@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem395
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int[] a = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                a[i] = int.Parse(massiv[i]);
+            }
+            setir = "";
+            for (int i = 0; i < n; i++)
+            {
+                int bolenSayi = 0;
+                for (int j = 0; j < n; j++)
+                {
+                    if (a[i]%a[j] == 0) bolenSayi++;
+                }
+                if (bolenSayi == 1) setir = setir + a[i] + " ";
+            }
+            setir = setir.TrimEnd(' ');
+            Console.WriteLine(setir);
+        }
+    }
+}
