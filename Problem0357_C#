@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem357
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double max = double.Parse(massiv[0]);
+            for (int i = 1; i < massiv.Length; i++)
+            {
+                if (double.Parse(massiv[i]) > max)
+                {
+                    max = double.Parse(massiv[i]);
+                }
+            }
+            Console.WriteLine("{0:#.00}", max);
+        }
+    }
+}
