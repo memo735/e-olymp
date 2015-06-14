@@ -1,0 +1,52 @@
+using System;
+
+namespace Problem488
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[,] a = new int[n + 1, n + 1];
+            int istiqamet = 1;
+            int i = 1;
+            int j = 0;
+            int say = 1;
+            string cavab = "";
+            while (i <= n)
+            {
+                if (istiqamet == 1)
+                {
+                    j++;
+                    while (j <= n)
+                    {
+                        a[i, j] = say++;
+                        cavab = cavab + a[i, j] + " ";
+                        j++;
+                    }
+                    cavab = cavab.TrimEnd(' ') + "\n";
+                    i++;
+                    istiqamet = -1;
+                }
+                if (i > n) break;
+                string cavab2 = "";
+                if (istiqamet == -1)
+                {
+                    j--;
+                    while (j > 0)
+                    {
+                        a[i, j] = say++;
+                        cavab2 = " " + a[i, j] + cavab2;
+                        j--;
+                    }
+                    cavab2 = cavab2.TrimStart(' ');
+                    cavab = cavab + cavab2 + "\n";
+                    i++;
+                    istiqamet = 1;
+                }
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
