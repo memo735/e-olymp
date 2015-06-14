@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem260
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int length = massiv.Length;
+            int[] a = new int[length];
+            for (int i = 1; i < length; i++)
+            {
+                a[i] = int.Parse(massiv[i]);
+            }
+            Array.Sort(a);
+            string cavab = "";
+            for (int i = length - 1; i > 0; i--)
+            {
+                cavab = cavab + a[i] + " ";
+            }
+            cavab = cavab.TrimEnd(' ');
+            Console.WriteLine(cavab);
+        }
+    }
+}
