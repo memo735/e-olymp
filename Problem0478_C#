@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem478
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            long a = long.Parse(massiv[0]);
+            long b = long.Parse(massiv[1]);
+            long c = long.Parse(massiv[2]);
+            long renglenmishUzler = 2*(a*b + a*c + b*c);
+            long say = a*b*c;
+            Console.WriteLine("{0} {1}", say, 6*say - renglenmishUzler);
+        }
+    }
+}
