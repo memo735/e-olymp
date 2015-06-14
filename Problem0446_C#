@@ -1,0 +1,18 @@
+using System;
+
+namespace Problem446
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            var n = long.Parse(Console.ReadLine());
+            int say = 0;
+            for (int i = 1; i <= n; i++)
+            {
+                if (n%i == n/i) say++;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
