@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem916
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            var str = Console.ReadLine();
+            var massiv = str.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int c = int.Parse(massiv[2]);
+            int d = int.Parse(massiv[3]);
+            int komekci;
+            if (a > b)
+            {
+                komekci = a;
+                a = b;
+                b = komekci;
+            }
+            if (c > d)
+            {
+                komekci = c;
+                c = d;
+                d = komekci;
+            }
+            var siyahi = new List<int>();
+            for (int i = a; i <= b; i++)
+            {
+                for (int j = c; j <= d; j++)
+                {
+                    var t = i*j;
+                    if (!siyahi.Contains(t)) siyahi.Add(t);
+                }
+            }
+            Console.WriteLine(siyahi.Count);
+        }
+    }
+}
