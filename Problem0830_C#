@@ -1,0 +1,41 @@
+using System;
+
+namespace Problem830
+{
+    internal class Program
+    {
+        private static bool Sade(long x)
+        {
+            if ((x == 0) || (x == 1)) return false;
+            if ((x == 2) || (x == 3)) return true;
+            if (x%2 == 0) return false;
+            long kok = (long) Math.Sqrt(x) + 1;
+            for (long i = 3; i < kok; i = i + 2)
+            {
+                if (x%i == 0) return false;
+            }
+            return true;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            long m = long.Parse(massiv[0]);
+            long n = long.Parse(massiv[1]);
+            if (m > n)
+            {
+                long komekci = m;
+                m = n;
+                n = komekci;
+            }
+            setir = "";
+            for (long i = m; i <= n; i++)
+            {
+                if (Sade(i)) setir = setir + i + "\n";
+            }
+            setir = setir.TrimEnd('\n');
+            Console.WriteLine(setir == "" ? "Absent" : setir);
+        }
+    }
+}
