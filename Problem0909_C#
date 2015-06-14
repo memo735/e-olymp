@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem909
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string s = Console.ReadLine();
+            s = s.TrimStart(' ');
+            s = s.TrimEnd(' ');
+            int saygac = 1;
+            var ok = true;
+            while (ok)
+            {
+                s = s.Replace("  ", " ");
+                if (!s.Contains("  ")) ok = false;
+            }
+            int length = s.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (s[i] == ' ') saygac++;
+            }
+            Console.WriteLine(saygac);
+        }
+    }
+}
