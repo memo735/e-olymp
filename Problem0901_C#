@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem901
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            var say = 0;
+            string s = Console.ReadLine();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if ((s[i] == '+') || (s[i] == '-') || (s[i] == '*'))
+                {
+                    say = say + 1;
+                }
+            }
+            if ((s[0] == '+') || (s[0] == '-'))
+            {
+                say = say - 1;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
