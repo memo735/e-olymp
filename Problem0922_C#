@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem922
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int length = int.Parse(Console.ReadLine());
+            string eded = Console.ReadLine();
+            var massiv = eded.Split(' ');
+            string cavab = massiv[length - 1];
+            for (int i = 0; i < length - 1; i++)
+            {
+                cavab = cavab + " " + massiv[i];
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
