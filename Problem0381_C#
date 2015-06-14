@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem381
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int b = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]);
+            int a = (int) Math.Pow(b, 1.0/n);
+            if (Math.Pow(a, n) == b) Console.WriteLine(a);
+            else
+            {
+                int epsilonSol = b - (int) Math.Pow(a, n);
+                int epsilonSag = (int) Math.Pow(a + 1, n) - b;
+                if (epsilonSol < epsilonSag) Console.WriteLine(a);
+                else Console.WriteLine(a + 1);
+            }
+        }
+    }
+}
