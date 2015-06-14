@@ -1,0 +1,23 @@
+using System;
+
+namespace Problem407
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int m = int.Parse(Console.ReadLine()); //test sayi
+            int[] a = new int[m + 1];
+            for (int i = 1; i <= m; i++)
+            {
+                a[i] = int.Parse(Console.ReadLine());
+            }
+            for (int i = 1; i <= m; i++)
+            {
+                if (a[i]%3 == 0) Console.WriteLine("GCV");
+                if (a[i]%3 == 1) Console.WriteLine("VGC");
+                if (a[i]%3 == 2) Console.WriteLine("CVG");
+            }
+        }
+    }
+}
