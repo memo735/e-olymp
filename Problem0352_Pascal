@@ -1,0 +1,10 @@
+var a, min:real;
+begin
+  min:=99999;
+  while not(eoln()) do
+    begin
+      read(a);
+      if a<min then min:=a;
+    end;
+  writeln (min:0:2)
+end.
