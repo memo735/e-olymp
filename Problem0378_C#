@@ -1,0 +1,51 @@
+using System;
+
+namespace Problem378
+{
+    internal class Program
+    {
+        private static char Desifre(char a, string b)
+        {
+            if (a == 'A') return b[0];
+            if (a == 'B') return b[1];
+            if (a == 'C') return b[2];
+            if (a == 'D') return b[3];
+            if (a == 'E') return b[4];
+            if (a == 'F') return b[5];
+            if (a == 'G') return b[6];
+            if (a == 'H') return b[7];
+            if (a == 'I') return b[8];
+            if (a == 'J') return b[9];
+            if (a == 'K') return b[10];
+            if (a == 'L') return b[11];
+            if (a == 'M') return b[12];
+            if (a == 'N') return b[13];
+            if (a == 'O') return b[14];
+            if (a == 'P') return b[15];
+            if (a == 'Q') return b[16];
+            if (a == 'R') return b[17];
+            if (a == 'S') return b[18];
+            if (a == 'T') return b[19];
+            if (a == 'U') return b[20];
+            if (a == 'V') return b[21];
+            if (a == 'W') return b[22];
+            if (a == 'X') return b[23];
+            if (a == 'Y') return b[24];
+            if (a == 'Z') return b[25];
+            return a;
+        }
+
+        public static void Main(string[] args)
+        {
+            string str1 = Console.ReadLine();
+            string str2 = Console.ReadLine();
+            string cavab = "";
+            int length = str1.Length;
+            for (int i = 0; i < length; i++)
+            {
+                cavab = cavab + Desifre(str1[i], str2);
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
