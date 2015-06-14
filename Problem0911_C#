@@ -1,0 +1,36 @@
+using System;
+
+namespace Problem911
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int c = int.Parse(massiv[2]);
+
+            int x1 = 0, x2 = 0;
+            var d = (int) Math.Sqrt(b*b - 4*a*c);
+            if (d >= 0)
+            {
+                x1 = (-b - d)/(2*a);
+                x2 = (-b + d)/(2*a);
+            }
+
+            if (d < 0) Console.WriteLine("No roots");
+
+            if (d >= 0)
+            {
+                if (x1 == x2) Console.WriteLine("One root: {0}", x1);
+                else
+                {
+                    if (x1 < x2) Console.WriteLine("Two roots: {0} {1}", x1, x2);
+                    else Console.WriteLine("Two roots: {0} {1}", x2, x1);
+                }
+            }
+        }
+    }
+}
