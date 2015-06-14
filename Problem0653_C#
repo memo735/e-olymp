@@ -1,0 +1,71 @@
+using System;
+
+namespace Problem653
+{
+    internal class Program
+    {
+        private static int Max(int a, int b, int c)
+        {
+            int max = a;
+            if (b > max) max = b;
+            if (c > max) max = c;
+            return max;
+        }
+
+        private static bool Yoxla(int a, int b, int c)
+        {
+            if (a == Max(a, b, c))
+            {
+                return a < b + c;
+            }
+            if (b == Max(a, b, c))
+            {
+                return b < a + c;
+            }
+            if (c == Max(a, b, c))
+            {
+                return c < a + b;
+            }
+            return false;
+        }
+
+        private static bool Right(int a, int b, int c)
+        {
+            if (a == Max(a, b, c)) return a*a == b*b + c*c;
+            if (b == Max(a, b, c)) return b*b == a*a + c*c;
+            if (c == Max(a, b, c)) return c*c == a*a + b*b;
+            return false;
+        }
+
+        private static string ItiKor(int a, int b, int c)
+        {
+            if (a == Max(a, b, c))
+            {
+                if (a*a < b*b + c*c) return "ACUTE";
+                return "OBTUSE";
+            }
+            if (b == Max(a, b, c))
+            {
+                if (b*b < a*a + c*c) return "ACUTE";
+                return "OBTUSE";
+            }
+            if (c == Max(a, b, c))
+            {
+                if (c*c < a*a + b*b) return "ACUTE";
+                return "OBTUSE";
+            }
+            return "";
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int c = int.Parse(massiv[2]);
+            if (Yoxla(a, b, c)) Console.WriteLine(Right(a, b, c) ? "RIGHT" : ItiKor(a, b, c));
+            else Console.WriteLine("IMPOSSIBLE");
+        }
+    }
+}
