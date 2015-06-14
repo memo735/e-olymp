@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem500
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string cavab = "";
+            for (int i = 0; i < n; i++)
+            {
+                var setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                int l = int.Parse(massiv[0]);
+                int w = int.Parse(massiv[1]);
+                int h = int.Parse(massiv[2]);
+                int say = 2*(l*h + w*h)/16;
+                if ((l*h + w*h)%8 != 0) say++;
+                cavab = cavab + say + "\n";
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
