@@ -4,7 +4,6 @@ namespace Problem1
 {
     class Program
     {
-
         public static void Main(string[] args)
         {
             var s = Console.ReadLine();
