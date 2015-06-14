@@ -1,0 +1,15 @@
+using System;
+
+namespace Problem903
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            if (eded[0] > eded[2]) Console.WriteLine(eded[0]);
+            if (eded[0] == eded[2]) Console.WriteLine("=");
+            if (eded[0] < eded[2]) Console.WriteLine(eded[2]);
+        }
+    }
+}
