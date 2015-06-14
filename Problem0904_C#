@@ -1,0 +1,23 @@
+using System;
+
+namespace Problem904
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            setir = "";
+            for (int i = 0; i < n; i++)
+            {
+                int eded = int.Parse(massiv[i]);
+                if (eded >= 0) eded = eded + 2;
+                setir = setir + eded + " ";
+            }
+            setir = setir.TrimEnd(' ');
+            Console.WriteLine(setir);
+        }
+    }
+}
