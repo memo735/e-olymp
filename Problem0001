@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem1
+{
+    class Program
+    {
+
+        public static void Main(string[] args)
+        {
+            var s = Console.ReadLine();
+            if (s != null)
+            {
+                s = s.Trim();
+                s = s.TrimStart('0');
+                if (s.Length == 2) Console.WriteLine(s[0] + " " + s[1]);
+            }
+        }
+    }
+}
