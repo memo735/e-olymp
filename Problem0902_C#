@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem902
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int q = int.Parse(Console.ReadLine());
+            if ((q == 1) || (q == 2) || (q == 3)) Console.WriteLine("Initial");
+            if ((q == 4) || (q == 5) || (q == 6)) Console.WriteLine("Average");
+            if ((q == 7) || (q == 8) || (q == 9)) Console.WriteLine("Sufficient");
+            if ((q == 10) || (q == 11) || (q == 12)) Console.WriteLine("High");
+        }
+    }
+}
