@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem388
+{
+    internal class Program
+    {
+        private static int Funksiya(int x)
+        {
+            if (x%2 == 0) return x/2;
+            return x + 1;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int say = 0;
+            while (n > 1)
+            {
+                n = Funksiya(n);
+                say++;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
