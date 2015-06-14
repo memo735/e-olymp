@@ -1,0 +1,6 @@
+var s1, s2, s3, cavab: real;
+begin
+  readln(s1, s2, s3);
+  cavab:=sqr(sqrt(s1)+sqrt(s2)+sqrt(s3));
+  writeln(cavab:8:8);
+end.
