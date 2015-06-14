@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem917
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double min = double.Parse(massiv[0]);
+            for (int i = 1; i < n; i++)
+            {
+                double cari = double.Parse(massiv[i]);
+                if (cari < min) min = cari;
+            }
+            Console.WriteLine("{0:N2}", 2*min);
+        }
+    }
+}
