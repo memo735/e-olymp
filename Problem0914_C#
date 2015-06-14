@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem914
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double max = -100;
+            for (int i = 0; i < n; i++)
+            {
+                double deyisen = double.Parse(massiv[i]);
+                if (deyisen > max) max = deyisen;
+            }
+            max = Math.Abs(max);
+            Console.WriteLine("{0:N2}", max);
+        }
+    }
+}
