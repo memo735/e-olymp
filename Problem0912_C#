@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem912
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            var s = Console.ReadLine();
+            s = s.TrimStart(' ');
+            s = s.TrimEnd(' ');
+
+            while (s.Contains("  "))
+            {
+                s = s.Replace("  ", " ");
+            }
+
+            var say = s.Split(new[] {'.', '?', '!'}, StringSplitOptions.RemoveEmptyEntries).Length;
+            Console.WriteLine(say);
+        }
+    }
+}
