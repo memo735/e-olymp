@@ -1,0 +1,29 @@
+using System;
+
+namespace Problem1159
+{
+    internal class Program
+    {
+        private static string Hesabla(int x)
+        {
+            for (int ay = 1; ay < 13; ay++)
+            {
+                int gun = (x - 31*ay)/12;
+                if (12*gun + 31*ay == x)
+                {
+                    if ((gun < 10) && (ay < 10)) return "0" + gun + "/" + "0" + ay;
+                    if ((gun < 10) && (ay >= 10)) return "0" + gun + "/" + ay;
+                    if ((gun >= 10) && (ay < 10)) return gun + "/" + "0" + ay;
+                    return gun + "/" + ay;
+                }
+            }
+            return "";
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(Hesabla(n));
+        }
+    }
+}
