@@ -1,0 +1,42 @@
+using System;
+using System.Text;
+
+namespace Problem1340
+{
+    internal class Program
+    {
+        private static StringBuilder Ulduz(int x)
+        {
+            int orta = 2*x - 1;
+            StringBuilder ulduz = new StringBuilder("");
+            for (int i = 1; i <= orta; i++)
+            {
+                if (i <= x)
+                {
+                    for (int j = 1; j <= x - i; j++) ulduz = ulduz.Append(" ");
+                    for (int j = 1; j <= 2*i - 1; j++) ulduz = ulduz.Append("*");
+                    ulduz = ulduz.Append("\n");
+                }
+                else
+                {
+                    for (int j = i - x; j > 0; j--) ulduz = ulduz.Append(" ");
+                    for (int j = orta - 2*(i - x); j > 0; j--) ulduz = ulduz.Append("*");
+                    ulduz = ulduz.Append("\n");
+                }
+            }
+            return ulduz;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n;
+            StringBuilder cavab = new StringBuilder("");
+            do
+            {
+                n = int.Parse(Console.ReadLine());
+                cavab = cavab.Append(Ulduz(n)).Append("\n");
+            } while (n != 0);
+            Console.WriteLine(cavab.ToString().TrimEnd('\n'));
+        }
+    }
+}
