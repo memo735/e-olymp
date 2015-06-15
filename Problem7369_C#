@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem7369
+{
+    internal class Program
+    {
+        private static int Ilk(int x)
+        {
+            while (x%7 != 3) x++;
+            return x;
+        }
+
+        private static int Son(int x)
+        {
+            while (x%7 != 3) x--;
+            return x;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            Console.WriteLine((Son(b) - Ilk(a))/7 + 1);
+        }
+    }
+}
