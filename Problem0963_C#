@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem963
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            Console.WriteLine(massiv[1] + " " + massiv[0]);
+        }
+    }
+}
