@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Problem2169
+{
+    internal class Program
+    {
+        private static IEnumerable<List<int>> Permutation(int n)
+        {
+            if (n == 1) return new List<List<int>> {new List<int> {1}};
+            var kohne = Permutation(n - 1);
+            var cvb = new List<List<int>>();
+            foreach (var siyahi in kohne)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    var siyahicopy = siyahi.ToList();
+                    siyahicopy.Insert(i, n);
+                    cvb.Add(siyahicopy);
+                }
+            }
+            return cvb;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n == 1)
+            {
+                Console.WriteLine("1");
+                return;
+            }
+            var cvb = Permutation(n);
+            var massiv = cvb.Select(siyahi => int.Parse(string.Join("", siyahi))).ToArray();
+            Array.Sort(massiv);
+            foreach (var str in massiv.Select(eded => eded + ""))
+            {
+                Console.WriteLine(string.Join(" ", str.Select(ch => ch.ToString())));
+            }
+        }
+    }
+}
