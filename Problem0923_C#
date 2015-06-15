@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem923
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            byte ay = byte.Parse(Console.ReadLine());
+            if ((ay == 12) || (ay == 1) || (ay == 2)) Console.WriteLine("Winter");
+            if ((ay == 3) || (ay == 4) || (ay == 5)) Console.WriteLine("Spring");
+            if ((ay == 6) || (ay == 7) || (ay == 8)) Console.WriteLine("Summer");
+            if ((ay == 9) || (ay == 10) || (ay == 11)) Console.WriteLine("Autumn");
+        }
+    }
+}
