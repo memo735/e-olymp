@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem335
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            byte t = byte.Parse(Console.ReadLine());
+            string cavab = "";
+            for (byte i = 1; i <= t; i++)
+            {
+                int n = int.Parse(Console.ReadLine());
+                int j = 1;
+                bool ok = false;
+                while (j < n)
+                {
+                    if (n%j == 0) ok = !ok;
+                    j++;
+                }
+                cavab = ok ? cavab + "0" + "\n" : cavab + "1" + "\n";
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
