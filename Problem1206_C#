@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem1206
+{
+    internal class Program
+    {
+        private static int F91(int n)
+        {
+            if (n <= 100) return F91(F91(n + 11));
+            return n - 10;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(F91(n));
+        }
+    }
+}
