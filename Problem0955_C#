@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem955
+{
+    internal class Program
+    {
+        private static int ReqemCemi(int x)
+        {
+            int cem = 0;
+            while (x > 0)
+            {
+                cem = cem + x%10;
+                x = x/10;
+            }
+            return cem;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            n = ReqemCemi(n);
+            Console.WriteLine(n*n);
+        }
+    }
+}
