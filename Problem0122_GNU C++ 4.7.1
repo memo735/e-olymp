@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <vector>
+#include <stdlib.h>
+using namespace std;
+ 
+struct Graph
+{
+  vector< vector<int> > AdjList;
+	int Size;
+	
+  Graph(int n)
+  {
+		vector<int> List;
+		for (int k = 0; k < n; k++) AdjList.push_back(List);
+		Size = n;
+	}
+ 
+	void add_vertex()
+  {
+        // вершина == целое число == номер этой вершины в списке вершин
+		Size++;
+		vector<int> List;
+		AdjList.push_back(List);
+	}
+	
+	void add_edge(int u, int v)
+  {		// u и v уже должны быть в списке вершин
+		AdjList[u].push_back(v);
+	}
+ 
+	int simple_paths(int start, int end, int max_depth)
+  {
+		bool* on_path = (bool*) calloc(Size, sizeof(bool));
+		int cur_depth = 0;
+		int count = 0;
+		simple_paths(start, end, on_path, cur_depth, max_depth, count);
+		return count;
+	}
+	
+	void simple_paths(int start, int end, bool* on_path, int& cur_depth, int max_depth, int& count)
+  {
+        if (cur_depth <= max_depth)
+        {
+          on_path[start] = true;
+			    if (start == end) count++;
+			    else
+				    for (int k = 0; k < AdjList[start].size(); k++)
+            {
+					    int v = AdjList[start][k];
+					    if (!on_path[v])
+              {
+						    cur_depth++;
+						    simple_paths(v, end, on_path, cur_depth, max_depth, count);
+						    on_path[v] = false;
+						    cur_depth--;
+					    }
+				    }
+		    }
+	}
+	
+};
+ 
+ 
+int main()
+{
+	int n, k, a, b, d, tmp1, tmp2;
+	scanf("%d %d %d %d %d", &n, &k, &a, &b, &d);
+	Graph G(n);
+	for (int i = 0; i < k; i++)
+  {
+		scanf("%d %d", &tmp1, &tmp2);
+		G.add_edge(tmp1 - 1, tmp2 - 1);
+	}
+	printf("%d\n", G.simple_paths(a-1, b-1, d));
+	return 0;
+}
