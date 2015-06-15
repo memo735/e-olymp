@@ -1,0 +1,30 @@
+using System;
+
+namespace Problem7327
+{
+    internal class Program
+    {
+        private static int Hesabla(long x)
+        {
+            if (x < 1) return 0;
+            if (x < 4) return 1;
+            if (x < 16) return 2;
+            if (x < 27) return 3;
+            if (x < 256) return 4;
+            if (x < 3125) return 5;
+            if (x < 46656) return 6;
+            if (x < 65536) return 7;
+            if (x < 823543) return 8;
+            if (x < 16777216) return 9;
+            if (x < 387420489) return 10;
+            if (x < 10000000000) return 11;
+            return 12;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(Hesabla(n));
+        }
+    }
+}
