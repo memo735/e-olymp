@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem5314
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int k = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]);
+            var cavab = 0;
+            cavab = cavab + (1 << k);
+            cavab = cavab + (1 << n);
+            Console.WriteLine(cavab);
+        }
+    }
+}
