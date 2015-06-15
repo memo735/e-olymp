@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem1605
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            eded = eded.TrimStart('-');
+            Console.WriteLine(eded[1]);
+        }
+    }
+}
