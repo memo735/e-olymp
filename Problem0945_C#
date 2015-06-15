@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem945
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            Console.WriteLine("" + eded[0] + "" + eded[2]);
+        }
+    }
+}
