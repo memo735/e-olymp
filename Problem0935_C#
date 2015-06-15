@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem935
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            var eded = Console.ReadLine();
+            eded = eded.Trim();
+            eded = eded.TrimStart('0');
+            eded = eded.TrimStart('+');
+            eded = eded.TrimStart('-');
+            Console.WriteLine(eded[0]);
+            Console.WriteLine(eded[1]);
+            Console.WriteLine(eded[2]);
+        }
+    }
+}
