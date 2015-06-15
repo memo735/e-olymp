@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem7366
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int gun = n/86400;
+            int saat = (n - gun*86400)/3600;
+            int deq = (n - gun*86400 - saat*3600)/60;
+            int san = n - gun*86400 - saat*3600 - deq*60;
+            Console.WriteLine("{0} {1} {2} {3}", gun, saat, deq, san);
+        }
+    }
+}
