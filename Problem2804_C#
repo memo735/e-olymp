@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem2804
+{
+    internal class Program
+    {
+        private static bool Netice(long x)
+        {
+            long cem = 0;
+            while (x > 0)
+            {
+                cem = cem + (x%10);
+                x = x/10;
+            }
+            int kok = (int) Math.Sqrt(cem);
+            if (kok*kok == cem) return true;
+            return false;
+        }
+
+        public static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            Console.WriteLine(Netice(n) ? "Yes" : "No");
+        }
+    }
+}
