@@ -1,0 +1,167 @@
+#include <iostream>
+ 
+using namespace std;
+ 
+struct node
+{
+    int x,y,z;
+    node *prev;
+    node(int x0, int y0, int z0, node* las)
+    {
+        x = x0; y=y0; z=z0;  prev = las;
+    }
+   node();
+};  //Структура "Узел" используемая в структуре "Очередь"
+
+struct quene
+{//Структура "Очередь"
+    int k = 0;
+    node* last = NULL;
+    node* first = NULL;
+    node* tmp = NULL;
+
+    void push(int n, int m, int g)
+    {
+        node* x = new node(n, m, g, NULL);
+        k++;
+        if (k != 1) last->prev = x;
+        last = x;
+        if (k == 1) first = x;
+    }
+
+    void pop()
+    {
+        tmp = first;
+        first = first->prev;
+        delete tmp;
+        k--;
+    }
+
+};
+
+
+
+int main()
+{
+    int l,r,c;
+    cin >> l >> r >> c;
+    while ((l!=0) && (r!=0) && (c!=0))
+    { //Внешний цикл
+        int mas[l+2][r+2][c+2];
+        bool masb[l+2][r+2][c+2];
+        char u;
+        int st1,st2,st3;
+        int fs1,fs2,fs3;
+        for(int i1=0; i1<l+2; i1++)
+        { //Начало считывания и обработки данных
+            for(int i2=0; i2<r+2; i2++)
+            {
+                for(int i3=0; i3<c+2; i3++)
+                {
+                    masb[i1][i2][i3]=0;
+                    if((i1==0)||(i2==0)||(i3==0)||(i1==l+1)||(i2==r+1)||(i3==c+1)) mas[i1][i2][i3]=-1;
+                    else
+                    {
+                        cin>>u;
+                        if(u=='#') mas[i1][i2][i3]=-1;
+                        if(u=='.') mas[i1][i2][i3]=0;
+                        if(u=='S')
+                        {
+                            mas[i1][i2][i3]=0;
+                            st1=i1;st2=i2;st3=i3;
+                        }
+                        if(u=='E')
+                        {
+                            mas[i1][i2][i3]=0;
+                            fs1=i1; fs2=i2; fs3=i3;
+                        }
+                    }
+                }
+            }
+        } // Конец обработки
+ 
+    quene ts; //Создание очереди
+    ts.push(st1,st2,st3);// Кладем в нее "стартовую" вершину
+    while(ts.k!=0)
+    {  //Запускаем поиск
+        int x1=ts.first->x;
+        int y1=ts.first->y;
+        int z1=ts.first->z;  //Для удобства сохраняем координаты 
+        //обрабатываемой вершины в специальных переменных
+ 
+        if(mas[x1+1][y1][z1]>=0)
+        { // Вершина справа
+            if(mas[x1+1][y1][z1]!=0) mas[x1+1][y1][z1]=min(mas[x1+1][y1][z1],mas[x1][y1][z1]+1);
+            else mas[x1+1][y1][z1]=mas[x1][y1][z1]+1;
+            if(masb[x1+1][y1][z1]==0)
+            {
+                masb[x1+1][y1][z1]=1;
+                ts.push(x1+1,y1,z1);
+            }
+        }
+ 
+        if(mas[x1-1][y1][z1]>=0)
+        { //Вершина слева
+            if(mas[x1-1][y1][z1]!=0) mas[x1-1][y1][z1]=min(mas[x1-1][y1][z1],mas[x1][y1][z1]+1);
+            else mas[x1-1][y1][z1]=mas[x1][y1][z1]+1;
+            if(masb[x1-1][y1][z1]==0)
+            {
+                masb[x1-1][y1][z1]=1;
+                ts.push(x1-1,y1,z1);
+            }
+        }
+ 
+        if(mas[x1][y1+1][z1]>=0)
+        { //Вершина вверху
+            if(mas[x1][y1+1][z1]!=0) mas[x1][y1+1][z1]=min(mas[x1][y1+1][z1],mas[x1][y1][z1]+1);
+            else mas[x1][y1+1][z1]=mas[x1][y1][z1]+1;
+            if(masb[x1][y1+1][z1]==0)
+            {
+                masb[x1][y1+1][z1]=1;
+                ts.push(x1,y1+1,z1);
+            }
+        }
+ 
+        if(mas[x1][y1-1][z1]>=0)
+        { //Вершина внизу
+            if(mas[x1][y1-1][z1]!=0) mas[x1][y1-1][z1]=min(mas[x1][y1-1][z1],mas[x1][y1][z1]+1);
+            else mas[x1][y1-1][z1]=mas[x1][y1][z1]+1;
+            if(masb[x1][y1-1][z1]==0)
+            {
+                masb[x1][y1-1][z1]=1;
+                ts.push(x1,y1-1,z1);
+            }
+        }
+ 
+        if(mas[x1][y1][z1+1]>=0)
+        { //Вершина на уровень выше
+            if(mas[x1][y1][z1+1]!=0) mas[x1][y1][z1+1]=min(mas[x1][y1][z1+1],mas[x1][y1][z1]+1);
+            else mas[x1][y1][z1+1]=mas[x1][y1][z1]+1;
+            if(masb[x1][y1][z1+1]==0)
+            {
+                masb[x1][y1][z1+1]=1;
+                ts.push(x1,y1,z1+1);
+            }
+        }
+ 
+        if(mas[x1][y1][z1-1]>=0)
+        { //Вершина на уровень ниже
+            if(mas[x1][y1][z1-1]!=0) mas[x1][y1][z1-1]=min(mas[x1][y1][z1-1],mas[x1][y1][z1]+1);
+            else mas[x1][y1][z1-1]=mas[x1][y1][z1]+1;
+            if(masb[x1][y1][z1-1]==0)
+            {
+                masb[x1][y1][z1-1]=1;
+                ts.push(x1,y1,z1-1);
+            }
+        }
+        ts.pop(); //Удаление обработанной вершины из очереди
+ 
+    }
+    if(mas[fs1][fs2][fs3]!=0) // Последняя проверка результата
+    cout <<"Escaped in " << mas[fs1][fs2][fs3] << " minute(s)."<< endl;
+    else cout << "Trapped!" << endl;
+    cin >> l >> r >> c; // Считывание чисел для внешнего цикла
+    }
+    return 0;
+ 
+}
