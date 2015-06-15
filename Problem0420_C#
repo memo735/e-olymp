@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem420
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int x = int.Parse(massiv[0]);
+            int y = int.Parse(massiv[1]);
+            double yer = 81/(Math.Pow(x, 2) + Math.Pow(y, 2));
+            double ay = 1/(Math.Pow(384000 - x, 2) + Math.Pow(y, 2));
+            if (yer == ay) Console.WriteLine("Equal");
+            else Console.WriteLine(yer > ay ? "Earth" : "Moon");
+        }
+    }
+}
