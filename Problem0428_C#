@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem428
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                double r = double.Parse(massiv[0]);
+                double x = double.Parse(massiv[1]);
+                double y = double.Parse(massiv[2]);
+                if (x < 0) x = -x;
+                Console.WriteLine("{0:N2}", r*x/(2*r - y));
+            }
+        }
+    }
+}
