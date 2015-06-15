@@ -1,0 +1,54 @@
+using System;
+
+namespace Problem27
+{
+    internal class Class1
+    {
+        private static string ToBin(int n)
+        {
+            var s = "";
+            while (n > 0)
+            {
+                s = n%2 + s;
+                n = n/2;
+            }
+            return s;
+        }
+
+        private static string Cevir(string s)
+        {
+            string s1 = s.Substring(1);
+            s1 = s1 + s[0];
+            return s1;
+        }
+
+        private static int ToInt(string s)
+        {
+            return Convert.ToInt32(s, 2);
+        }
+
+        private static int Maks(int n)
+        {
+            int maks = -1;
+            string temp = ToBin(n);
+            string real = ToBin(n);
+
+            do
+            {
+                var eded = ToInt(temp);
+                if (eded > maks)
+                {
+                    maks = eded;
+                }
+                temp = Cevir(temp);
+            } while (real != temp);
+            return maks;
+        }
+
+
+        public static void Main(string[] args)
+        {
+            Console.WriteLine(Maks(int.Parse(Console.ReadLine())));
+        }
+    }
+}
