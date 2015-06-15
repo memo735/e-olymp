@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem7330
+{
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            if (n%3 == 2) Console.WriteLine(2*(n/3) + 1);
+            else Console.WriteLine(n*2/3);
+        }
+    }
+}
