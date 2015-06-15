@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem7336
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int n = int.Parse(massiv[2]);
+            Console.WriteLine("{0} {1}", (100*a + b)*n/100, (100*a + b)*n%100);
+        }
+    }
+}
