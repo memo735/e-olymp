@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem7326
+{
+    internal class Program
+    {
+        private static int Cavab(string[] a)
+        {
+            int max = a[0].Length;
+            int n = a.Length;
+            for (int i = 1; i < n; i++)
+            {
+                if (a[i].Length > max) max = a[i].Length;
+            }
+            return max;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split('p');
+            Console.WriteLine(Cavab(massiv));
+        }
+    }
+}
