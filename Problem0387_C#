@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem387
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int x = int.Parse(massiv[0]);
+            int y = int.Parse(massiv[1]);
+            int r = int.Parse(massiv[2]);
+            int n = int.Parse(massiv[3]);
+            int xmin = 2000;
+            int ymin = 2000;
+            int xmax = 0;
+            int ymax = 0;
+            for (int i = 0; i < n; i++)
+            {
+                setir = Console.ReadLine();
+                massiv = setir.Split(' ');
+                int xi = int.Parse(massiv[0]);
+                int yi = int.Parse(massiv[1]);
+                xmin = Math.Min(xi - r, xmin);
+                xmax = Math.Max(xi + r, xmax);
+                ymin = Math.Min(yi - r, ymin);
+                ymax = Math.Max(yi + r, ymax);
+            }
+            Console.WriteLine(x*y - (xmax - xmin)*(ymax - ymin));
+        }
+    }
+}
