@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem379
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            int n = setir.Length - 1;
+            int cem = 0;
+            for (int i = 0; i < n; i++)
+            {
+                if (setir[i] == '1') cem++;
+            }
+            if (((cem%2 == 0) && (setir[n] == 'e')) || ((cem%2 == 1) && (setir[n] == 'o')))
+            {
+                setir = setir.Substring(0, n) + "0";
+            }
+            else setir = setir.Substring(0, n) + "1";
+            Console.WriteLine(setir);
+        }
+    }
+}
