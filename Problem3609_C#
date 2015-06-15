@@ -1,0 +1,18 @@
+using System;
+
+namespace Problem3609
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double a = double.Parse(massiv[0]);
+            double b = double.Parse(massiv[1]);
+            //(v_0+v)t/2=25 metr, burada v - cruiser sureti, t ise 25 metri getdiyi vaxtdi
+            var v0 = 200/(7*a - 3*b) - 100/(b - a);
+            Console.WriteLine("{0:N9}", v0);
+        }
+    }
+}
