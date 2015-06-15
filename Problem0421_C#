@@ -1,0 +1,23 @@
+using System;
+
+namespace Problem421
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double l = double.Parse(massiv[0]);
+            int k = int.Parse(massiv[1]);
+            int say = 0;
+            l = l/k;
+            while (l > 1)
+            {
+                say++;
+                l = l/k;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
