@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem1142
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            long a = long.Parse(massiv[0]);
+            long b = long.Parse(massiv[1]);
+            if (b == 0) Console.WriteLine("ERROR");
+            else Console.WriteLine(a/b);
+        }
+    }
+}
