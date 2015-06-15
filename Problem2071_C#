@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem2071
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine("{0} {1} {2}", 13*n/24, 4*n/24, 7*n/24);
+        }
+    }
+}
