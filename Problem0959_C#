@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem959
+{
+    internal class Program
+    {
+        private static int IlkReqem(int x)
+        {
+            int cari = 0;
+            while (x > 0)
+            {
+                cari = x;
+                x = x/10;
+            }
+            return cari;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine((n%10) + IlkReqem(n));
+        }
+    }
+}
