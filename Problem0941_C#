@@ -1,0 +1,38 @@
+using System;
+
+namespace Problem941
+{
+    internal class Program
+    {
+        private static int Hasil(int a)
+        {
+            int hasil = 1;
+            while (a > 0)
+            {
+                hasil = hasil*(a%10);
+                a = a/10;
+            }
+            return hasil;
+        }
+
+        private static int Cem(int a)
+        {
+            int cem = 0;
+            while (a > 0)
+            {
+                cem = cem + a%10;
+                a = a/10;
+            }
+            return cem;
+        }
+
+        public static void Main(string[] args)
+        {
+            var eded = Console.ReadLine();
+            eded = eded.TrimStart('+');
+            eded = eded.TrimStart('-');
+            int n = int.Parse(eded);
+            Console.WriteLine(Hasil(n) - Cem(n));
+        }
+    }
+}
