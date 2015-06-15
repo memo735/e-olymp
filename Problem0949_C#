@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem949
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            string cavab = "" + eded[1] + eded[2];
+            Console.WriteLine(int.Parse(cavab));
+        }
+    }
+}
