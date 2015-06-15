@@ -1,0 +1,40 @@
+using System;
+
+namespace Problem1146
+{
+    internal class Program
+    {
+        private static int EBOB(int x, int y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return (x + y);
+        }
+
+        public static void Main(string[] args)
+        {
+            string cavab = "";
+            int n;
+            do
+            {
+                n = int.Parse(Console.ReadLine());
+                int g = 0;
+                for (int i = 1; i < n; i++)
+                {
+                    for (int j = i + 1; j <= n; j++)
+                    {
+                        g = g + EBOB(i, j);
+                    }
+                }
+                cavab = cavab + g + "\n";
+            } while (n != 0);
+            cavab = cavab.TrimEnd('\n');
+            cavab = cavab.TrimEnd('0');
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
