@@ -1,0 +1,5 @@
+var a,b,c:Integer;
+begin
+  readln(a,b,c);
+  writeln(a+b+c);
+end.
