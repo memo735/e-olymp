@@ -1,0 +1,23 @@
+using System;
+
+namespace Problem1684
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n%60 == 0) n = n/60;
+            else n = n/60 + 1;
+            var qepik = 1;
+            int cari = 64;
+            for (int i = 1; i <= n; i++)
+            {
+                qepik = qepik + cari;
+                if (cari/2 >= 1) cari = cari/2;
+                else cari = 1;
+            }
+            Console.WriteLine(qepik);
+        }
+    }
+}
