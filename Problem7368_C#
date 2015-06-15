@@ -1,0 +1,66 @@
+using System;
+
+namespace Problem7368
+{
+    internal class Program
+    {
+        private static int Min(int[] a)
+        {
+            int length = a.Length;
+            int min = a[0];
+            for (int i = 1; i < length; i++)
+            {
+                if (a[i] < min) min = a[i];
+            }
+            return min;
+        }
+
+        private static int Max(int[] a)
+        {
+            int length = a.Length;
+            int max = a[0];
+            for (int i = 1; i < length; i++)
+            {
+                if (a[i] > max) max = a[i];
+            }
+            return max;
+        }
+
+        private static double Hesabla(int[] a)
+        {
+            int length = a.Length;
+            int min = Min(a);
+            int max = Max(a);
+            int say = 0;
+            double cem = 0;
+            for (int i = 0; i < length; i++)
+            {
+                if ((a[i] != min) && (a[i] != max))
+                {
+                    cem = cem + a[i];
+                    say++;
+                }
+            }
+            return cem/say;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            string cavab = "";
+            for (int i = 0; i < m; i++)
+            {
+                setir = Console.ReadLine();
+                massiv = setir.Split(' ');
+                int[] a = new int[n];
+                for (int j = 0; j < n; j++) a[j] = int.Parse(massiv[j]);
+                cavab = cavab + Hesabla(a).ToString("N2") + " ";
+            }
+            cavab = cavab.TrimEnd(' ');
+            Console.WriteLine(cavab);
+        }
+    }
+}
