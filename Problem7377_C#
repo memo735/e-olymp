@@ -1,0 +1,26 @@
+using System;
+using System.Numerics;
+using System.Text;
+
+namespace Problem7377
+{
+    internal class Program
+    {
+        private static int Cavab(int x)
+        {
+            x = 2*x;
+            StringBuilder setir = new StringBuilder("");
+            for (int i = 1; i < 116; i++)
+            {
+                setir = setir.Append(BigInteger.Pow(2, i));
+            }
+            return int.Parse(setir[x - 2] + "" + setir[x - 1]);
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(Cavab(n));
+        }
+    }
+}
