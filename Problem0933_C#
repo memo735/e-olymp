@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem933
+{
+    internal class Program
+    {
+
+        public static void Main(string[] args)
+        {
+            var s = Console.ReadLine();
+            if (s != null)
+            {
+                s = s.Trim();
+                s = s.TrimStart('+');
+                s = s.TrimStart('-');
+                s = s.TrimStart('0');
+                Console.WriteLine(int.Parse(s[0].ToString()) + int.Parse(s[1].ToString()));
+            }
+        }
+    }
+}
