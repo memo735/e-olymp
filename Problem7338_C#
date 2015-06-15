@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem7338
+{
+    internal class Program
+    {
+        private static int ReqemCemi(string a)
+        {
+            var cem = 0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                cem = cem + int.Parse(a[i].ToString());
+            }
+            return cem;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            var say = 0;
+            for (int i = 10; i < 100; i++)
+            {
+                if (ReqemCemi(i.ToString()) == ReqemCemi((i*n).ToString()))
+                {
+                    say = say + 1;
+                }
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
