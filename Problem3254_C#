@@ -1,0 +1,15 @@
+using System;
+
+namespace Problem3254
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            eded = eded.TrimStart('0');
+            if (eded == "") eded = "0";
+            Console.WriteLine(Convert.ToInt32(eded, 2));
+        }
+    }
+}
