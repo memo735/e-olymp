@@ -1,0 +1,40 @@
+using System;
+
+namespace Problem441
+{
+    internal class Program
+    {
+        private static int SifirSayi(int x)
+        {
+            int say = 0;
+            while (x%10 == 0)
+            {
+                x = x/10;
+                say++;
+            }
+            return say;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int maxSifir = -1;
+            int kicikEded = -1;
+            for (int i = 0; i < n; i++)
+            {
+                int eded = int.Parse(Console.ReadLine());
+                int cariSifir = SifirSayi(eded);
+                if (maxSifir < cariSifir)
+                {
+                    maxSifir = cariSifir;
+                    kicikEded = eded;
+                }
+                else
+                {
+                    if ((maxSifir == cariSifir) && (eded < kicikEded)) kicikEded = eded;
+                }
+            }
+            Console.WriteLine(kicikEded);
+        }
+    }
+}
