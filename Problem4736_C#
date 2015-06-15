@@ -1,0 +1,14 @@
+using System;
+using System.Numerics;
+
+namespace Problem4736
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            var x = BigInteger.Parse(Console.ReadLine());
+            Console.WriteLine(x%11 == 0 ? "Yes" : "No");
+        }
+    }
+}
