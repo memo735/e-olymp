@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem1124
+{
+    internal class Program
+    {
+        private static char Herf(int x)
+        {
+            string elifba = "abcdefghijklmnopqrstuvwxyz";
+            return elifba[x - 1];
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 1; i <= n; i++) //i - burada i-ci setri gosterir
+            {
+                string setir = "a";
+                for (int j = 1; j <= n - i; j++) //j - burada noqtelerin sayini gosterir
+                {
+                    setir = setir + " ";
+                }
+                for (int k = 1; k <= i; k++)
+                {
+                    setir = setir + Herf(k);
+                }
+                Console.WriteLine(setir);
+            }
+        }
+    }
+}
