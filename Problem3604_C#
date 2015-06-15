@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem3604
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double a = double.Parse(massiv[0]);
+            double b = double.Parse(massiv[1]);
+            Console.WriteLine("{0:N8}", 100/(b - a));
+        }
+    }
+}
