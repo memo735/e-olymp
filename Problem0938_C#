@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem938
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double x1 = double.Parse(massiv[0]);
+            double y1 = double.Parse(massiv[1]);
+            double x2 = double.Parse(massiv[2]);
+            double y2 = double.Parse(massiv[3]);
+            double a = double.Parse(massiv[4]);
+            double x = (x1 + a*x2)/(1 + a);
+            double y = (y1 + a*y2)/(1 + a);
+            Console.WriteLine("{0:N2} {1:N2}", x, y);
+        }
+    }
+}
