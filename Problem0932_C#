@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem932
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int s = int.Parse(massiv[0]);
+            int a = int.Parse(massiv[1]);
+            Console.WriteLine("{0:N2}", (-a + Math.Sqrt(a*a + 8*s))/2.0);
+        }
+    }
+}
