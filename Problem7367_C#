@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem7367
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            double n = double.Parse(Console.ReadLine());
+            double qacdi = 0;
+            double qacacaq = 10;
+            int gun = 0;
+            while (qacdi < n)
+            {
+                qacdi = qacdi + qacacaq;
+                gun++;
+                qacacaq = qacacaq*1.1;
+            }
+            Console.WriteLine(gun);
+        }
+    }
+}
