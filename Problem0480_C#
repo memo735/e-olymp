@@ -1,0 +1,18 @@
+using System;
+using System.Numerics;
+
+namespace Problem480
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            long a = long.Parse(massiv[0]);
+            long b = long.Parse(massiv[1]);
+            long c = long.Parse(massiv[2]);
+            Console.WriteLine(BigInteger.ModPow(a, b, c));
+        }
+    }
+}
