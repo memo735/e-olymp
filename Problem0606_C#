@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem606
+{
+    internal class Program
+    {
+        private static int Hesabla(int n)
+        {
+            char[] c1 = n.ToString().ToCharArray();
+            char[] c2 = (n + 1).ToString().ToCharArray();
+            int say = 0;
+            int len = c1.Length;
+            for (int i = 0; i < len; i++)
+            {
+                say = say + (c1[i] == c2[i] ? 0 : 1);
+            }
+            return say;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int cem = 0;
+            for (int i = n; i < 9999; i++)
+            {
+                cem = cem + Hesabla(i);
+            }
+            Console.WriteLine(cem);
+        }
+    }
+}
