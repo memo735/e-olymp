@@ -1,0 +1,31 @@
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+
+    TreeMap<Integer, Integer> m = new TreeMap<Integer, Integer>(new Comparator<Integer>() {
+      @Override
+      public int compare(Integer o1, Integer o2) {
+        return o2-o1;
+      }
+    });
+    for(int i=1, t=in.nextInt(); i<=t; i++) {
+      m.put(in.nextInt(), i);
+    }
+
+    int min = Integer.MAX_VALUE, x1 = Integer.MIN_VALUE, i1 = -1, i2 = -1;
+    for(int x2 : m.descendingKeySet()) {
+      if(x1 != Integer.MIN_VALUE && x2-x1 < min) {
+        min = x2-x1;
+        i1 = m.get(x1);
+        i2 = m.get(x2);
+      }
+      x1 = x2;
+    }
+    System.out.println(min);
+    System.out.println(Math.min(i1, i2) + " " + Math.max(i1, i2));
+  }
+}
