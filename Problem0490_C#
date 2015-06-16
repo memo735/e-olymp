@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem490
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            int length = setir.Length;
+            string cavab = setir[0] == '0' ? "0" : "1";
+            for (int i = 1; i < length; i++)
+            {
+                cavab = (setir[i] == setir[i - 1]) ? cavab + "0" : cavab + "1";
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
