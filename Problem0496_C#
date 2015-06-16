@@ -1,0 +1,35 @@
+using System;
+
+namespace Problem475
+{
+    internal class Program
+    {
+        private static string Yoxla(string x)
+        {
+            var massiv = x.Split(' ');
+            string s1 = massiv[0];
+            string s2 = massiv[1];
+            if (s1.Length != s2.Length) return "No";
+
+            int length = s1.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (s1[i] != s2[length - 1 - i]) break;
+            }
+            return "Yes";
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string cavab = "";
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                cavab = cavab + Yoxla(setir) + "\n";
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
