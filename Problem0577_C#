@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem577
+{
+    internal class Program
+    {
+        private static int ReqemSayi(int x)
+        {
+            if (x < 10) return 1;
+            if (x < 100) return 2;
+            if (x < 1000) return 3;
+            return 4;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int seh = 3;
+            while (n > 0)
+            {
+                seh++;
+                n = n - ReqemSayi(seh);
+            }
+            Console.WriteLine(seh);
+        }
+    }
+}
