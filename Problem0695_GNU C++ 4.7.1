@@ -1,0 +1,38 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+#include <climits>
+using namespace std;
+#define length 100000
+ 
+int main()
+{
+    int a[length];
+    for(long long i=1; i<=length; i++)
+    {
+        a[i-1]=((i%12345)*(i%12345))%12345+((i%23456)*(i%23456)%23456*i%23456)%23456; //заполнение массива
+    }
+    int k,x,y,result;
+    cin>>k; 
+    int mmax,mmin; //переменные для хранения максимума и минимума на отрезке
+    for(int i=0;i<k;i++)
+    {
+        cin >> x >> y;
+        mmax=INT_MIN;
+        mmin=INT_MAX;
+        if(x>0)
+        {
+            for(int i=x-1;i<y;i++) //поиск максимума и минимума на отрезке [x,y]
+            {
+                if(mmax<a[i]) mmax=a[i];
+                if(mmin>a[i]) mmin=a[i];
+            }
+            cout << mmax-mmin << endl;
+        }
+        else
+        {
+            x*=-1;
+            a[x-1]=y; //замена x-го элемента на y
+        }
+    }
+}
