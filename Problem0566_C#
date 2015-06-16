@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem566
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int k = int.Parse(Console.ReadLine());
+            string cavab = "";
+            for (int i = 0; i < k; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                int m = int.Parse(massiv[0]);
+                int n = int.Parse(massiv[1]);
+                int kvadrat = 0;
+                int duzbucaqli = 0;
+                for (int j = 1; j <= m; j++)
+                {
+                    for (int t = 1; t <= n; t++)
+                    {
+                        int c = Math.Max(m - j + 1, 0)*Math.Max(n - t + 1, 0);
+                        if (j == t) kvadrat = kvadrat + c;
+                        else duzbucaqli = duzbucaqli + c;
+                    }
+                }
+                cavab = cavab + kvadrat + " " + duzbucaqli + "\n";
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
