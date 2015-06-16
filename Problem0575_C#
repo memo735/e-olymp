@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem575
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int k = int.Parse(Console.ReadLine());
+            Console.WriteLine(k < 3 ? k : 3*(k - 2));
+        }
+    }
+}
