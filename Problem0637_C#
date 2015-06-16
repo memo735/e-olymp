@@ -1,0 +1,16 @@
+using System;
+using System.Numerics;
+
+namespace Problem637
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            //cavab = 2^(n^2)-1
+            BigInteger cavab = BigInteger.Pow(2, n*n) - 1;
+            Console.WriteLine(cavab);
+        }
+    }
+}
