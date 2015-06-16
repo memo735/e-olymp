@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem511
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int k = int.Parse(massiv[1]);
+            int a = 1;
+            int b = n;
+            int say = 1;
+            int m = (a + b)/2;
+            while (m != k)
+            {
+                if (m > k) b = m - 1;
+                else a = m + 1;
+                m = (a + b)/2;
+                say++;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
