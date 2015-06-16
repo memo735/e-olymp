@@ -1,0 +1,34 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem537
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string cavab = "";
+            string setir = Console.ReadLine();
+            while (setir[0] != '0')
+            {
+                int n = int.Parse(setir);
+                List<int> siyahi = new List<int>();
+                for (int i = 0; i < n; i++)
+                {
+                    setir = Console.ReadLine();
+                    var massiv = setir.Split(' ');
+                    int len = massiv.Length;
+                    for (int j = 0; j < len; j++)
+                    {
+                        int cari = int.Parse(massiv[j]);
+                        if (!siyahi.Contains(cari)) siyahi.Add(cari);
+                    }
+                }
+                cavab = siyahi.Count < 49 ? cavab + "No\n" : cavab + "Yes\n";
+                setir = Console.ReadLine();
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
