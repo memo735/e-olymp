@@ -1,0 +1,19 @@
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int n1 = c(Integer.toString(in.nextInt(), in.nextInt())),
+        n2 = c(Integer.toString(in.nextInt(), in.nextInt()));
+    System.out.println(n1 == n2 ? n1 : 0);
+  }
+
+  private static int c(String s) {
+    int sum = 0;
+    for(char c : s.toCharArray()) {
+      if('0' <= c && c <= '9') sum += c - '0';
+      else sum += c - 'a' + 10;
+    }
+    return sum;
+  }
+}
