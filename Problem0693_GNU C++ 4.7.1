@@ -1,0 +1,30 @@
+#include <iostream>
+#include <stack>
+#include <utility>
+#include <algorithm>
+using namespace std;
+ 
+const long long mod = 1000000;
+stack <pair <long long, long long> > st;
+ 
+int main()
+{
+    long long n, a, b, c, x, ans=0;
+	cin >> n >> a >> b >> c >> x;
+	while (n--)
+    {
+        x=(a*x*x+b*x+c)/100%mod;
+		if (x%5<2)
+        {
+			if (!st.empty()) st.pop();
+		}
+		else
+        {
+			long long mini = st.empty() ? x : min(x, st.top().second);
+			st.push(make_pair(x, mini));
+		} 
+		if (!st.empty()) ans+=st.top().second;
+	}
+	cout << ans << endl;
+	return 0;
+}
