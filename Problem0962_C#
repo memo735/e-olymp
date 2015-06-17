@@ -1,0 +1,41 @@
+using System;
+
+namespace Problem962
+{
+    internal class Program
+    {
+        private static double Mesafe(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+        }
+
+        private static double Max(double a, double b, double c, double d)
+        {
+            double max = a;
+            if (b > max) max = b;
+            if (c > max) max = c;
+            if (d > max) max = d;
+            return max;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double xA = double.Parse(massiv[0]);
+            double yA = double.Parse(massiv[1]);
+            double xB = double.Parse(massiv[2]);
+            double yB = double.Parse(massiv[3]);
+            double xC = double.Parse(massiv[4]);
+            double yC = double.Parse(massiv[5]);
+            double xD = double.Parse(massiv[6]);
+            double yD = double.Parse(massiv[7]);
+
+            double AB = Mesafe(xA, yA, xB, yB);
+            double BC = Mesafe(xB, yB, xC, yC);
+            double CD = Mesafe(xC, yC, xD, yD);
+            double DA = Mesafe(xD, yD, xA, yA);
+            Console.WriteLine("{0:N2}", Max(AB, BC, CD, DA));
+        }
+    }
+}
