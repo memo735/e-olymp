@@ -1,0 +1,8 @@
+var a,b,kos,sinus,sahe: Real;
+const pi=3.1415926535897932384626433832795;
+begin
+  readln(b,a); a:=a*pi/180;
+  kos:=cos(a); sinus:=sin(a);
+  sahe:=2*b*b*kos*(kos+sqrt(1+sinus*sinus));
+  writeln(sahe:0:3);
+end.
