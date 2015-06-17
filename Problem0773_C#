@@ -1,0 +1,47 @@
+using System;
+
+namespace Problem773
+{
+    internal class Program
+    {
+        private static int Hesabla(byte x)
+        {
+            if (x == 1) return 2;
+            if (x == 2) return 4;
+            if (x == 3) return 6;
+            if (x == 4) return 10;
+            if (x == 5) return 16;
+            if (x == 6) return 26;
+            if (x == 7) return 42;
+            if (x == 8) return 68;
+            if (x == 9) return 110;
+            if (x == 10) return 178;
+            if (x == 11) return 288;
+            if (x == 12) return 466;
+            if (x == 13) return 754;
+            if (x == 14) return 1220;
+            if (x == 15) return 1974;
+            if (x == 16) return 3194;
+            if (x == 17) return 5168;
+            if (x == 18) return 8362;
+            if (x == 19) return 13530;
+            if (x == 20) return 21892;
+            if (x == 21) return 35422;
+            if (x == 22) return 57314;
+            if (x == 23) return 92736;
+            if (x == 24) return 150050;
+            if (x == 25) return 242786;
+            if (x == 26) return 392836;
+            if (x == 27) return 635622;
+            if (x == 28) return 1028458;
+            if (x == 29) return 1664080;
+            return 2692538;
+        }
+
+        public static void Main(string[] args)
+        {
+            byte n = byte.Parse(Console.ReadLine());
+            Console.WriteLine(Hesabla(n));
+        }
+    }
+}
