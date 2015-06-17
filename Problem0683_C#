@@ -1,0 +1,41 @@
+using System;
+using System.Text;
+
+namespace Problem683
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            int[,] a = new int[n, m];
+            for (int i = 0; i < n; i++)
+            {
+                setir = Console.ReadLine();
+                massiv = setir.Split(' ');
+                for (int j = 0; j < m; j++)
+                {
+                    a[i, j] = int.Parse(massiv[j]);
+                }
+            }
+            for (int i = 0; i < n; i++)
+            {
+                StringBuilder cavab = new StringBuilder();
+                for (int j = 0; j < m; j++)
+                {
+                    int cari = i%2;
+                    a[cari, j] = a[i, j];
+                    if (j > 0) a[cari, j] = a[cari, j] + a[cari, j - 1];
+                    if (i > 0) a[cari, j] = a[cari, j] + a[1 - cari, j];
+                    if (i > 0 && j > 0) a[cari, j] = a[cari, j] - a[1 - cari, j - 1];
+                    cavab = cavab.Append(a[cari, j]);
+                    if (j < m - 1) cavab.Append(' ');
+                }
+                Console.WriteLine(cavab);
+            }
+        }
+    }
+}
