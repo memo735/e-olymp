@@ -1,0 +1,7 @@
+var a,b,h: Integer; sahe: Real;
+
+begin
+  readln(a,b,h);
+  sahe:=(a+b)*sqrt((a-b)*(a-b)+4*h*h);
+  writeln(sahe:0:2);
+end.
