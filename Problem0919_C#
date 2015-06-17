@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem919
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int say = 0;
+            double cem = 0;
+            for (int i = 2; i < n; i = i + 3)
+            {
+                double cari = double.Parse(massiv[i]);
+                if (cari > 0)
+                {
+                    say++;
+                    cem = cem + cari;
+                }
+            }
+            Console.WriteLine("{0} {1:N2}", say, cem);
+        }
+    }
+}
