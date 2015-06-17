@@ -1,0 +1,33 @@
+using System;
+using System.Numerics;
+
+namespace Problem704
+{
+    internal class Program
+    {
+        private static char Hesabla(int x)
+        {
+            BigInteger hasil = 1;
+            for (int i = 2; i <= x; i++)
+            {
+                hasil = BigInteger.Multiply(hasil, i);
+            }
+            string cavab = hasil.ToString().TrimEnd('0');
+            int len = cavab.Length;
+            return cavab[len - 1];
+        }
+
+        public static void Main(string[] args)
+        {
+            int t = int.Parse(Console.ReadLine());
+            string cavab = "";
+            for (int i = 0; i < t; i++)
+            {
+                int n = int.Parse(Console.ReadLine());
+                cavab = cavab + Hesabla(n) + "\n";
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
