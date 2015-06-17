@@ -9,13 +9,22 @@ namespace Problem836
         {
             if ((x == 0) || (x == 1)) return false;
             if ((x == 2) || (x == 3)) return true;
-            if (x%2 == 0) return false;
-            int kok = (int) Math.Sqrt(x) + 1;
+            if (x % 2 == 0) return false;
+            int kok = (int)Math.Sqrt(x) + 1;
             for (int i = 3; i < kok; i = i + 2)
             {
-                if (x%i == 0) return false;
+                if (x % i == 0) return false;
             }
             return true;
+        }
+
+        private static void TrimEND(StringBuilder setir, char simvol)
+        {
+            int len = setir.Length;
+            if (len > 0)
+            {
+                if (setir[len - 1] == simvol) setir.Length = len - 1;
+            }
         }
 
         public static void Main(string[] args)
@@ -35,12 +44,9 @@ namespace Problem836
             {
                 if (Sade(i)) cavab.Append(i + "\n");
             }
+            TrimEND(cavab,'\n');
             int len = cavab.Length;
-            if (len > 1)
-            {
-                cavab.Remove(cavab.Length - 1, 1);
-            }
-            if (len < 2) Console.WriteLine("Absent");
+            if (len < 1) Console.WriteLine("Absent");
             else Console.WriteLine(cavab);
         }
     }
