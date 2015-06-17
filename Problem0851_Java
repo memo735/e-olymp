@@ -1,0 +1,21 @@
+import java.util.Locale;
+import java.util.Scanner;
+
+//Coxbucaqlinin sahesi
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int n = in.nextInt()-1, a = in.nextInt(), b = in.nextInt(),
+        sum = 0, c, d, x = a, y = b;
+
+    while(n-- > 0) {
+      c = in.nextInt();
+      d = in.nextInt();
+      sum += a * d - c * b;
+      a = c;
+      b = d;
+    }
+    sum += a * y - x * b;
+    System.out.printf(Locale.US, "%.1f\n", Math.abs(sum) / 2.0);
+  }
+}
