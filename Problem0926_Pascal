@@ -1,0 +1,12 @@
+var a,b,c,d,f,sahe: Real;
+
+function Heron(a,b,c: Real): Real;
+begin
+  Heron:=sqrt((a+b+c)*(a+b-c)*(a+c-b)*(b+c-a))/4;
+end;
+
+begin
+  readln(a,b,c,d,f);
+  sahe:=Heron(a,b,f)+Heron(c,d,f);
+  writeln(sahe:0:4);
+end.
