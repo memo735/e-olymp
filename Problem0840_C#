@@ -9,7 +9,7 @@ namespace Problem840
         {
             BigInteger m = BigInteger.Parse(Console.ReadLine());
             BigInteger n = BigInteger.Parse(Console.ReadLine());
-            Console.WriteLine(BigInteger.Add(m, n));
+            Console.WriteLine(m + n);
         }
     }
 }
