@@ -1,0 +1,42 @@
+using System;
+
+namespace Problem749
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(':');
+            long hh = long.Parse(massiv[0]);
+            long mm = long.Parse(massiv[1]);
+            long ss = long.Parse(massiv[2]);
+            long s = 3600*hh + 60*mm + ss;
+            setir = Console.ReadLine();
+            massiv = setir.Split(':');
+            int len = massiv.Length;
+            long saat, deq, san = 0;
+            if (len == 1) san = long.Parse(massiv[0]);
+            if (len == 2)
+            {
+                deq = long.Parse(massiv[0]);
+                san = long.Parse(massiv[1]);
+                san = san + 60*deq;
+            }
+            if (len == 3)
+            {
+                saat = long.Parse(massiv[0]);
+                deq = long.Parse(massiv[1]);
+                san = long.Parse(massiv[2]);
+                san = san + 60*deq + 3600*saat;
+            }
+            san = san + s;
+            long gun = san/86400;
+            saat = (san - 86400*gun)/3600;
+            deq = (san - 86400*gun - 3600*saat)/60;
+            san = san - 86400*gun - 3600*saat - 60*deq;
+            if (gun < 1) Console.WriteLine("{0:D2}:{1:D2}:{2:D2}", saat, deq, san);
+            else Console.WriteLine("{0:D2}:{1:D2}:{2:D2}+{3} days", saat, deq, san, gun);
+        }
+    }
+}
