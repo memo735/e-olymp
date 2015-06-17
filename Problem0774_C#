@@ -1,0 +1,18 @@
+using System;
+
+namespace Problem774
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int r = int.Parse(massiv[0]);
+            int w = int.Parse(massiv[1]);
+            int l = int.Parse(massiv[2]);
+            //diaqonal diametrden kicikse, HE, eks halda YOX
+            Console.WriteLine(Math.Sqrt(w*w + l*l) <= 2*r ? "YES" : "NO");
+        }
+    }
+}
