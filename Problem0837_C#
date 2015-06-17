@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem837
+{
+    internal class Program
+    {
+        private static void Permutasiya(string p, string setir)
+        {
+            int n = setir.Length;
+            if (n == 0) Console.WriteLine(p);
+            else
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    Permutasiya(p + setir[i], setir.Substring(0, i) + setir.Substring(1 + i));
+                }
+            }
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            char[] simvol = setir.ToCharArray();
+            Array.Sort(simvol);
+            Permutasiya("", new string(simvol));
+        }
+    }
+}
