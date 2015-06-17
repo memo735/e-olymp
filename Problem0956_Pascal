@@ -1,0 +1,7 @@
+var v,h,sahe: Real;
+
+begin
+  readln(v,h);
+  sahe:=sqrt(9*v*v+12*v*h*h*h)/h;
+  writeln(sahe:0:1);
+end.
