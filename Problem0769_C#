@@ -1,0 +1,40 @@
+using System;
+
+namespace Problem769
+{
+    internal class Program
+    {
+        private static int HesablaX(int x1, int x2, int x3)
+        {
+            if (x1 == x2) return x3;
+            if (x1 == x3) return x2;
+            return x1;
+        }
+
+        private static int HesablaY(int y1, int y2, int y3)
+        {
+            if (y1 == y2) return y3;
+            if (y1 == y3) return y2;
+            return y1;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int x1 = int.Parse(massiv[0]);
+            int y1 = int.Parse(massiv[1]);
+
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            int x2 = int.Parse(massiv[0]);
+            int y2 = int.Parse(massiv[1]);
+
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            int x3 = int.Parse(massiv[0]);
+            int y3 = int.Parse(massiv[1]);
+            Console.WriteLine(HesablaX(x1, x2, x3) + " " + HesablaY(y1, y2, y3));
+        }
+    }
+}
