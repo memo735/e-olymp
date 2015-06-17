@@ -1,0 +1,7 @@
+var r1,r2,h,sahe: Real;
+const pi=3.1415926535897932384626433832795;
+begin
+  readln(r1,r2,h);
+  sahe:=pi*(r1*r1+r2*r2+(r1+r2)*sqrt((r1-r2)*(r1-r2)+h*h));
+  writeln(sahe:0:2);
+end.
