@@ -1,0 +1,16 @@
+var x1,y1,x2,y2,x3,y3,a,b,c,perimetr,sahe: Real;
+
+function Mesafe(x,y,x0,y0: Real): Real;
+begin
+  Mesafe:=sqrt((x-x0)*(x-x0)+(y-y0)*(y-y0));
+end;
+
+begin
+  readln(x1,y1,x2,y2,x3,y3);
+  a:=Mesafe(x1,y1,x2,y2);
+  b:=Mesafe(x1,y1,x3,y3);
+  c:=Mesafe(x2,y2,x3,y3);
+  perimetr:=a+b+c;
+  sahe:=sqrt((a+b+c)*(a+b-c)*(a+c-b)*(b+c-a))/4;
+  writeln(perimetr:0:4,' ',sahe:0:4);
+end.
