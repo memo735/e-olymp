@@ -5,6 +5,15 @@ namespace Problem593
 {
     internal class Program
     {
+        private static void TrimEND(StringBuilder setir, char simvol)
+        {
+            int len = setir.Length;
+            if (len > 0)
+            {
+                if (setir[len - 1] == simvol) setir.Length = len - 1;
+            }
+        }
+
         public static void Main(string[] args)
         {
             string setir = Console.ReadLine();
@@ -14,7 +23,7 @@ namespace Problem593
             StringBuilder cavab = new StringBuilder();
             for (int i = 0; i < n; i++)
             {
-                bool ok = (i%2 != n%2);
+                bool ok = (i % 2 != n % 2);
                 for (int j = 0; j < m; j++)
                 {
                     cavab.Append(ok ? '.' : 'X');
@@ -22,7 +31,8 @@ namespace Problem593
                 }
                 cavab.Append('\n');
             }
-            Console.WriteLine(cavab.ToString().TrimEnd('\n'));
+            TrimEND(cavab, '\n');
+            Console.WriteLine(cavab);
         }
     }
 }
