@@ -1,0 +1,47 @@
+using System;
+using System.Text;
+
+namespace Problem836
+{
+    internal class Program
+    {
+        private static bool Sade(int x)
+        {
+            if ((x == 0) || (x == 1)) return false;
+            if ((x == 2) || (x == 3)) return true;
+            if (x%2 == 0) return false;
+            int kok = (int) Math.Sqrt(x) + 1;
+            for (int i = 3; i < kok; i = i + 2)
+            {
+                if (x%i == 0) return false;
+            }
+            return true;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int m = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]);
+            if (m > n)
+            {
+                int komekci = m;
+                m = n;
+                n = komekci;
+            }
+            StringBuilder cavab = new StringBuilder();
+            for (int i = m; i <= n; i++)
+            {
+                if (Sade(i)) cavab.Append(i + "\n");
+            }
+            int len = cavab.Length;
+            if (len > 1)
+            {
+                cavab.Remove(cavab.Length - 1, 1);
+            }
+            if (len < 2) Console.WriteLine("Absent");
+            else Console.WriteLine(cavab);
+        }
+    }
+}
