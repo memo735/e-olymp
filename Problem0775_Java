@@ -1,0 +1,18 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int k = in.nextInt(), c = in.nextInt() * in.nextInt(),
+        ns[] = new int[k];
+
+    for(int i=0; i<k; i++) ns[i] = in.nextInt();
+    Arrays.sort(ns);
+
+    int i=ns.length-1;
+    while(c > 0)
+      c -= ns[i--];
+    System.out.println(ns.length-i-1);
+  }
+}
