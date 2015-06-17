@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem937
+{
+    internal class Program
+    {
+        private static int ReqemHasili(int x)
+        {
+            int hasil = 1;
+            while (x > 0)
+            {
+                hasil = hasil*(x%10);
+                x = x/10;
+            }
+            return hasil;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n < 0) n = -n;
+            Console.WriteLine(ReqemHasili(n));
+        }
+    }
+}
