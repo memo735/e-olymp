@@ -1,0 +1,45 @@
+using System;
+
+namespace Problem891
+{
+    internal class Program
+    {
+        private static int Hesabla(int a, int b, int c)
+        {
+            int max = 0;
+            int qiymet = 0;
+            int bmax = c/b;
+            for (int bi = 0; bi <= bmax; bi++)
+            {
+                int ai = (c - b*bi)/a;
+                int cariQiymet = a*ai + b*bi;
+                int cariSay = ai + bi;
+                if (max <= cariSay)
+                {
+                    if (cariQiymet > qiymet)
+                    {
+                        max = cariSay;
+                        qiymet = cariQiymet;
+                    }
+                }
+            }
+            return qiymet;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int c = int.Parse(massiv[2]);
+            if (a > b)
+            {
+                int komekci = a;
+                a = b;
+                b = komekci;
+            }
+            Console.WriteLine(Hesabla(a, b, c));
+        }
+    }
+}
