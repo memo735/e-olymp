@@ -1,0 +1,13 @@
+var n,i,say,x: Integer; cem: LongInt;
+begin
+  readln(n); say:=0; cem:=0;
+  for i:=1 to n do
+    begin
+      read(x);
+      if (x>0) and (x mod 6 = 0) then
+        begin
+          say:=say+1; cem:=cem+x;
+        end;
+    end;
+  writeln(say,' ',cem);  
+end.
