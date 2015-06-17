@@ -1,0 +1,8 @@
+var d,p, sahe,hecm: Real;
+
+begin
+  readln(d,p);
+  sahe:=d*(d+sqrt(4*p*p-d*d));
+  hecm:=d*d*sqrt(p*p-d*d/2)/3;
+  writeln(sahe:0:3,' ',hecm:0:3);
+end.
