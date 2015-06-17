@@ -1,0 +1,17 @@
+using System;
+using System.Numerics;
+
+namespace Problem834
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]);
+            Console.WriteLine(BigInteger.Pow(a, n));
+        }
+    }
+}
