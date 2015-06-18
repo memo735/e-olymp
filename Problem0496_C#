@@ -11,10 +11,10 @@ namespace Problem475
             string s2 = massiv[1];
             if (s1.Length != s2.Length) return "No";
 
-            int length = s1.Length;
-            for (int i = 0; i < length; i++)
+            int len = s1.Length;
+            for (int i = 0; i < len; i++)
             {
-                if (s1[i] != s2[length - 1 - i]) break;
+                if (s1[i] != s2[len - 1 - i]) break;
             }
             return "Yes";
         }
