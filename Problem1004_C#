@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem1004
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int max = n;
+            string eded = Convert.ToString(n, 2);
+            int len = eded.Length;
+            for (int i = 0; i < len; i++)
+            {
+                eded = eded[len - 1] + eded.Substring(0, len - 1);
+                int cari = Convert.ToInt32(eded, 2);
+                if (cari > max) max = cari;
+            }
+            Console.WriteLine(max);
+        }
+    }
+}
