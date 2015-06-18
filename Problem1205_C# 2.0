@@ -1,0 +1,22 @@
+using System;
+using System.Numerics;
+
+namespace Problem1205
+{
+    internal class Program
+    {
+        private static int nYuvadanKok(int n, BigInteger p)
+        {
+            return (int) Math.Round(Math.Exp(BigInteger.Log(p)/n));
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            BigInteger p = BigInteger.Parse(massiv[1]);
+            Console.WriteLine(nYuvadanKok(n, p));
+        }
+    }
+}
