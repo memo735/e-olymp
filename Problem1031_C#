@@ -1,0 +1,42 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem1031
+{
+    internal class Program
+    {
+        private static string Sirala(double x, int max)
+        {
+            for (int suret = 1; suret <= max; suret++)
+            {
+                for (int mexrec = 2; mexrec <= max; mexrec++)
+                {
+                    if (suret/(mexrec + 0.0) == x) return suret + "/" + mexrec;
+                }
+            }
+            return "1/1";
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            List<double> qiymet = new List<double>();
+            for (int suret = 1; suret < n; suret++)
+            {
+                for (int mexrec = suret + 1; mexrec <= n; mexrec++)
+                {
+                    double cari = suret/(mexrec + 0.0);
+                    if (!qiymet.Contains(cari)) qiymet.Add(cari);
+                }
+            }
+            qiymet.Sort();
+            int len = qiymet.Count;
+            Console.WriteLine("0/1");
+            for (int i = 0; i < len; i++)
+            {
+                Console.WriteLine(Sirala(qiymet[i], n));
+            }
+            Console.WriteLine("1/1");
+        }
+    }
+}
