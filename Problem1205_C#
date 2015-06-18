@@ -1,0 +1,41 @@
+using System;
+using System.Numerics;
+
+namespace Problem1205
+{
+    internal class Program
+    {
+        private static BigInteger invPow(int n, BigInteger p)
+        {
+            BigInteger high = 1;
+            BigInteger mid = 0;
+            BigInteger two = 2;
+            while (BigInteger.Pow(high, n).CompareTo(p) == -1) high = high*two;
+            BigInteger low = high/two;
+            while (low.CompareTo(high) == -1)
+            {
+                mid = (high + low)/two;
+                if (low.CompareTo(mid) == -1 && BigInteger.Pow(mid, n).CompareTo(p) == -1) low = mid;
+                else
+                {
+                    if (high.CompareTo(mid) == 1 && BigInteger.Pow(mid, n).CompareTo(p) == 1) high = mid;
+                    else
+                    {
+                        if (BigInteger.Pow(mid, n).CompareTo(p) == 0) return mid;
+                        break;
+                    }
+                }
+            }
+            return mid + 1;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            BigInteger p = BigInteger.Parse(massiv[1]);
+            Console.WriteLine(invPow(n, p));
+        }
+    }
+}
