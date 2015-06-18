@@ -1,0 +1,61 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+public class Main {
+
+  static int[] b;
+  static int res = 0;
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+
+    int n = in.nextInt(), i;
+    if(n == 0 || n == 1) {
+      for(i=0; i<n; i++) in.nextInt();
+      System.out.println("0");
+    }
+    else {
+      ArrayList<Integer> list = new ArrayList<Integer>();
+      for(i=0; i<n; i++) list.add(in.nextInt());
+      f(list);
+      System.out.println(res);
+    }
+  }
+
+  private static void f(ArrayList<Integer> a) {
+    int i, len = a.size();
+    int min = a.get(len-1), index = len;
+    int lmin = Integer.MAX_VALUE;
+    int now;
+
+    while(true) {
+      for(i=len-1; i>=0; i--) {
+        now = a.get(i);
+        if(now<min) {
+          min = now;
+        } else if(now>min){
+          if(now<lmin) {
+            index = i;
+            lmin = now;
+          }
+        }
+      }
+
+      if(index == len) break;
+      else {
+        swap(a, index);
+        min = a.get(len-1);
+        index = len;
+        lmin = Integer.MAX_VALUE;
+      }
+
+    }
+  }
+
+  private static void swap(ArrayList<Integer> a, int i) {
+    int v = a.get(i);
+    a.remove(i);
+    a.add(v);
+    res++;
+  }
+
+}
