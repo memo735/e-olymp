@@ -1,0 +1,76 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+ 
+int check(int row, int col, char** lab, int** visited, queue<int>& plan)
+{//находим количество стен рядом с каждой клеткой
+	int empty = 0;//пустые клетки
+	if(!visited[row][col])
+    {
+        if(lab[row+1][col]=='.')
+        {//проверяем нижнюю клетку
+            empty++;
+			if(!visited[row+1][col]) { plan.push(row+1); plan.push(col); }
+		}
+		if(lab[row-1][col]=='.')
+        {//проверяем верхнюю клетку
+			empty++;
+			if(!visited[row-1][col]) { plan.push(row-1); plan.push(col); }
+		}
+		if(lab[row][col+1]=='.')
+        {//проверяем правую клетку
+			empty++;
+			if(!visited[row][col+1]) { plan.push(row); plan.push(col+1); }
+		}
+		if(lab[row][col-1]=='.')
+        {//проверяем левую клетку
+			empty++;
+			if(!visited[row][col-1]) { plan.push(row); plan.push(col-1); }
+		}
+		visited[row][col]=1;//отмечаем, что клетка пройдена
+		return 4-empty;//количество стен рядом с клеткой
+	}
+	return 0;
+}
+ 
+int main()
+{
+	int N; cin >> N;
+	char** lab = new char* [N+2];
+	int** visited = new int * [N+2];
+	for(int i=0; i<N+2; i++)
+    {
+		lab[i] = new char [N+2];
+		visited[i] = new int [N+2];
+		for(int j=0; j<N+2; j++)
+        {
+			visited[i][j] = 0;//массив для проверки посещённости клеток
+			if(i==0||i==N+1||j==0||j==N+1) lab[i][j]='*';//вокруг данного лабиринта делаем стену
+            else  cin >> lab[i][j];//данный лабиринт
+		}
+	}
+	queue <int> plan;
+	plan.push(1);//начинаем считать с левой верхней клетки
+	plan.push(1); int walls=0;
+	while(!plan.empty())
+    {
+		int row=plan.front(); plan.pop();
+		int col=plan.front(); plan.pop();
+		walls+=check(row, col, lab, visited, plan);
+	}
+	if(!visited[N][N])
+    {//если не попали в правую нижнюю клетку
+		plan.push(N);//считаем начиная с неё
+		plan.push(N);
+		while(!plan.empty())
+        {
+			int row=plan.front(); plan.pop();
+			int col=plan.front(); plan.pop();
+			walls+=check(row, col, lab, visited, plan);
+		}
+	}
+	walls-=4;//стены у левого верхнего и правого нижнего угла отсутствуют
+	int meters=walls*9;
+	cout << meters << endl;
+	return 0;
+}
