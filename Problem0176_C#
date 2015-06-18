@@ -6,9 +6,9 @@ namespace Problem176
     {
         private static int Max(int[] a)
         {
-            int upper = a.Length;
+            int len = a.Length;
             int max = a[0];
-            for (int i = 1; i < upper; i++)
+            for (int i = 1; i < len; i++)
             {
                 if (a[i] > max) max = a[i];
             }
