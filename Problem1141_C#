@@ -1,0 +1,55 @@
+using System;
+
+namespace Problem1141
+{
+    internal class Program
+    {
+        private static int Kicikler(int[] a, int x)
+        {
+            int len = a.Length;
+            int say = 0;
+            for (int i = 0; i < len; i++)
+            {
+                if (a[i] < x) say++;
+            }
+            return say;
+        }
+
+        private static int Boyukler(int[] a, int x)
+        {
+            int len = a.Length;
+            int say = 0;
+            for (int i = 0; i < len; i++)
+            {
+                if (a[i] > x) say++;
+            }
+            return say;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int len = massiv.Length;
+            if (len%2 == 0)
+            {
+                Console.WriteLine("-1");
+                return;
+            }
+            int[] a = new int[len];
+            for (int i = 0; i < len; i++)
+            {
+                a[i] = int.Parse(massiv[i]);
+            }
+            for (int i = 0; i < len; i++)
+            {
+                if (Kicikler(a, a[i]) == Boyukler(a, a[i]))
+                {
+                    Console.WriteLine(a[i]);
+                    return;
+                }
+            }
+            Console.WriteLine("-1");
+        }
+    }
+}
