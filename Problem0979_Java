@@ -1,0 +1,15 @@
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int ns[] = new int[in.nextInt()];
+    for(int i=0; i<ns.length; i++) ns[i] = in.nextInt();
+    int i = ns[in.nextInt()-1], j = ns[in.nextInt()-1];
+    for(int k=0; k<ns.length; k++) if(ns[k] == i) ns[k] = j;
+
+    StringBuilder sb = new StringBuilder().append(ns[0]);
+    for(int k=1; k<ns.length; k++) sb.append(" ").append(ns[k]);
+    System.out.println(sb.toString());
+  }
+}
