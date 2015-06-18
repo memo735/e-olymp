@@ -6,14 +6,11 @@ namespace Problem7340
     {
         public static void Main(string[] args)
         {
-            var soz = Console.ReadLine();
+            string soz = Console.ReadLine();
             int say = 0;
             for (char i = 'A'; i <= 'Z'; i++)
             {
-                if (soz != null && soz.Contains(i.ToString()))
-                {
-                    say++;
-                }
+                if (soz.Contains(i.ToString())) say++;
             }
             Console.WriteLine(say);
         }
