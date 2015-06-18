@@ -1,0 +1,21 @@
+using System;
+using System.Numerics;
+
+namespace Problem1213
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            var a = massiv[0].Split('^');
+            var x = massiv[1].Split('^');
+            BigInteger b = BigInteger.Parse(a[0]);
+            BigInteger y = BigInteger.Parse(x[0]);
+            int c = int.Parse(a[1]);
+            int z = int.Parse(x[1]);
+            Console.WriteLine(BigInteger.Pow(b, c) > BigInteger.Pow(y, z) ? massiv[0] : massiv[1]);
+        }
+    }
+}
