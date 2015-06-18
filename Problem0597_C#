@@ -4,7 +4,6 @@ namespace Problem597
 {
     internal class Program
     {
-
         public static void Main(string[] args)
         {
             int max = int.Parse(Console.ReadLine());
