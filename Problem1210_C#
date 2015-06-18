@@ -1,0 +1,27 @@
+using System;
+using System.Numerics;
+
+namespace Problem1210
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            BigInteger n = BigInteger.Parse(massiv[0]);
+            BigInteger a = BigInteger.Parse(massiv[1]);
+            if (a == 1)
+            {
+                Console.WriteLine(n*(n + 1)/2);
+                return;
+            }
+            BigInteger cem = 0;
+            for (int i = 1; i <= n; i++)
+            {
+                cem = cem + i*BigInteger.Pow(a, i);
+            }
+            Console.WriteLine(cem);
+        }
+    }
+}
