@@ -4,12 +4,13 @@ namespace Problem7338
 {
     internal class Program
     {
-        private static int ReqemCemi(string a)
+        private static int ReqemCemi(int x)
         {
-            var cem = 0;
-            for (int i = 0; i < a.Length; i++)
+            int cem = 0;
+            while (x > 0)
             {
-                cem = cem + int.Parse(a[i].ToString());
+                cem = cem + x%10;
+                x = x/10;
             }
             return cem;
         }
@@ -20,10 +21,7 @@ namespace Problem7338
             var say = 0;
             for (int i = 10; i < 100; i++)
             {
-                if (ReqemCemi(i.ToString()) == ReqemCemi((i*n).ToString()))
-                {
-                    say = say + 1;
-                }
+                if (ReqemCemi(i) == ReqemCemi(i*n)) say++;
             }
             Console.WriteLine(say);
         }
