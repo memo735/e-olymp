@@ -6,18 +6,14 @@ namespace Problem901
     {
         public static void Main(string[] args)
         {
-            var say = 0;
             string s = Console.ReadLine();
-            for (int i = 0; i < s.Length; i++)
+            s = s.TrimStart('-');
+            s = s.TrimStart('+');
+            int len = s.Length;
+            int say = 0;
+            for (int i = 0; i < len; i++)
             {
-                if ((s[i] == '+') || (s[i] == '-') || (s[i] == '*'))
-                {
-                    say = say + 1;
-                }
-            }
-            if ((s[0] == '+') || (s[0] == '-'))
-            {
-                say = say - 1;
+                if ((s[i] == '+') || (s[i] == '-') || (s[i] == '*')) say++;
             }
             Console.WriteLine(say);
         }
