@@ -7,7 +7,7 @@ namespace Problem390
         private static long Faktorial(int x)
         {
             long cavab = 1;
-            for (int i = 2; i <= x; i++) cavab = cavab*i;
+            for (int i = 2; i <= x; i++) cavab = cavab * i;
             return cavab;
         }
 
@@ -15,24 +15,24 @@ namespace Problem390
         {
             string setir = Console.ReadLine();
             string str2 = "";
-            int length = setir.Length;
-            for (int i = 0; i < length; i++)
+            int len = setir.Length;
+            for (int i = 0; i < len; i++)
             {
                 if (!str2.Contains(setir[i].ToString()))
                 {
                     str2 = str2 + setir[i];
                 }
             }
-            int length2 = str2.Length;
-            long cavab = Faktorial(length);
-            for (int i = 0; i < length2; i++)
+            int len2 = str2.Length;
+            long cavab = Faktorial(len);
+            for (int i = 0; i < len2; i++)
             {
                 int say = 0;
-                for (int j = 0; j < length; j++)
+                for (int j = 0; j < len; j++)
                 {
                     if (setir[j] == str2[i]) say++;
                 }
-                cavab = cavab/Faktorial(say);
+                cavab = cavab / Faktorial(say);
             }
             Console.WriteLine(cavab);
         }
