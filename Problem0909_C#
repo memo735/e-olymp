@@ -6,20 +6,9 @@ namespace Problem909
     {
         public static void Main(string[] args)
         {
-            string s = Console.ReadLine();
-            s = s.TrimStart(' ');
-            s = s.TrimEnd(' ');
-            int saygac = 1;
-            while (s.Contains("  "))
-            {
-                s = s.Replace("  ", " ");
-            }
-            int length = s.Length;
-            for (int i = 0; i < length; i++)
-            {
-                if (s[i] == ' ') saygac++;
-            }
-            Console.WriteLine(saygac);
+            string setir = Console.ReadLine().Trim();
+            var massiv = setir.Split(' ');
+            Console.WriteLine(massiv.Length);
         }
     }
 }
