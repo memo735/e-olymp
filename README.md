@@ -14,7 +14,7 @@ Həlli yerləşdirilməyən məsələlər haqqında
 
 Bəzən elə olur ki, müəyyən bir məsələni həll etdikdən sonra həmin həlli (alqoritmi) bura yerləşdirməyi unuduram. Nəzərə alsaq ki, e-olymp.com (e-olimp.com) saytında 7000-dən artıq məsələ var (bunların bəziləri təkrar suallardır), müəyyən məsələni sevincək həll edib, yerləşdirməyi unutmaq zənnimcə, normal fizioloji prosesdir.
 
-Ola bilər ki, məsələni həllini məndən öncə Siz tapmısınız və həmin məsələ burada həll olunmamış kimi görünürsə, tapdığınız həmin həlli Problem[Nomresi_alqoritmin dili] olmaqla əlavə edə bilərsiniz.
+Ola bilər ki, məsələni həllini məndən öncə Siz tapmısınız və həmin məsələ burada həll olunmamış kimi görünürsə, tapdığınız həmin həlli Problem[Nomresi]_[alqoritmin dili] olmaqla əlavə edə bilərsiniz.
 
 Yuxarıda göstərilən hallarla (yerləşdirməyi unutduğum məsələlər və s.) rastlaşsanız, tapdığınız həlli yerləşdirməyi bacarmasanız, lütfən e-mailim@box.az ünvanına həlli (nömrəsi ilə birlikdə) yazıb, göndərin.
 
