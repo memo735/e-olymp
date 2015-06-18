@@ -1,0 +1,32 @@
+using System;
+
+namespace Problem1207
+{
+    internal class Program
+    {
+        private static void Doldur(int[] x, int k)
+        {
+            for (int i = 1; i <= k; i++)
+            {
+                x[i] = x[(int) (i - Math.Sqrt(i))] + x[(int) Math.Log(i)] + x[(int) (i*Math.Pow(Math.Sin(i), 2))];
+                x[i] = x[i]%1000000;
+            }
+        }
+
+        public static void Main(string[] args)
+        {
+            int[] x = new int[1000001];
+            x[0] = 1;
+            string cavab = "";
+            int i = int.Parse(Console.ReadLine());
+            while (i != -1)
+            {
+                if (x[i] == 0) Doldur(x, i);
+                cavab = cavab + x[i] + "\n";
+                i = int.Parse(Console.ReadLine());
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
