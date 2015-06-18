@@ -5,7 +5,7 @@ namespace Problem1205
 {
     internal class Program
     {
-        private static BigInteger invPow(int n, BigInteger p)
+        private static BigInteger nYuvadanKok(int n, BigInteger p)
         {
             BigInteger high = 1;
             BigInteger mid = 0;
@@ -35,7 +35,7 @@ namespace Problem1205
             var massiv = setir.Split(' ');
             int n = int.Parse(massiv[0]);
             BigInteger p = BigInteger.Parse(massiv[1]);
-            Console.WriteLine(invPow(n, p));
+            Console.WriteLine(nYuvadanKok(n, p));
         }
     }
 }
