@@ -1,0 +1,32 @@
+using System;
+
+namespace Problem1119
+{
+    internal class Program
+    {
+        private static void Pramida(char simvol, int h)
+        {
+            int bosluq = h - 1;
+            int simvolSayi = 1;
+            for (int i = 1; i <= h; i++)
+            {
+                string cavab = "";
+                for (int j = 1; j <= bosluq; j++) cavab = cavab + " ";
+                for (int j = 1; j <= simvolSayi; j++) cavab = cavab + simvol;
+                Console.WriteLine(cavab);
+                bosluq--;
+                simvolSayi = simvolSayi + 2;
+            }
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            var simvol = massiv[0][0];
+            int h = int.Parse(massiv[1]);
+            Console.WriteLine((3*h*h - h)/2);
+            Pramida(simvol, h);
+        }
+    }
+}
