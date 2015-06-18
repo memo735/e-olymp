@@ -8,8 +8,8 @@ namespace Problem29
         {
             string y = x.ToString();
             string z = "";
-            int length = y.Length;
-            for (int i = 0; i < length; i++)
+            int len = y.Length;
+            for (int i = 0; i < len; i++)
             {
                 z = y[i] + z;
             }
@@ -21,8 +21,8 @@ namespace Problem29
         {
             string y = x.ToString();
             string z = "";
-            int length = y.Length;
-            for (int i = 0; i < length; i++)
+            int len = y.Length;
+            for (int i = 0; i < len; i++)
             {
                 z = y[i] + z;
             }
