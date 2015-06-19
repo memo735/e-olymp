@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem1274
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string cavab = "";
+            int say = 1;
+            string setir = Console.ReadLine();
+            while (setir != "0")
+            {
+                int n = int.Parse(setir);
+                if (n%2 == 0) cavab = cavab + say + ". even " + (n/2) + "\n";
+                else cavab = cavab + say + ". odd " + (n/2) + "\n";
+                say++;
+                setir = Console.ReadLine();
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
