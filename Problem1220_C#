@@ -1,0 +1,65 @@
+using System;
+
+namespace Problem1220
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++)
+            {
+                y = x[i] + y;
+            }
+            return y;
+        }
+
+        private static int BinToInt(string s)
+        {
+            int len = s.Length;
+            int n = 0;
+            for (int i = len - 1; i > -1; i--)
+            {
+                n = n + (s[i] - '0')*(int) Math.Pow(-2, len - 1 - i);
+            }
+            return n;
+        }
+
+        private static string IntToBin(string x)
+        {
+            int n = int.Parse(x);
+            if (n == 0) return "0";
+            string cavab = "";
+            while (n != 0)
+            {
+                int r = n%(-2);
+                n = n/(-2);
+                if (r < 0)
+                {
+                    r = r + 2;
+                    n++;
+                }
+                cavab = cavab + r;
+            }
+            return Guzgu(cavab);
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string cavab = "";
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                string bd = massiv[0];
+                string eded = massiv[1];
+                if (bd == "b") cavab = cavab + "From binary: " + eded + " is " + BinToInt(eded);
+                else cavab = cavab + "From decimal: " + eded + " is " + IntToBin(eded);
+                if (i < n - 1) cavab = cavab + "\n";
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
