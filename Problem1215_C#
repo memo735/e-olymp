@@ -1,0 +1,47 @@
+using System;
+
+namespace Problem1215
+{
+    internal class Program
+    {
+        private static int Hesabla(string x)
+        {
+            var massiv = x.Split(' ');
+            if (massiv[0] == massiv[1]) return 0;
+            if (massiv[0] == "R" && massiv[1] == "S") return -1;
+            if (massiv[0] == "S" && massiv[1] == "P") return -1;
+            if (massiv[0] == "P" && massiv[1] == "R") return -1;
+            return 1; //-1 Player1 uddu, +1 Player2 uddu
+        }
+
+        public static void Main(string[] args)
+        {
+            int t = int.Parse(Console.ReadLine());
+            string cavab = "";
+            for (int i = 0; i < t; i++)
+            {
+                int n = int.Parse(Console.ReadLine());
+                int Player1 = 0;
+                int Player2 = 0;
+                for (int j = 0; j < n; j++)
+                {
+                    string setir = Console.ReadLine();
+                    int hesab = Hesabla(setir);
+                    if (hesab != 0)
+                    {
+                        if (hesab < 0) Player1++;
+                        else Player2++;
+                    }
+                }
+                if (Player1 == Player2) cavab = cavab + "TIE";
+                else
+                {
+                    if (Player1 > Player2) cavab = cavab + "Player 1";
+                    else cavab = cavab + "Player 2";
+                }
+                if (i < t - 1) cavab = cavab + "\n";
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
