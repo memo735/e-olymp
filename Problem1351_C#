@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem1351
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n < 0) n = -n;
+            int max = 0;
+            while (n > 0)
+            {
+                int cari = n%10;
+                if (cari > max) max = cari;
+                n = n/10;
+            }
+            Console.WriteLine(max);
+        }
+    }
+}
