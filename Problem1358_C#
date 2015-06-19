@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem1358
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            List<ulong> siyahi = new List<ulong> {1, 1};
+            ulong[] fib = new ulong[100];
+            fib[1] = 1;
+            fib[2] = 1;
+            for (int i = 3; i < 100; i++)
+            {
+                fib[i] = fib[i - 1] + fib[i - 2];
+                siyahi.Add(fib[i]);
+            }
+            int k = int.Parse(Console.ReadLine());
+            int say = 0;
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < k; i++)
+            {
+                if (siyahi.Contains(ulong.Parse(massiv[i]))) say++;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
