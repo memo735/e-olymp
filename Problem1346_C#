@@ -1,0 +1,37 @@
+using System;
+
+namespace Problem1346
+{
+    internal class Program
+    {
+        private static int Min(int[] a)
+        {
+            int min = a[0];
+            int len = a.Length;
+            for (int i = 1; i < len; i++)
+            {
+                if (a[i] < min) min = a[i];
+            }
+            return min;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[] a = new int[n];
+            int cem = 0;
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++)
+            {
+                a[i] = int.Parse(massiv[i]);
+            }
+            int min = Min(a);
+            for (int i = 0; i < n; i++)
+            {
+                if (a[i] != min) cem = cem + a[i];
+            }
+            Console.WriteLine(cem);
+        }
+    }
+}
