@@ -1,0 +1,25 @@
+import java.util.TreeSet;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class Main {
+
+  public static void main(String[] args) throws Exception {
+
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    String s;
+    String[] str;
+    TreeSet<String> set = new TreeSet<String>();
+
+    while(br.ready()) {
+      s = br.readLine().replaceAll("[^a-zA-Z]", " ");
+      s = s.toLowerCase();
+      str = s.split(" ");
+      for(String sss : str)
+        if(!sss.equals(""))
+          set.add(sss);
+    }
+
+    for(String ss : set) System.out.println(ss);
+  }
+}
