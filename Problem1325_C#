@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem1325
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            int k = int.Parse(massiv[2]);
+            int[] deshik = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                deshik[i] = int.Parse(massiv[i + 3]);
+            }
+            long vuruq = 1;
+            int min = Math.Min(m, k);
+            int max = Math.Max(m, k);
+            for (int i = min; i <= max; i++) vuruq = vuruq*deshik[i - 1];
+            Console.WriteLine(vuruq);
+        }
+    }
+}
