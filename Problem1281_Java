@@ -1,0 +1,27 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class Main {
+
+  private static int n;
+  private static HashMap<String, Long> dp = new HashMap<String, Long>();
+
+  public static void main(String[] args) {
+    n = new Scanner(System.in).nextInt();
+    System.out.println(solve(0, 0));
+  }
+
+  private static long solve(int whites, int offset) {
+    if(offset == n) return 1;
+
+    String key = String.valueOf(whites) + '-' + String.valueOf(offset);
+    if(dp.containsKey(key)) return dp.get(key);
+    long sum = 0;
+    if(whites < 2)
+      sum += solve(whites + 1, offset + 1);
+    sum += solve(0, offset + 1);
+
+    dp.put(key, sum);
+    return sum;
+  }
+}
