@@ -1,0 +1,60 @@
+using System;
+
+namespace Problem1306
+{
+    internal class Program
+    {
+        private static int getSortedness(string s, int k)
+        {
+            int say = 0;
+            for (int i = 0; i < k - 1; i++)
+            {
+                for (int j = i + 1; j < k; j++)
+                {
+                    if (s[i] > s[j]) say++;
+                }
+            }
+            return say;
+        }
+
+        public static void Main(string[] args)
+        {
+            int m = int.Parse(Console.ReadLine());
+            for (int i = 0; i < m; i++)
+            {
+                Console.ReadLine();
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                int n = int.Parse(massiv[0]);
+                int t = int.Parse(massiv[1]);
+                int[] ns = new int[t];
+                string[] s = new string[t];
+                for (int j = 0; j < t; j++)
+                {
+                    s[j] = Console.ReadLine();
+                    ns[j] = getSortedness(s[j], n);
+                    if (j > 0)
+                    {
+                        string tmps = s[j];
+                        int tmpn = ns[j];
+                        int k = j;
+                        while (k > 0 && ns[k - 1] > tmpn)
+                        {
+                            s[k] = s[k - 1];
+                            ns[k] = ns[k - 1];
+                            k--;
+                        }
+                        s[k] = tmps;
+                        ns[k] = tmpn;
+                    }
+                }
+                int len = s.Length;
+                for (int j = 0; j < len; j++)
+                {
+                    Console.WriteLine(s[j]);
+                }
+                if (i < m - 1) Console.WriteLine();
+            }
+        }
+    }
+}
