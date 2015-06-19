@@ -1,0 +1,44 @@
+using System;
+
+namespace Problem1265
+{
+    internal class Program
+    {
+        private static string Yoxla(int a, int b, int c)
+        {
+            int max = a;
+            if (b > max) max = b;
+            if (c > max) max = c;
+            if (max == a)
+            {
+                return a*a == b*b + c*c ? "right\n" : "wrong\n";
+            }
+            if (max == b)
+            {
+                return b*b == a*a + c*c ? "right\n" : "wrong\n";
+            }
+            if (max == c)
+            {
+                return c*c == a*a + b*b ? "right\n" : "wrong\n";
+            }
+            return "bura gelib cixmamalidi";
+        }
+
+        public static void Main(string[] args)
+        {
+            string cavab = "";
+            string setir = Console.ReadLine();
+            while (setir != "0 0 0")
+            {
+                var massiv = setir.Split(' ');
+                int a = int.Parse(massiv[0]);
+                int b = int.Parse(massiv[1]);
+                int c = int.Parse(massiv[2]);
+                cavab = cavab + Yoxla(a, b, c);
+                setir = Console.ReadLine();
+            }
+            cavab = cavab.TrimEnd('\n');
+            Console.WriteLine(cavab);
+        }
+    }
+}
