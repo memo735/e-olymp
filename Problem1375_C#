@@ -1,0 +1,49 @@
+using System;
+using System.Text;
+
+namespace Problem1375
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++)
+            {
+                y = x[i] + y;
+            }
+            return y;
+        }
+
+        private static string IntToBin(int pro)
+        {
+            if (pro == 0) return "0";
+            string cavab = "";
+            while (pro != 0)
+            {
+                if (pro%2 == 0) cavab = cavab + "0";
+                else
+                {
+                    cavab = cavab + "1";
+                    pro--;
+                }
+                pro = pro/(-2);
+            }
+            return Guzgu(cavab);
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            StringBuilder cavab = new StringBuilder();
+            for (int i = 0; i < n; i++)
+            {
+                int eded = int.Parse(Console.ReadLine());
+                cavab.Append("Case #" + (i + 1) + ": " + IntToBin(eded));
+                if (i < n - 1) cavab.AppendLine();
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
