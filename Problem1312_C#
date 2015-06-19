@@ -1,0 +1,23 @@
+using System;
+
+namespace Problem1312
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int[] dolab = new int[3];
+            int[] qapi = new int[2];
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            dolab[0] = int.Parse(massiv[0]);
+            dolab[1] = int.Parse(massiv[1]);
+            dolab[2] = int.Parse(massiv[2]);
+            qapi[0] = int.Parse(massiv[3]);
+            qapi[1] = int.Parse(massiv[4]);
+            Array.Sort(dolab);
+            Array.Sort(qapi);
+            Console.WriteLine(dolab[0] <= qapi[0] && dolab[1] <= qapi[1] ? "YES" : "NO");
+        }
+    }
+}
