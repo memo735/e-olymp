@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem1473
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int[] a = new int[3];
+            a[0] = int.Parse(massiv[0]);
+            a[1] = int.Parse(massiv[1]);
+            a[2] = int.Parse(massiv[2]);
+            Array.Sort(a);
+            Console.WriteLine(a[1] + a[2]);
+        }
+    }
+}
