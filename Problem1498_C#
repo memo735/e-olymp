@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem1498
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string text = Console.ReadLine();
+            string word = Console.ReadLine();
+            string cavab = "";
+            int i = text.IndexOf(word);
+            while (i != -1)
+            {
+                cavab = cavab + " " + i;
+                i = text.IndexOf(word, i + 1);
+            }
+            Console.WriteLine(cavab.Length > 0 ? cavab.Substring(1) : cavab);
+        }
+    }
+}
