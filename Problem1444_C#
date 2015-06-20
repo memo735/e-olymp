@@ -1,0 +1,44 @@
+using System;
+
+namespace Problem1444
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            setir = setir.Replace('+', ' ');
+            setir = setir.Replace('=', ' ');
+            var massiv = setir.Split(' ');
+            string x = massiv[0];
+            string y = massiv[1];
+            string z = massiv[2];
+            for (int i = 1; i < 10; i++)
+            {
+                for (int j = 1; j < 10; j++)
+                {
+                    for (int k = 1; k < 10; k++)
+                    {
+                        string d = x;
+                        string e = y;
+                        string f = z;
+                        d = d.Replace("A", i.ToString());
+                        d = d.Replace("B", j.ToString());
+                        d = d.Replace("C", k.ToString());
+                        e = e.Replace("A", i.ToString());
+                        e = e.Replace("B", j.ToString());
+                        e = e.Replace("C", k.ToString());
+                        f = f.Replace("A", i.ToString());
+                        f = f.Replace("B", j.ToString());
+                        f = f.Replace("C", k.ToString());
+                        if (int.Parse(d) + int.Parse(e) == int.Parse(f))
+                        {
+                            Console.WriteLine(d + "+" + e + "=" + f);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
