@@ -1,0 +1,12 @@
+import java.math.BigInteger;
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int base = in.nextInt();
+    String s1 = in.next(), s2 = in.next();
+    int c = new BigInteger(s1, base).compareTo(new BigInteger(s2, base));
+    System.out.println(c < 0 ? s2 : s1);
+  }
+}
