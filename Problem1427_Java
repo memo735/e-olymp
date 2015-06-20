@@ -1,0 +1,40 @@
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+
+public class Main {
+
+  public static void main(String[] args) throws Exception {
+
+    String line=new BufferedReader(new InputStreamReader(System.in)).readLine();
+    line=line.replaceAll(" ", "");
+
+    int i;
+    StringBuilder sb=new StringBuilder();
+    for(i=0; i<line.length(); i++) {
+      if(line.charAt(i)=='+' || line.charAt(i)=='-') break;
+      else sb.append(line.charAt(i));
+    }
+
+    line=line.substring(i);
+    int n=Integer.parseInt(sb.toString());
+    char op;
+
+    while(line.length()>0) {
+
+      sb=new StringBuilder();
+      op=line.charAt(0);
+      line=line.substring(1);
+
+      for(i=0; i<line.length(); i++) {
+        if(line.charAt(i)=='+'|| line.charAt(i)=='-') break;
+        else sb.append(line.charAt(i));
+      }
+
+      line=line.substring(i);
+      if(op=='+') n+=Integer.parseInt(sb.toString());
+      else n-=Integer.parseInt(sb.toString());
+    }
+
+    System.out.println(n);
+  }
+}
