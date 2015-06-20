@@ -1,0 +1,43 @@
+using System;
+
+namespace Problem1461
+{
+    internal class Program
+    {
+        private static int ReqemHasili(int x)
+        {
+            int hasil = 1;
+            while (x > 0)
+            {
+                hasil = hasil*(x%10);
+                x = x/10;
+            }
+            return hasil;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int k = int.Parse(massiv[1]);
+
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+
+            int eps = 10000;
+            int cavab = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int cari = int.Parse(massiv[i]);
+                int ferq = Math.Abs(ReqemHasili(cari) - k);
+                if (ferq < eps)
+                {
+                    eps = ferq;
+                    cavab = cari;
+                }
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
