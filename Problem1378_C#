@@ -1,0 +1,35 @@
+using System;
+
+namespace Problem1378
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int[] fib = new int[40];
+            fib[0] = 0;
+            fib[1] = 1;
+            for (int i = 2; i < 40; i++)
+            {
+                fib[i] = fib[i - 1] + fib[i - 2];
+            }
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string cavab = "";
+                int eded = int.Parse(Console.ReadLine());
+                int eded2 = eded;
+                for (int j = 39; j > 1; j--)
+                {
+                    if (fib[j] <= eded)
+                    {
+                        cavab = cavab + "1";
+                        eded = eded - fib[j];
+                    }
+                    else if (cavab.IndexOf('1') != -1) cavab = cavab + "0";
+                }
+                Console.WriteLine(eded2 + " = " + (eded2 == 0 ? "0" : cavab) + " (fib)");
+            }
+        }
+    }
+}
