@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem1499
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string cyril = Console.ReadLine();
+            string dima = Console.ReadLine();
+            int len = cyril.Length - 1;
+            if (cyril == dima) Console.WriteLine(0);
+            else
+            {
+                string cari = cyril[len] + cyril.Substring(0, len);
+                int i;
+                for (i = 1; i < len; i++)
+                {
+                    if (cari == dima) break;
+                    cari = cari[len] + cari.Substring(0, len);
+                }
+                Console.WriteLine(cari == dima ? i : -1);
+            }
+        }
+    }
+}
