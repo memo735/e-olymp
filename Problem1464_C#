@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem1464
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            while (n != 0)
+            {
+                Console.WriteLine(n < 0 ? 1 - n*(n - 1)/2 : n*(n + 1)/2);
+                n = int.Parse(Console.ReadLine());
+            }
+        }
+    }
+}
