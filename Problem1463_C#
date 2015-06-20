@@ -1,0 +1,47 @@
+using System;
+
+namespace Problem1463
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[,] a = new int[n, n];
+            int maxSetir = 0;
+            int maxSutun = 0;
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                for (int j = 0; j < n; j++)
+                {
+                    a[i, j] = int.Parse(massiv[j]);
+                }
+            }
+            long max = long.MinValue;
+            for (int i = 0; i < n; i++)
+            {
+                long cem = 0;
+                for (int j = 0; j < n; j++) cem = cem + a[i, j];
+                if (cem > max)
+                {
+                    maxSetir = i;
+                    max = cem;
+                }
+            }
+            max = long.MaxValue;
+            for (int i = 0; i < n; i++)
+            {
+                long cem = 0;
+                for (int j = 0; j < n; j++) cem = cem + a[j, i];
+                if (cem < max)
+                {
+                    maxSutun = i;
+                    max = cem;
+                }
+            }
+            Console.WriteLine(a[maxSetir, maxSutun]);
+        }
+    }
+}
