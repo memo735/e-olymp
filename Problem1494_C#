@@ -1,0 +1,44 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem1494
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            int k = int.Parse(massiv[2]);
+            k = m + k;
+            int artim;
+            List<int> cache = new List<int>();
+            for (int i = 0; i < k; i = i + artim)
+            {
+                setir = Console.ReadLine();
+                massiv = setir.Split(' ');
+                int len = massiv.Length;
+                artim = len;
+                for (int j = 0; j < len; j++)
+                {
+                    cache.Add(int.Parse(massiv[j]));
+                }
+            }
+            int say = 0;
+            string cavab = "";
+            for (int i = 1; i <= n; i++)
+            {
+                if (!cache.Contains(i))
+                {
+                    if (say > 0) cavab = cavab + " ";
+                    cavab = cavab + i;
+                    say++;
+                }
+            }
+            Console.WriteLine(say);
+            Console.WriteLine(cavab);
+        }
+    }
+}
