@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem1609
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            char reqem = Console.ReadLine()[0];
+            int say = 0;
+            foreach (var x in eded.ToCharArray())
+            {
+                if (x == reqem) say++;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
