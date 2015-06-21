@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem1647
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int k = int.Parse(massiv[1]);
+            //sagdaki k sayda biti sifirlamaq
+            Console.WriteLine(n & (int.MaxValue << k));
+        }
+    }
+}
