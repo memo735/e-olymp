@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem1612
+{
+    internal class Program
+    {
+        private static string Evezle(string x)
+        {
+            bool evezlemedim = true;
+            int len = x.Length - 1;
+            string y = "";
+            for (int i = len; 0 <= i; i--)
+            {
+                if (x[i] == '1' && evezlemedim)
+                {
+                    y = "0" + y;
+                    evezlemedim = false;
+                }
+                else y = x[i] + y;
+            }
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string ikilik = Convert.ToString(n, 2);
+            Console.WriteLine(Convert.ToInt64(Evezle(ikilik), 2));
+        }
+    }
+}
