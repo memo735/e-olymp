@@ -1,0 +1,15 @@
+import java.util.Scanner;
+
+public class Main {
+
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+
+    while(in.hasNextInt()) System.out.println(getOddSum(in.nextInt()));
+  }
+
+  private static long getOddSum(int n) {
+    if(n == 0) return 0;
+    return (long)((n+1)/2)*((n+1)/2) + getOddSum(n/2);
+  }
+}
