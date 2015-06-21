@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem1544
+{
+    internal class Program
+    {
+        private static string getNS(long n)
+        {
+            string sb = "";
+            for (int i = 9; i >= 0; i--)
+            {
+                if ((n - i)%9 == 0) sb = sb + (((n - i)/9)*10 + i) + " ";
+            }
+            return sb.TrimEnd(' ');
+        }
+
+        public static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            while (n != 0)
+            {
+                Console.WriteLine(getNS(n));
+                n = long.Parse(Console.ReadLine());
+            }
+        }
+    }
+}
