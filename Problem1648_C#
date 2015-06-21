@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem1648
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int say = 0;
+            while (n%2 == 0)
+            {
+                say++;
+                n = n/2;
+            }
+            Console.WriteLine(1 << say);
+        }
+    }
+}
