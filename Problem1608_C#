@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem1608
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++)
+            {
+                y = x[i] + y;
+            }
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            Console.WriteLine(eded == Guzgu(eded) ? "Yes" : "No");
+        }
+    }
+}
