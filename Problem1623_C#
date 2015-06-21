@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem1623
+{
+    internal class Program
+    {
+        private static bool Tek(int a, int b, int c)
+        {
+            if (a%2 == 1) return true;
+            if (b%2 == 1) return true;
+            if (c%2 == 1) return true;
+            return false;
+        }
+
+        private static bool Cut(int a, int b, int c)
+        {
+            if (a%2 == 0) return true;
+            if (b%2 == 0) return true;
+            if (c%2 == 0) return true;
+            return false;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int c = int.Parse(massiv[2]);
+            Console.WriteLine(Tek(a, b, c) && Cut(a, b, c) ? "YES" : "NO");
+        }
+    }
+}
