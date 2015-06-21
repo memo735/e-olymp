@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem1645
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            string ikilik = Convert.ToString(n, 2);
+            int say = 0;
+            foreach (char c in ikilik)
+            {
+                if (c == '1') say++;
+            }
+            Console.WriteLine(Math.Pow(2, say) - 1);
+        }
+    }
+}
