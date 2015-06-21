@@ -1,0 +1,15 @@
+import java.util.Scanner;
+import java.util.TreeSet;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    TreeSet<Integer> s = new TreeSet<Integer>();
+
+    int n = in.nextInt(), k = n%2;
+    while(n-- > 0) s.add(in.nextInt());
+
+    if(k == 0) for(int i : s.descendingSet()) System.out.println(i);
+    else while(!s.isEmpty()) System.out.println(s.pollFirst());
+  }
+}
