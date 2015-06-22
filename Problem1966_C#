@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem1966
+{
+    internal class Program
+    {
+        private static void Plus(int n)
+        {
+            int orta = 2 * n + 1; //ortadaki * sayi
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= n; j++) Console.Write(".");
+                Console.Write("*");
+                for (int j = 1; j <= n; j++) Console.Write(".");
+                Console.WriteLine();
+            }
+            for (int i = 1; i <= orta; i++) Console.Write("*");
+            Console.WriteLine();
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= n; j++) Console.Write(".");
+                Console.Write("*");
+                for (int j = 1; j <= n; j++) Console.Write(".");
+                Console.WriteLine();
+            }
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Plus(n);
+        }
+    }
+}
