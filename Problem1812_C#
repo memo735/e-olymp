@@ -1,0 +1,36 @@
+using System;
+
+namespace Problem1812
+{
+    internal class Program
+    {
+        private static string Hesabla(string x)
+        {
+            int len = x.Length;
+            int yarisi = len%2 == 0 ? len/2 : len/2 + 1;
+            int absent = 0;
+            int yes = 0;
+            int no = 0;
+            foreach (char c in x)
+            {
+                if (c == 'A') absent++;
+                if (c == 'N') no++;
+                if (c == 'Y') yes++;
+            }
+            if (yarisi <= absent) return "need quorum";
+            if (yes == no) return "tie";
+            if (yes > no) return "yes";
+            return "no";
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "#")
+            {
+                Console.WriteLine(Hesabla(setir));
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
