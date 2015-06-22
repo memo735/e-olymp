@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem1753
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            while (n != 0)
+            {
+                string ikilik = Convert.ToString(n, 2);
+                string son = ikilik.Substring(ikilik.LastIndexOf('1'));
+                Console.WriteLine(Convert.ToInt64(son, 2));
+                n = int.Parse(Console.ReadLine());
+            }
+        }
+    }
+}
