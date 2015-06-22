@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem1703
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int say = 0;
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split('>');
+                if (massiv[1][0] == massiv[0][0]) say++;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
