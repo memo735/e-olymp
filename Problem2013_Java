@@ -1,0 +1,9 @@
+import java.math.BigInteger;
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    BigInteger b = new BigInteger(new Scanner(System.in).next());
+    System.out.println(b.pow(2).multiply(BigInteger.valueOf(6)).toString());
+  }
+}
