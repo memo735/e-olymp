@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem1686
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int c = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]) - 1;
+            int vaxt = Math.Max(n/c + 1, c - n/c) + Math.Max(n%c + 1, c - n%c) - 1;
+            Console.WriteLine(vaxt/60 + " " + vaxt%60);
+        }
+    }
+}
