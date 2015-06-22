@@ -1,0 +1,17 @@
+using System;
+using System.Numerics;
+
+namespace Problem1958
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.ReadLine();
+            string setir = Console.ReadLine();
+            BigInteger n = BigInteger.Parse(setir.Replace(" ", ""));
+            int m = int.Parse(Console.ReadLine());
+            Console.WriteLine(BigInteger.ModPow(n, 1, m) == 0 ? "YES" : "NO");
+        }
+    }
+}
