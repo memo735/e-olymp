@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem2043
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n == 1) Console.WriteLine("January\nFebruary\nMarch");
+            if (n == 2) Console.WriteLine("April\nMay\nJune");
+            if (n == 3) Console.WriteLine("July\nAugust\nSeptember");
+            if (n == 4) Console.WriteLine("October\nNovember\nDecember");
+        }
+    }
+}
