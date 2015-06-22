@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem1965
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            var setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int Vasichkin = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                if (Vasichkin > int.Parse(massiv[i]))
+                {
+                    Console.WriteLine(i + 1);
+                    return;
+                }
+            }
+            Console.WriteLine(n + 1);
+        }
+    }
+}
