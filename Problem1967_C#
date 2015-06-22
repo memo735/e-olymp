@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem1967
+{
+    internal class Program
+    {
+        private static long EBOB(long x, long y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return (x + y);
+        }
+
+        private static long EKOB(long x, long y)
+        {
+            return x*y/EBOB(x, y);
+        }
+
+        public static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            if (n < 3) Console.WriteLine(1);
+            else
+            {
+                long ekob = 2;
+                for (long i = 3; i <= n; i++) ekob = EKOB(ekob, i);
+                Console.WriteLine(ekob - 1);
+            }
+        }
+    }
+}
