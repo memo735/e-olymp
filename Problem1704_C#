@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem1704
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int m = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]);
+            long[,] ns = new long[m, n];
+            ns[m - 1, 0] = 1;
+            for (int i = m - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == m - 1 && j == 0) continue;
+                    ns[i, j] = (i < m - 1 ? ns[i + 1, j] : 0) + (j > 0 ? ns[i, j - 1] : 0);
+                }
+            }
+            Console.WriteLine(ns[0, n - 1]);
+        }
+    }
+}
