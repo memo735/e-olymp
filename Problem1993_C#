@@ -1,0 +1,15 @@
+using System;
+
+namespace Problem1993
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n < 4) n = 1;
+            else n = n < 10 ? 2 : 3;
+            Console.WriteLine(n);
+        }
+    }
+}
