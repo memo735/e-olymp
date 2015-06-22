@@ -1,0 +1,41 @@
+using System;
+
+namespace Problem2014
+{
+    internal class Program
+    {
+        private static int ReqemCemi(int x)
+        {
+            int cem = 0;
+            while (x > 0)
+            {
+                cem = cem + x%10;
+                x = x/10;
+            }
+            return cem;
+        }
+
+        private static string Yoxla(double x)
+        {
+            int tam = (int) x;
+            if (!x.ToString().Contains("."))
+            {
+                return ReqemCemi(tam) == 0 ? "Yes" : "No";
+            }
+            var parcala = x.ToString().Split('.');
+            if (parcala[1] != "")
+            {
+                int kesr = int.Parse(parcala[1]);
+                return ReqemCemi(tam) == ReqemCemi(kesr) ? "Yes" : "No";
+            }
+            return ReqemCemi(tam) == 0 ? "Yes" : "No";
+        }
+
+        public static void Main(string[] args)
+        {
+            double x = double.Parse(Console.ReadLine());
+            if (x < 0) x = -x;
+            Console.WriteLine(Yoxla(x));
+        }
+    }
+}
