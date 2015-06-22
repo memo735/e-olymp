@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem1951
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split('.');
+            int a = massiv[0] == "" ? -1 : int.Parse(massiv[0]);
+            int b = massiv[1] == "" ? -1 : int.Parse(massiv[1]);
+            int c = massiv[2] == "" ? -1 : int.Parse(massiv[2]);
+            int d = massiv[3] == "" ? -1 : int.Parse(massiv[3]);
+            if (a < 0 || a > 255) Console.WriteLine(0);
+            else
+            {
+                if (b < 0 || b > 255) Console.WriteLine(0);
+                else
+                {
+                    if (c < 0 || c > 255) Console.WriteLine(0);
+                    else
+                    {
+                        if (d < 0 || d > 255) Console.WriteLine(0);
+                        else Console.WriteLine(1);
+                    }
+                }
+            }
+        }
+    }
+}
