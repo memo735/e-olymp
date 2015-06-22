@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem1814
+{
+    internal class Program
+    {
+        private static char HerfGuzgu(char x)
+        {
+            if (x == 'b') return 'd';
+            if (x == 'd') return 'b';
+            if (x == 'p') return 'q';
+            if (x == 'q') return 'p';
+            return x;
+        }
+
+        private static string TersGuzguDuzulusu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++) y = HerfGuzgu(x[i]) + y;
+            return y;
+        }
+
+        private static string Yoxla(string x)
+        {
+            HashSet<char> siyahi = new HashSet<char> {'b', 'd', 'i', 'o', 'p', 'q', 'v', 'w', 'x'};
+            foreach (char c in x)
+            {
+                if (!siyahi.Contains(c)) return "INVALID";
+            }
+            return TersGuzguDuzulusu(x);
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "#")
+            {
+                Console.WriteLine(Yoxla(setir));
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
