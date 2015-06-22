@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem2031
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n == 1)
+            {
+                Console.WriteLine(1);
+                return;
+            }
+            if (n == 2)
+            {
+                Console.WriteLine(1);
+                Console.WriteLine(1);
+                return;
+            }
+            Console.WriteLine(1);
+            Console.WriteLine(1);
+            int[] fib = new int[n + 1];
+            fib[1] = 1;
+            fib[2] = 1;
+            for (int i = 3; i <= n; i++)
+            {
+                fib[i] = fib[i - 1] + fib[i - 2];
+                Console.WriteLine(fib[i]);
+            }
+        }
+    }
+}
