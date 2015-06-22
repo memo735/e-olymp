@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem1784
+{
+    internal class Program
+    {
+        private static int perm(int[] p, int d, int k, HashSet<int> siyahi)
+        {
+            int len = p.Length;
+            if (k == len) return 1;
+            int cem = 0;
+            for (int i = 1; i <= len; i++)
+            {
+                if (!siyahi.Contains(i) && (k == 0 || Math.Abs(p[k - 1] - i) <= d))
+                {
+                    p[k] = i;
+                    siyahi.Add(i);
+                    cem = cem + perm(p, d, k + 1, siyahi);
+                    siyahi.Remove(i);
+                }
+            }
+            return cem;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int k = int.Parse(massiv[1]);
+            Console.WriteLine(perm(new int[n], k, 0, new HashSet<int>()));
+        }
+    }
+}
