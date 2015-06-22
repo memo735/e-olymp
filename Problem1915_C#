@@ -1,0 +1,18 @@
+using System;
+using System.Numerics;
+
+namespace Problem1915
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            BigInteger c = BigInteger.Abs(BigInteger.Pow(10, a - 1) - BigInteger.Pow(10, b));
+            Console.WriteLine(a == 1 ? BigInteger.Pow(10, b) : c);
+        }
+    }
+}
