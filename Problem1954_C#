@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem1954
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int kok = (int) Math.Sqrt(n);
+            Console.WriteLine(n - kok*kok);
+        }
+    }
+}
