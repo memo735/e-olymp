@@ -1,0 +1,29 @@
+using System;
+
+namespace Problem2164
+{
+    internal class Program
+    {
+        private static char Deshifre(char c, int k)
+        {
+            string elifba = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            int n = elifba.IndexOf(c);
+            n = n - k;
+            if (n < 0) n = n + 26;
+            return elifba[n];
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            string cavab = "";
+            int k = int.Parse(Console.ReadLine());
+            int len = setir.Length;
+            for (int i = 0; i < len; i++)
+            {
+                cavab = cavab + Deshifre(setir[i], k);
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
