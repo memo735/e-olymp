@@ -1,0 +1,5 @@
+var a,b,c,x,y: Integer;
+begin
+  readln(x,y,a,b,c);
+  if a*x+b*y+c=0 then writeln('YES') else writeln('NO');
+end.
