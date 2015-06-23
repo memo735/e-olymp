@@ -1,0 +1,35 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem2099
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            List<string> siyahi1 = new List<string>();
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++) siyahi1.Add(massiv[i]);
+            int m = int.Parse(Console.ReadLine());
+            List<string> siyahi2 = new List<string>();
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            for (int i = 0; i < m; i++) siyahi2.Add(massiv[i]);
+            setir = "";
+            m = 0;
+            for (int i = 0; i < n; i++)
+            {
+                string cari = siyahi1[i];
+                if (!siyahi2.Contains(cari))
+                {
+                    setir = setir + cari + " ";
+                    m++;
+                }
+            }
+            Console.WriteLine(m);
+            Console.WriteLine(setir.TrimEnd(' '));
+        }
+    }
+}
