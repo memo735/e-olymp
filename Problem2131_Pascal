@@ -1,0 +1,6 @@
+var s,x1,y1,x2,y2: Real;
+begin
+  readln(x1,y1,x2,y2);
+  s:=sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+  writeln(s:0:6);
+end.
