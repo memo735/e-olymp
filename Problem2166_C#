@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem2166
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string x = Console.ReadLine();
+            int n = x.Length;
+            string y = Console.ReadLine();
+            int m = y.Length;
+            if (n != m)
+            {
+                Console.WriteLine("NO");
+                return;
+            }
+            char[] a = x.ToCharArray();
+            char[] b = y.ToCharArray();
+            Array.Sort(a);
+            Array.Sort(b);
+            for (int i = 0; i < n; i++)
+            {
+                if (a[i] != b[i])
+                {
+                    Console.WriteLine("NO");
+                    return;
+                }
+            }
+            Console.WriteLine("YES");
+        }
+    }
+}
