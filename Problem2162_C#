@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem2162
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++) y = x[i] + y;
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            setir = setir.Replace(" ", "");
+            Console.WriteLine(setir == Guzgu(setir) ? "YES" : "NO");
+        }
+    }
+}
