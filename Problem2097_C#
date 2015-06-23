@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem2097
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int say = 0;
+            for (int i = a; i <= b; i++)
+            {
+                string x = i.ToString();
+                if (x[0] != x[1] && x[0] != x[2] && x[1] != x[2])
+                {
+                    Console.WriteLine(i);
+                    say++;
+                }
+            }
+            if (say == 0) Console.WriteLine();
+        }
+    }
+}
