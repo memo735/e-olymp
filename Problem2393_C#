@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem2393
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double x = double.Parse(massiv[0]);
+            double y = double.Parse(massiv[1]);
+            double x1 = double.Parse(massiv[2]);
+            double y1 = double.Parse(massiv[3]);
+            double x2 = double.Parse(massiv[4]);
+            double y2 = double.Parse(massiv[5]);
+            double minX = Math.Min(x1, x2);
+            double minY = Math.Min(y1, y2);
+            double maxX = Math.Max(x1, x2);
+            double maxY = Math.Max(y1, y2);
+            if (minX <= x && x <= maxX && minY <= y && y <= maxY) Console.WriteLine(1);
+            else Console.WriteLine(0);
+        }
+    }
+}
