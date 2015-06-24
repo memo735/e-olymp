@@ -8,7 +8,7 @@ namespace Problem2323
         public static void Main(string[] args)
         {
             int n = int.Parse(Console.ReadLine());
-            HashSet<int> siyahi = new HashSet<int>();
+            List<int> siyahi = new List<int>();
             string setir = Console.ReadLine();
             var massiv = setir.Split(' ');
             for (int i = 0; i < n; i++)
