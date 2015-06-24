@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem2391
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int n = int.Parse(massiv[2]);
+            if (n == 0) Console.WriteLine(0);
+            else
+            {
+                n = n%60 == 0 ? n/60 : n/60 + 1;
+                int cem = a;
+                for (int i = 1; i <= n; i++) cem = cem + b;
+                Console.WriteLine(cem);
+            }
+        }
+    }
+}
