@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem2381
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "-1")
+            {
+                var massiv = setir.Split(' ');
+                List<int> siyahi = new List<int>();
+                int len = massiv.Length;
+                for (int i = 0; i < len; i++) siyahi.Add(int.Parse(massiv[i]));
+                int say = 0;
+                for (int i = 0; i < len; i++)
+                {
+                    if (siyahi[i] != 0 && siyahi[i]%2 == 0)
+                    {
+                        if (siyahi.Contains(siyahi[i]/2)) say++;
+                    }
+                }
+                Console.WriteLine(say);
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
