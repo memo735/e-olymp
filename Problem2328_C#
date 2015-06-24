@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem2328
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int max = 0;
+            int[] a = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                a[i] = int.Parse(massiv[i]);
+                if (a[i] > max) max = a[i];
+            }
+            HashSet<long> siyahi = new HashSet<long> {1};
+            int log = (int) Math.Log(max, 2) + 1;
+            int kok = (int) Math.Sqrt(max) + 1;
+            for (int i = 2; i < kok; i++)
+            {
+                for (int j = 2; j < log; j++)
+                {
+                    long cari = (long) Math.Pow(i, j);
+                    if (cari <= max && !siyahi.Contains(cari)) siyahi.Add(cari);
+                }
+            }
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine(siyahi.Contains(a[i]) ? "YES" : "NO");
+            }
+        }
+    }
+}
