@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem2206
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int m = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]);
+            int k = int.Parse(massiv[2]);
+            if ((m + n + k)%3 != 0) Console.WriteLine("IMPOSSIBLE");
+            else
+            {
+                int yerdeyisme = 0;
+                int orta = (m + n + k)/3;
+                yerdeyisme = yerdeyisme + Math.Abs(m - orta);
+                yerdeyisme = yerdeyisme + Math.Abs(n - orta);
+                yerdeyisme = yerdeyisme + Math.Abs(k - orta);
+                Console.WriteLine(yerdeyisme/2);
+            }
+        }
+    }
+}
