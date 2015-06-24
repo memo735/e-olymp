@@ -1,0 +1,28 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    int n = new Scanner(System.in).nextInt();
+
+    ArrayList<Integer> ls = new ArrayList<Integer>();
+    for(int i=2; i<37; i++)
+      if(isPalindrome(Integer.toString(n, i))) ls.add(i);
+    if(ls.isEmpty()) System.out.println("none");
+    else
+      if(ls.size() == 1) {
+        System.out.println("unique");
+        System.out.println(ls.get(0));
+      }
+      else {
+        System.out.println("multiple");
+        StringBuilder sb = new StringBuilder();
+        for(int i : ls) sb.append(i).append(" ");
+        System.out.println(sb.substring(0, sb.length()-1));
+      }
+  }
+
+  private static boolean isPalindrome(String s) {
+    return new StringBuilder(s).reverse().toString().equals(s);
+  }
+}
