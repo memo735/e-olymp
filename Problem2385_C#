@@ -1,0 +1,15 @@
+using System;
+
+namespace Problem2385
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int hasil = 1;
+            for (int i = 2; i <= n; i++) hasil = hasil*i;
+            Console.WriteLine(hasil);
+        }
+    }
+}
