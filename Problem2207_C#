@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem2207
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            Console.WriteLine(setir);
+            var massiv = setir.Split(':');
+            int saat = int.Parse(massiv[0]);
+            int deq = int.Parse(massiv[1]);
+            int n = int.Parse(Console.ReadLine()) - 1;
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++)
+            {
+                deq = 60*saat + deq;
+                deq = deq + int.Parse(massiv[i]);
+                saat = (deq/60)%24;
+                deq = deq%60;
+                Console.WriteLine("{0:D2}:{1:D2}", saat, deq);
+            }
+        }
+    }
+}
