@@ -1,0 +1,53 @@
+using System;
+
+namespace Problem2262
+{
+    internal class Program
+    {
+        private static bool F(bool x1, bool x2, bool x3, bool x4, bool x5, bool x6, bool x7, bool x8, bool x9, bool x10)
+        {
+            return (x1||x2)^(x1||x3)^(x1||x4)^(x1||x5)^(x1||x6)^(x1||x7)^(x1||x8)^(x1||x9)^(x1||x10)^
+                   (x2||x3)^(x2||x4)^(x2||x5)^(x2||x6)^(x2||x7)^(x2||x8)^(x2||x9)^(x2||x10)^(x3||x4)^
+                   (x3||x5)^(x3||x6)^(x3||x7)^(x3||x8)^(x3||x9)^(x3||x10)^(x4||x5)^(x4||x6)^(x4||x7)^
+                   (x4||x8)^(x4||x9)^(x4||x10)^(x5||x6)^(x5||x7)^(x5||x8)^(x5||x9)^(x5||x10)^(x6||x7)^
+                   (x6||x8)^(x6||x9)^(x6||x10)^(x7||x8)^(x7||x9)^(x7||x10)^(x8||x9)^(x8||x10)^(x9||x10)^
+                   (x1||x2||x3)^(x1||x2||x4)^(x1||x2||x5)^(x1||x2||x6)^(x1||x2||x7)^(x1||x2||x8)^
+                   (x1||x2||x9)^(x1||x2||x10)^(x1||x3||x4)^(x1||x3||x5)^(x1||x3||x6)^(x1||x3||x7)^
+                   (x1||x3||x8)^(x1||x3||x9)^(x1||x3||x10)^(x1||x4||x5)^(x1||x4||x6)^(x1||x4||x7)^
+                   (x1||x4||x8)^(x1||x4||x9)^(x1||x4||x10)^(x1||x5||x6)^(x1||x5||x7)^(x1||x5||x8)^
+                   (x1||x5||x9)^(x1||x5||x10)^(x1||x6||x7)^(x1||x6||x8)^(x1||x6||x9)^(x1||x6||x10)^
+                   (x1||x7||x8)^(x1||x7||x9)^(x1||x7||x10)^(x1||x8||x9)^(x1||x8||x10)^(x1||x9||x10)^
+                   (x2||x3||x4)^(x2||x3||x5)^(x2||x3||x6)^(x2||x3||x7)^(x2||x3||x8)^(x2||x3||x9)^
+                   (x2||x3||x10)^(x2||x4||x5)^(x2||x4||x6)^(x2||x4||x7)^(x2||x4||x8)^(x2||x4||x9)^
+                   (x2||x4||x10)^(x2||x5||x6)^(x2||x5||x7)^(x2||x5||x8)^(x2||x5||x9)^(x2||x5||x10)^
+                   (x2||x6||x7)^(x2||x6||x8)^(x2||x6||x9)^(x2||x6||x10)^(x2||x7||x8)^(x2||x7||x9)^
+                   (x2||x7||x10)^(x2||x8||x9)^(x2||x8||x10)^(x2||x9||x10)^(x3||x4||x5)^(x3||x4||x6)^
+                   (x3||x4||x7)^(x3||x4||x8)^(x3||x4||x9)^(x3||x4||x10)^(x3||x5||x6)^(x3||x5||x7)^
+                   (x3||x5||x8)^(x3||x5||x9)^(x3||x5||x10)^(x3||x6||x7)^(x3||x6||x8)^(x3||x6||x9)^
+                   (x3||x6||x10)^(x3||x7||x8)^(x3||x7||x9)^(x3||x7||x10)^(x3||x8||x9)^(x3||x8||x10)^
+                   (x3||x9||x10)^(x4||x5||x6)^(x4||x5||x7)^(x4||x5||x8)^(x4||x5||x9)^(x4||x5||x10)^
+                   (x4||x6||x7)^(x4||x6||x8)^(x4||x6||x9)^(x4||x6||x10)^(x4||x7||x8)^(x4||x7||x9)^
+                   (x4||x7||x10)^(x4||x8||x9)^(x4||x8||x10)^(x4||x9||x10)^(x5||x6||x7)^(x5||x6||x8)^
+                   (x5||x6||x9)^(x5||x6||x10)^(x5||x7||x8)^(x5||x7||x9)^(x5||x7||x10)^(x5||x8||x9)^
+                   (x5||x8||x10)^(x5||x9||x10)^(x6||x7||x8)^(x6||x7||x9)^(x6||x7||x10)^(x6||x8||x9)^
+                   (x6||x8||x10)^(x6||x9||x10)^(x7||x8||x9)^(x7||x8||x10)^(x7||x9||x10)^(x8||x9||x10);
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            bool x1 = int.Parse(massiv[0]) != 0;
+            bool x2 = int.Parse(massiv[1]) != 0;
+            bool x3 = int.Parse(massiv[2]) != 0;
+            bool x4 = int.Parse(massiv[3]) != 0;
+            bool x5 = int.Parse(massiv[4]) != 0;
+            bool x6 = int.Parse(massiv[5]) != 0;
+            bool x7 = int.Parse(massiv[6]) != 0;
+            bool x8 = int.Parse(massiv[7]) != 0;
+            bool x9 = int.Parse(massiv[8]) != 0;
+            bool x10 = int.Parse(massiv[9]) != 0;
+            Console.WriteLine(F(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10) ? 1 : 0);
+        }
+    }
+}
