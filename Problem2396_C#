@@ -1,0 +1,101 @@
+using System;
+
+namespace Problem2396
+{
+    internal class Program
+    {
+        private static string Teklik(int x)
+        {
+            if (x == 9) return "nine";
+            if (x == 8) return "eight";
+            if (x == 7) return "seven";
+            if (x == 6) return "six";
+            if (x == 5) return "five";
+            if (x == 4) return "four";
+            if (x == 3) return "three";
+            if (x == 2) return "two";
+            if (x == 1) return "one";
+            return "";
+        }
+
+        private static string Onluq(int x, int y)
+        {
+            if (x == 9) return "ninety";
+            if (x == 8) return "eighty";
+            if (x == 7) return "seventy";
+            if (x == 6) return "sixty";
+            if (x == 5) return "fifty";
+            if (x == 4) return "forty";
+            if (x == 3) return "thirty";
+            if (x == 2) return "twenty";
+            if (x == 1)
+            {
+                if (y == 9) return "nineteen";
+                if (y == 8) return "eighteen";
+                if (y == 7) return "seventeen";
+                if (y == 6) return "sixteen";
+                if (y == 5) return "fifteen";
+                if (y == 4) return "fourteen";
+                if (y == 3) return "thirteen";
+                if (y == 2) return "twelve";
+                if (y == 1) return "eleven";
+                if (y == 0) return "ten";
+            }
+            return "";
+        }
+
+        private static string Yuzluk(int x)
+        {
+            if (x == 9) return "nine hundred";
+            if (x == 8) return "eight hundred";
+            if (x == 7) return "seven hundred";
+            if (x == 6) return "six hundred";
+            if (x == 5) return "five hundred";
+            if (x == 4) return "four hundred";
+            if (x == 3) return "three hundred";
+            if (x == 2) return "two hundred";
+            if (x == 1) return "one hundred";
+            return "";
+        }
+
+        public static void Main(string[] args)
+        {
+            int m = int.Parse(Console.ReadLine());
+            string cavab = "";
+            int yuz = m/100;
+            int on = (m - yuz*100)/10;
+            int tek = m%10;
+            if (yuz == 0)
+            {
+                if (on == 0) cavab = cavab + Teklik(tek);
+                else
+                {
+                    if (on == 1) cavab = cavab + Onluq(on, tek);
+                    else
+                    {
+                        if (tek == 0) cavab = cavab + Onluq(on, tek);
+                        else cavab = cavab + Onluq(on, tek) + " " + Teklik(tek);
+                    }
+                }
+            }
+            else
+            {
+                if (on == 0)
+                {
+                    if (tek == 0) cavab = cavab + Yuzluk(yuz);
+                    else cavab = cavab + Yuzluk(yuz) + " " + Teklik(tek);
+                }
+                else
+                {
+                    if (on == 1) cavab = cavab + Yuzluk(yuz) + " " + Onluq(on, tek);
+                    else
+                    {
+                        if (tek == 0) cavab = cavab + Yuzluk(yuz) + " " + Onluq(on, tek);
+                        else cavab = cavab + Yuzluk(yuz) + " " + Onluq(on, tek) + " " + Teklik(tek);
+                    }
+                }
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
