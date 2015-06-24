@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem2205
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int m = int.Parse(massiv[0]);
+            int n = int.Parse(massiv[1]);
+            int k = int.Parse(massiv[2]);
+            int c = ((n - 1)/k)*k + 1;
+            int min = (n - c)*200;
+            if (c + k <= m) min = Math.Min(min, (c + k - n)*100);
+            Console.WriteLine(min);
+        }
+    }
+}
