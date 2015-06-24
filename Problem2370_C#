@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem2370
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int say = 0;
+            for (int i = 0; i < 100; i++)
+            {
+                int j = n - i;
+                if (0 <= j && j < 100) say++;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
