@@ -6,21 +6,21 @@ namespace Problem2169
 {
     internal class Program
     {
-        private static IEnumerable<List<int>> Permutation(int n)
+        private static IEnumerable<List<int>> Permutasiya(int n)
         {
             if (n == 1) return new List<List<int>> {new List<int> {1}};
-            var kohne = Permutation(n - 1);
-            var cvb = new List<List<int>>();
+            var kohne = Permutasiya(n - 1);
+            var cavab = new List<List<int>>();
             foreach (var siyahi in kohne)
             {
                 for (int i = 0; i < n; i++)
                 {
-                    var siyahicopy = siyahi.ToList();
-                    siyahicopy.Insert(i, n);
-                    cvb.Add(siyahicopy);
+                    var siyahiCopy = siyahi.ToList();
+                    siyahiCopy.Insert(i, n);
+                    cavab.Add(siyahiCopy);
                 }
             }
-            return cvb;
+            return cavab;
         }
 
         public static void Main(string[] args)
@@ -31,8 +31,8 @@ namespace Problem2169
                 Console.WriteLine("1");
                 return;
             }
-            var cvb = Permutation(n);
-            var massiv = cvb.Select(siyahi => int.Parse(string.Join("", siyahi))).ToArray();
+            var cavab = Permutasiya(n);
+            var massiv = cavab.Select(siyahi => int.Parse(string.Join("", siyahi))).ToArray();
             Array.Sort(massiv);
             foreach (var str in massiv.Select(eded => eded + ""))
             {
