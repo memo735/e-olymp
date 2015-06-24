@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem2324
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            List<int> siyahi = new List<int>();
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++)
+            {
+                int cari = int.Parse(massiv[i]);
+                siyahi.Add(cari);
+            }
+            siyahi.Sort();
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write(siyahi[i]);
+                if (i < n - 1) Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
