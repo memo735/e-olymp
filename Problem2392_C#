@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem2392
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            char[] reqem = eded.ToCharArray();
+            int len = reqem.Length;
+            Array.Sort(reqem);
+            string boyuk = "";
+            for (int i = len - 1; i >= 0; i--) boyuk = boyuk + reqem[i];
+            string kicik = "";
+            if (reqem[0] == '0')
+            {
+                if (reqem[1] == '0') kicik = reqem[2] + "00";
+                else kicik = reqem[1] + "0" + reqem[2];
+            }
+            else
+            {
+                for (int i = 0; i < len; i++) kicik = kicik + reqem[i];
+            }
+            Console.WriteLine(int.Parse(boyuk) + int.Parse(kicik));
+        }
+    }
+}
