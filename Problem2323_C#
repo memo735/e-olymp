@@ -1,0 +1,22 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem2323
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            HashSet<int> siyahi = new HashSet<int>();
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++)
+            {
+                int cari = int.Parse(massiv[i]);
+                if (!siyahi.Contains(cari)) siyahi.Add(cari);
+            }
+            Console.WriteLine(siyahi.Count);
+        }
+    }
+}
