@@ -1,0 +1,50 @@
+using System;
+
+namespace Problem2196
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++) y = x[i] + y;
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string sozcuk = Console.ReadLine();
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                char RS = char.Parse(massiv[0]);
+                int a = int.Parse(massiv[1]);
+                int b = int.Parse(massiv[2]);
+                if (RS == 'R')
+                {
+                    string sozcuk1 = sozcuk.Substring(0, a - 1);
+                    string sozcuk2 = sozcuk.Substring(a - 1, b - a + 1);
+                    string sozcuk3 = sozcuk.Substring(b, sozcuk.Length - b);
+                    sozcuk2 = Guzgu(sozcuk2);
+                    sozcuk = sozcuk1 + sozcuk2 + sozcuk3;
+                }
+                if (RS == 'S')
+                {
+                    string sozcuk1 = sozcuk.Substring(0, a - 1);
+                    string sozcuk2 = sozcuk.Substring(a - 1, b - a + 1);
+                    string sozcuk3 = sozcuk.Substring(b, sozcuk.Length - b);
+                    var x = sozcuk2.ToCharArray();
+                    Array.Sort(x);
+                    int len = sozcuk2.Length;
+                    sozcuk2 = "";
+                    for (int j = 0; j < len; j++) sozcuk2 = sozcuk2 + x[j];
+                    sozcuk = sozcuk1 + sozcuk2 + sozcuk3;
+                }
+            }
+            Console.WriteLine(sozcuk);
+        }
+    }
+}
