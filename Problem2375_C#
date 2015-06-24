@@ -1,0 +1,30 @@
+using System;
+
+namespace Problem2375
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int qiymet = int.Parse(massiv[1]);
+            int area = 0;
+            int bedroom = 0;
+            int balcony = 0;
+            for (int i = 0; i < n; i++)
+            {
+                setir = Console.ReadLine();
+                massiv = setir.Split(' ');
+                area = area + int.Parse(massiv[0]);
+                if (massiv[1] == "bedroom") bedroom = bedroom + int.Parse(massiv[0]);
+                if (massiv[1] == "balcony") balcony = balcony + int.Parse(massiv[0]);
+            }
+            Console.WriteLine(area);
+            Console.WriteLine(bedroom);
+            double yekun = qiymet*(area - balcony/2.0);
+            Console.WriteLine(yekun);
+        }
+    }
+}
