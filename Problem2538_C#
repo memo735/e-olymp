@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem2538
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "0")
+            {
+                int len = setir.Length;
+                char c = setir[0];
+                int say = 1;
+                for (int i = 1; i < len; i++)
+                {
+                    char cari = setir[i];
+                    if (c == cari) say++;
+                    else
+                    {
+                        Console.Write("{0}{1}", say, c);
+                        c = cari;
+                        say = 1;
+                    }
+                }
+                Console.WriteLine("{0}{1}", say, c);
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
