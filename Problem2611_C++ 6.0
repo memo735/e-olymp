@@ -1,0 +1,25 @@
+#include <stdio.h>
+ 
+int main()
+{
+    int N, a[14], c, d, pr = 0, i = 0, j;
+    scanf("%d %d %d", &N, &c, &d);
+    if(N < 0) N = -N;
+    while(N > 0)
+    {
+        a[i] = N % 10; N = N / 10; i++;
+    }
+    for(j = 0; j < i; j++)
+    {
+        if(a[j] == c) a[j] = d;
+    }
+    pr = i - 1; j = i - 1;
+    while(a[j] == 0) { pr = j - 1; j--; }
+    if(j != 0)
+    {
+        for(j = pr; j > 0; j--)  printf("%d", a[j]);
+        printf("%d\n", a[0]);
+    }
+    else printf("%d\n", a[0]);
+    return 0;
+}
