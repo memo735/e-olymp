@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem2614
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n == 1) Console.WriteLine(1);
+            else
+            {
+                int say = 1;
+                Console.Write(1);
+                for (int i = 2; i <= n; i++)
+                {
+                    for (int j = 1; j <= i; j++)
+                    {
+                        if (say == n)
+                        {
+                            Console.WriteLine();
+                            return;
+                        }
+                        Console.Write(" " + i);
+                        say++;
+                    }
+                }
+            }
+        }
+    }
+}
