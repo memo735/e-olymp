@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem2496
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            int len = setir.Length;
+            string cavab = "";
+            bool tapildi = false;
+            int j = 0;
+            for (int i = 0; i < len; i++)
+            {
+                if (setir[i] == '(')
+                {
+                    tapildi = true;
+                    j = i;
+                }
+                else
+                {
+                    if (setir[i] == ')')
+                    {
+                        tapildi = false;
+                        for (int k = i - 1; k > j; k--) cavab = cavab + setir[k];
+                    }
+                    else if (!tapildi) cavab = cavab + setir[i];
+                }
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
