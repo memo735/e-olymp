@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem2611
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            string eded = massiv[0];
+            char x = massiv[1][0];
+            char y = massiv[2][0];
+            eded = eded.Replace(x, y);
+            try
+            {
+                Console.WriteLine(int.Parse(eded));
+            }
+            catch (Exception)
+            {
+                Console.WriteLine(eded);
+            }
+        }
+    }
+}
