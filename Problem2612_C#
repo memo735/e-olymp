@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem2612
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int max = Math.Max(a, b);
+            int min = Math.Min(a, b);
+            int say = 0;
+            while (max%min != 0)
+            {
+                int komekci = Math.Max(min, max - min);
+                min = Math.Min(min, max - min);
+                max = komekci;
+                say++;
+            }
+            Console.WriteLine(say + max/min);
+        }
+    }
+}
