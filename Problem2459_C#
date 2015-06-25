@@ -1,0 +1,45 @@
+using System;
+
+namespace Problem2459
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++) y = x[i] + y;
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            setir = setir.Replace(".", "");
+            setir = Guzgu(setir);
+            int d = int.Parse(setir.Substring(0, 2));
+            int m = int.Parse(setir.Substring(2, 2));
+            int y = int.Parse(setir.Substring(4));
+            if (0 < m && m <= 12 && d > 0)
+            {
+                if (m == 2 && (((y%400 == 0 || y%100 != 0 && y%4 == 0) && d <= 29) || d <= 28))
+                {
+                    Console.WriteLine("YES");
+                    return;
+                }
+                if ((m == 4 || m == 6 || m == 9 || m == 11) && d <= 30)
+                {
+                    Console.WriteLine("YES");
+                    return;
+                }
+                if ((m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12) && d <= 31)
+                {
+                    Console.WriteLine("YES");
+                    return;
+                }
+                Console.WriteLine("NO");
+            }
+            else Console.WriteLine("NO");
+        }
+    }
+}
