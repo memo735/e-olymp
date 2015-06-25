@@ -1,0 +1,49 @@
+using System;
+
+namespace Problem2631
+{
+    internal class Program
+    {
+        private static int MaxEBOB(int[] a)
+        {
+            int max = 1;
+            int len = a.Length;
+            for (int i = 0; i < len; i++)
+            {
+                for (int j = i + 1; j < len; j++)
+                {
+                    max = Math.Max(max, EBOB(Math.Min(a[i], a[j]), Math.Max(a[i], a[j])));
+                }
+            }
+            return max;
+        }
+
+        private static int EBOB(int x, int y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return (x + y);
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                int len = massiv.Length;
+                int[] a = new int[len];
+                for (int j = 0; j < len; j++)
+                {
+                    a[j] = int.Parse(massiv[j]);
+                }
+                Array.Sort(a);
+                Console.WriteLine(MaxEBOB(a));
+            }
+        }
+    }
+}
