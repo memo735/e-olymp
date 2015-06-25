@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem2610
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n == 1) Console.WriteLine(9);
+            else
+            {
+                int yari = n/2;
+                for (int i = 1; i <= yari; i++) Console.Write(98);
+                if (n%2 == 1) Console.Write(9);
+                Console.WriteLine();
+            }
+        }
+    }
+}
