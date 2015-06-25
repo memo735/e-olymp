@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem2425
+{
+    internal class Program
+    {
+        private static List<long> generate_fibs(long n)
+        {
+            List<long> fib = new List<long>();
+            long a = 1, b = 1;
+            while (a <= n)
+            {
+                fib.Add(a);
+                long komekci = a;
+                a = a + b;
+                b = komekci;
+            }
+            return fib;
+        }
+
+        public static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            List<long> fib = generate_fibs(n);
+            string cavab = "";
+            for (int i = fib.Count - 1; i > -1; i--)
+            {
+                long t = fib[i];
+                if (n >= t)
+                {
+                    cavab = cavab + "1";
+                    n = n - t;
+                }
+                else cavab = cavab + "0";
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
