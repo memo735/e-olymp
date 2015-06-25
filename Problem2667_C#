@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem2667
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            //istiqametsiz de alinir
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            int x = int.Parse(massiv[2]);
+            int y = int.Parse(massiv[3]);
+            Console.WriteLine(m*(x - 1) + (x%2 == 0 ? m - y : y - 1));
+        }
+    }
+}
