@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem2440
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 1; i <= n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                int[] a = new int[10];
+                for (int j = 0; j < 10; j++) a[j] = int.Parse(massiv[j + 1]);
+                Array.Sort(a);
+                Console.WriteLine(i + " " + a[7]);
+            }
+        }
+    }
+}
