@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem2608
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            double x = Math.Log(n, 2);
+            int y = (int) x;
+            if (x == y) Console.WriteLine("I=" + y);
+            else Console.WriteLine(y + "<I<" + (y + 1));
+        }
+    }
+}
