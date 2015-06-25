@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem2662
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[] a = new int[n];
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++) a[i] = int.Parse(massiv[i]);
+            int k = a[0];
+            int say = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int min = i;
+                for (int j = i + 1; j < n; j++)
+                {
+                    if (a[j] < a[min]) min = j;
+                }
+                if (min != i)
+                {
+                    if (a[i] == k || a[min] == k) say++;
+                    int komekci = a[i];
+                    a[i] = a[min];
+                    a[min] = komekci;
+                }
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
