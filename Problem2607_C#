@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem2607
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            int len = eded.Length;
+            int cemTek = 0;
+            int cemCut = 0;
+            for (int i = 0; i < len; i = i + 2)
+            {
+                cemTek = cemTek + int.Parse(eded[i].ToString());
+            }
+            for (int i = 1; i < len; i = i + 2)
+            {
+                cemCut = cemCut + int.Parse(eded[i].ToString());
+            }
+            Console.WriteLine(cemTek*cemCut);
+        }
+    }
+}
