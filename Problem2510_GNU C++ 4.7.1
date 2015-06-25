@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <queue>
+#include <algorithm>
+using namespace std;
+ 
+int main()
+{
+    unsigned n; scanf("%u", &n);    //количество команд
+    int* to_sort = new int[n];      //исходный массив
+    for(int i = 0; i < n; i++) scanf("%d", to_sort + i);
+ 
+    unsigned k; scanf("%u", &k);    //количество очередей
+    queue<int>* sorting_machine = new queue<int>[k];    //массив очередей
+ 
+    int *order = new int[n];    //порядок размещения чисел по очередям
+    for(int i = 0; i < n; i++)
+    {
+        //подходящая очередь либо пуста, либо имеет последний элемент, меньший данного
+        //найти её номер в массиве
+        int available = find_if(sorting_machine, sorting_machine + k,
+            [&](const queue<int> &q){return q.empty() || q.back() <= to_sort[i];}) - sorting_machine;
+        //если таких очередей нет, то сортировка невозможна
+        if(available >= k) { puts("NO"); return 0; }
+        //добавить элемент массива в одну из очередей
+        sorting_machine[available].push(to_sort[i]);
+        order[i] = available + 1;
+    }
+ 
+    puts("YES");
+    for(int i = 0; i < n; i++) printf("I(%d)\n", order[i]);
+    //вывод порядка размещения исходного массива чисел по очередям
+    for(int i = 0; i < n; i++){
+        //так как и очередей, и элементов мало, найти минимальный доступный элемент
+        queue<int>* minimum = min_element(sorting_machine, sorting_machine + k,
+        [&](const queue<int> x, const queue<int> y){
+            return !x.empty() && !y.empty() && x.front() < y.front();
+        });
+        minimum->pop(); //удалить его и вывести номер соответствующей очереди
+        printf("R(%d)\n", minimum-sorting_machine+1);
+    }
+    return 0;
+}
