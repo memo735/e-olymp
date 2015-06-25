@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem2501
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            double pi = 3.1415926535897932384626433832795;
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int r = int.Parse(massiv[1]);
+            double sahe = pi*r*r;
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            int[] buf = new int[n];
+            int cem = 0;
+            for (int i = 0; i < n; i++)
+            {
+                buf[i] = int.Parse(massiv[i]);
+                cem = cem + buf[i];
+            }
+            for (int i = 0; i < n; i++) Console.WriteLine((sahe/cem)*buf[i]);
+        }
+    }
+}
