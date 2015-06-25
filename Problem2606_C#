@@ -1,0 +1,63 @@
+using System;
+
+namespace Problem2606
+{
+    internal class Program
+    {
+        private static bool Sade(int x)
+        {
+            if ((x == 0) || (x == 1)) return false;
+            if ((x == 2) || (x == 3)) return true;
+            if (x%2 == 0) return false;
+            int kok = (int) Math.Sqrt(x) + 1;
+            for (int i = 3; i < kok; i = i + 2)
+            {
+                if (x%i == 0) return false;
+            }
+            return true;
+        }
+
+        private static int NovbetiSade(int x)
+        {
+            if ((x == 0) || (x == 1)) return 2;
+            if (x == 2) return 3;
+            x = x%2 == 0 ? x + 1 : x + 2;
+            for (int i = x; i < 1010; i++)
+            {
+                if (Sade(i)) return i;
+            }
+            return 0;
+        }
+
+        private static int Vuruq(int n)
+        {
+            if (Sade(n)) return n;
+            int kok = (int) Math.Sqrt(n) + 1;
+            for (int i = 2; i <= kok; i = NovbetiSade(i))
+            {
+                if (n%i == 0) return i;
+            }
+            return 0;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string cavab = "";
+            int cari = n;
+            while (cari > 1)
+            {
+                int tekrar = 0;
+                int vuruq = Vuruq(cari);
+                while (cari%vuruq == 0)
+                {
+                    tekrar++;
+                    cari = cari/vuruq;
+                }
+                cavab = (tekrar == 1) ? cavab + vuruq + "*" : cavab + vuruq + "^" + tekrar + "*";
+            }
+            cavab = cavab.TrimEnd('*');
+            Console.WriteLine(cavab);
+        }
+    }
+}
