@@ -1,0 +1,37 @@
+using System;
+
+namespace Problem2619
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[] a = new int[n];
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int cem = 0;
+            for (int i = 0; i < n; i++)
+            {
+                a[i] = int.Parse(massiv[i]);
+                cem = cem + a[i];
+            }
+            if (cem%2 == 0)
+            {
+                int solCem = 0;
+                for (int k = 0; k < n; k++)
+                {
+                    cem = cem - a[k];
+                    solCem = solCem + a[k];
+                    if (cem == solCem)
+                    {
+                        Console.WriteLine(k + 1);
+                        return;
+                    }
+                    if (cem < solCem) break;
+                }
+            }
+            Console.WriteLine(-1);
+        }
+    }
+}
