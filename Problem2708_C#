@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem2708
+{
+    internal class Program
+    {
+        private static int EBOB(int x, int y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return (x + y);
+        }
+
+        private static int EKOB(int x, int y)
+        {
+            return x*y/EBOB(x, y);
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            Console.WriteLine(EKOB(n, m) - 1);
+        }
+    }
+}
