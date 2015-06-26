@@ -1,0 +1,38 @@
+using System;
+
+namespace Problem2674
+{
+    internal class Program
+    {
+        private static int EBOB(int x, int y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return (x + y);
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            if (a < 0 || b < 0)
+            {
+                Console.Write(a*b < 0 ? "-" : "");
+                a = Math.Abs(a);
+                b = Math.Abs(b);
+                int ebob = EBOB(a, b);
+                Console.WriteLine(a/ebob + " " + b/ebob);
+            }
+            else
+            {
+                int ebob = EBOB(a, b);
+                Console.WriteLine(a/ebob + " " + b/ebob);
+            }
+        }
+    }
+}
