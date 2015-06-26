@@ -1,0 +1,18 @@
+var n,i,j,say,ikiQuvveti,ucQuvveti, son: Int64;
+begin
+  readln(n); say:=1;
+  i:=1; j:=1; son:=1;
+  while say<=n do
+    begin
+      ikiQuvveti:=i*i;
+      ucQuvveti:=j*j*j;
+      if ikiQuvveti=ucQuvveti then begin i:=i+1; j:=j+1; son:=ikiQuvveti; end
+      else
+        begin
+          if ikiQuvveti<ucQuvveti then begin i:=i+1; son:=ikiQuvveti; end
+          else begin j:=j+1; son:=ucQuvveti; end;
+        end;
+      say:=say+1;  
+    end;
+  writeln(son);
+end.
