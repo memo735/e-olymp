@@ -1,0 +1,27 @@
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int n = in.nextInt(), m = in.nextInt();
+    char[][] cs = new char[n][m];
+
+    int w = in.nextInt();
+    while(w-- > 0)
+      cs[in.nextInt()-1][in.nextInt()-1] = '*';
+
+    for(int i=0; i<n; i++)
+      for(int j=0; j<m; j++) {
+        System.out.print(cs[i][j] == '*' ? "*" : count(cs, i, j));
+        System.out.print(j < m-1 ? ' ' : '\n');
+      }
+  }
+
+  private static int count(char[][] cs, int x, int y) {
+    int cnt = 0;
+    for(int i=Math.max(0, x-1); i<Math.min(cs.length, x+2); i++)
+      for(int j=Math.max(0, y-1); j<Math.min(cs[0].length, y+2); j++)
+        if(cs[i][j] == '*') cnt++;
+    return cnt;
+  }
+}
