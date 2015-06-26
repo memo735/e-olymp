@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem2714
+{
+    internal class Program
+    {
+        private static bool boyukHerf(char x)
+        {
+            foreach (char c in "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+            {
+                if (c == x) return true;
+            }
+            return false;
+        }
+
+        public static void Main(string[] args)
+        {
+            string soz = Console.ReadLine();
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int boyutmek = int.Parse(massiv[0]);
+            int kiciltmek = int.Parse(massiv[1]);
+            int cemiBoyutmek = 0;
+            int cemiKiciltmek = 0;
+            foreach (char x in soz)
+            {
+                if (boyukHerf(x)) cemiKiciltmek = cemiKiciltmek + kiciltmek;
+                else cemiBoyutmek = cemiBoyutmek + boyutmek;
+            }
+            Console.WriteLine(cemiKiciltmek < cemiBoyutmek ? cemiKiciltmek : cemiBoyutmek);
+        }
+    }
+}
