@@ -1,0 +1,37 @@
+TYPE DigStr = string[2];
+CONST Digs:Array[1..13] of DigStr = ('I','IV','V','IX','X','XL','L','XC','C','CD','D','CM','M');
+      Vals:Array[1..13] of Integer = (1,4,5,9,10,40,50,90,100,400,500,900,1000);
+VAR n: ShortInt;
+
+FUNCTION Dig(C: char): Integer;
+begin
+  case C of
+    'I': Dig:=1;
+    'V': Dig:=5;
+    'X': Dig:=10;
+    'L': Dig:=50;
+    'C': Dig:=100;
+    'D': Dig:=500;
+    'M': Dig:=1000;
+  end;
+end;
+
+FUNCTION ArabToRoman(Num:ShortInt):string;
+var S:String; K,i:ShortInt;
+begin
+  i:=13; S:='';
+  K:=Num;
+  while i<>0 do
+    if K>=Vals[i] then
+      begin
+        K:=K-Vals[i];
+        S:=S+Digs[i];
+      end
+    else dec(i);
+  ArabToRoman:=S;
+end;
+
+BEGIN
+  readln(n);
+  writeln(ArabToRoman(n));
+END.
