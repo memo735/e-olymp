@@ -1,0 +1,23 @@
+using System;
+
+namespace Problem2713
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[] fib = new int[44];
+            fib[1] = 1;
+            fib[2] = 1;
+            string siyahi = "011";
+            for (int i = 3; i < 44; i++)
+            {
+                fib[i] = fib[i - 1] + fib[i - 2];
+                siyahi = siyahi + fib[i];
+                if (siyahi.Length > n) break;
+            }
+            Console.WriteLine(siyahi[n]);
+        }
+    }
+}
