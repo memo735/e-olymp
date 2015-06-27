@@ -1,0 +1,30 @@
+using System;
+
+namespace Problem3174
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int t = int.Parse(Console.ReadLine());
+            int len = 1000;
+            int[,] ns = new int[len, len];
+            for (int i = 0; i < len; i++)
+            {
+                ns[len - 1, i] = ns[i, 0] = 1;
+            }
+            for (int i = len - 2; i > -1; i--)
+            {
+                for (int j = 1; j < len; j++)
+                {
+                    ns[i, j] = (ns[i, j - 1] + ns[i + 1, j] + ns[i + 1, j - 1])%1000003;
+                }
+            }
+            for (int i = 0; i < t; i++)
+            {
+                int n = int.Parse(Console.ReadLine());
+                Console.WriteLine(ns[1000 - n, n - 1]);
+            }
+        }
+    }
+}
