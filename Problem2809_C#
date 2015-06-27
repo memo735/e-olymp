@@ -1,0 +1,18 @@
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int x = in.nextInt(), y = in.nextInt(), a = 0, b = 1, i = 2;
+
+    while(i++ < x) {
+      int t = a + b; a = b; b = t;
+    }
+
+    for(i=y/a; i>-1; i--) {
+      for(int j=i; j>-1; j--) {
+        if(a*i + b*j == y) System.out.printf("%d %d\n", i, j);
+      }
+    }
+  }
+}
