@@ -1,0 +1,35 @@
+using System;
+
+namespace Problem3255
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            string cavab = "";
+            string cari = "";
+            char emel = '-';
+            int len = setir.Length;
+            for (int i = 0; i < len; i++)
+            {
+                if (setir[i] != '+' && setir[i] != '*') cari = cari + setir[i];
+                else
+                {
+                    if (emel == '-') cavab = cari;
+                    else
+                    {
+                        if (emel == '+') cavab = (long.Parse(cavab) + long.Parse(cari)) + "";
+                        else cavab = (long.Parse(cavab)*long.Parse(cari)) + "";
+                    }
+                    emel = setir[i];
+                    cari = "";
+                }
+            }
+            if (emel != '+' && emel != '*') cavab = cari;
+            if (emel == '+') cavab = (long.Parse(cavab) + long.Parse(cari)) + "";
+            if (emel == '*') cavab = (long.Parse(cavab)*long.Parse(cari)) + "";
+            Console.WriteLine(cavab);
+        }
+    }
+}
