@@ -1,0 +1,30 @@
+using System;
+
+namespace Problem3256
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int[] a = new int[n];
+            int cem = 0;
+            for (int i = 0; i < n; i++)
+            {
+                cem = cem + int.Parse(massiv[i]);
+                a[i] = cem;
+            }
+            int min = int.MaxValue;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = i; j < n; j++)
+                {
+                    min = Math.Min(min, a[j] - (i == 0 ? 0 : a[i - 1]));
+                }
+            }
+            Console.WriteLine(min);
+        }
+    }
+}
