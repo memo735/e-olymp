@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem2817
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++) y = x[i] + y;
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            int d = int.Parse(Console.ReadLine());
+            for (int i = 0; i < d; i++)
+            {
+                string ikilik = Convert.ToString(int.Parse(Console.ReadLine()), 2);
+                ikilik = Guzgu(ikilik); //indekslemeye gore
+                int len = ikilik.Length;
+                string cavab = "";
+                for (int j = 0; j < len; j++)
+                {
+                    if (ikilik[j] == '1') cavab = cavab + j + " ";
+                }
+                cavab = cavab.TrimEnd(' ');
+                Console.WriteLine(cavab);
+            }
+        }
+    }
+}
