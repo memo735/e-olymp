@@ -1,0 +1,21 @@
+using System;
+using System.Numerics;
+
+namespace Problem2796
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            int len = eded.Length;
+            BigInteger boyuk = 0;
+            for (int i = len - 1; i > -1; i--)
+            {
+                BigInteger cari = BigInteger.Parse(eded.Substring(0, i) + eded.Substring(i + 1));
+                if (boyuk < cari) boyuk = cari;
+            }
+            Console.WriteLine(boyuk);
+        }
+    }
+}
