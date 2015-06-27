@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem2733
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            Console.WriteLine((1 << n) + (1 << m));
+        }
+    }
+}
