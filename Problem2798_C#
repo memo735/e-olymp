@@ -1,0 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+
+namespace Problem2798
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            List<BigInteger> coxluq = new List<BigInteger> {2};
+            for (int i = 0; i < 64; i++)
+            {
+                for (int j = i + 1; j < 64; j++)
+                {
+                    BigInteger cari = BigInteger.Pow(2, i) + BigInteger.Pow(2, j);
+                    if (!coxluq.Contains(cari)) coxluq.Add(cari);
+                }
+            }
+            coxluq.Sort();
+            Console.WriteLine(coxluq[n]);
+        }
+    }
+}
