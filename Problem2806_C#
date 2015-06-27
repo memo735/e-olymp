@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem2806
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            //n-(2e bolunenleri sayi)-(3e bolunenleri sayi)-(5e bolunenleri sayi)
+            //+(2ve3e bolunenleri sayi)+(2ve5e bolunenleri sayi)+(3ve5e bolunenleri sayi)-
+            //-(2ve3ve5e bolunenleri sayi)
+            Console.WriteLine(n - n/2 - n/3 - n/5 + n/6 + n/10 + n/15 - n/30);
+        }
+    }
+}
