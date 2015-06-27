@@ -19,16 +19,16 @@ namespace Problem3255
                     if (emel == '-') cavab = cari;
                     else
                     {
-                        if (emel == '+') cavab = (long.Parse(cavab) + long.Parse(cari)) + "";
-                        else cavab = (long.Parse(cavab)*long.Parse(cari)) + "";
+                        if (emel == '+') cavab = (int.Parse(cavab) + int.Parse(cari)) + "";
+                        else cavab = (int.Parse(cavab)*int.Parse(cari)) + "";
                     }
                     emel = setir[i];
                     cari = "";
                 }
             }
             if (emel != '+' && emel != '*') cavab = cari;
-            if (emel == '+') cavab = (long.Parse(cavab) + long.Parse(cari)) + "";
-            if (emel == '*') cavab = (long.Parse(cavab)*long.Parse(cari)) + "";
+            if (emel == '+') cavab = (int.Parse(cavab) + int.Parse(cari)) + "";
+            if (emel == '*') cavab = (int.Parse(cavab)*int.Parse(cari)) + "";
             Console.WriteLine(cavab);
         }
     }
