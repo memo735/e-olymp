@@ -1,0 +1,38 @@
+using System;
+
+namespace Problem2732
+{
+    internal class Program
+    {
+        private static bool olaBilermi(int a, int b, int c)
+        {
+            if (b + c <= a) return false;
+            if (a + c <= b) return false;
+            if (a + b <= c) return false;
+            return true;
+        }
+
+        public static void Main(string[] args)
+        {
+            int t = int.Parse(Console.ReadLine());
+            for (int i = 1; i <= t; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                int a = int.Parse(massiv[0]);
+                int b = int.Parse(massiv[1]);
+                int c = int.Parse(massiv[2]);
+                if (olaBilermi(a, b, c))
+                {
+                    if (a == b && a == c && b == c) Console.WriteLine("Case #{0}: equilateral", i);
+                    else
+                    {
+                        if (a == b || a == c || b == c) Console.WriteLine("Case #{0}: isosceles", i);
+                        else Console.WriteLine("Case #{0}: scalene", i);
+                    }
+                }
+                else Console.WriteLine("Case #{0}: invalid!", i);
+            }
+        }
+    }
+}
