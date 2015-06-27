@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem2807
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int simvol = 0;
+            string setir = Console.ReadLine();
+            foreach (char c in setir)
+            {
+                simvol = simvol ^ c;
+            }
+            if (simvol == 0) Console.WriteLine("Ok");
+            else Console.WriteLine((char) simvol);
+        }
+    }
+}
