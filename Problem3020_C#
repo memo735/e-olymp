@@ -1,0 +1,31 @@
+using System;
+
+namespace Problem3020
+{
+    internal class Program
+    {
+        private static string Deyish(char x)
+        {
+            if (x == ' ') return "%20";
+            if (x == '!') return "%21";
+            if (x == '$') return "%24";
+            if (x == '%') return "%25";
+            if (x == '(') return "%28";
+            if (x == ')') return "%29";
+            if (x == '*') return "%2a";
+            return x + "";
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "#")
+            {
+                string cavab = "";
+                foreach (char c in setir) cavab = cavab + Deyish(c);
+                Console.WriteLine(cavab);
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
