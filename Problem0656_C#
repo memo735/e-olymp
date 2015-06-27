@@ -4,28 +4,28 @@ namespace Problem656
 {
     internal class Program
     {
-        private static string Yoxla(uint x)
+        private static string Yoxla(long x)
         {
-            if (x <= 9) return "Stan wins.";
-            if ((x > 9) && (x <= 18)) return "Ollie wins.";
-            if ((x > 18) && (x <= 162)) return "Stan wins.";
-            if ((x > 162) && (x <= 324)) return "Ollie wins.";
-            if ((x > 324) && (x <= 2916)) return "Stan wins.";
-            if ((x > 2916) && (x <= 5832)) return "Ollie wins.";
-            if ((x > 5832) && (x <= 52488)) return "Stan wins.";
-            if ((x > 52488) && (x <= 104976)) return "Ollie wins.";
-            if ((x > 104976) && (x <= 944784)) return "Stan wins.";
-            if ((x > 944784) && (x <= 1889568)) return "Ollie wins.";
-            if ((x > 1889568) && (x <= 17006112)) return "Stan wins.";
-            if ((x > 17006112) && (x <= 34012224)) return "Ollie wins.";
-            if ((x > 34012224) && (x <= 306110016)) return "Stan wins.";
-            if ((x > 306110016) && (x <= 612220032)) return "Ollie wins.";
+            if (x < 10) return "Stan wins.";
+            if (x < 19) return "Ollie wins.";
+            if (x < 163) return "Stan wins.";
+            if (x < 325) return "Ollie wins.";
+            if (x < 2917) return "Stan wins.";
+            if (x < 5833) return "Ollie wins.";
+            if (x < 52489) return "Stan wins.";
+            if (x < 104977) return "Ollie wins.";
+            if (x < 944785) return "Stan wins.";
+            if (x < 1889569) return "Ollie wins.";
+            if (x < 17006113) return "Stan wins.";
+            if (x < 34012225) return "Ollie wins.";
+            if (x < 306110017) return "Stan wins.";
+            if (x < 612220033) return "Ollie wins.";
             return "Stan wins.";
         }
 
         public static void Main(string[] args)
         {
-            var n = uint.Parse(Console.ReadLine());
+            long n = long.Parse(Console.ReadLine());
             Console.WriteLine(Yoxla(n));
         }
     }
