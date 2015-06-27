@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem2814
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string ikilik = Convert.ToString(int.Parse(Console.ReadLine()), 2);
+            int len = ikilik.Length;
+            string cavab = "";
+            for (int i = 1; i < len; i++)
+            {
+                cavab = cavab + "S";
+                if (ikilik[i] == '1') cavab = cavab + "X";
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
