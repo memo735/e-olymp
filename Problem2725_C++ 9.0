@@ -1,0 +1,57 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<iostream>
+#include<queue>
+#include<cmath>
+#include<map>
+#include<stack>
+#include<bitset>
+using namespace std;
+#define REPF(i, a, b) for(int i = a; i <= b; ++i)
+#define REP(i, n) for (int i = 0; i < n; ++i)
+#define CLEAR(a, x) memset (a, x, sizeof a)
+typedef long long LL;
+typedef pair<int,int> pil;
+const int mod = 1000000007;
+LL a,b,n; int t;
+LL solve(LL r,LL n)
+{
+    vector<int> v;
+    for(int i=2; i*i<=n; i++)
+    {
+        if(n && n%i==0)
+        {
+            v.push_back(i);
+            while(n&&n%i==0) n=n/i;
+        }
+    }
+    if(n>1)  v.push_back(n);
+    LL sum=0;
+    for(int t=1;t<(1<<v.size());t++)
+    {
+        LL mul=1, bits=0;
+        for(int i=0; i<(int)v.size(); i++)
+        {
+            if(t&(1<<i))
+            {
+                ++bits; mul=mul*v[i];
+            }
+        }
+        if (bits&1) sum=sum+r/mul;
+        else sum=sum-r/mul;
+    }
+    return r-sum;
+}
+int main()
+{
+    int cas=1; scanf("%d",&t);
+    while(t--)
+    {
+        scanf("%I64d%I64d%I64d",&a,&b,&n);
+        printf("Case #%d: %I64d\n",cas++, solve(b,n)-solve(a-1,n));
+    }
+    return 0;
+}
