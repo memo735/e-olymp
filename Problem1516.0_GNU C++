@@ -1,0 +1,40 @@
+#include <cstdio>
+#include <cmath>
+#include <algorithm>
+
+void buildTree(int n1, int n2, int h)
+{
+	int n = n2 - n1 + 1;
+	if (n == 0 || h == 0)  return ;
+
+	int powerH = pow(2, h);
+	if(n > 1 || h > 1)
+	{ 
+		if (n > (powerH - 1))
+		{
+			//printf("%d %d %d\n", n1, n2, h);
+			printf(" Impossible.");
+			return ;
+		}
+	}
+	int goesToLeft = std::max(n - powerH / 2, 0);
+	
+	//printf("%d %d %d %d\n", n1, n2, h, goesToLeft);
+	printf(" %d", n1 + goesToLeft);
+	if (goesToLeft > 0) buildTree(n1, n1 + goesToLeft - 1, h - 1);
+	buildTree(n1 + goesToLeft + 1, n2, h - 1);
+}
+
+int main()
+{
+	int n, h; int caseNum = 0;
+	do
+	{
+		caseNum++; scanf("%d %d", &n, &h);
+		if (n == 0) break;
+		printf("Case %d:", caseNum);
+		buildTree(1, n, h);
+		printf("\n");
+	} while(1);
+	return 0;
+}
