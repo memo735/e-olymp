@@ -4,7 +4,7 @@
 
 void buildTree(int n1, int n2, int h)
 {
-	int n = n2 - n1 + 1;
+    int n = n2 - n1 + 1;
 	if (n == 0 || h == 0)  return ;
 
 	int powerH = pow(2, h);
