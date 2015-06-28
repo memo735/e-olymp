@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem3823
+{
+    internal class Program
+    {
+        private static void Yoxla(int c)
+        {
+            double e = 2.718281828459045235360287471352662;
+            for (int b = 30; b > 1; b--)
+            {
+                // a = c^(1/b)
+                int a = (int) Math.Round(Math.Pow(e, Math.Log(c)/b));
+                if (Math.Pow(a, b) == c)
+                {
+                    Console.WriteLine("{0} = {1} ^ {2}", c, a, b);
+                    return;
+                }
+            }
+            Console.WriteLine("{0} = {0} ^ 1", c);
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                int c = int.Parse(Console.ReadLine());
+                Yoxla(c);
+            }
+        }
+    }
+}
