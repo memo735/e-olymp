@@ -1,0 +1,37 @@
+using System;
+
+namespace Problem3744
+{
+    internal class Program
+    {
+        private static int Fakt(int x)
+        {
+            switch (x)
+            {
+                case 1: return 1;
+                case 2: return 2;
+                case 3: return 6;
+                case 4: return 24;
+            }
+            return 120;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            while (n != 0)
+            {
+                int i = 1;
+                int cavab = 0;
+                while (n > 0)
+                {
+                    cavab = cavab + Fakt(i)*(n%10);
+                    n = n/10;
+                    i++;
+                }
+                Console.WriteLine(cavab);
+                n = int.Parse(Console.ReadLine());
+            }
+        }
+    }
+}
