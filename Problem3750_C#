@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem3750
+{
+    internal class Program
+    {
+        private static void Yoxla(string x)
+        {
+            x = x.ToLower();
+            var massiv = x.Split(' ');
+            int len = massiv.Length;
+            char ilkHerif = massiv[0][0];
+            for (int i = 1; i < len; i++)
+            {
+                if (massiv[i][0] != ilkHerif)
+                {
+                    Console.WriteLine("N");
+                    return;
+                }
+            }
+            Console.WriteLine("Y");
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "*")
+            {
+                Yoxla(setir);
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
