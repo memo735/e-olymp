@@ -1,0 +1,66 @@
+using System;
+
+namespace Problem3259
+{
+    internal class Program
+    {
+        private static bool Sade(int x)
+        {
+            if ((x == 0) || (x == 1)) return false;
+            if ((x == 2) || (x == 3)) return true;
+            if (x % 2 == 0) return false;
+            int kok = (int)Math.Sqrt(x) + 1;
+            for (int i = 3; i < kok; i = i + 2)
+            {
+                if (x % i == 0) return false;
+            }
+            return true;
+        }
+
+        private static int NovbetiSade(int x)
+        {
+            if ((x == 0) || (x == 1)) return 2;
+            if (x == 2) return 3;
+            x = x % 2 == 0 ? x + 1 : x + 2;
+            for (int i = x; i < 110000; i++)
+            {
+                if (Sade(i)) return i;
+            }
+            return 0;
+        }
+
+        private static int bolenSayi(int x)
+        {
+            if (Sade(x)) return 2;
+            int say = 1;
+            int bolen = 2;
+            while (x > 1)
+            {
+                int tekrar = 0;
+                while (x % bolen == 0)
+                {
+                    x = x / bolen;
+                    tekrar++;
+                }
+                if (tekrar > 0) say = say * (tekrar + 1);
+                bolen = NovbetiSade(bolen);
+            }
+            return say;
+        }
+
+        private static int bolenSayinaGoreTap(int n)
+        {
+            for (int i = 1; i < 4100; i++)
+            {
+                if (bolenSayi(i) == n) return i;
+            }
+            return 0;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(bolenSayinaGoreTap(n));
+        }
+    }
+}
