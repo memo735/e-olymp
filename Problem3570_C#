@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem3570
+{
+    internal class Program
+    {
+        private static string neceOglandur(string filankes)
+        {
+            int g = 0, b = 0;
+            foreach (char c in filankes.ToLower())
+            {
+                if (c == 'g') g++;
+                else if (c == 'b') b++;
+            }
+            return g > b ? "GOOD" : (g == b ? "NEUTRAL" : "A BADDY");
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string filankes = Console.ReadLine();
+                Console.WriteLine(filankes + " is " + neceOglandur(filankes));
+            }
+        }
+    }
+}
