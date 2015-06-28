@@ -1,0 +1,16 @@
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+
+    while(in.hasNextLine()) {
+      int m = 0, p = 0, i = 0;
+      for(char c : in.nextLine().toCharArray()) {
+        if(c == p) i++;
+        else { m = Math.max(m, i); i = 1; p = c; }
+      }
+      System.out.println(Math.max(m, i));
+    }
+  }
+}
