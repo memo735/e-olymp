@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem3913
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string indeks = Console.ReadLine();
+            var massiv = indeks.Split(' ');
+            string setir = Console.ReadLine();
+            var arr = setir.Split(' ');
+            int len = massiv.Length;
+            for (int i = 0; i < len; i++)
+            {
+                Console.Write(arr[int.Parse(massiv[i])]);
+                if (i < len - 1) Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
