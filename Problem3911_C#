@@ -1,0 +1,17 @@
+using System;
+using System.Numerics;
+
+namespace Problem3911
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            BigInteger a = BigInteger.Parse(massiv[0]);
+            BigInteger b = BigInteger.Parse(massiv[1]);
+            Console.WriteLine("{0} {1}", BigInteger.Divide(a, b), BigInteger.ModPow(a, 1, b));
+        }
+    }
+}
