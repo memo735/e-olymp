@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem3935
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int len = int.Parse(Console.ReadLine());
+            string cavab = "";
+            for (int i = 0; i < len; i++)
+            {
+                string cari = Console.ReadLine();
+                cavab = cari + " " + cavab;
+            }
+            cavab = cavab.TrimEnd(' ');
+            Console.WriteLine(cavab);
+        }
+    }
+}
