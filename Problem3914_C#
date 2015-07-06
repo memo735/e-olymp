@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem3914
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int l = int.Parse(massiv[0]);
+            int k = int.Parse(massiv[1]);
+            int n = int.Parse(Console.ReadLine());
+            int c = 0;
+            int i;
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            for (i = 0; i < n; i++)
+            {
+                int m = int.Parse(massiv[i]);
+                if (c + m*k > l) break;
+                c = c + m*k;
+            }
+            Console.WriteLine(i);
+        }
+    }
+}
