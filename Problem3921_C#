@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem3921
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int len = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int[] boy = new int[len];
+            for (int i = 0; i < len; i++)
+            {
+                boy[i] = int.Parse(massiv[i]);
+            }
+            Array.Sort(boy);
+            for (int i = 0; i < len; i++)
+            {
+                Console.Write(boy[i]);
+                if (i < len - 1) Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
