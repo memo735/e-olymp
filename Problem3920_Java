@@ -1,0 +1,15 @@
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int r = in.nextInt();
+
+    while(in.hasNextInt()) r = gcd(r, in.nextInt());
+    System.out.println(r);
+  }
+
+  private static int gcd(int a, int b) {
+    return b == 0 ? a : gcd(b, a%b);
+  }
+}
