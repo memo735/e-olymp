@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem3966
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            HashSet<int> siyahi = new HashSet<int>();
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++)
+            {
+                siyahi.Add(int.Parse(massiv[i]));
+            }
+            int m = int.Parse(Console.ReadLine());
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            for (int i = 0; i < m; i++)
+            {
+                int cari = int.Parse(massiv[i]);
+                Console.WriteLine(siyahi.Contains(cari) ? "YES" : "NO");
+            }
+        }
+    }
+}
