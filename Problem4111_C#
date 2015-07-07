@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem4111
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int t = int.Parse(Console.ReadLine());
+            for (int i = 0; i < t; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                char[] a = massiv[0].ToCharArray();
+                char[] b = massiv[1].ToCharArray();
+                if (a.Length != b.Length) Console.WriteLine("NO");
+                else
+                {
+                    Array.Sort(a);
+                    Array.Sort(b);
+                    string c = "";
+                    string d = "";
+                    int len = a.Length;
+                    for (int j = 0; j < len; j++)
+                    {
+                        c = c + a[j];
+                        d = d + b[j];
+                    }
+                    Console.WriteLine(c == d ? "YES" : "NO");
+                }
+            }
+        }
+    }
+}
