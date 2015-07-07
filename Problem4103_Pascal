@@ -1,0 +1,45 @@
+TYPE DigStr = String[2];
+CONST Digs: Array[1..13] of DigStr = ('I','IV','V','IX','X','XL','L','XC','C','CD','D','CM','M');
+      Vals: Array[1..13] of Integer = (1,4,5,9,10,40,50,90,100,400,500,900,1000);
+VAR rum: String; n,i: Integer;
+
+FUNCTION Dig(C: Char): Integer;
+begin
+  case C of
+    'I':Dig:=1;
+    'V':Dig:=5;
+    'X':Dig:=10;
+    'L':Dig:=50;
+    'C':Dig:=100;
+    'D':Dig:=500;
+    'M':Dig:=1000;
+  end;
+end;
+
+FUNCTION RomanToArab(var S: String): Integer;
+var Sum,i,Len: Integer;
+begin
+  Sum:=0;
+  i:=1; Len:=length(S);
+  while i<Len do
+  begin
+    if Dig(S[i])<Dig(S[i+1]) then
+      begin
+        Sum:=Sum+Dig(S[i+1])-Dig(S[i]);
+        i:=i+1;
+      end
+    else Sum:=Sum+Dig(S[i]);
+    i:=i+1;
+  end;
+  if i=Len then Sum:=Sum+Dig(S[Len]);
+  RomanToArab:=Sum;
+end;
+
+BEGIN
+  readln(n);
+  for i:=1 to n do
+    begin
+      readln(rum);
+      writeln(RomanToArab(rum));
+    end;
+END.
