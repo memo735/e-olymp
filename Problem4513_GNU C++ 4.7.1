@@ -1,0 +1,28 @@
+#include <iostream>
+using namespace std;
+struct stack{
+	int truck[100]; int length = 0;
+	int pop () { return truck[--length]; }
+	void push (int x) { truck[length++] = x; }
+	int front () { return truck[length-1]; }
+	int size () { return length; }
+}
+car; 
+
+int main() {
+	int amount_n; cin >> amount_n; //Ввод (количество вагонов)
+	int n, count = 1;
+	while (cin >> n) { //Цикл (для ввода нового вагона)
+		car.push(n); //заводим в стек новый вагон 
+		if (n == count) { count++; car.pop(); } //проверяем, если вагон подходит, то выводим его на путь 2
+		while (car.size() > 0) {
+        //т.к. перед подходящим вагоном может стоять следующий подходящий вагон или несколько вагонов,
+        //то пока стек не пуст будем проверять последние вагоны в стеке
+		if (car.front() == count) { count++; car.pop(); } //если вагон подходит выводим на путь 2
+		else break;
+		}
+	}
+	if (car.size() == 0) { cout << "YES" << endl; }	//если стек пуст, то все вагоны были выведены на путь 2
+	else cout << "NO" << endl;
+	return 0;
+}
