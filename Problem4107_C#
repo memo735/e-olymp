@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem4107
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int p = 5;
+            int say = 0;
+            while (n/p != 0)
+            {
+                say = say + n/p;
+                p = p*5;
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
