@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem4083
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine()) - 150;
+            string eded = n.ToString();
+            Console.WriteLine(eded[0] + " " + eded[1] + " " + eded[2]);
+        }
+    }
+}
