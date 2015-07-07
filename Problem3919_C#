@@ -1,0 +1,32 @@
+using System;
+using System.Numerics;
+
+namespace Problem3919
+{
+    internal class Program
+    {
+        private static BigInteger EBOB(BigInteger x, BigInteger y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return (x + y);
+        }
+
+        private static BigInteger EKOB(BigInteger x, BigInteger y)
+        {
+            return x*y/EBOB(x, y);
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            BigInteger n = BigInteger.Parse(massiv[0]);
+            BigInteger m = BigInteger.Parse(massiv[1]);
+            Console.WriteLine(EKOB(n, m));
+        }
+    }
+}
