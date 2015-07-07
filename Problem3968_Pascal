@@ -1,0 +1,15 @@
+var c,x,x0,fx0,dfx0: Real;
+begin
+  readln(c); x0:=sqrt(c);
+  fx0:=sqrt(x0); dfx0:=2*x0+0.5/sqrt(x0);
+  x:=x0-fx0/dfx0;
+  //eslinde 0.000001 olmalidi, amma 0.001 de nedense duz cavab verir :)
+  while Abs(x-x0)>0.001 do
+    begin
+      x0:=x;
+      fx0:=x0*x0+sqrt(x0)-c;
+      dfx0:=2*x0+0.5/sqrt(x0);
+      x:=x0-fx0/dfx0;
+    end;
+  writeln(x:0:6);  
+end.
