@@ -1,0 +1,81 @@
+#include <iostream>
+#include <iomanip>  //cout.setprecision(), cout.fixed
+#include <deque>
+#include <stack>
+#include <cmath>//floor()
+#include <map>
+using namespace std;
+ 
+//НОД
+long double gcd(long double a, long double b){
+   while(b){
+   a = a - b*floor(a/b);
+   swap(a, b);
+   }
+   return a;
+}
+ 
+//НОК
+long double lcm(long double a, long double b){
+   return a*(b/gcd(a,b));
+}
+ 
+int main()
+{
+int S, M, H, K;
+cin >> S >> M >> H >> K;
+ 
+//инициализация очереди
+deque<int> clock;
+for(int i = 1; i <= K; i++) clock.push_back(i);
+ 
+//моделирование суточного цикла
+stack<int> s, m, h;
+while(h.size() != H){
+   s.push(clock.front()); //первый шарик очереди падает
+   clock.pop_front(); //на секундную чашу
+   if(s.size() == S){   //при переполнении чаши
+      m.push(s.top());   //последний упавший шарик
+      s.pop();//переходит на минутную чашу
+      while(!s.empty()){   //остальные шарики
+         clock.push_back(s.top());   //переходят в конец очереди
+         s.pop();//в обратном порядке
+      }
+      if(m.size() == M){   //аналогично при переполнении
+         h.push(m.top());   //минутной чаши
+         m.pop();
+         while(!m.empty()){
+            clock.push_back(m.top()); m.pop();
+         }
+      }
+   }
+}
+
+while(!h.empty()){ clock.push_back(h.top()); h.pop(); }
+ 
+//суточная перестановка
+//1  2  3  4  5  6  ... K
+//a1 a2 a3 a4 a5 a6 ... ak
+int* permutation = new int[K+1];
+for(int i = 1; i <= K; i++){
+   permutation[i] = clock.front();
+   clock.pop_front();
+}
+ 
+//разложение перестановки в композицию непересекающихся циклов
+bool *used = new bool[K+1]; //метки на посещенных элементах
+long double permutation_order = 1; //порядок перестановки
+for(int i = 1; i <= K; i++){
+   if(!used[i]){ //если элемент не принадлежит ни одному из обследованных циклов
+      long double cycle_length = 1;  //найти длину его цикла
+      for(size_t x = i; permutation[x] != i; x = permutation[x]){
+         used[x] = true; cycle_length++;
+      }
+      //и воспользоваться тем, что порядок перестановки -
+      //произведение длин циклов из его разложения
+      permutation_order = lcm(permutation_order, cycle_length);
+   }
+}
+cout << setprecision(0) << fixed << permutation_order << endl;
+return 0;
+}
