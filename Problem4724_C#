@@ -1,0 +1,46 @@
+using System;
+
+namespace Problem4724
+{
+    internal class Program
+    {
+        private static string Guzgu(string x)
+        {
+            string y = "";
+            int len = x.Length;
+            for (int i = 0; i < len; i++) y = x[i] + y;
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            int len = setir.Length;
+            Console.WriteLine(setir[2]);
+            Console.WriteLine(setir[len - 2]);
+            Console.WriteLine(setir.Substring(0, 5));
+            Console.WriteLine(setir.Substring(0, len - 2));
+            string besh = "";
+            for (int i = 0; i < len; i = i + 2)
+            {
+                besh = besh + setir[i];
+            }
+            Console.WriteLine(besh);
+            string alti = "";
+            for (int i = 1; i < len; i = i + 2)
+            {
+                alti = alti + setir[i];
+            }
+            Console.WriteLine(alti);
+            string yeddi = Guzgu(setir);
+            Console.WriteLine(yeddi);
+            string sekkiz = "";
+            for (int i = 0; i < len; i = i + 2)
+            {
+                sekkiz = sekkiz + yeddi[i];
+            }
+            Console.WriteLine(sekkiz);
+            Console.WriteLine(len);
+        }
+    }
+}
