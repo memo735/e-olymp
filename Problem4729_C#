@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem4729
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int say = 0;
+            while (n != 0)
+            {
+                say++;
+                n = int.Parse(Console.ReadLine());
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
