@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem4731
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int max = n;
+            int say = 0;
+            while (n != 0)
+            {
+                if (n == max) say++;
+                else
+                {
+                    if (n > max)
+                    {
+                        max = n;
+                        say = 1;
+                    }
+                }
+                n = int.Parse(Console.ReadLine());
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
