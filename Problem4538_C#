@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem4538
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int k = int.Parse(Console.ReadLine());
+            int cem = 0;
+            int n = 0;
+            while (cem <= k)
+            {
+                n++;
+                cem = cem + n;
+            }
+            Console.WriteLine(n - 1);
+        }
+    }
+}
