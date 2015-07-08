@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem4733
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = "00" + Console.ReadLine();
+            int len = eded.Length;
+            int son = int.Parse(eded.Substring(len - 1));
+            int son2 = int.Parse(eded.Substring(len - 2));
+            int son3 = int.Parse(eded.Substring(len - 3));
+            Console.WriteLine(son % 2 == 0 ? "Yes" : "No");
+            Console.WriteLine(son2 % 4 == 0 ? "Yes" : "No");
+            Console.WriteLine(son3 % 8 == 0 ? "Yes" : "No");
+        }
+    }
+}
