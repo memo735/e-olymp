@@ -22,7 +22,7 @@ namespace Problem3918
             if ((x == 0) || (x == 1)) return 2;
             if (x == 2) return 3;
             x = x%2 == 0 ? x + 1 : x + 2;
-            for (int i = x; i < 240; i++)
+            for (int i = x; i < 240; i = i + 2)
             {
                 if (Sade(i)) return i;
             }
