@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem4725
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(n*(n + 1)*(2*n + 1)/6);
+        }
+    }
+}
