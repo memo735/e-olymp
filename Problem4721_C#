@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem4721
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string bilet = Console.ReadLine();
+            int len = bilet.Length;
+            Console.WriteLine(len - bilet.Replace("5", "").Length);
+        }
+    }
+}
