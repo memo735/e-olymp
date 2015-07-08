@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem4735
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            int len = eded.Length;
+            int son = int.Parse(eded[len - 1] + "");
+            Console.WriteLine(son%5 == 0 ? "Yes" : "No");
+            Console.WriteLine(son%10 == 0 ? "Yes" : "No");
+        }
+    }
+}
