@@ -1,0 +1,16 @@
+using System;
+
+namespace Problem4719
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int xTop = int.Parse(Console.ReadLine());
+            int yTop = int.Parse(Console.ReadLine());
+            int xDiger = int.Parse(Console.ReadLine());
+            int yDiger = int.Parse(Console.ReadLine());
+            Console.WriteLine(xTop == xDiger || yTop == yDiger ? "YES" : "NO");
+        }
+    }
+}
