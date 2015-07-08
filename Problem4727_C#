@@ -1,0 +1,34 @@
+using System;
+
+namespace Problem4727
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            int ilk = setir.IndexOf('f');
+            if (ilk == -1)
+            {
+                Console.WriteLine(-2);
+                return;
+            }
+            int son = setir.LastIndexOf('f');
+            if (ilk == son)
+            {
+                Console.WriteLine(-1);
+                return;
+            }
+            int ikinci = -1;
+            for (int i = ilk + 1; i <= son; i++)
+            {
+                if (setir[i] == 'f')
+                {
+                    ikinci = i;
+                    break;
+                }
+            }
+            Console.WriteLine(ikinci);
+        }
+    }
+}
