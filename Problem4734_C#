@@ -1,0 +1,16 @@
+using System;
+using System.Numerics;
+
+namespace Problem4734
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            BigInteger n = BigInteger.Parse(Console.ReadLine());
+            Console.WriteLine(n%3 == 0 ? "Yes" : "No");
+            Console.WriteLine(n%6 == 0 ? "Yes" : "No");
+            Console.WriteLine(n%9 == 0 ? "Yes" : "No");
+        }
+    }
+}
