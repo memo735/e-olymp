@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem4743
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(Math.Pow(2, n) - 1);
+        }
+    }
+}
