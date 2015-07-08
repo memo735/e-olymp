@@ -1,0 +1,17 @@
+using System;
+using System.Numerics;
+
+namespace Problem4722
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string n = Console.ReadLine();
+            string eded = n;
+            int k = int.Parse(Console.ReadLine());
+            for (int i = 1; i < k; i++) eded = eded + n;
+            Console.WriteLine(BigInteger.Pow(BigInteger.Parse(eded), 2));
+        }
+    }
+}
