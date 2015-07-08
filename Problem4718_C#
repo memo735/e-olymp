@@ -1,0 +1,12 @@
+using System;
+
+namespace Problem4718
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, " + Console.ReadLine());
+        }
+    }
+}
