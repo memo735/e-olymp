@@ -1,0 +1,422 @@
+#include <iostream>
+ 
+using namespace std;
+ 
+// шаблонный класс, описывающий узел списка
+ 
+template <typename KeyType>
+class ListNode
+{
+public:
+	ListNode( KeyType& key, ListNode* next ) { mKey = key; mNext = next; };
+	KeyType& getKey() { return mKey; };
+	ListNode* getNext() { return mNext; };
+	void setNext( ListNode* node ) { mNext = node; };
+protected:
+	KeyType mKey; ListNode *mNext;
+};
+ 
+// шаблонный класс, описывающий список
+template <typename KeyType, typename ListNodeType>
+class List
+{
+public:
+	List() { mHead = NULL; };
+	virtual ~List() { clear(); };
+	void clear();
+	bool find( KeyType& key, ListNodeType*& foundNode, ListNodeType*& foundPrevNode );
+	bool remove( KeyType& key );
+	void push( KeyType& key ) { mHead = new ListNodeType( key, mHead ); };
+	bool pop( KeyType& key );
+	ListNodeType* getHead() { return mHead; };
+	bool isEmpty() { return mHead == NULL; };
+protected:
+	ListNodeType* mHead;
+};
+ 
+// очищает все элементы списка и высвобождает память
+template <typename KeyType, typename ListNodeType>
+void List<KeyType,ListNodeType>::clear()
+{
+	ListNodeType *n =  mHead;
+	while( NULL != n )
+	{
+	   ListNodeType *prev = n;
+	   n = n->getNext(); delete prev;
+	}
+	mHead = NULL;
+};
+ 
+// находит узел списка по ключу
+template <typename KeyType, typename ListNodeType>
+bool List<KeyType,ListNodeType>::find( KeyType& key, ListNodeType*& foundNode, ListNodeType*& foundPrevNode )
+{
+	ListNodeType *n =  mHead; ListNodeType *prev = NULL;
+	while( NULL != n )
+	{
+	   if ( n->getKey() == key )
+	   {
+	      foundNode = n; foundPrevNode = prev;
+	      return true;
+	   }
+	   prev = n; n = n->getNext();
+	}
+	return false;
+}
+ 
+// удаляет узел списка по ключу
+template <typename KeyType, typename ListNodeType>
+bool List<KeyType,ListNodeType>::remove( KeyType& key )
+{
+	ListNodeType *n = NULL;
+	ListNodeType *prev = NULL;
+	if ( find( key, n, prev ) )
+	{
+	   if ( NULL != prev ) prev->setNext( n->getNext() );
+	   else mHead = n->getNext();
+	   delete n;
+	   return true;
+	}
+	return false;
+};
+ 
+// удаляет первый элемент
+template <typename KeyType, typename ListNodeType>
+bool List<KeyType,ListNodeType>::pop( KeyType& key )
+{
+	if ( mHead != NULL )
+	{
+	   key = mHead->getKey(); ListNodeType* n = mHead;
+	   mHead = n->getNext(); delete n;
+	   return true;
+	}
+	return false;
+};
+ 
+// Шаблонный класс, описывающий узел дерева двоичного поиска
+ 
+template <typename KeyType, typename ValueType>
+class TreeNode {
+public:
+	TreeNode( KeyType& key ) : mKey(key), mValue(NULL), mParent(NULL), mLeft(NULL), mRight(NULL) {};
+	TreeNode( KeyType& key, ValueType& value ) : mKey(key), mValue(value), mParent(NULL), mLeft(NULL), mRight(NULL) {};
+	~TreeNode() { };
+	void setLeft( TreeNode* left ) { mLeft = left; };
+	void setRight( TreeNode* right ) { mRight = right; };
+	void setParent( TreeNode* parent ) { mParent = parent; };
+	KeyType getKey() { return mKey; };
+	ValueType& getValue() { return mValue; };
+	void setValue( ValueType& value ) { mValue = value; };
+	TreeNode* getLeft() { return mLeft; };
+	TreeNode* getRight() { return mRight; };
+	TreeNode* getParent() { return mParent; };
+	virtual string getValueAsText() { return ""; };
+protected:
+	KeyType mKey; ValueType mValue;
+	TreeNode* mParent; TreeNode* mLeft; TreeNode* mRight;
+};
+ 
+// шаблонный класс, описывающий дерево
+template <typename KeyType, typename NodeType>
+class Tree {
+	NodeType* mRoot;
+public:
+	Tree() { mRoot = NULL; }; ~Tree() { clear(); };
+	void clear() { dispose( mRoot ); mRoot = NULL; };
+	bool isEmpty() { return mRoot == NULL; };
+	NodeType* getRoot() { return mRoot; };
+	NodeType* findOrInsert( KeyType& key, bool insertIfAbsent );
+	void exclude( NodeType* node );
+	void remove( NodeType* node ) { exclude( node ); dispose( node ); };
+	bool remove( KeyType& key, NodeType* removedNodeCopy );
+	bool remove( KeyType& key ) { return( key, NULL ); };
+	NodeType* findMax( NodeType* node );
+	NodeType* findMax() { return findMax( mRoot ); };
+protected:
+	void dispose( NodeType* node );
+};
+ 
+// находит узел двоичного дерева по ключу или всталяет, если не найдено
+template <typename KeyType, typename NodeType>
+NodeType* Tree<KeyType,NodeType>::findOrInsert( KeyType& key, bool insertIfAbsent )
+{
+	enum EInsertAction { eNONE, eROOT, eLEFT, eRIGHT };
+	EInsertAction doInsert = eNONE;
+	NodeType *p = mRoot;
+	if ( p != NULL )
+	{
+	   for(;;)
+	   {
+	      if ( key < p->getKey() )
+	      {
+	         if ( p->getLeft() != NULL ) p = p->getLeft();
+	         else
+	         {
+	            doInsert = eLEFT;
+	            break;
+	         }
+	      }
+	      else
+	      if ( key > p->getKey() )
+	      {
+	         if ( p->getRight() != NULL ) p = p->getRight();
+	         else
+	         {
+	            doInsert = eRIGHT;
+	            break;
+	         }
+	      }
+	      else return p;
+	   }
+	}
+	else doInsert = eROOT;
+	if ( doInsert != eNONE && insertIfAbsent )
+	{
+	   NodeType* q = new NodeType( key );
+	   switch( doInsert )
+	   {
+	      case eLEFT : p->setLeft( q ); break;
+	      case eRIGHT: p->setRight( q ); break;
+	      case eROOT : mRoot = q; break;
+	      default: break;
+	   }
+	   q->setParent( p );
+	   return q;
+	}
+	return NULL;
+}
+ 
+// находит узел двоичного дерева с максимальным значением ключа
+template <typename KeyType, typename NodeType>
+NodeType* Tree<KeyType,NodeType>::findMax( NodeType* node )
+{
+	if ( node != NULL )
+	{
+	   NodeType* n = node;
+	   while( NULL != n->getRight() ) n = n->getRight();
+	   return n;
+	}
+	return NULL;
+}
+ 
+// исключает узел двоичного дерева из дерева, не удаляя
+template <typename KeyType, typename NodeType>
+void Tree<KeyType,NodeType>::exclude( NodeType* node )
+{
+	if ( NULL != node )
+	{
+	   NodeType* successor = NULL;
+	   if ( node->getLeft() == NULL ) successor = node->getRight();
+	   else
+        if ( node->getRight() == NULL ) successor = node->getLeft();
+        else
+        {
+            successor = node->getRight();
+            NodeType* left = successor->getLeft();
+            while( left != NULL )
+            {
+                successor = left; left = successor->getLeft();
+            }
+            if ( successor->getParent() != node )
+            {
+                NodeType* right = successor->getRight();
+                successor->getParent()->setLeft( right );
+                if ( NULL != right) successor->getRight()->setParent( successor->getParent() );
+                successor->setRight( node->getRight() );
+                node->getRight()->setParent( successor );
+	      }
+	      successor->setLeft( node->getLeft() );
+	      node->getLeft()->setParent( successor );
+	   }
+	   
+	   if ( node->getParent() == NULL ) mRoot = successor;
+	   else
+	   if ( node->getParent()->getLeft() == node ) node->getParent()->setLeft( successor );
+	   else
+	   if ( node->getParent()->getRight() == node ) node->getParent()->setRight( successor );
+	   else
+	   {
+	      cout << "fatal error: orphaned# " << "N:" << node << ",P:" << node->getParent() << ",L:" << node->getLeft() << ",R:"<<node->getRight() << endl;
+	      return;
+	   }
+	   
+	   if ( NULL != successor ) successor->setParent( node->getParent() );
+	   node->setParent( NULL );
+	   node->setLeft( NULL );
+	   node->setRight( NULL );
+	}
+}
+ 
+// находит и удаляет узел дерева по ключу
+template <typename KeyType, typename NodeType>
+bool Tree<KeyType,NodeType>::remove( KeyType& key, NodeType* removedNodeCopy )
+{
+	NodeType* node = findOrInsert( key, false );
+	if ( node != NULL )
+	{
+	   exclude( node );
+	   if ( removedNodeCopy != NULL ) *removedNodeCopy = node;
+	   dispose( node );
+	   return true;
+	}
+	return false;
+}
+ 
+// удаляет узел из памяти
+template <typename KeyType, typename NodeType>
+void Tree<KeyType,NodeType>::dispose( NodeType* node )
+{
+	if ( node != NULL ) 
+	{
+	    dispose( node->getLeft() ); dispose( node->getRight() ); delete node;
+	}
+}
+ 
+// класы-контейнеры на основе высше описанных шаблонных классов
+ 
+class PrioTreeNode;
+typedef TreeNode<string,PrioTreeNode*> IdTreeNodeBase;
+class IdTreeNode : public IdTreeNodeBase
+{
+public:
+	IdTreeNode( string& id ) : IdTreeNodeBase( id ) {};
+	virtual ~IdTreeNode() { mValue = NULL; };
+	IdTreeNode* getLeft() { return (IdTreeNode*)mLeft; };
+	IdTreeNode* getRight() { return (IdTreeNode*)mRight; };
+	IdTreeNode* getParent() { return (IdTreeNode*)mParent; };
+};
+typedef Tree<string,IdTreeNode> IdTree;
+ 
+typedef ListNode<IdTreeNode*> IdListNode;
+typedef List<IdTreeNode*,IdListNode> IdList;
+ 
+typedef TreeNode<int,IdList*> PrioTreeNodeBase;
+class PrioTreeNode : public PrioTreeNodeBase
+{
+public:
+	PrioTreeNode( int& prio ) : PrioTreeNodeBase( prio ) { mValue = new IdList(); };
+	virtual ~PrioTreeNode() { delete mValue; };
+	PrioTreeNode* getLeft() { return (PrioTreeNode*)mLeft; };
+	PrioTreeNode* getRight() { return (PrioTreeNode*)mRight; };
+	PrioTreeNode* getParent() { return (PrioTreeNode*)mParent; };
+};
+typedef Tree<int,PrioTreeNode> PrioTree;
+ 
+// класс, реализующий очередь с приоритетами
+ 
+class PrioQueue
+{
+ 
+public:
+ 
+	PrioQueue() { }
+	~PrioQueue() { }
+ 
+	bool add( string& id, int prio  );
+	bool pop( string& id, int& prio );
+	bool change( string& id, int prio );
+	void clear();
+ 
+private:
+	IdTree mIdTree; PrioTree mPrioTree;
+};
+ 
+bool PrioQueue::add( string& id, int prio  )
+{
+	IdTreeNode *idNode = mIdTree.findOrInsert( id, true );
+	if ( NULL != idNode )
+	{
+	   PrioTreeNode* prioNode = mPrioTree.findOrInsert( prio, true );
+	   if ( NULL != prioNode )
+	   {
+	      prioNode->getValue()->push( idNode );
+	      idNode->setValue( prioNode );
+	      return true;
+	   }
+	}
+	return false;
+}
+ 
+bool PrioQueue::pop( string& id, int& prio )
+{
+	bool result = false;
+	PrioTreeNode* prioNode = mPrioTree.findMax();
+	if ( NULL != prioNode )
+	{
+	   prio = prioNode->getKey();
+	   if ( ! prioNode->getValue()->isEmpty() )
+	   {
+	      IdTreeNode* idNode;
+	      if ( prioNode->getValue()->pop( idNode ) )
+	      {
+	         id = idNode->getKey();
+	         mIdTree.remove( idNode );
+	         if ( prioNode->getValue()->isEmpty() ) mPrioTree.remove( prioNode );
+	         result = true;
+	      }
+	   }
+	}
+	return result;
+}
+ 
+bool PrioQueue::change( string& id, int prio )
+{
+	bool result = false;
+	IdTreeNode* idNode = mIdTree.findOrInsert( id, false );
+	if ( NULL != idNode )
+	{
+	   PrioTreeNode* oldPrioNode = idNode->getValue();
+	   (void)oldPrioNode->getValue()->remove( idNode );
+	   if ( oldPrioNode->getValue()->isEmpty() ) mPrioTree.remove( oldPrioNode );
+	   PrioTreeNode* newPrioNode = mPrioTree.findOrInsert( prio, true );
+	   idNode->setValue( newPrioNode );
+	   newPrioNode->getValue()->push( idNode );
+	   result = true;
+	}
+	return result;
+}
+ 
+void PrioQueue::clear()
+{
+	mIdTree.clear(); mPrioTree.clear();
+}
+ 
+int main( int argc, char** argv )
+{
+	PrioQueue q;
+ 
+	string command, id;
+	int prio;
+ 
+	while ( cin >> command )
+	{
+	   if ( command.compare( 0, 1, "#" ) == 0 ) continue;
+	   else
+	   if ( command == "add" || command == "ADD" )
+	   {
+	      cin >> id; cin >> prio;
+	      q.add( id, prio );
+	   }
+	   else
+	   if ( command == "change" || command == "CHANGE" )
+	   {
+	      cin >> id; cin >> prio;
+	      q.change( id, prio );
+	   }
+	   else
+	   if ( command == "pop" || command == "POP" )
+	   {
+	      if ( q.pop( id, prio ) ) cout << id << " " << prio << endl;
+	      else cout << "error" << endl;
+	   }
+	   else
+	   if ( command == "clear" || command == "CLEAR" ) q.clear();
+	   else
+	   if ( command == "exit" || command == "EXIT" )
+	   {
+	      cout << "bye" << endl;
+	      return 0;
+	   }
+	}
+	return 0;
+}
