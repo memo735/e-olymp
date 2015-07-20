@@ -1,0 +1,76 @@
+#include <iostream>
+#include <string>
+using namespace std;
+ 
+struct Node{
+  Node * prev; int x;
+  Node() { prev = nullptr; x = 0;}
+  Node(Node * a, int b) { prev = a; x = b; }
+};
+ 
+struct queue{
+  private:
+    Node * Front = nullptr;
+    Node * Back = nullptr;
+    int Size = 0;
+  public: 
+  int size() { return Size; }
+  void push(int p){
+    if(Size == 0){
+      Node * NewNode = new Node(Back,p);
+      Front = NewNode; Back = NewNode;
+    }
+    else{
+      Node * NewNode = new Node(nullptr, p);
+      Back->prev = NewNode; Back = NewNode;
+    }
+    Size++;
+  }
+  int front(){
+    if(Size) { return Front->x; }
+    return 0;
+  }
+  int pop(){
+    if(Size){
+      int x = Front->x;
+      Node * NewNode = Front->prev;
+      delete Front; Front = NewNode;
+      Size--;
+      return x;
+    }
+    return 0;
+  }
+  void clear(){
+    while(Size > 0){
+      Node * NewNode = Front->prev;
+      delete Front; Front = NewNode; Size--;
+    }
+    Front = nullptr; Back = nullptr;
+  }
+};
+ 
+int main() {
+  queue Q;
+  while(true){
+    string s; cin >> s;
+    if(s == "exit") { cout << "bye\n"; break; }
+    else
+      if(s == "push"){
+        int inp; cin >> inp; Q.push(inp); cout << "ok\n";
+      }
+      else
+        if(s == "front"){
+          if(Q.size()) cout << Q.front() << endl;
+          else cout << "error\n";
+        }
+        else
+          if(s == "size") cout << Q.size() << endl;
+          else
+            if(s == "pop"){
+              if(Q.size()) cout << Q.pop() << endl;
+              else cout << "error\n";
+            }
+            else if(s == "clear") { cout << "ok\n"; Q.clear(); }
+  }
+  return 0;
+}
