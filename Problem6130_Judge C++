@@ -1,0 +1,83 @@
+#include <iostream>
+#include <string>
+using namespace std;
+ 
+class Deque{
+  private:
+    int *a = new int [100];
+    int size_, front_, back_, capacity;
+    void resize(int);
+  public:
+    Deque(): size_(0), front_(1), back_(0), capacity(100){}
+  void push_back(int), push_front(int), pop_back(), pop_front();
+  int size() const;
+  int back() const;
+  int front() const;
+  void clear();
+};
+ 
+void Deque::resize(int newcapacity){  //Функция изменения размера.
+  int* tmp = new int [newcapacity];   //Создаем новый динамический массив с новой размерностью
+  int j = front_;                     //Присваиваем начальное значение счетчику.
+  for(int i = 0; j!= back_; ++i){     //Продвигаемся по деку, пока счетчик не будет равен позиции последнего элемента.
+    tmp[i] = a[j]; j = (j+1)%capacity;
+  }
+  tmp[size_ - 1] = a[back_];  //Так как в цикле перенос последнего элемента из старого массива в новый не произошел, вручную переносим последний элемент старого массива.
+  delete []a;                 //Удаляем лишнюю память.
+  a = tmp;                    //Присваиваем указателю на старый массив указатель на новый массив.
+  capacity = newcapacity;     //Меняем значение вместимости.
+  front_ = 0;                 //Теперь первый элемент нового массива стоит на нулевой позиции.
+  back_ = size_ - 1;          //А последний - на позиции на единицу меньшей чем кол-во элементов.
+}
+ 
+void Deque::push_back(int b){
+  if(size_ == capacity) this -> resize(2*capacity);
+  back_ = (back_ + 1)%capacity; a[back_] = b; size_++;
+}
+void Deque::push_front(int b){
+  if(size_ == capacity) this -> resize(2*capacity);
+  front_ = (front_ - 1 + capacity)%capacity;
+  a[front_] = b; size_++;
+}
+ 
+void Deque::pop_back() { back_ = (back_ - 1 + capacity)%capacity; size_--; }
+void Deque::pop_front(){ front_ = (front_ + 1)%capacity; size_--; }
+int Deque::size() const { return size_; }
+int Deque::front() const{ return a[front_]; }
+int Deque::back() const { return a[back_]; }
+void Deque::clear() { back_ = 0; front_ = 1; size_ = 0; }
+  
+int main() {
+  Deque a; string s; int n;
+  while(cin >> s){
+    if(s == "push_back"){ cin >> n; a.push_back(n); cout << "ok\n"; }
+    else
+      if(s == "push_front"){ cin >> n; a.push_front(n); cout << "ok\n"; }
+      else
+        if(s == "pop_back"){
+          if(a.size()){ cout << a.back() << endl; a.pop_back(); }
+          else cout << "error\n";
+        }
+        else
+          if(s == "pop_front"){
+            if(a.size()){ cout << a.front() << endl; a.pop_front(); }
+            else cout << "error\n";
+          }
+          else
+            if(s == "front"){
+              if(a.size()) cout << a.front() << endl;
+              else cout << "error\n";
+            }
+            else
+              if(s == "back"){
+                if(a.size()) cout << a.back() << endl;
+                else cout << "error\n";
+              }
+              else
+                if(s == "size") cout << a.size() << endl;
+                else
+                  if(s == "clear"){ cout << "ok\n"; a.clear(); }
+                  else if(s == "exit"){ cout << "bye\n"; return 0; }
+  }
+  return 0;
+}
