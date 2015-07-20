@@ -1,0 +1,55 @@
+using System;
+
+namespace Problem4748
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[,] a = new int[n + 1, n + 1];
+            a[1, 1] = 1;
+            int say = 2;
+            int i = 2;
+            int j = 1;
+            string istiqamet = "yuxari";
+            int kv = n*n;
+            while (say <= kv)
+            {
+                if (istiqamet == "yuxari")
+                {
+                    int stop = i;
+                    while (j <= stop) a[i--, j++] = say++;
+                    istiqamet = "asagi";
+                    if (j <= n) i = 1;
+                    else
+                    {
+                        j = n;
+                        i = i + 2;
+                    }
+                }
+                if (istiqamet == "asagi")
+                {
+                    int stop = j;
+                    while (i <= stop) a[i++, j--] = say++;
+                    istiqamet = "yuxari";
+                    if (i <= n) j = 1;
+                    else
+                    {
+                        i = n;
+                        j = j + 2;
+                    }
+                }
+            }
+            for (i = 1; i <= n; i++)
+            {
+                for (j = 1; j <= n; j++)
+                {
+                    Console.Write(a[i, j]);
+                    if (j < n) Console.Write(" ");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
+}
