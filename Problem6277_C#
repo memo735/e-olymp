@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem6277
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine((int) (n - 0.2));
+        }
+    }
+}
