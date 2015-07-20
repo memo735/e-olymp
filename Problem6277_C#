@@ -6,8 +6,7 @@ namespace Problem6277
     {
         public static void Main(string[] args)
         {
-            int n = int.Parse(Console.ReadLine());
-            Console.WriteLine((int) (n - 0.2));
+            Console.WriteLine(int.Parse(Console.ReadLine()) - 1);
         }
     }
 }
