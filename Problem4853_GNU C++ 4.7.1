@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+ 
+int n,m,a,b,count = 0;
+vector<vector<int>> graf;
+vector<int> ver, family, ans;
+bool ok = false; vector<bool> popa;
+
+int bfs(int beg, int end){ // функция которая добавляет вершины в вектор вершин,которые мы просмотрим,и помечает их как уже проверенные
+  count++;
+  if (beg == end) { ok = true; return 1; }
+  else{
+    for(int i = graf[beg].size() - 1;i >= 0;i--){
+      if(!popa[graf[beg][i]]){
+        ver.push_back(graf[beg][i]);
+        family.push_back(beg);
+        popa[graf[beg][i]] = true;
+      }
+    }
+  }
+  return 0;
+}
+ 
+int main() {
+  ios::sync_with_stdio(false);
+  cin >> n >> m; cin >> a >> b;
+  for(int i = 0 ; i <= n; i++){ // создаем вектов векторов
+    graf.push_back(ans); popa.push_back(false);
+  }
+  ver.push_back(a);family.push_back(a);
+  for(int i = 0; i < m; i++){ //в вектор вершины добавляем те вершины,с которым она связанна 
+    int x,y; cin >> x >> y;
+    if(x != y){ // проверка на петлю
+      graf[x].push_back(y);
+      graf[y].push_back(x);
+    }
+  }
+  if(!graf[a].empty()){ //если вершины начала не изолированна 
+    while(!ok && count < ver.size()) { //цикл,пока мы не найдем конечную вершину,или если мы не прошли все вершины в векторе "плана"
+      if(bfs(ver[count],b)){ //если мы нашли выход,то начать восстанавливать пути
+        count--;// Нам надо начать с последней вершины,а это count - 1 вершина
+        int p = 1; //Новая переменная,которая нужна,для нахождения первого вхождения "отца" данной вершины
+        ans.push_back(b);//вектор ответа
+        while(ver[count] != a){ // пока не дошли до начальной вершины
+          while(ver[p] != family[count]) p++;
+          //двигаемся слева пройденных по вектору вершин плана,и ищем первое вхождение вершины ОТЦА
+          ans.push_back(ver[p]);//добавляем в ответ вершину,из которой мы попали в предыдущую (отца)
+          count = p;// теперь ищем отца отца и так далее,пока не дойдем до начальной вершины 
+          p = 1;
+        }
+      }
+    }
+    if(ans.size() > 0){ // если вектор ответа не пуст(имеет хотя бы одну вершины из пути)
+      cout << ans.size()-1 << endl;
+      for(int i = ans.size()-1; i >= 0; i--) cout << ans[i] << " ";
+      // выводим ответ справа на лево, так сказано в условии
+    }
+    else cout << "-1\n";
+  }
+  else cout << "-1\n";
+  return 0;
+}
