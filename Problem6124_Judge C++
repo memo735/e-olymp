@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+using namespace std;
+ 
+struct node {
+  int value=0; node* prev=NULL;
+  node(int val, node* prv): value(val), prev(prv) {} // конструктор нашего верхнего элемента в стеке
+};
+ 
+struct stack {
+  int cnt=0; node* top=NULL;
+  void push (int n) {
+    top = new node(n, top); // когда создаём новую вершину, но присваиваем ей цену, а предыдущей записываем прошлую топовую вершину
+    cnt++;
+  }
+  bool empty() { return cnt == 0; }
+  int pop() {
+    node* prev = top->prev; // записываем предыдущий узел во временную переменную
+    int topVal = top->value;
+    delete top; // удаляем последний элемент стека
+    top = prev; // говорим, что он теперь равен прдыдущему
+    cnt--;
+    return topVal;
+  }
+  int back() { return top->value; }
+  int size() { return cnt; }
+  void clear() { while (!empty()) pop(); }
+};
+ 
+int main() {
+  ios::sync_with_stdio(false);
+  string t; int val; stack s;
+   while (1) {
+     cin >> t;
+     if (t=="push") {
+       cin >> val; s.push(val);
+       cout << "ok" << endl;
+     }
+     else
+       if (t=="pop") {
+         if (s.empty()) cout << "error" << endl;
+         else {
+           val = s.pop(); cout << val << endl;
+         }
+       }
+       else
+         if (t=="back") {
+           if (s.empty()) cout << "error" << endl;
+           else cout << s.back() << endl;
+       }
+       else if (t=="size") cout << s.size() << endl;
+       else
+         if (t=="clear") { s.clear(); cout << "ok" << endl; }
+         else if (t=="exit") { cout << "bye" << endl; break; }
+   }
+   return 0;
+}
