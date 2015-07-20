@@ -1,0 +1,37 @@
+using System;
+
+namespace Problem4749
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            int[,] a = new int[n, m];
+            for (int i = 0; i < n; i++)
+            {
+                setir = Console.ReadLine();
+                massiv = setir.Split(' ');
+                for (int j = 0; j < m; j++)
+                {
+                    a[i, j] = int.Parse(massiv[j]);
+                }
+            }
+            Console.ReadLine();
+            int cem = 0;
+            for (int i = 0; i < n; i++)
+            {
+                setir = Console.ReadLine();
+                massiv = setir.Split(' ');
+                for (int j = 0; j < m; j++)
+                {
+                    cem = cem + a[i, j]*int.Parse(massiv[j]);
+                }
+            }
+            Console.WriteLine(cem);
+        }
+    }
+}
