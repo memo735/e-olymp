@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem4754
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int k = int.Parse(Console.ReadLine());
+            string n = Console.ReadLine();
+            int len = n.Length;
+            int cavab = 0;
+            for (int i = 0; i < len; i++)
+            {
+                int cari = int.Parse(n[i] + "");
+                cavab = cavab + (int) Math.Pow(k, len - i - 1)*cari;
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
