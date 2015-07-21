@@ -1,0 +1,30 @@
+using System;
+
+namespace Problem4751
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[,] a = new int[n, n];
+            int i, j, cem = 0;
+            for (i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                for (j = 0; j < n; j++)
+                {
+                    a[i, j] = int.Parse(massiv[j]);
+                    if (i == j) cem = cem + a[i, j];
+                }
+            }
+            Console.Write(cem + " ");
+            cem = 0;
+            i = 0;
+            j = n - 1;
+            for (int k = 0; k < n; k++) cem = cem + a[i++, j--];
+            Console.WriteLine(cem);
+        }
+    }
+}
