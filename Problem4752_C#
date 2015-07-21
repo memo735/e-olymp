@@ -1,0 +1,36 @@
+using System;
+
+namespace Problem4752
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            int[,] a = new int[n, m];
+            int[,] b = new int[n, m];
+            int say = 1;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++) a[i, j] = say++;
+            }
+            say = 1;
+            for (int j = 0; j < m; j++)
+            {
+                for (int i = 0; i < n; i++) b[i, j] = say++;
+            }
+            say = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < m; j++)
+                {
+                    if (a[i, j] == b[i, j]) say++;
+                }
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
