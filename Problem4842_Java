@@ -1,0 +1,32 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    TreeMap<String, ArrayList<String>> t = new TreeMap<String, ArrayList<String>>(new Comparator<String>() {
+      @Override
+      public int compare(String o1, String o2) {
+        return -o1.compareTo(o2);
+      }
+    });
+    while(in.hasNextLine()) {
+      String ss[] = in.nextLine().split("\\s*-\\s*");
+      for(String s : ss[1].split(",\\s*")) {
+        if(!t.containsKey(s)) t.put(s, new ArrayList<String>());
+        t.get(s).add(ss[0]);
+      }
+    }
+
+    System.out.println(t.size());
+    for(String k : t.descendingKeySet()) System.out.println(k + " - " + str(t.get(k)));
+  }
+
+  private static String str(ArrayList<String> ls) {
+    StringBuilder sb = new StringBuilder();
+    for(String s : ls) sb.append(", ").append(s);
+    return sb.substring(2);
+  }
+}
