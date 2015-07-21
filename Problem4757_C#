@@ -1,0 +1,25 @@
+using System;
+using System.Numerics;
+
+namespace Problem4757
+{
+    internal class Program
+    {
+        private static BigInteger BinToBigInteger(string x)
+        {
+            BigInteger cavab = 0;
+            foreach (char c in x)
+            {
+                cavab <<= 1;
+                cavab = cavab + (c == '1' ? 1 : 0);
+            }
+            return cavab;
+        }
+
+        public static void Main(string[] args)
+        {
+            string ikilik = Console.ReadLine();
+            Console.WriteLine(BigInteger.ModPow(BinToBigInteger(ikilik), 1, 15) == 0 ? "YES" : "NO");
+        }
+    }
+}
