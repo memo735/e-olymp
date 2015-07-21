@@ -1,0 +1,27 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem4848
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int len = massiv.Length;
+            List<int> siyahi = new List<int>();
+            for (int i = 0; i < len; i++)
+            {
+                siyahi.Add(int.Parse(massiv[i]));
+            }
+            siyahi.Sort();
+            for (int i = 0; i < len; i++)
+            {
+                Console.Write(siyahi[i]);
+                if (i < len - 1) Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
