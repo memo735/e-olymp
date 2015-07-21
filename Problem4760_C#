@@ -1,0 +1,23 @@
+using System;
+
+namespace Problem4760
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int cem = 0;
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                for (int j = 0; j < n; j++)
+                {
+                    cem = cem + int.Parse(massiv[j]);
+                }
+            }
+            Console.WriteLine(cem/2);
+        }
+    }
+}
