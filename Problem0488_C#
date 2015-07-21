@@ -7,46 +7,33 @@ namespace Problem488
         public static void Main(string[] args)
         {
             int n = int.Parse(Console.ReadLine());
-            int[,] a = new int[n + 1, n + 1];
-            int istiqamet = 1;
-            int i = 1;
-            int j = 0;
-            int say = 1;
+            string istiqamet = "saga";
             string cavab = "";
-            while (i <= n)
+            int say = 1;
+            for (int i = 0; i < n; i++)
             {
-                if (istiqamet == 1)
+                if (istiqamet == "saga")
                 {
-                    j++;
-                    while (j <= n)
+                    for (int j = 0; j < n; j++)
                     {
-                        a[i, j] = say++;
-                        cavab = cavab + a[i, j] + " ";
-                        j++;
+                        Console.Write(say++);
+                        if (j < n - 1) Console.Write(" ");
                     }
-                    cavab = cavab.TrimEnd(' ') + "\n";
-                    i++;
-                    istiqamet = -1;
+                    Console.WriteLine();
+                    istiqamet = "sola";
                 }
-                if (i > n) break;
-                string cavab2 = "";
-                if (istiqamet == -1)
+                else
                 {
-                    j--;
-                    while (j > 0)
+                    for (int j = 0; j < n; j++)
                     {
-                        a[i, j] = say++;
-                        cavab2 = " " + a[i, j] + cavab2;
-                        j--;
+                        cavab = (say++) + cavab;
+                        if (j < n - 1) cavab = " " + cavab;
                     }
-                    cavab2 = cavab2.TrimStart(' ');
-                    cavab = cavab + cavab2 + "\n";
-                    i++;
-                    istiqamet = 1;
+                    Console.WriteLine(cavab);
+                    cavab = "";
+                    istiqamet = "saga";
                 }
             }
-            cavab = cavab.TrimEnd('\n');
-            Console.WriteLine(cavab);
         }
     }
 }
