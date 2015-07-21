@@ -1,0 +1,48 @@
+using System;
+
+namespace Problem4768
+{
+    internal class Program
+    {
+        private static double Mesafe(int x0, int y0, int x1, int y1)
+        {
+            return Math.Sqrt((x1 - x0)*(x1 - x0) + (y1 - y0)*(y1 - y0));
+        }
+
+        private static double Orta(double a, double b, double c, double min, double max)
+        {
+            if (a == min && b == max) return c;
+            if (a == min && c == max) return b;
+            if (b == min && a == max) return c;
+            if (b == min && c == max) return a;
+            if (c == min && a == max) return b;
+            if (c == min && b == max) return a;
+            return 0;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int xA = int.Parse(massiv[0]);
+            int yA = int.Parse(massiv[1]);
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            int xB = int.Parse(massiv[0]);
+            int yB = int.Parse(massiv[1]);
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            int xC = int.Parse(massiv[0]);
+            int yC = int.Parse(massiv[1]);
+            double AB = Mesafe(xA, yA, xB, yB);
+            double AC = Mesafe(xA, yA, xC, yC);
+            double BC = Mesafe(xB, yB, xC, yC);
+            double max = Math.Max(AB, Math.Max(AC, BC));
+            double min = Math.Min(AB, Math.Min(AC, BC));
+            double orta = Orta(AB, AC, BC, min, max);
+            double bucaq = Math.Acos((min*min - max*max + orta*orta)/(2*min*orta));
+            bucaq = bucaq*180/Math.PI;
+            Console.WriteLine("{0:N6}", bucaq);
+        }
+    }
+}
