@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem4755
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string cavab = "";
+            while (n > 0)
+            {
+                int qaliq = n%13;
+                n = n/13;
+                if (qaliq < 10) cavab = qaliq + cavab;
+                else
+                {
+                    if (qaliq == 10) cavab = "A" + cavab;
+                    if (qaliq == 11) cavab = "B" + cavab;
+                    if (qaliq == 12) cavab = "C" + cavab;
+                }
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
