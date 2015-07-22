@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem5084
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            Console.Write(massiv[n - 1]);
+            for (int i = 1; i < n; i++)
+            {
+                Console.Write(" " + massiv[i - 1]);
+            }
+            Console.WriteLine();
+        }
+    }
+}
