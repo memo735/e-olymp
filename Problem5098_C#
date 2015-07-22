@@ -1,0 +1,26 @@
+using System;
+using System.Text;
+
+namespace Problem5098
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int t = int.Parse(Console.ReadLine());
+            int[] a = new int[t];
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            StringBuilder cavab = new StringBuilder();
+            for (int i = 0; i < t; i++)
+            {
+                int cari = int.Parse(massiv[i]);
+                int j = i;
+                while (j > 0 && cari < a[j - 1]) a[j] = a[--j];
+                a[j] = cari;
+                cavab.Append(' ').Append(i%2 == 0 ? a[i/2] : Math.Min(a[i/2], a[i/2 + 1]));
+            }
+            Console.WriteLine(cavab.ToString().Substring(1));
+        }
+    }
+}
