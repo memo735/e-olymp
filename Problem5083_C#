@@ -1,0 +1,38 @@
+using System;
+
+namespace Problem5083
+{
+    internal class Program
+    {
+        private static int ReqemCemi(int x)
+        {
+            int cem = 0;
+            while (x > 0)
+            {
+                cem = cem + x%10;
+                x = x/10;
+            }
+            return cem;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int min = 100;
+            int cavab = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int cari = int.Parse(massiv[i]);
+                int cem = ReqemCemi(cari);
+                if (cem <= min)
+                {
+                    min = cem;
+                    cavab = cari;
+                }
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
