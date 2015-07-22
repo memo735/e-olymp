@@ -11,50 +11,37 @@ namespace Problem841
             int i = 0;
             int j = -1;
             int say = 1;
-            int istiqamet = 1;
+            string istiqamet = "saga";
             int kv = n*n;
             while (say <= kv)
             {
-                if (istiqamet == 1)
+                if (istiqamet == "saga")
                 {
                     j++;
-                    while ((j < n) && (a[i, j] == 0))
-                    {
-                        a[i, j++] = say++;
-                    }
+                    while ((j < n) && (a[i, j] == 0)) a[i, j++] = say++;
                     j--;
-                    istiqamet = 2;
+                    istiqamet = "asagi";
                 }
-                if (istiqamet == 2)
+                if (istiqamet == "asagi")
                 {
                     i++;
-                    while ((i < n) && (a[i, j] == 0))
-                    {
-                        a[i++, j] = say++;
-                    }
+                    while ((i < n) && (a[i, j] == 0)) a[i++, j] = say++;
                     i--;
-                    istiqamet = 3;
+                    istiqamet = "sola";
                 }
-                if (istiqamet == 3)
+                if (istiqamet == "sola")
                 {
                     j--;
-                    while ((j >= 0) && (a[i, j] == 0))
-                    {
-                        a[i, j--] = say++;
-                    }
+                    while ((j >= 0) && (a[i, j] == 0)) a[i, j--] = say++;
                     j++;
-                    istiqamet = 4;
+                    istiqamet = "yuxari";
                 }
-                if (istiqamet == 4)
+                if (istiqamet == "yuxari")
                 {
                     i--;
-                    while ((i >= 0) && (a[i, j] == 0))
-                    {
-                        a[i--, j] = say++;
-                    }
+                    while ((i >= 0) && (a[i, j] == 0)) a[i--, j] = say++;
                     i++;
-                    istiqamet = 1;
-
+                    istiqamet = "saga";
                 }
             }
             for (i = 0; i < n; i++)
