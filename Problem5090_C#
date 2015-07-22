@@ -1,0 +1,42 @@
+using System;
+
+namespace Problem5090
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[,] a = new int[n, n];
+            int m = 0, mi = -1, mj = -1;
+            for (int i = 0; i < n; i++)
+            {
+                int t = 0;
+                string setir = Console.ReadLine();
+                var massiv = setir.Split(' ');
+                for (int j = 0; j < n; j++)
+                {
+                    a[i, j] = int.Parse(massiv[j]);
+                    t = t + a[i, j];
+                }
+                if (t > m)
+                {
+                    m = t;
+                    mi = i;
+                }
+            }
+            m = int.MaxValue;
+            for (int j = 0; j < n; j++)
+            {
+                int t = 0;
+                for (int i = 0; i < n; i++) t = t + a[i, j];
+                if (t < m)
+                {
+                    m = t;
+                    mj = j;
+                }
+            }
+            Console.WriteLine(a[mi, mj]);
+        }
+    }
+}
