@@ -10,28 +10,27 @@ namespace Problem1457
             var massiv = setir.Split(' ');
             int n = int.Parse(massiv[0]);
             int m = int.Parse(massiv[1]);
-            int[] ns = new int[n];
+            int[] a = new int[n];
             setir = Console.ReadLine();
             massiv = setir.Split(' ');
             for (int i = 0; i < n; i++)
             {
-                ns[i] = int.Parse(massiv[i]);
+                a[i] = int.Parse(massiv[i]);
             }
             for (int i = 1; i < n; i++)
             {
                 int j = i;
-                int k = ns[i];
-                while (j > 0 && ns[j - 1] > ns[j])
+                int k = a[i];
+                while (j > 0 && a[j - 1] > a[j])
                 {
-                    if (m < ns[j - 1] + k)
+                    if (m < a[j - 1] + k)
                     {
                         Console.WriteLine("No");
                         return;
                     }
-                    ns[j] = ns[j - 1];
-                    j--;
+                    a[j] = a[--j];
                 }
-                ns[j] = k;
+                a[j] = k;
             }
             Console.WriteLine("Yes");
         }
