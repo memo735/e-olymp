@@ -1,0 +1,19 @@
+using System;
+
+namespace Problem5085
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string a = Console.ReadLine();
+            string b = Console.ReadLine();
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write(a[i] ^ b[i]);
+            }
+            Console.WriteLine();
+        }
+    }
+}
