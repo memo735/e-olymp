@@ -10,17 +10,17 @@ namespace Problem1704
             var massiv = setir.Split(' ');
             int m = int.Parse(massiv[0]);
             int n = int.Parse(massiv[1]);
-            long[,] ns = new long[m, n];
-            ns[m - 1, 0] = 1;
+            long[,] a = new long[m, n];
+            a[m - 1, 0] = 1;
             for (int i = m - 1; i >= 0; i--)
             {
                 for (int j = 0; j < n; j++)
                 {
                     if (i == m - 1 && j == 0) continue;
-                    ns[i, j] = (i < m - 1 ? ns[i + 1, j] : 0) + (j > 0 ? ns[i, j - 1] : 0);
+                    a[i, j] = (i < m - 1 ? a[i + 1, j] : 0) + (j > 0 ? a[i, j - 1] : 0);
                 }
             }
-            Console.WriteLine(ns[0, n - 1]);
+            Console.WriteLine(a[0, n - 1]);
         }
     }
 }
