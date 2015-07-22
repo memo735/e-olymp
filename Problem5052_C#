@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem5052
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int i = int.Parse(massiv[1]);
+            int j = 1 << (i - 1);
+            Console.WriteLine((n & j) == j ? "YES" : "NO");
+        }
+    }
+}
