@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem5082
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 0; i < n; i++)
+            {
+                string setir = Console.ReadLine();
+                int say = 0;
+                foreach (char c in setir)
+                {
+                    if (c == '1') say++;
+                }
+                Console.Write(say);
+                if (i < n - 1) Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
