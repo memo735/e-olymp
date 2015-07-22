@@ -1,0 +1,21 @@
+using System;
+using System.Numerics;
+
+namespace Problem5065
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            BigInteger[] fib = new BigInteger[n + 2];
+            fib[1] = 2;
+            fib[2] = 3;
+            for (int i = 3; i <= n; i++)
+            {
+                fib[i] = fib[i - 1] + fib[i - 2];
+            }
+            Console.WriteLine(fib[n]);
+        }
+    }
+}
