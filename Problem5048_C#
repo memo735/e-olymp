@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem5048
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int uc = 0;
+            int besh = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int cari = int.Parse(massiv[i]);
+                if (cari == 3) uc++;
+                if (cari == 5) besh++;
+            }
+            if (uc > 2) Console.WriteLine("Ordinary degree");
+            else
+            {
+                double faizBesh = besh/(n + 0.0);
+                Console.WriteLine(faizBesh < 0.75 ? "Ordinary degree" : "Degree with honors");
+            }
+        }
+    }
+}
