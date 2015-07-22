@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem5051
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            // a>>b - a/(2^b) menasi verir
+            Console.WriteLine(((a << 5) + (a << 2) + (b >> 4)) & (0x1f));
+        }
+    }
+}
