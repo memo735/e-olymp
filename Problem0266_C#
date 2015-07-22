@@ -26,11 +26,9 @@ namespace Problem266
         public static void Main(string[] args)
         {
             string a = Console.ReadLine();
-            a = a.Trim();
             a = a.TrimStart('0');
             if (a == "") a = "0";
             string b = Console.ReadLine();
-            b = b.Trim();
             b = b.TrimStart('0');
             if (b == "") b = "0";
             Console.WriteLine(Muqayise(a, b));
