@@ -1,0 +1,15 @@
+using System;
+using System.Numerics;
+
+namespace Problem5053
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            BigInteger k = BigInteger.Parse(Console.ReadLine());
+            BigInteger n = BigInteger.Parse(Console.ReadLine());
+            Console.WriteLine(BigInteger.ModPow(n, 1, k));
+        }
+    }
+}
