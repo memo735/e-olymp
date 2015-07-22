@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem5054
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            if (n%4 != 0) Console.WriteLine("NO");
+            else
+            {
+                if (n%100 != 0) Console.WriteLine("YES");
+                else
+                {
+                    Console.WriteLine(n%400 == 0 ? "YES" : "NO");
+                }
+            }
+        }
+    }
+}
