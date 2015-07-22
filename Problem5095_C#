@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem5095
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int m = int.Parse(massiv[1]);
+            string a = Console.ReadLine();
+            string b = Console.ReadLine();
+            if (n < m) for (int i = 0; i < m - n; i++) a = "0" + a;
+            if (m < n) for (int i = 0; i < n - m; i++) b = "0" + b;
+            int max = Math.Max(n, m);
+            string cavab = "";
+            for (int i = 0; i < max; i++) cavab = cavab + (a[i] ^ b[i]);
+            cavab = cavab.TrimStart('0');
+            if (cavab == "") cavab = "0";
+            Console.WriteLine(cavab);
+        }
+    }
+}
