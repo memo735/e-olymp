@@ -31,9 +31,9 @@ namespace Problem2651
                     else if (a[j] == min) if (b[j] >= 0) b[j]++;
                 }
             }
-            string sb = "";
-            for (int i = 0; i < k; i++) if (b[i] > t) sb = sb + " " + (i + 1);
-            Console.WriteLine(sb == "" ? "0" : sb.Substring(1));
+            string cavab = "";
+            for (int i = 0; i < k; i++) if (b[i] > t) cavab = cavab + " " + (i + 1);
+            Console.WriteLine(cavab == "" ? "0" : cavab.Substring(1));
         }
     }
 }
