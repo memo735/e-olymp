@@ -1,0 +1,18 @@
+using System;
+
+namespace Problem5055
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            int gun = int.Parse(setir.Substring(0, 2));
+            int ay = int.Parse(setir.Substring(2, 2));
+            int il = int.Parse(setir.Substring(4));
+            var date2 = new DateTime(il, ay, gun);
+            var date1 = new DateTime(1, 1, 1);
+            Console.WriteLine(date2.Subtract(date1).Days + 1);
+        }
+    }
+}
