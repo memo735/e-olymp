@@ -1,0 +1,17 @@
+using System;
+using System.Numerics;
+
+namespace Problem5100
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            BigInteger Saruman = BigInteger.Parse(Console.ReadLine());
+            Saruman = Saruman + Saruman/2;
+            BigInteger Sauron = BigInteger.Parse(Console.ReadLine());
+            if (Saruman == Sauron) Console.WriteLine("Tie");
+            else Console.WriteLine(Saruman < Sauron ? "Sauron" : "Saruman");
+        }
+    }
+}
