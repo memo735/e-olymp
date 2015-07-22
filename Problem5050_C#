@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem5050
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(1 << n);
+        }
+    }
+}
