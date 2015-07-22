@@ -27,32 +27,28 @@ namespace Problem1306
                 var massiv = setir.Split(' ');
                 int n = int.Parse(massiv[0]);
                 int t = int.Parse(massiv[1]);
-                int[] ns = new int[t];
+                int[] a = new int[t];
                 string[] s = new string[t];
                 for (int j = 0; j < t; j++)
                 {
                     s[j] = Console.ReadLine();
-                    ns[j] = getSortedness(s[j], n);
+                    a[j] = getSortedness(s[j], n);
                     if (j > 0)
                     {
                         string tmps = s[j];
-                        int tmpn = ns[j];
+                        int tmpn = a[j];
                         int k = j;
-                        while (k > 0 && ns[k - 1] > tmpn)
+                        while (k > 0 && a[k - 1] > tmpn)
                         {
-                            s[k] = s[k - 1];
-                            ns[k] = ns[k - 1];
-                            k--;
+                            s[k] = s[k-1];
+                            a[k] = a[--k];
                         }
                         s[k] = tmps;
-                        ns[k] = tmpn;
+                        a[k] = tmpn;
                     }
                 }
                 int len = s.Length;
-                for (int j = 0; j < len; j++)
-                {
-                    Console.WriteLine(s[j]);
-                }
+                for (int j = 0; j < len; j++) Console.WriteLine(s[j]);
                 if (i < m - 1) Console.WriteLine();
             }
         }
