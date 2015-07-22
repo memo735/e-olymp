@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem5049
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir.Contains("  "))
+            {
+                setir = setir.Replace("  ", " ");
+            }
+            Console.WriteLine(setir);
+        }
+    }
+}
