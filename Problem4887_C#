@@ -1,0 +1,15 @@
+using System;
+
+namespace Problem4887
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.Write(45*n);
+            for (int i = 1; i < n; i++) Console.Write(0);
+            Console.WriteLine();
+        }
+    }
+}
