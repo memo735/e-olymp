@@ -1,0 +1,14 @@
+using System;
+using System.Numerics;
+
+namespace Problem5096
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            BigInteger n = BigInteger.Parse(Console.ReadLine());
+            Console.WriteLine(n - 1);
+        }
+    }
+}
