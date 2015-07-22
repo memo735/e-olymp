@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem5064
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            long k = (long) ((Math.Sqrt(8*n + 1) - 1)/2);
+            Console.WriteLine(k*(k + 1) == 2*n ? k : -1);
+        }
+    }
+}
