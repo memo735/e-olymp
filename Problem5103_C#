@@ -1,0 +1,21 @@
+using System;
+
+namespace Problem5103
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            int[] lucas = new int[n + 3];
+            lucas[1] = 2;
+            lucas[2] = 3;
+            lucas[3] = 4;
+            for (int i = 4; i <= n; i++)
+            {
+                lucas[i] = lucas[i - 1] + lucas[i - 2];
+            }
+            Console.WriteLine(lucas[n]);
+        }
+    }
+}
