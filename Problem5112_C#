@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem5112
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            Console.WriteLine(a + b == 5 ? 7 : 5);
+            //5 ve 7 ozum secmishem, esas odur ki, dogru cavab alinmasin :)
+        }
+    }
+}
