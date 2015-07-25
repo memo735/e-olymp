@@ -1,0 +1,58 @@
+using System;
+
+namespace Problem5151
+{
+    internal class Program
+    {
+        private static double Bucaq(double a, double b, double c)
+        {
+            return Math.Acos((a*a + b*b - c*c)/(2*a*b));
+        }
+
+        private static double Mesafe(double x0, double y0, double x1, double y1)
+        {
+            return Math.Sqrt((x1 - x0)*(x1 - x0) + (y1 - y0)*(y1 - y0));
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double xA = double.Parse(massiv[0]);
+            double yA = double.Parse(massiv[1]);
+            double xB = double.Parse(massiv[2]);
+            double yB = double.Parse(massiv[3]);
+            double xC = double.Parse(massiv[4]);
+            double yC = double.Parse(massiv[5]);
+            double AB = Mesafe(xA, yA, xB, yB);
+            double AC = Mesafe(xA, yA, xC, yC);
+            double BC = Mesafe(xB, yB, xC, yC);
+            double A = Bucaq(AB, AC, BC);
+            double B = Bucaq(AB, BC, AC);
+            double C = Bucaq(AC, BC, AB);
+            double minABC = Math.Min(A, Math.Min(B, C));
+            double maxABC = Math.Max(A, Math.Max(B, C));
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            double xD = double.Parse(massiv[0]);
+            double yD = double.Parse(massiv[1]);
+            double xE = double.Parse(massiv[2]);
+            double yE = double.Parse(massiv[3]);
+            double xF = double.Parse(massiv[4]);
+            double yF = double.Parse(massiv[5]);
+            double DE = Mesafe(xD, yD, xE, yE);
+            double DF = Mesafe(xD, yD, xF, yF);
+            double EF = Mesafe(xE, yE, xF, yF);
+            double D = Bucaq(DE, DF, EF);
+            double E = Bucaq(DE, EF, DF);
+            double F = Bucaq(DF, EF, DE);
+            double minDEF = Math.Min(D, Math.Min(E, F));
+            double maxDEF = Math.Max(D, Math.Max(E, F));
+            if (minABC == minDEF && maxABC == maxDEF)
+            {
+                Console.WriteLine("YES");
+            }
+            else Console.WriteLine("NO");
+        }
+    }
+}
