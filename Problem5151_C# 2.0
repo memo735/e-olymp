@@ -1,0 +1,60 @@
+using System;
+
+namespace Problem5151
+{
+    internal class Program
+    {
+        private static double Orta(double a, double b, double c, double min, double max)
+        {
+            if (a == min && b == max) return c;
+            if (a == min && c == max) return b;
+            if (b == min && a == max) return c;
+            if (b == min && c == max) return a;
+            if (c == min && a == max) return b;
+            if (c == min && b == max) return a;
+            return 0;
+        }
+
+        private static double Mesafe(double x0, double y0, double x1, double y1)
+        {
+            return Math.Sqrt((x1 - x0)*(x1 - x0) + (y1 - y0)*(y1 - y0));
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double xA = double.Parse(massiv[0]);
+            double yA = double.Parse(massiv[1]);
+            double xB = double.Parse(massiv[2]);
+            double yB = double.Parse(massiv[3]);
+            double xC = double.Parse(massiv[4]);
+            double yC = double.Parse(massiv[5]);
+            double AB = Mesafe(xA, yA, xB, yB);
+            double AC = Mesafe(xA, yA, xC, yC);
+            double BC = Mesafe(xB, yB, xC, yC);
+            double minABC = Math.Min(AB, Math.Min(AC, BC));
+            double maxABC = Math.Max(AB, Math.Max(AC, BC));
+            double ortaABC = Orta(AB, AC, BC, minABC, maxABC);
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            double xD = double.Parse(massiv[0]);
+            double yD = double.Parse(massiv[1]);
+            double xE = double.Parse(massiv[2]);
+            double yE = double.Parse(massiv[3]);
+            double xF = double.Parse(massiv[4]);
+            double yF = double.Parse(massiv[5]);
+            double DE = Mesafe(xD, yD, xE, yE);
+            double DF = Mesafe(xD, yD, xF, yF);
+            double EF = Mesafe(xE, yE, xF, yF);
+            double minDEF = Math.Min(DE, Math.Min(DF, EF));
+            double maxDEF = Math.Max(DE, Math.Max(DF, EF));
+            double ortaDEF = Orta(DE, DF, EF, minDEF, maxDEF);
+            if (minABC/minDEF == ortaABC/ortaDEF && ortaABC/ortaDEF == maxABC/maxDEF)
+            {
+                Console.WriteLine("YES");
+            }
+            else Console.WriteLine("NO");
+        }
+    }
+}
