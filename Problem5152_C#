@@ -1,0 +1,231 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem5152
+{
+    internal class Program
+    {
+        private static char Elifba(char x, int n)
+        {
+            string elifba = "  abcdefgh  ";
+            int m = elifba.IndexOf(x);
+            return elifba[m + n];
+        }
+
+        public static void Main(string[] args)
+        {
+            string ag = Console.ReadLine();
+            string qara = Console.ReadLine();
+            char agFiqur = ag[0];
+            char qaraFiqur = qara[0];
+            char agHerf = ag[1];
+            char qaraHerf = qara[1];
+            int agReqem = int.Parse(ag[2] + "");
+            int qaraReqem = int.Parse(qara[2] + "");
+            List<string> beyaz = new List<string>();
+            List<string> siyah = new List<string>();
+            //ag shahin veziyyeti...
+            if (agFiqur == 'K')
+            {
+                int ashagiReqem = agReqem - 1;
+                int yuxariReqem = agReqem + 1;
+                char solHerf = Elifba(agHerf, -1);
+                char sagHerf = Elifba(agHerf, 1);
+                //butun ashagi ve yuxarini elave edek, sol ve sag qalsin...
+                if (solHerf != ' ')
+                {
+                    if (ashagiReqem > 0 && ashagiReqem < 9) beyaz.Add(solHerf + "" + ashagiReqem);
+                    beyaz.Add(solHerf + "" + agReqem);
+                    if (yuxariReqem > 0 && yuxariReqem < 9) beyaz.Add(solHerf + "" + yuxariReqem);
+                }
+                if (sagHerf != ' ')
+                {
+                    if (ashagiReqem > 0 && ashagiReqem < 9) beyaz.Add(sagHerf + "" + ashagiReqem);
+                    beyaz.Add(sagHerf + "" + agReqem);
+                    if (yuxariReqem > 0 && yuxariReqem < 9) beyaz.Add(sagHerf + "" + yuxariReqem);
+                }
+                //solu ve sagi da elave edek...
+                if (ashagiReqem > 0 && ashagiReqem < 9) beyaz.Add(agHerf + "" + ashagiReqem);
+                if (yuxariReqem > 0 && yuxariReqem < 9) beyaz.Add(agHerf + "" + yuxariReqem);
+            }
+            //ag vezirin veziyyeti = top + fil
+            if (agFiqur == 'Q')
+            {
+                foreach (char x in "abcdefgh") if (x != agHerf) beyaz.Add(x + "" + agReqem);
+                for (int j = 1; j < 9; j++) if (j != agReqem) beyaz.Add(agHerf + "" + j);
+                int i = "abcdefgh".IndexOf(agHerf);
+                foreach (char x in "abcdefgh")
+                {
+                    if (x != agHerf)
+                    {
+                        int j = "abcdefgh".IndexOf(x);
+                        int cari = agReqem - i + j;
+                        int cari2 = agReqem - j + i;
+                        if (cari > 0 && cari < 9) beyaz.Add(x + "" + cari);
+                        if (cari2 > 0 && cari2 < 9) beyaz.Add(x + "" + cari2);
+                    }
+                }
+            }
+            //ag topun veziyyeti...
+            if (agFiqur == 'R')
+            {
+                foreach (char x in "abcdefgh") if (x != agHerf) beyaz.Add(x + "" + agReqem);
+                for (int i = 1; i < 9; i++) if (i != agReqem) beyaz.Add(agHerf + "" + i);
+            }
+            //ag filin veziyyeti...
+            if (agFiqur == 'B')
+            {
+                int i = "abcdefgh".IndexOf(agHerf);
+                foreach (char x in "abcdefgh")
+                {
+                    if (x != agHerf)
+                    {
+                        int j = "abcdefgh".IndexOf(x);
+                        int cari = agReqem - i + j;
+                        int cari2 = agReqem - j + i;
+                        if (cari > 0 && cari < 9) beyaz.Add(x + "" + cari);
+                        if (cari2 > 0 && cari2 < 9) beyaz.Add(x + "" + cari2);
+                    }
+                }
+            }
+            //ag atin veziyyeti...
+            if (agFiqur == 'N')
+            {
+                char solHerf1 = Elifba(agHerf, -1);
+                char solHerf2 = Elifba(agHerf, -2);
+                char sagHerf1 = Elifba(agHerf, 1);
+                char sagHerf2 = Elifba(agHerf, 2);
+                int ashagiReqem1 = agReqem - 1;
+                int ashagiReqem2 = agReqem - 2;
+                int yuxariReqem1 = agReqem + 1;
+                int yuxariReqem2 = agReqem + 2;
+                if (solHerf1 != ' ')
+                {
+                    if (ashagiReqem2 > 0 && ashagiReqem2 < 9) beyaz.Add(solHerf1 + "" + ashagiReqem2);
+                    if (yuxariReqem2 > 0 && yuxariReqem2 < 9) beyaz.Add(solHerf1 + "" + yuxariReqem2);
+                }
+                if (solHerf2 != ' ')
+                {
+                    if (ashagiReqem1 > 0 && ashagiReqem1 < 9) beyaz.Add(solHerf2 + "" + ashagiReqem1);
+                    if (yuxariReqem1 > 0 && yuxariReqem1 < 9) beyaz.Add(solHerf2 + "" + yuxariReqem1);
+                }
+                if (sagHerf1 != ' ')
+                {
+                    if (ashagiReqem2 > 0 && ashagiReqem2 < 9) beyaz.Add(sagHerf1 + "" + ashagiReqem2);
+                    if (yuxariReqem2 > 0 && yuxariReqem2 < 9) beyaz.Add(sagHerf1 + "" + yuxariReqem2);
+                }
+                if (sagHerf2 != ' ')
+                {
+                    if (ashagiReqem1 > 0 && ashagiReqem1 < 9) beyaz.Add(sagHerf2 + "" + ashagiReqem1);
+                    if (yuxariReqem1 > 0 && yuxariReqem1 < 9) beyaz.Add(sagHerf2 + "" + yuxariReqem1);
+                }
+            }
+            //qara shahin veziyyeti...
+            if (qaraFiqur == 'K')
+            {
+                int ashagiReqem = qaraReqem - 1;
+                int yuxariReqem = qaraReqem + 1;
+                char solHerf = Elifba(qaraHerf, -1);
+                char sagHerf = Elifba(qaraHerf, 1);
+                //butun ashagi ve yuxarini elave edek, sol ve sag qalsin...
+                if (solHerf != ' ')
+                {
+                    if (ashagiReqem > 0 && ashagiReqem < 9) siyah.Add(solHerf + "" + ashagiReqem);
+                    siyah.Add(solHerf + "" + qaraReqem);
+                    if (yuxariReqem > 0 && yuxariReqem < 9) siyah.Add(solHerf + "" + yuxariReqem);
+                }
+                if (sagHerf != ' ')
+                {
+                    if (ashagiReqem > 0 && ashagiReqem < 9) siyah.Add(sagHerf + "" + ashagiReqem);
+                    siyah.Add(sagHerf + "" + qaraReqem);
+                    if (yuxariReqem > 0 && yuxariReqem < 9) siyah.Add(sagHerf + "" + yuxariReqem);
+                }
+                //solu ve sagi da elave edek...
+                if (ashagiReqem > 0 && ashagiReqem < 9) siyah.Add(qaraHerf + "" + ashagiReqem);
+                if (yuxariReqem > 0 && yuxariReqem < 9) siyah.Add(qaraHerf + "" + yuxariReqem);
+            }
+            //qara vezirin veziyyeti = top + fil
+            if (qaraFiqur == 'Q')
+            {
+                foreach (char x in "abcdefgh") if (x != qaraHerf) siyah.Add(x + "" + qaraReqem);
+                for (int j = 1; j < 9; j++) if (j != qaraReqem) siyah.Add(qaraHerf + "" + j);
+                int i = "abcdefgh".IndexOf(qaraHerf);
+                foreach (char x in "abcdefgh")
+                {
+                    if (x != qaraHerf)
+                    {
+                        int j = "abcdefgh".IndexOf(x);
+                        int cari = qaraReqem - i + j;
+                        int cari2 = qaraReqem - j + i;
+                        if (cari > 0 && cari < 9) siyah.Add(x + "" + cari);
+                        if (cari2 > 0 && cari2 < 9) siyah.Add(x + "" + cari2);
+                    }
+                }
+            }
+            //qara topun veziyyeti...
+            if (qaraFiqur == 'R')
+            {
+                foreach (char x in "abcdefgh") if (x != qaraHerf) siyah.Add(x + "" + qaraReqem);
+                for (int i = 1; i < 9; i++) if (i != qaraReqem) siyah.Add(qaraHerf + "" + i);
+            }
+            //qara filin veziyyeti...
+            if (qaraFiqur == 'B')
+            {
+                int i = "abcdefgh".IndexOf(qaraHerf);
+                foreach (char x in "abcdefgh")
+                {
+                    if (x != qaraHerf)
+                    {
+                        int j = "abcdefgh".IndexOf(x);
+                        int cari = qaraReqem - i + j;
+                        int cari2 = qaraReqem - j + i;
+                        if (cari > 0 && cari < 9) siyah.Add(x + "" + cari);
+                        if (cari2 > 0 && cari2 < 9) siyah.Add(x + "" + cari2);
+                    }
+                }
+            }
+            //qara atin veziyyeti...
+            if (qaraFiqur == 'N')
+            {
+                char solHerf1 = Elifba(qaraHerf, -1);
+                char solHerf2 = Elifba(qaraHerf, -2);
+                char sagHerf1 = Elifba(qaraHerf, 1);
+                char sagHerf2 = Elifba(qaraHerf, 2);
+                int ashagiReqem1 = qaraReqem - 1;
+                int ashagiReqem2 = qaraReqem - 2;
+                int yuxariReqem1 = qaraReqem + 1;
+                int yuxariReqem2 = qaraReqem + 2;
+                if (solHerf1 != ' ')
+                {
+                    if (ashagiReqem2 > 0 && ashagiReqem2 < 9) siyah.Add(solHerf1 + "" + ashagiReqem2);
+                    if (yuxariReqem2 > 0 && yuxariReqem2 < 9) siyah.Add(solHerf1 + "" + yuxariReqem2);
+                }
+                if (solHerf2 != ' ')
+                {
+                    if (ashagiReqem1 > 0 && ashagiReqem1 < 9) siyah.Add(solHerf2 + "" + ashagiReqem1);
+                    if (yuxariReqem1 > 0 && yuxariReqem1 < 9) siyah.Add(solHerf2 + "" + yuxariReqem1);
+                }
+                if (sagHerf1 != ' ')
+                {
+                    if (ashagiReqem2 > 0 && ashagiReqem2 < 9) siyah.Add(sagHerf1 + "" + ashagiReqem2);
+                    if (yuxariReqem2 > 0 && yuxariReqem2 < 9) siyah.Add(sagHerf1 + "" + yuxariReqem2);
+                }
+                if (sagHerf2 != ' ')
+                {
+                    if (ashagiReqem1 > 0 && ashagiReqem1 < 9) siyah.Add(sagHerf2 + "" + ashagiReqem1);
+                    if (yuxariReqem1 > 0 && yuxariReqem1 < 9) siyah.Add(sagHerf2 + "" + yuxariReqem1);
+                }
+            }
+            string vurulanAg = ag.Substring(1, 2);
+            string vurulanQara = qara.Substring(1, 2);
+            bool agVururQarani = beyaz.Contains(vurulanQara);
+            bool qaraVururAgi = siyah.Contains(vurulanAg);
+            if (agVururQarani && qaraVururAgi) Console.WriteLine("BOTH");
+            else
+            {
+                if (!agVururQarani && !qaraVururAgi) Console.WriteLine("NONE");
+                else Console.WriteLine(agVururQarani ? "WHITE" : "BLACK");
+            }
+        }
+    }
+}
