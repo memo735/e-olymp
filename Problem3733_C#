@@ -11,7 +11,7 @@ namespace Problem3733
                 if (x < y) y = y%x;
                 else x = x%y;
             }
-            return (x + y);
+            return x + y;
         }
 
         private static long EKOB(long x, long y)
