@@ -11,7 +11,7 @@ namespace Problem2708
                 if (x < y) y = y%x;
                 else x = x%y;
             }
-            return (x + y);
+            return x + y;
         }
 
         private static int EKOB(int x, int y)
