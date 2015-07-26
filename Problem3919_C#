@@ -12,7 +12,7 @@ namespace Problem3919
                 if (x < y) y = y%x;
                 else x = x%y;
             }
-            return (x + y);
+            return x + y;
         }
 
         private static BigInteger EKOB(BigInteger x, BigInteger y)
