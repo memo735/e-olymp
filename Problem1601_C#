@@ -11,7 +11,7 @@ namespace Problem1601
                 if (x < y) y = y%x;
                 else x = x%y;
             }
-            return (x + y);
+            return x + y;
         }
 
         public static void Main(string[] args)
