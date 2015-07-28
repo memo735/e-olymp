@@ -1,0 +1,18 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    HashMap<Integer, Integer> h = new HashMap<Integer, Integer>();
+
+    int t = in.nextInt();
+    while(t-- > 0) {
+      int a = in.nextInt(), b = in.nextInt(), ak, bk;
+      ak = h.containsKey(a) ? h.get(a) : a;
+      bk = h.containsKey(b) ? h.get(b) : b;
+      System.out.println(Math.abs(ak - bk));
+      h.put(a, bk); h.put(b, ak);
+    }
+  }
+}
