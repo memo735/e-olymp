@@ -1,0 +1,15 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    int n, m, k; cin >> n >> m;
+    vector<int> v;
+    for(int i=0; i<n; i++) { cin >> k; v.push_back(k); }
+    for(int i=0; i<m; i++) {
+        cin >> k;
+        cout << (binary_search(v.begin(), v.end(), k) ? upper_bound(v.begin(), v.end(), k) - v.begin() : 0) << endl;
+    }
+}
