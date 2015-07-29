@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem5324
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int a = int.Parse(massiv[0]);
+            int b = int.Parse(massiv[1]);
+            int x, y = int.MinValue;
+            for (x = 1; x < 10001; x++)
+            {
+                int cari = (1 - a*x)/b;
+                if (a*x + b*cari == 1)
+                {
+                    y = cari;
+                    break;
+                }
+            }
+            if (y != int.MinValue) Console.WriteLine("YES" + "\n" + x + " " + y);
+            else Console.WriteLine("NO");
+        }
+    }
+}
