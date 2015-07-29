@@ -1,0 +1,15 @@
+using System;
+
+namespace Problem5321
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string ikilik = Console.ReadLine();
+            int len = ikilik.Length;
+            if (ikilik[0] == '1') Console.WriteLine(Convert.ToInt64(ikilik.Substring(1), 2) - (1 << (len - 1)));
+            else Console.WriteLine(Convert.ToInt64(ikilik, 2));
+        }
+    }
+}
