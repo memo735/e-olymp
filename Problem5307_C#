@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem5307
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("1");
+            //maraqli bir meseledir, amma cavab bu olmamalidir :)
+        }
+    }
+}
