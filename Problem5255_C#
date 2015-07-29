@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem5255
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            int len = eded.Length;
+            int tekrar = 0;
+            char cavab = '\0';
+            foreach (char x in "0123456789")
+            {
+                int cari = len - eded.Replace(x + "", "").Length;
+                if (cari > tekrar)
+                {
+                    tekrar = cari;
+                    cavab = x;
+                }
+            }
+            Console.WriteLine(cavab);
+        }
+    }
+}
