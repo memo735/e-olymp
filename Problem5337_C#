@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+
+namespace Problem5337
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            HashSet<int> siyahi = new HashSet<int>();
+            int n = int.Parse(Console.ReadLine());
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            for (int i = 0; i < n; i++)
+            {
+                siyahi.Add(int.Parse(massiv[i]));
+            }
+            Console.WriteLine(siyahi.Count);
+        }
+    }
+}
