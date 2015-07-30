@@ -39,7 +39,6 @@ public class Main {
     }
 
     Arrays.sort(ks);
-    for(Key k : ks)
-      k.print();
+    for(Key k : ks) k.print();
   }
 }
