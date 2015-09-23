@@ -1,0 +1,25 @@
+using System;
+
+namespace Problem4823
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            string cavab = "";
+            foreach (char c in setir)
+            {
+                if (c == '-') cavab = cavab + " ";
+                cavab = cavab + c;
+                if (c == '.' || c == ',' || c == '-' || c == '?' || c == '!')
+                {
+                    cavab = cavab + " ";
+                }
+            }
+            cavab = cavab.Trim();
+            while (cavab.Contains("  ")) cavab = cavab.Replace("  ", " ");
+            Console.WriteLine(cavab);
+        }
+    }
+}
