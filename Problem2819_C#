@@ -1,0 +1,36 @@
+using System;
+
+namespace Problem2819
+{
+    internal class Program
+    {
+        private static string Yoxla(long x)
+        {
+            if (x < 10) return "Masha wins.";
+            if (x < 19) return "Misha wins.";
+            if (x < 163) return "Masha wins.";
+            if (x < 325) return "Misha wins.";
+            if (x < 2917) return "Masha wins.";
+            if (x < 5833) return "Misha wins.";
+            if (x < 52489) return "Masha wins.";
+            if (x < 104977) return "Misha wins.";
+            if (x < 944785) return "Masha wins.";
+            if (x < 1889569) return "Misha wins.";
+            if (x < 17006113) return "Masha wins.";
+            if (x < 34012225) return "Misha wins.";
+            if (x < 306110017) return "Masha wins.";
+            if (x < 612220033) return "Misha wins.";
+            return "Masha wins.";
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir;
+            while ((setir = Console.ReadLine()) != null)
+            {
+                long n = long.Parse(setir);
+                Console.WriteLine(Yoxla(n));
+            }
+        }
+    }
+}
