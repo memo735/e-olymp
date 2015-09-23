@@ -1,0 +1,54 @@
+using System;
+
+namespace Problem1614
+{
+    internal class Program
+    {
+        private static double Mesafe(double x1, double y1, double x2, double y2)
+        {
+            return Math.Sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+        }
+
+        private static double Max(double a, double b, double c)
+        {
+            double max = a;
+            if (b > max) max = b;
+            if (c > max) max = c;
+            return max;
+        }
+
+        private static double Sahe(double a, double b, double c)
+        {
+            return Math.Sqrt((a + b + c)*(a + b - c)*(a + c - b)*(b + c - a))/4.0;
+        }
+
+        public static void Main(string[] args)
+        {
+            double pi = 3.1415926535897932384626433832795;
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            double x1 = double.Parse(massiv[0]);
+            double y1 = double.Parse(massiv[1]);
+
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            double x2 = double.Parse(massiv[0]);
+            double y2 = double.Parse(massiv[1]);
+
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            double x3 = double.Parse(massiv[0]);
+            double y3 = double.Parse(massiv[1]);
+
+            double a = Mesafe(x1, y1, x2, y2);
+            double b = Mesafe(x1, y1, x3, y3);
+            double c = Mesafe(x2, y2, x3, y3);
+
+            double bucaq = 0.0;
+            if (a == Max(a, b, c)) bucaq = Math.Acos((b*b + c*c - a*a)/(2*b*c));
+            else bucaq = b == Max(a, b, c) ? Math.Acos((a*a + c*c - b*b)/(2*a*c)) : Math.Acos((a*a + b*b - c*c)/(2*a*b));
+            bucaq = bucaq*180/pi;
+            Console.WriteLine("{0:N6}", bucaq);
+        }
+    }
+}
