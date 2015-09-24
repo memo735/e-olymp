@@ -1,0 +1,10 @@
+program Problem2670;
+var m,n,x,y: LongInt;
+begin
+  readln(m,n);
+  readln(x,y);
+  if x>1 then writeln((x-1),' ',y);
+  if x<m then writeln((x+1),' ',y);
+  if y>1 then writeln(x,' ',(y-1));
+  if y<n then writeln(x,' ',(y+1));
+end.
