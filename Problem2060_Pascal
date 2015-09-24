@@ -1,0 +1,8 @@
+program Problem2060;
+var n,i: Integer; quvvet: QWord;
+begin
+  readln(n);
+  quvvet:=1;
+  for i:=1 to n do quvvet:=quvvet*2;
+  writeln(3*quvvet-2);
+end.
