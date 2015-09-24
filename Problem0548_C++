@@ -1,0 +1,95 @@
+#include <iostream>
+#include <queue>
+#include <memory.h>
+#include <x86intrin.h>
+
+using namespace std;
+#pragma comment(linker, "/STACK:1024000000,1024000000")
+
+typedef long long LL;
+typedef unsigned long long uLL;
+typedef double dbl;
+typedef vector<int> vi;
+typedef vector<LL> vL;
+typedef vector<string> vs;
+typedef pair<int,int> pii;
+typedef pair<LL,LL> pLL;
+
+#define mp(x,y)  make_pair((x),(y))
+#define pb(x)  push_back(x)
+#define sqr(x) ((x)*(x))
+
+const int MaxN= 2500;
+vi g[MaxN+10];
+int d[MaxN+10];
+int prev_[MaxN+10];
+int dfs(int v, int del)
+{
+   memset(d,63,sizeof(d));
+   d[v]= 0; d[del]= -1;
+   queue<int> q;
+   q.push(v);
+   while (!q.empty())
+   {
+      v= q.front(); q.pop();
+      for (int i= g[v].size()-1; i>=0; i--)
+         if (d[v]+1<d[g[v][i]])
+            {
+               d[g[v][i]]= d[v]+1;
+               q.push(g[v][i]);
+               prev_[g[v][i]]= v;
+            }
+   }
+   return v;
+}
+
+int getNewDiametr(int v, int u)
+{
+   int v1=dfs(v,u);
+   int d1=d[dfs(v1,u)];
+   int u1=dfs(u,v);
+   int d2=d[dfs(u1,v)];
+   return max((d1+1)/2+(d2+1)/2+1,max(d1,d2));
+}
+
+int getCentr(int v, int u)
+{
+   int v1=dfs(v,u); v=dfs(v1,u);
+   int d1= d[v]; d1=(d1+1)/2;
+   for (int i=0; i<d1; i++) v=prev_[v];
+   return v;
+}
+
+void getCentres(int v, int u, int &V, int &U)
+{
+   V=getCentr(v,u);
+   U=getCentr(u,v);
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    srand(__rdtsc());
+    int n;
+    cin>>n;
+    int a,b;
+    for (int i= 1; i<n; i++)
+    {
+        cin>>a>>b; g[a].pb(b); g[b].pb(a);
+    }
+int ans=n, ansV=0, ansU=0;
+for (int i=1; i<=n; i++)
+   for (int j= g[i].size()-1; j>=0; j--)
+      if (i<g[i][j])
+      {
+         int tmp= getNewDiametr(i,g[i][j]);
+         if (tmp<ans) { ans=tmp; ansV=i; ansU=g[i][j]; }
+      }
+    cout<<ans<<endl;
+    cout<<ansV<<" "<<ansU<<endl;
+    int V,U;
+    getCentres(ansV,ansU,V,U);
+    cout<<V<<" "<<U<<endl;
+    return 0;
+}
