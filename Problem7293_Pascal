@@ -1,0 +1,6 @@
+program Problem7293;
+var n: Integer;
+begin
+  readln(n);
+  writeln(145-n);
+end.
