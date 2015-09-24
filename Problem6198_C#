@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem6198
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            long[] n1 = new long[n];
+            long[] n2 = new long[n];
+            long cem = 0;
+            string setir1 = Console.ReadLine();
+            string setir2 = Console.ReadLine();
+            var massiv1 = setir1.Split(' ');
+            var massiv2 = setir2.Split(' ');
+            for (int i = 0; i < n; i++)
+            {
+                n1[i] = int.Parse(massiv1[i]);
+                n2[i] = int.Parse(massiv2[i]);
+            }
+            Array.Sort(n1);
+            Array.Sort(n2);
+            for (int i = 0; i < n; i++) cem = cem + n1[i]*n2[n - i - 1];
+            Console.WriteLine(cem);
+        }
+    }
+}
