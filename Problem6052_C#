@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem6052
+{
+    internal class Program
+    {
+        private static long quickSum(string s)
+        {
+            long cem = 0;
+            int len = s.Length;
+            for (int i = 0; i < len; i++)
+            {
+                if (s[i] != ' ') cem = cem + (i + 1)*(s[i] - 'A' + 1);
+            }
+            return cem;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "#")
+            {
+                Console.WriteLine(quickSum(setir));
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
