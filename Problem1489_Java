@@ -1,0 +1,58 @@
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class Main_1489 {
+
+    public static void main(String[] args) {
+        new Task_1489_Resolver(System.in, System.out).solve();
+    }
+
+    public static class Task_1489_Resolver {
+
+        private Scanner scanner;
+        private PrintWriter writer;
+
+        public Task_1489_Resolver(InputStream is, OutputStream os) {
+            this.scanner = new Scanner(is);
+            this.writer = new PrintWriter(os);
+        }
+
+        public void solve() {
+            int rowCount = scanner.nextInt();
+            int columnCount = scanner.nextInt();
+            int[][] chocolate = new int[rowCount][columnCount];
+            for (int i = 0; i < rowCount; i++) {
+                for (int j = 0; j < columnCount; j++) chocolate[i][j] = scanner.nextInt();
+            }
+            check(chocolate, rowCount, columnCount);
+            writer.flush(); writer.close();
+        }
+
+        private void check(int[][] chocolate, int rowCount, int columnCount) {
+            if (mayBreakByRow(chocolate, rowCount, columnCount) || mayBreakByColumn(chocolate, rowCount, columnCount)) writer.println("Yes");
+            else writer.println("No");
+        }
+        private boolean mayBreakByRow(int[][] chocolate, int rowCount, int columnCount) {
+            for (int i = 0; i < rowCount - 1; i++) {
+                boolean okRow = true;
+                for (int j = 0; j < columnCount; j++) {
+                    if (chocolate[i][j] == chocolate[i + 1][j]) { okRow = false; break; }
+                }
+                if (okRow) return true;
+            }
+            return false;
+        }
+        private boolean mayBreakByColumn(int[][] chocolate, int rowCount, int columnCount) {
+            for (int i = 0; i < columnCount - 1; i++) {
+                boolean okColumn = true;
+                for (int j = 0; j < rowCount; j++) {
+                    if (chocolate[j][i] == chocolate[j][i + 1]) { okColumn = false; break; }
+                }
+                if (okColumn) return true;
+            }
+            return false;
+        }
+    }
+}
