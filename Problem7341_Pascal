@@ -1,0 +1,6 @@
+program Problem7341;
+var a,b: Int64;
+begin
+  readln(a,b);
+  writeln(a*b*(a+1)*(b+1) div 4);
+end.
