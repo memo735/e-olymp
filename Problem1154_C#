@@ -1,0 +1,29 @@
+using System;
+
+namespace Problem1154
+{
+    internal class Program
+    {
+        private static int EBOB(int x, int y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return x + y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir;
+            while ((setir = Console.ReadLine()) != null)
+            {
+                var massiv = setir.Split(' ');
+                int n = int.Parse(massiv[0]);
+                int m = int.Parse(massiv[1]);
+                Console.WriteLine((EBOB(n, m) == 1) ? "YES" : "NO");
+            }
+        }
+    }
+}
