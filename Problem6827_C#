@@ -1,0 +1,14 @@
+using System;
+
+namespace Problem6827
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string marius = Console.ReadLine();
+            string doctor = Console.ReadLine();
+            Console.WriteLine(marius.Length >= doctor.Length ? "go" : "no");
+        }
+    }
+}
