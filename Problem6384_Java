@@ -1,0 +1,32 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner in = new Scanner(System.in);
+    int n;
+
+    while((n = in.nextInt()) != 0) {
+      int ns[] = new int[n], z = 0;
+      for(int i=0; i<ns.length; i++) {
+        ns[i] = in.nextInt();
+        if(ns[i] == 0) z++;
+      }
+      Arrays.sort(ns);
+      StringBuilder sb1 = new StringBuilder(), sb2 = new StringBuilder();
+      for(int i=z, j=0; i<ns.length; i++, j++) {
+        if(j%2 == 0) sb1.append(ns[i]);
+        else sb2.append(ns[i]);
+      }
+      for(int i=0; i<z/2; i++) { sb1.insert(1, '0'); sb2.insert(1, '0'); }
+      if(z%2 == 1) {
+        int l1 = sb1.length(), l2 = sb2.length();
+        if(l1 < l2) sb1.insert(1, '0');
+        else
+          if(l2 < l1) sb2.insert(1, '0');
+          else sb1.insert(1, '0');
+      }
+      System.out.println(Integer.parseInt(sb1.toString()) + Integer.parseInt(sb2.toString()));
+    }
+  }
+}
