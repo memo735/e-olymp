@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem6058
+{
+    internal class Program
+    {
+        private static int Hesabla(int b, int n)
+        {
+            int x = (int) Math.Pow(b, 1.0/n);
+            int y = x + 1;
+            if (b - Math.Pow(x, n) < Math.Pow(y, n) - b) return x;
+            return y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            while (setir != "0 0")
+            {
+                var massiv = setir.Split(' ');
+                int b = int.Parse(massiv[0]);
+                int n = int.Parse(massiv[1]);
+                Console.WriteLine(Hesabla(b, n));
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
