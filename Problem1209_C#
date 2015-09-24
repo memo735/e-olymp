@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem1209
+{
+    internal class Program
+    {
+        private static double FaktLog(int n)
+        {
+            double cavab = 0.0;
+            for (int i = 2; i <= n; i++) cavab = cavab + Math.Log(i);
+            return cavab;
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            double cavab = FaktLog(n - 2) - 2*FaktLog(n/2 - 1) + (n - 2)*Math.Log(1/2.0);
+            cavab = Math.Exp(cavab);
+            Console.WriteLine("{0:N4}", cavab);
+        }
+    }
+}
