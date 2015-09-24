@@ -1,0 +1,29 @@
+using System;
+
+namespace Problem6897
+{
+    internal class Program
+    {
+        private static int Conjecture(int n)
+        {
+            int cavab = 1;
+            while (n != 1)
+            {
+                n = n%2 == 0 ? n/2 : 3*n + 1;
+                cavab++;
+            }
+            return cavab;
+        }
+
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            while (eded != "0")
+            {
+                int n = int.Parse(eded);
+                Console.WriteLine(Conjecture(n));
+                eded = Console.ReadLine();
+            }
+        }
+    }
+}
