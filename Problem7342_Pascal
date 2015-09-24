@@ -1,0 +1,18 @@
+program Problem7342;
+var a,b,m,n,r: Real;
+
+function Min(x,y: Real): Real;
+begin
+  if x<y then Min:=x else Min:=y;
+end;
+
+function Max(x,y: Real): Real;
+begin
+  if x>y then Max:=x else Max:=y;
+end;
+
+begin
+  readln(a,b,m,n);
+  r:=Max(Min(m/a, n/b), Min(n/a, m/b));
+  writeln(r*a:0:3,' ',r*b:0:3);
+end.
