@@ -1,0 +1,38 @@
+using System;
+
+namespace Problem7292
+{
+    internal class Program
+    {
+        private static string Cap(long n)
+        {
+            long a = n/(17*29);
+            long b = (n%(17*29))/29;
+            long c = n%29;
+            return a + " " + b + " " + c;
+        }
+
+        private static long getMoney(string x)
+        {
+            var massiv = x.Split(' ');
+            long a = long.Parse(massiv[0]);
+            long b = long.Parse(massiv[1]);
+            long c = long.Parse(massiv[2]);
+            return 17*29*a + 29*b + c;
+        }
+
+        public static void Main(string[] args)
+        {
+            long total = getMoney(Console.ReadLine());
+            int t = int.Parse(Console.ReadLine());
+            long cem = 0;
+            for (int i = 0; i < t; i++)
+            {
+                cem = cem + getMoney(Console.ReadLine());
+            }
+            long k = Math.Max(total - cem, -1);
+            if (k < 0) Console.WriteLine(k);
+            else Console.WriteLine(Cap(k));
+        }
+    }
+}
