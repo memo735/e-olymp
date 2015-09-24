@@ -1,0 +1,16 @@
+#include <cstdio>
+
+int main() {
+	int x, k;
+	while(scanf("%d %d", &x, &k) == 2) {
+		unsigned long long y = 0, powerTwo = 1;
+		
+		for( ; k > 0; powerTwo *= 2) {
+			if((x/powerTwo) & 1) continue;
+			y = y | (powerTwo * (k & 1));
+			k = k/2;
+		}
+		printf("%lld\n", y);
+	}
+	return 0;
+}
