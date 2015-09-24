@@ -1,0 +1,18 @@
+using System;
+
+namespace Problem1249
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded;
+            while ((eded = Console.ReadLine()) != null)
+            {
+                int n = int.Parse(eded);
+                double p = n*Math.Log10(n);
+                Console.WriteLine((int) Math.Pow(10, p - (int) p));
+            }
+        }
+    }
+}
