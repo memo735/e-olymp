@@ -1,0 +1,30 @@
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef unsigned long long ull;
+
+ull n, ans;
+
+int main()
+{
+	do
+	{
+		cin >> n;
+		if (n)
+		{
+			ans = n;
+			for (ull i = 2; i*i <= n; i++)
+			{
+				if (n % i == 0) ans -= ans / i;
+				while (n % i == 0) n /= i;
+			}
+			if (n > 1) ans -= ans / n;
+			cout << ans << endl;
+		}
+	} while (n);
+}
