@@ -1,0 +1,22 @@
+#include <iostream>
+#include <fstream>
+
+#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long long ll;
+
+ll sum, tmp, i;
+
+int main()
+{
+	FOR(i, 31)
+	{
+		cin >> tmp;
+		sum += tmp;
+	}
+	cout << sum / 27 << endl;
+}
