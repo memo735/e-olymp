@@ -14,13 +14,8 @@ namespace Problem43
             long d = long.Parse(massiv[3]);
             var suret = d*k*m*n;
             var mexrec = k*m*n - k*m - k*n - m*n;
-            long cavab = -1;
-            if (mexrec != 0) cavab = suret/mexrec;
-            if ((mexrec == 0) || (suret%mexrec != 0) || (cavab%k != 0) || (cavab%m != 0) || (cavab%n != 0) || (suret == 0))
-            {
-                Console.WriteLine("-1");
-            }
-            else Console.WriteLine(cavab);
+            if (suret%mexrec == 0) Console.WriteLine(suret/mexrec);
+            else Console.WriteLine("-1");
         }
     }
 }
