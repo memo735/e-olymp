@@ -1,31 +1,30 @@
 #include <iostream>
-#include <math.h>
 #include <stdio.h>
 using namespace std;
- 
-int EBOB (int a, int b)
+
+int EBOB(int a, int b)
 {
-    while (a*b != 0)
-    {
-        if (a < b) b = b%a;
-        else a = a%b;
-    }
-    return a + b;
+	while (a*b != 0)
+	{
+		if (a < b) b = b%a;
+		else a = a%b;
+	}
+	return a + b;
 }
- 
-int main ()
+
+int main()
 {
-    int a,b,t;
-    while (scanf("%d %d",&a, &b) == 2)
-    {
-        int k=0;
-        t=(a+b)/EBOB(a,b);
-        while (t%2==0)
-        {
-            t=t/2; k++;
-        }
-        if (t>1) k=-1;
-        cout << k << endl;
-    }
-    return 0;
+	int a, b, t;
+	while (scanf("%d %d", &a, &b) == 2)
+	{
+		int k = 0;
+		t = (a + b) / EBOB(a, b);
+		while (t % 2 == 0)
+		{
+			t = t / 2; k++;
+		}
+		if (t > 1) k = -1;
+		cout << k << endl;
+	}
+	return 0;
 }
