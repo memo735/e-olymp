@@ -1,47 +1,46 @@
 #include <cstdio>
 #include <queue>
-#include <vector>
 #include <utility>
 #include <algorithm>
 using namespace std;
- 
-pair <long long, long long> v [100010];
+
+pair <long long, long long> v[100010];
 // массив пар (время, ярость) поменяла местами, чтобы не писать перегруженный оператор, так как сравнивается по умолчанию по первому значению
 priority_queue <pair <long long, long long> > q; // очередь пар (ярость, время)
- 
+
 int main() {
-  long long t; scanf("%lld", &t);
-  while (t--) {
-    long long n; scanf("%lld", &n);
-    long long ans=0;
-    for (int i=0; i<n; i++) {
-      long long r, w; scanf("%lld%lld", &r, &w);
-      v[i]=make_pair(r,w);
-    }
-    sort (v, v+n); // сортируем по времени прибытия
-    long long k=0; long long tim=1;
-    for (; tim<=1000000; ) { // цикл от 1 до максимального количества пришедших
-      while (v[k].first==tim) { // если встретился такой человек, пришедший в нужный момент времени
-        q.push(make_pair(v[k].second, v[k].first)); k++;// то закидываем его в очередь по ярости (по невозрастанию)
-        if (k==n) break; // выходим из циклов, если прошли все возможные люди
-      }
-      if (k==n) break;
-      if (q.empty()) {
-        if (k<n) tim=max(tim+1, v[k].first);
-        // если очередь уже пуста, но люди не закончились, то время ставим на максимум, чтобы не получить TLE
-        else tim++;
-      }
-      else {
-        ans+=(long long)q.top().first*(tim-q.top().second);
-        tim++; q.pop();
-      }
-    }
-    while (!q.empty()) {
-      ans+=(long long)q.top().first*(tim-q.top().second);
-      // если очередь не пуста, а люди уже прийти не могут, то просто запускаем по одному
-      tim++; q.pop();
-    }
-    printf("%lld\n", ans);
-  }
-  return 0;
+	long long t; scanf("%lld", &t);
+	while (t--) {
+		long long n; scanf("%lld", &n);
+		long long ans = 0;
+		for (int i = 0; i < n; i++) {
+			long long r, w; scanf("%lld%lld", &r, &w);
+			v[i] = make_pair(r, w);
+		}
+		sort(v, v + n); // сортируем по времени прибытия
+		long long k = 0; long long tim = 1;
+		for (; tim <= 1000000;) { // цикл от 1 до максимального количества пришедших
+			while (v[k].first == tim) { // если встретился такой человек, пришедший в нужный момент времени
+				q.push(make_pair(v[k].second, v[k].first)); k++;// то закидываем его в очередь по ярости (по невозрастанию)
+				if (k == n) break; // выходим из циклов, если прошли все возможные люди
+			}
+			if (k == n) break;
+			if (q.empty()) {
+				if (k < n) tim = max(tim + 1, v[k].first);
+				// если очередь уже пуста, но люди не закончились, то время ставим на максимум, чтобы не получить TLE
+				else tim++;
+			}
+			else {
+				ans += (long long)q.top().first*(tim - q.top().second);
+				tim++; q.pop();
+			}
+		}
+		while (!q.empty()) {
+			ans += (long long)q.top().first*(tim - q.top().second);
+			// если очередь не пуста, а люди уже прийти не могут, то просто запускаем по одному
+			tim++; q.pop();
+		}
+		printf("%lld\n", ans);
+	}
+	return 0;
 }
