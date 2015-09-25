@@ -1,0 +1,30 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long long int s64;
+
+s64 n, a, b, _count;
+
+bool checker(s64 param)
+{
+	if (param == 2) return true;
+	if (!(param % 2)) return false;
+	for (int i = 3; i*i <= param; i += 2) if (!(param % i)) return false;
+	return true;
+}
+
+int main()
+{
+	cin >> n; a = 1; b = 2;
+	while (_count != n)
+	{
+		if (checker(b)) _count++;
+		b += a;
+		a = b - a;
+	}
+	cout << a << endl;
+}
