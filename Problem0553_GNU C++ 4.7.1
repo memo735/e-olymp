@@ -4,53 +4,51 @@
 #include<map>
 #include<string>
 using namespace std;
- 
-map<string,set<string>> G;
-map<string,bool> used;
-map<string,bool> rec;
+
+map<string, set<string>> G;
+map<string, bool> used;
+map<string, bool> rec;
 vector<string> V;
- 
+
 void dfs(string cur, string aim)
 {
-    if(used[cur] || rec[aim]) return;
-    used[cur] = 1;
-    for (auto i = G[cur].begin(); i != G[cur].end(); i++)
-    {
-        if(*i != aim) dfs(*i,aim);
-        else
-        {
-            rec[aim] = 1;
-            return;
-        }
-    }
+	if (used[cur] || rec[aim]) return;
+	used[cur] = 1;
+	for (auto i = G[cur].begin(); i != G[cur].end(); i++)
+	{
+		if (*i != aim) dfs(*i, aim);
+		else
+		{
+			rec[aim] = 1;
+			return;
+		}
+	}
 }
- 
+
 int main()
 {
-    //input
-    int n; cin >> n;
-    for(int i = 0; i < n; i++)
-    {
-        string curVert; cin >> curVert;
-        V.push_back(curVert);
-        int m; cin >> m;
-        while(m--)
-        {
-            string inp; cin >> inp;
-            G[curVert].insert(inp);
-        }
-        if(i != n-1)
-        {
-            string stars;
-            cin >> stars;
-        }
-    }
-    //work
-    for(auto i : V)
-    {
-        dfs(i, i);
-        used.clear();
-    }
-    for(auto i : V) cout << i << (rec[i] ? ": YES" : ": NO") << endl;
-    return 0;
+	int n; cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		string curVert; cin >> curVert;
+		V.push_back(curVert);
+		int m; cin >> m;
+		while (m--)
+		{
+			string inp; cin >> inp;
+			G[curVert].insert(inp);
+		}
+		if (i != n - 1)
+		{
+			string stars;
+			cin >> stars;
+		}
+	}
+	for (auto i : V)
+	{
+		dfs(i, i);
+		used.clear();
+	}
+	for (auto i : V) cout << i << (rec[i] ? ": YES" : ": NO") << endl;
+	return 0;
 }
