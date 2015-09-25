@@ -2,38 +2,35 @@
 #include <vector>
 #include <deque>  
 using namespace std;
- 
+
 struct vertax{ // структура вершина
 	int vert, index, father; bool visited;
-	vertax(int a){vert = a; index = 10001; father = a;visited = false;}
+	vertax(int a){ vert = a; index = 10001; father = a; visited = false; }
 	vertax(int a, int b){
 		vert = a;
 		father = b;
-		index = 10001;visited = false;
+		index = 10001; visited = false;
 	}
 	vertax(int a, int b, int x){
 		vert = a;
 		father = b;
-		index = x;visited = false;
+		index = x; visited = false;
 	}
 	vector<vertax> follow;// с кем связанна эта вершина
 	~vertax(){}
 };
- 
+
 struct graph{
 	vector<vertax> v; // list of vertax
 	int count;
 	graph(){};
-	graph(int n){
-		count = n;
-	}
+	graph(int n){ count = n; }
 	void get(){//инициализируем граф
-		for(int i = 1; i <= count; i++){
+		for (int i = 1; i <= count; i++){
 			vertax v(i);
-			for(int j = 1; j <= count; j++){
-				int x;
-				cin >> x;
-				if(x != 0){
+			for (int j = 1; j <= count; j++){
+				int x; cin >> x;
+				if (x != 0){
 					vertax temp(j, i, x);
 					v.follow.push_back(temp);
 				}
@@ -42,90 +39,67 @@ struct graph{
 		}
 	}
 	void write(){//вывод вершины, и с кем она связанна
-		for(int i = 0; i < count; i++){
+		for (int i = 0; i < count; i++){
 			cout << v[i].index << ":";
-			for(int j = 0; j < v[i].follow.size(); j++){
-				cout << v[i].follow[j].vert << " ";
-			}
+			for (int j = 0; j < v[i].follow.size(); j++) cout << v[i].follow[j].vert << " ";
 			cout << endl;
 		}
 	}
 	void way(vertax& x){//алгоритм
 		deque<vertax> list;
-		x.index = 0;
-		x.visited = true;
+		x.index = 0; x.visited = true;
 		list.push_front(x);
-		while(!list.empty()){
+		while (!list.empty()){
 			vertax& y = list[0];
-			for(int i = 0; i < y.follow.size();i++){
-				v[y.follow[i].vert -1].visited = true;
-				if(v[y.follow[i].vert-1].index > y.index+y.follow[i].index){
-					v[y.follow[i].vert-1].index = y.index+y.follow[i].index;
-					if(v[y.follow[i].vert-1].index > -102){
-						list.push_back(v[y.follow[i].vert-1]);
-					}
+			for (int i = 0; i < y.follow.size(); i++){
+				v[y.follow[i].vert - 1].visited = true;
+				if (v[y.follow[i].vert - 1].index > y.index + y.follow[i].index){
+					v[y.follow[i].vert - 1].index = y.index + y.follow[i].index;
+					if (v[y.follow[i].vert - 1].index > -102) list.push_back(v[y.follow[i].vert - 1]);
 				}
 			}
 			list.pop_front();
 		}
 	}
 	void def(){//фунция к приведению значений по умолчанию
-		for(int i = 0; i < v.size(); i++){
+		for (int i = 0; i < v.size(); i++){
 			v[i].index = 10001;
 			v[i].visited = false;
 		}
 	}
 	void task1(){//решение к Флойд существования
-		for(int i = 0; i < v.size(); i++){
+		for (int i = 0; i < v.size(); i++){
 			way(v[i]);
-			for(int j = 0; j < v.size()-1; j++){
-				if(!v[j].visited){
-					cout << 0 << " ";
-				}else if(v[j].index < -50){
-					cout << 2 << " ";
-				}else{
-					cout << 1 << " ";
-				}
+			for (int j = 0; j < v.size() - 1; j++){
+				if (!v[j].visited) cout << 0 << " ";
+				else if (v[j].index < -50) cout << 2 << " ";
+				else cout << 1 << " ";
 			}
-			if(!v[v.size()-1].visited){
-					cout << 0 ;
-				}else if(v[v.size()-1].index < -50){
-					cout << 2 ;
-				}else{
-					cout << 1 ;
-				}
-			def();
-			cout << endl;
+			if (!v[v.size() - 1].visited) cout << 0;
+			else if (v[v.size() - 1].index < -50) cout << 2;
+			else cout << 1;
+			def(); cout << endl;
 		}
 	}
 	void task2(){//Решение к Флойд-1
-		for(int i = 0; i < v.size(); i++){
+		for (int i = 0; i < v.size(); i++){
 			way(v[i]);
-			for(int j = 0; j < v.size()-1; j++){
-				if(!v[j].visited){
-					cout << 0 << " ";
-				}else{
-					cout << v[j].index << " ";
-				}
+			for (int j = 0; j < v.size() - 1; j++){
+				if (!v[j].visited) cout << 0 << " ";
+				else cout << v[j].index << " ";
 			}
-			if(!v[v.size()-1].visited){
-					cout << 0 ;
-				}else{
-					cout << v[v.size()-1].index;
-				}
+			if (!v[v.size() - 1].visited) cout << 0;
+			else cout << v[v.size() - 1].index;
 			def();
 			cout << endl;
 		}
 	}
 };
- 
- 
+
 int main() {
 	ios::sync_with_stdio(false);
-	int n;
-	cin >> n;
-	graph dog(n);
-	dog.get();
+	int n; cin >> n;
+	graph dog(n); dog.get();
 	dog.task2();// task1() - Флойд существования, task2() - Флойд -1
 	return 0;
 }
