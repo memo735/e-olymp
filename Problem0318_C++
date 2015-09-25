@@ -1,0 +1,41 @@
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long long ll;
+typedef unsigned long long ull;
+
+ull t, n, k, gcd_tmp, C;
+
+ull gcd(ull a, ull b)
+{
+	while (b)
+	{
+		a %= b;
+		swap(a, b);
+	}
+	return a;
+}
+
+int main()
+{
+	cin >> t;
+	for (ll i = 0; i < t; i++)
+	{
+		cin >> n >> k;
+		if (k > n - k) k = n - k;
+		C = 1;
+		if (n > 0)
+			for (ull d = 0; d < k; d++)
+			{
+				gcd_tmp = gcd(C, d + 1);
+				//C = C * (n-d) / (d+1);
+				C = (C / gcd_tmp)*((n - d) / ((d + 1) / gcd_tmp));
+			}
+		cout << C << endl;
+	}
+}
