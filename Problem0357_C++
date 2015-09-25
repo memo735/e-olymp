@@ -1,0 +1,21 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long double ld;
+
+ld tmp, MAX = -1;
+
+int main()
+{
+	while (cin)
+	{
+		cin >> tmp;
+		if (cin) if (tmp > MAX) MAX = tmp;
+	}
+	cout.precision(2);
+	cout << fixed << MAX << endl;
+}
