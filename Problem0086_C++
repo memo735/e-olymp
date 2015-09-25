@@ -5,20 +5,9 @@
 
 using namespace std;
 
-#define FILE
-//#undef FILE
-
-#ifdef FILE
-#define cin in
-#define cout out
 fstream in("input.txt", ios::in), out("output.txt", ios::out);
-#endif FILE
 
-typedef short int s16;
 typedef long long int s64;
-typedef unsigned short int u16;
-typedef unsigned int u32;
-typedef unsigned long long int u64;
 
 s64 n, tmp1, tmp2, count_len;
 float ans;
