@@ -1,0 +1,25 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long long ll;
+
+ll n, sum, i, tmp;
+
+int main()
+{
+	cin >> n;
+	for (i = 4; sum != n; i++)
+	{
+		tmp = i;
+		while (tmp)
+		{
+			sum++;
+			tmp /= 10;
+		}
+	}
+	cout << i - 1 << endl;
+}
