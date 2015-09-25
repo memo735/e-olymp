@@ -1,0 +1,47 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef unsigned long long int u64;
+
+u64 d[50001], data[50001], n, Mod, Limite, power;
+char ch;
+bool db[50001];
+
+u64 dp(u64 pos)
+{
+	if (pos > n) return 0;
+	if (pos == n) return 1;
+	if (db[pos]) return d[pos];
+	u64 tmp = 0;
+	db[pos] = true;
+	if (data[pos + 1])
+	{
+		u64 m = data[pos + 1], index = pos + 1;
+		while (m <= Limite)
+		{
+			tmp = (tmp + dp(index)) % Mod;
+			if (index >= n) break;
+			m = m * 10 + data[++index];
+		}
+	}
+	else tmp = dp(pos + 1); // 0
+	return d[pos] = tmp % Mod;
+}
+
+int main()
+{
+	cin >> n >> Limite >> power;
+	for (u64 i = 1; i <= n; i++)
+	{
+		cin >> ch;
+		data[i] = ch - 48;
+	}
+	Mod = 1;
+	for (int i = 1; i <= power; i++) Mod *= 10;
+	cout << dp(0) << endl;
+	return 0;
+}
