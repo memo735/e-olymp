@@ -1,0 +1,27 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long long int s64;
+
+s64 n, Max, count_max, tmp;
+
+int main()
+{
+	cin >> n >> Max;
+	count_max = 1;
+	for (s64 i = 1; i < n; i++)
+	{
+		cin >> tmp;
+		if (tmp > Max)
+		{
+			Max = tmp;
+			count_max = 1;
+		}
+		else if (tmp == Max) count_max++;
+	}
+	cout << count_max << endl;
+}
