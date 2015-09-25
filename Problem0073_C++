@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+
+#define FILE
+#undef FILE
+
+#define ln length()
+#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
+
+using namespace std;
+
+#ifdef FILE
+#define cin in
+#define cout out
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+#endif FILE
+
+typedef long double ld;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef vector<ll> vll;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef vector<bool> vb;
+typedef vector<vb> vvb;
+typedef pair<int, int> pii;
+typedef pair<ll, int> pli;
+typedef pair<int, ll> pil;
+typedef pair<ll, ll> pll;
+typedef vector<pii> vpii;
+
+ll a[10], b[10], sumA, i, ans, index;
+string A, B, C;
+
+bool check()
+{
+	ll j;
+	for (j = 0; j < 10; j++) if (b[j] > a[j]) return false;
+	return true;
+}
+
+string SUM(string a, string b)
+{
+	for (int j = 0; j < a.ln / 2; j++) swap(a[j], a[a.ln - j - 1]);
+	for (int j = 0; j < b.ln / 2; j++) swap(b[j], b[b.ln - j - 1]);
+	if (a.ln < b.ln) swap(a, b);
+	ll j, ost = 0;
+	for (j = 0; j < b.ln; j++)
+	{
+		ost += a[j] + b[j] - 96;
+		a[j] = ost % 10 + 48;
+		ost /= 10;
+	}
+	while (ost)
+	{
+		if (j == a.ln) a += ost + 48, ost = 0;
+		else
+		{
+			ost += a[j] - 48;
+			a[j] = ost % 10 + 48;
+			ost /= 10;
+			j++;
+		}
+	}
+	for (int j = 0; j < a.ln / 2; j++) swap(a[j], a[a.ln - j - 1]);
+	return a;
+}
+
+int main()
+{
+	A = B = "1";
+	ans = -1;
+	index = 2;
+	FOR(i, 10) { cin >> a[i]; sumA += a[i]; }
+	while (B.ln <= sumA)
+	{
+		FOR(i, 10) b[i] = 0;
+		FOR(i, B.ln) b[B[i] - 48]++;
+		if (check()) ans = index;
+		index++;
+		C = SUM(A, B); A = B; B = C;
+	}
+	cout << ans << endl;
+}
