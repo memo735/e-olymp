@@ -1,0 +1,33 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+string str1, str2;
+int n, m, ans;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> m;
+		ans = 0;
+		for (int j = 0; j < m; j++)
+		{
+			cin >> str1 >> str2;
+			if (str1 == "P" && str2 == "R") ans++;
+			if (str1 == "P" && str2 == "S") ans--;
+			if (str1 == "R" && str2 == "P") ans--;
+			if (str1 == "R" && str2 == "S") ans++;
+			if (str1 == "S" && str2 == "P") ans++;
+			if (str1 == "S" && str2 == "R") ans--;
+		}
+		if (ans == 0) cout << "TIE" << endl;
+		else if (ans > 0) cout << "Player 1" << endl;
+		else cout << "Player 2" << endl;
+	}
+}
