@@ -1,0 +1,18 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+long long n, ans = 0, MIN, tmp;
+
+int main()
+{
+	cin >> n; cin >> MIN; ans = MIN;
+	for (int i = 1; i < n; i++)
+	{
+		cin >> tmp;
+		ans += tmp;
+		MIN = min(MIN, tmp);
+	}
+	cout << ans - MIN << endl;
+}
