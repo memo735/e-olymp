@@ -1,0 +1,24 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string sa, sb;
+long long a = 0, b = 0;
+
+int main()
+{
+	while (cin)
+	{
+		cin >> sa >> sb;
+		if (cin)
+		{
+			a = b = 0;
+			for (int i = sa[0] == '-'; i < sa.length(); i++) if (sa[i] != ',') a = a * 10 + sa[i] - 48;
+			if (sa[0] == '-') a *= -1;
+			for (int i = sb[0] == '-'; i < sb.length(); i++) if (sb[i] != ',') b = b * 10 + sb[i] - 48;
+			if (sb[0] == '-') b *= -1;
+			cout << a + b << endl;
+		}
+	}
+}
