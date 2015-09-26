@@ -1,0 +1,28 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+long long ans, n, m, tmp;
+
+long long gcd(long long a, long long b)
+{
+	return b ? gcd(b, a % b) : a;
+}
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> m; cin >> ans;
+		for (int j = 1; j < m; j++)
+		{
+			cin >> tmp;
+			ans = ans * tmp / gcd(ans, tmp);
+		}
+		cout << ans << endl;
+	}
+}
