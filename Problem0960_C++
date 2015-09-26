@@ -1,0 +1,17 @@
+#include <iostream>
+#include <fstream>
+#include <math.h>
+
+#define PI 3.1415926535897932384626433832795
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+double R, r, H;
+
+int main()
+{
+	cin >> R >> r >> H;
+	cout << fixed << PI*R*R + PI*r*r + hypot(H, R - r)*(R + r)*PI << endl;
+}
