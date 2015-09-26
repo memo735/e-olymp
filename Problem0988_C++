@@ -1,0 +1,25 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+#define MAX(a,b) (a < b) ? (b) : (a) 
+
+int n, d[1000], mas[1000], ans = 1;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++) cin >> mas[i];
+	for (int i = 0; i < n; i++)
+	{
+		d[i] = 1;
+		for (int j = 0; j < i; j++)
+			if (mas[j] < mas[i]) d[i] = MAX(d[i], d[j] + 1);
+	}
+	ans = d[0];
+	for (int i = 0; i < n; i++) ans = MAX(ans, d[i]);
+	cout << ans << endl;
+}
