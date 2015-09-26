@@ -1,0 +1,29 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+int n;
+int dn[500][500], ans = 0;
+
+int rec(int prev, int sum)
+{
+	if (sum > n) return 0;
+	if (sum == n) return 1;
+	if (dn[prev][sum] != -1) return dn[prev][sum];
+	int tmp = 0;
+	for (int i = 1; i < prev; i++) tmp += rec(i, sum + i);
+	return dn[prev][sum] = tmp;
+}
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < 500; i++)
+		for (int j = 0; j < 500; j++) dn[i][j] = -1;
+
+	for (int i = 1; i <= n; i++) ans += rec(i, i);
+	cout << ans << endl;
+}
