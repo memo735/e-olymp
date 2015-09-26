@@ -1,0 +1,44 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+int n, m, ans = 0;
+bool d[200][200];
+char tmp;
+
+void rec(int x, int y)
+{
+	if (x >= 0 && x < n && y >= 0 && y < m)
+	{
+		if (d[x][y])
+		{
+			d[x][y] = false;
+			rec(x - 1, y);
+			rec(x, y - 1);
+			rec(x + 1, y);
+			rec(x, y + 1);
+		}
+	}
+}
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			cin >> tmp;
+			d[i][j] = tmp == '#';
+		}
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			if (d[i][j])
+			{
+				ans++;
+				rec(i, j);
+			}
+	cout << ans << endl;
+}
