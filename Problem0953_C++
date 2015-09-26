@@ -1,0 +1,14 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+int a;
+
+int main()
+{
+	cin >> a;
+	cout << a % 10 % (a / 100) << endl;
+}
