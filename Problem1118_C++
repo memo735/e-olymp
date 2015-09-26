@@ -1,0 +1,30 @@
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+
+#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+int n, MAX, MIN, i, t;
+
+int main()
+{
+	cin >> n;
+	if (n < 2)
+	{
+		cout << "Ooops!\n" << endl;
+		return 0;
+	}
+	cin >> t;
+	MAX = MIN = t;
+	FOR(i, n - 1)
+	{
+		cin >> t;
+		MAX = max(MAX, t);
+		MIN = min(MIN, t);
+	}
+	cout << MIN << " " << MAX << endl;
+}
