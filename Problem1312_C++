@@ -1,0 +1,15 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int a[3], b[2];
+
+int main()
+{
+	cin >> a[0] >> a[1] >> a[2] >> b[0] >> b[1];
+	sort(a, a + 3);
+	sort(b, b + 2);
+	if (a[0] <= b[0] && a[1] <= b[1]) cout << "YES" << endl;
+	else cout << "NO" << endl;
+}
