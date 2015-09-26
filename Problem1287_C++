@@ -1,0 +1,14 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+long a, b;
+
+int main()
+{
+	cin >> a >> b;
+	cout << a*b << endl;
+}
