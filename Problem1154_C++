@@ -1,0 +1,33 @@
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long long ll;
+
+ll n, m;
+
+ll gcd(ll a, ll b)
+{
+	while (b)
+	{
+		a %= b;
+		swap(a, b);
+	}
+	return a;
+}
+
+int main()
+{
+	while (cin)
+	{
+		cin >> n; cin >> m;
+		if (cin)
+		{
+			if (gcd(n, m) == 1) cout << "YES" << endl;
+			else cout << "NO" << endl;
+		}
+	}
+}
