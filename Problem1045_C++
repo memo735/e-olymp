@@ -1,0 +1,29 @@
+#include <iostream>
+#include <fstream>
+#include <math.h>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+pair <double, double> a, b, c;
+
+double getD()
+{
+	double AB, BC, CA, S, p;
+	AB = hypot(a.first - b.first, a.second - b.second);
+	BC = hypot(c.first - b.first, c.second - b.second);
+	CA = hypot(a.first - c.first, a.second - c.second);
+	p = (AB + BC + CA) / 2;
+	S = sqrt(p*(p - AB)*(p - BC)*(p - CA));
+	return AB * BC * CA / S / 2.0;
+}
+
+int main()
+{
+	while (cin)
+	{
+		cin >> a.first >> a.second >> b.first >> b.second >> c.first >> c.second;
+		if (cin) cout << fixed << 3.1415926535897932384626433832795*getD() << endl;
+	}
+}
