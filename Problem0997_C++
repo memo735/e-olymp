@@ -1,0 +1,46 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+
+fstream in("input.txt", ios::in), out("output.txt", ios::out);
+
+typedef long long ll;
+typedef pair<ll, ll> pll;
+
+ll i, n;
+pll x, y;
+bool d[100][100];
+vector < pair<ll, pll> > v;
+
+void add(ll a, ll b, ll c)
+{
+	if (a >= 1 && a <= n && b >= 1 && b <= n && !d[a][b])
+	{
+		d[a][b] = true;
+		v.push_back(make_pair(c, make_pair(a, b)));
+	}
+}
+
+int main()
+{
+	cin >> n >> x.first >> x.second >> y.first >> y.second;
+	v.push_back(make_pair(0, x));
+	for (ll i = 0; i < v.size(); i++)
+	{
+		if (v[i].second == y)
+		{
+			cout << v[i].first << endl;
+			return 0;
+		}
+		add(v[i].second.first + 1, v[i].second.second + 2, v[i].first + 1);
+		add(v[i].second.first + 2, v[i].second.second + 1, v[i].first + 1);
+		add(v[i].second.first - 1, v[i].second.second - 2, v[i].first + 1);
+		add(v[i].second.first - 2, v[i].second.second - 1, v[i].first + 1);
+		add(v[i].second.first + 1, v[i].second.second - 2, v[i].first + 1);
+		add(v[i].second.first - 2, v[i].second.second + 1, v[i].first + 1);
+		add(v[i].second.first - 1, v[i].second.second + 2, v[i].first + 1);
+		add(v[i].second.first + 2, v[i].second.second - 1, v[i].first + 1);
+	}
+}
