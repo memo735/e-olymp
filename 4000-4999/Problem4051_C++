@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+typedef long long int s64;
+
+s64 n, k, d[100];
+
+s64 dp(s64 pos)
+{
+	if (pos == n) return 1;
+	if (pos > n) return 0;
+	if (d[pos] != -1) return d[pos];
+	s64 tmp = 0;
+	for (int i = 1; i <= k; i++) tmp += dp(pos + i);
+	return d[pos] = tmp;
+}
+
+int main()
+{
+	cin >> n >> k;
+	for (int i = 0; i < 100; i++) d[i] = -1;
+	cout << dp(1) << endl;
+}
