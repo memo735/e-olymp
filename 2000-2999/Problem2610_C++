@@ -1,0 +1,14 @@
+#include <iostream>
+
+using namespace std;
+
+long long n;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		if (i % 2) cout << 8;
+		else cout << 9;
+		cout << endl;
+}
