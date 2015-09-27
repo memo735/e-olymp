@@ -1,0 +1,27 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+typedef short int s16;
+
+vector <s16> vect;
+s16 sum, tmp, tmpSum;
+
+int main()
+{
+	cin >> sum;
+	for (s16 i = 100; i < 1000; i++)
+	{
+		tmp = i;
+		tmpSum = 0;
+		while (tmp)
+		{
+			tmpSum += tmp % 10;
+			tmp /= 10;
+		}
+		if (tmpSum == sum) vect.push_back(i);
+	}
+	cout << vect.size() << endl;
+	for (s16 i = 0; i < vect.size(); i++) cout << vect[i] << endl;
+}
