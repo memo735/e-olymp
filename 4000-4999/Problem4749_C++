@@ -1,0 +1,21 @@
+#include <iostream>
+
+using namespace std;
+
+int n, m, mas[500][500], tmp, Sum = 0;
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++) cin >> mas[i][j];
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			cin >> tmp;
+			if (tmp == 1) Sum += mas[i][j];
+		}
+
+	cout << Sum << endl;
+}
