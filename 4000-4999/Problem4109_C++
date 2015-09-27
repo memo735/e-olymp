@@ -1,0 +1,140 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
+
+using namespace std;
+
+typedef long long ll;
+typedef pair<int, int> pii;
+
+ll n, i, j, ans;
+pii tmpa, tmpb;
+vector < pair<pii, pii> > rect;
+
+bool inside(pii a, pii b, pii c)
+{
+	return a.first <= c.first && a.second <= c.second && (c.first <= b.first && c.second <= b.second);
+}
+
+ll ch(pii a, pii b)
+{
+	if (a.first == b.first || a.second == b.second) return 0;
+	bool ain, bin, cin, din;
+	for (ll ind = 0; ind < rect.size(); ind++)
+	{
+		pii c = make_pair(a.first, b.second), d = make_pair(b.first, a.second);
+		ain = inside(rect[ind].first, rect[ind].second, a);
+		bin = inside(rect[ind].first, rect[ind].second, b);
+		cin = inside(rect[ind].first, rect[ind].second, c);
+		din = inside(rect[ind].first, rect[ind].second, d);
+		if (ain && bin) return 0;
+		if (ain && cin && a.first != rect[ind].second.first)
+		{
+			ch(make_pair(rect[ind].second.first, a.second), b);
+			return 0;
+		}
+		if (ain && din && a.second != rect[ind].second.second)
+		{
+			ch(make_pair(a.first, rect[ind].second.second), b);
+			return 0;
+		}
+		if (bin && cin && b.second != rect[ind].first.second)
+		{
+			ch(a, make_pair(b.first, rect[ind].first.second));
+			return 0;
+		}
+		if (bin && din && b.first != rect[ind].first.first)
+		{
+			ch(a, make_pair(rect[ind].first.first, b.second));
+			return 0;
+		}
+		if (ain && a.first != rect[ind].second.first && a.second != rect[ind].second.second)
+		{
+			ch(make_pair(a.first, rect[ind].second.second), make_pair(rect[ind].second.first, b.second));
+			ch(make_pair(rect[ind].second.first, a.second), b);
+			return 0;
+		}
+		if (bin && b.first != rect[ind].first.first && b.second != rect[ind].first.second)
+		{
+			ch(a, make_pair(rect[ind].first.first, b.second));
+			ch(make_pair(rect[ind].first.first, a.second), make_pair(b.first, rect[ind].first.second));
+			return 0;
+		}
+		if (cin && c.first != rect[ind].second.first && c.second != rect[ind].first.second)
+		{
+			ch(a, make_pair(rect[ind].second.first, rect[ind].first.second));
+			ch(make_pair(rect[ind].second.first, a.second), b);
+			return 0;
+		}
+		if (din && d.first != rect[ind].first.first && d.second != rect[ind].second.second)
+		{
+			ch(a, make_pair(rect[ind].first.first, b.second));
+			ch(make_pair(rect[ind].first.first, rect[ind].second.second), b);
+			return 0;
+		}
+		if (inside(a, b, rect[ind].first) && inside(a, b, rect[ind].second))
+		{
+			ch(a, make_pair(rect[ind].first.first, b.second));
+			ch(make_pair(rect[ind].first.first, rect[ind].second.second), make_pair(rect[ind].second.first, b.second));
+			ch(make_pair(rect[ind].first.first, a.second), make_pair(rect[ind].second.first, rect[ind].first.second));
+			ch(make_pair(rect[ind].second.first, a.second), b);
+			return 0;
+		}
+		if (a.second >= rect[ind].first.second && b.second <= rect[ind].second.second && a.first < rect[ind].first.first && b.first > rect[ind].second.first)
+		{
+			ch(a, make_pair(rect[ind].first.first, b.second));
+			ch(make_pair(rect[ind].second.first, a.second), b);
+			return 0;
+		}
+		if (a.second >= rect[ind].first.second && a.second < rect[ind].second.second && a.first < rect[ind].first.first && b.first > rect[ind].second.first)
+		{
+			ch(a, make_pair(rect[ind].first.first, b.second));
+			ch(make_pair(rect[ind].second.first, a.second), b);
+			ch(make_pair(rect[ind].first.first, rect[ind].second.second), make_pair(rect[ind].second.first, b.second));
+			return 0;
+		}
+		if (b.second > rect[ind].first.second && b.second <= rect[ind].second.second && a.first < rect[ind].first.first && b.first > rect[ind].second.first)
+		{
+			ch(a, make_pair(rect[ind].first.first, b.second));
+			ch(make_pair(rect[ind].second.first, a.second), b);
+			ch(make_pair(rect[ind].first.first, a.second), make_pair(rect[ind].second.first, rect[ind].first.second));
+			return 0;
+		}
+		if (a.first >= rect[ind].first.first && b.first <= rect[ind].second.first && a.second < rect[ind].first.second && b.second > rect[ind].second.second)
+		{
+			ch(a, make_pair(b.first, rect[ind].first.second));
+			ch(make_pair(a.first, rect[ind].second.second), b);
+			return 0;
+		}
+		if (a.first >= rect[ind].first.first && a.first < rect[ind].second.first && a.second < rect[ind].first.second && b.second > rect[ind].second.second)
+		{
+			ch(a, make_pair(b.first, rect[ind].first.second));
+			ch(make_pair(a.first, rect[ind].second.second), b);
+			ch(make_pair(rect[ind].second.first, a.second), make_pair(b.first, rect[ind].second.second));
+			return 0;
+		}
+		if (b.first > rect[ind].first.first && b.first <= rect[ind].second.first && a.second < rect[ind].first.second && b.second > rect[ind].second.second)
+		{
+			ch(a, make_pair(b.first, rect[ind].first.second));
+			ch(make_pair(a.first, rect[ind].second.second), b);
+			ch(make_pair(a.first, rect[ind].first.second), make_pair(rect[ind].first.first, rect[ind].second.second));
+			return 0;
+		}
+	}
+	rect.push_back(make_pair(a, b));
+	return 0;
+}
+
+int main()
+{
+	cin >> n;
+	FOR(i, n)
+	{
+		cin >> tmpa.first >> tmpa.second >> tmpb.first >> tmpb.second;
+		ch(make_pair(min(tmpa.first, tmpb.first), min(tmpa.second, tmpb.second)), make_pair(max(tmpa.first, tmpb.first), max(tmpa.second, tmpb.second)));
+	}
+	FOR(i, rect.size()) ans += (rect[i].second.first - rect[i].first.first)*(rect[i].second.second - rect[i].first.second);
+	cout << ans << endl;
+}
