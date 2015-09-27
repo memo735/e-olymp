@@ -1,0 +1,17 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+
+int main()
+{
+	cin >> str;
+	if (str == "0") cout << 0 << endl;
+	else
+	{
+		for (int i = 0; i < str.length() / 2; i++) swap(str[i], str[str.length() - i - 1]);
+		cout << str << endl;
+	}
+}
