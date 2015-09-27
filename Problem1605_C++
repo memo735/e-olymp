@@ -1,0 +1,12 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+
+int main()
+{
+	cin >> str;
+	cout << (str[0] == '-' ? str[2] : str[1]) << endl;
+}
