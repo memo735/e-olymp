@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+long tmp, d = -1;
+
+int main()
+{
+	cin >> tmp;
+	tmp = abs(tmp);
+	if (tmp == 0) d = 0;
+	while (tmp)
+	{
+		if (tmp % 10 % 2 == 0) d *= tmp % 10;
+		tmp /= 10;
+	}
+	cout << (d == -1 ? d : -d) << endl;
+}
