@@ -1,0 +1,21 @@
+#include <iostream>
+
+using namespace std;
+
+int l, k, tmp, m;
+
+int main()
+{
+	cin >> l >> k >> m;
+	for (int i = 0; i < m; i++)
+	{
+		cin >> tmp;
+		l -= tmp * k;
+		if (l < 0)
+		{
+			cout << i << endl;
+			return 0;
+		}
+	}
+	if (l >= 0) cout << m << endl;
+}
