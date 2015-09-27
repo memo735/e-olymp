@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+typedef long long int s64;
+
+s64 n, ans, tmp;
+
+int main()
+{
+	cin >> n;
+	tmp = 5;
+	while (tmp <= n)
+	{
+		ans += n / tmp;
+		tmp *= 5;
+	}
+	cout << ans << endl;
+}
