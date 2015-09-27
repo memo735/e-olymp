@@ -1,0 +1,13 @@
+#include <iostream>
+
+using namespace std;
+
+long long n, tmp = 1, k = 0;
+
+int main()
+{
+	cin >> n;
+	while (tmp <= n) tmp *= 2, k++;
+	if (tmp == 2 * n) cout << "I=" << k - 1 << endl;
+	else cout << k - 1 << "<I<" << k << endl;
+}
