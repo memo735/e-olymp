@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int n;
+string str;
+
+int main()
+{
+	cin >> str;
+	n = 0;
+	if (str.length() > 3)
+	{
+		for (int i = str.length() - 3; i < str.length(); i++)
+		{
+			if (i >= 0) n = n * 10 + (str[i] - 48);
+		}
+	}
+	else
+	{
+		for (int i = 0; i < str.length(); i++) n = n * 10 + (str[i] - 48);
+	}
+	if (n % 2) cout << "No\n";
+	else cout << "Yes\n";
+	if (n % 4) cout << "No\n";
+	else cout << "Yes\n";
+	if (n % 8) cout << "No\n";
+	else cout << "Yes\n";
+}
