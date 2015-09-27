@@ -1,0 +1,17 @@
+#include <iostream>
+
+using namespace std;
+
+long x, y;
+
+long func(long a, long b)
+{
+	if (b == 0) return a;
+	return func(b, a % b);
+}
+
+int main()
+{
+	cin >> x >> y;
+	cout << x*y / func(x, y) << endl;
+}
