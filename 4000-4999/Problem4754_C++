@@ -1,0 +1,18 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+long long n, ans = 0, k, param = 1;
+string str;
+
+int main()
+{
+	cin >> k >> str;
+	for (int i = str.length() - 1; i >= 0; i--)
+	{
+		ans += (str[i] - 48) * param;
+		param *= k;
+	}
+	cout << ans << endl;
+}
