@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string a, b;
+int _next, i;
+
+
+int main()
+{
+	cin >> a >> b;
+	if (a.length() < b.length()) swap(a, b);
+	for (i = 0; i < a.length() / 2; i++) swap(a[i], a[a.length() - i - 1]);
+	for (i = 0; i < b.length() / 2; i++) swap(b[i], b[b.length() - i - 1]);
+	for (i = 0; i < b.length(); i++)
+	{
+		_next += a[i] + b[i] - 96;
+		a[i] = _next % 10 + 48;
+		_next /= 10;
+	}
+	while (_next)
+	{
+		if (a.length() == i) a += _next + 48, _next = 0;
+		else
+		{
+			_next += a[i] - 48;
+			a[i] = _next % 10 + 48;
+			_next /= 10;
+			i++;
+		}
+	}
+	for (i = 0; i < a.length() / 2; i++) swap(a[i], a[a.length() - i - 1]);
+	cout << a << endl;
+}
