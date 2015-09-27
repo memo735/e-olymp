@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+pair <int, int> a, b;
+
+int main()
+{
+	cin >> a.first >> a.second >> b.first >> b.second;
+	if (a.first == b.first) cout << abs(a.second - b.second) + 1 << endl;
+	else if (a.second == b.second) cout << abs(a.first - b.first) + 1 << endl;
+	else
+	{
+		if (a.first > b.first) swap(a, b);
+		int ans = 0;
+		for (int i = a.first; i <= b.first; i++) if (abs((i - a.first)*(b.second - a.second)) % abs(b.first - a.first) == 0) ans++;
+		cout << ans << endl;
+	}
+}
