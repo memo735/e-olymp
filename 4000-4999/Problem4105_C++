@@ -1,0 +1,31 @@
+#include <iostream>
+
+using namespace std;
+
+typedef int s32;
+
+s32 d[52][52], n, m, k, a, b, tmp;
+
+int main()
+{
+	cin >> n >> m >> k;
+	for (int i = 0; i < k; i++)
+	{
+		cin >> a >> b;
+		d[a][b] = 1;
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++)
+		{
+			if (d[i][j]) cout << "*";
+			else
+			{
+				tmp = d[i - 1][j] + d[i][j - 1] + d[i + 1][j] + d[i][j + 1] + d[i + 1][j + 1] + d[i - 1][j - 1] + d[i + 1][j - 1] + d[i - 1][j + 1];
+				if (tmp) cout << tmp;
+				else cout << ".";
+			}
+		}
+		cout << endl;
+	}
+}
