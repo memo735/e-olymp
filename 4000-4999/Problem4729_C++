@@ -1,0 +1,15 @@
+#include <iostream>
+
+using namespace std;
+
+int tmp, ans = 0;
+
+int main()
+{
+	do
+	{
+		cin >> tmp;
+		if (tmp) ans++;
+	} while (tmp);
+	cout << ans << endl;
+}
