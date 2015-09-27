@@ -1,0 +1,24 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+#define ui unsigned int
+#define ll long long
+
+ll n;
+map <ll, ui> my_map;
+
+ui f(ll x)
+{
+	if (x <= 2) return 1;
+	if (my_map[x]) return my_map[x];
+	if (x % 2) return my_map[x] = f(6 * x / 7) + f(2 * x / 3);
+	return my_map[x] = f(x - 1) + f(x - 3);
+}
+
+int main()
+{
+	cin >> n;
+	cout << f(n) << endl;
+}
