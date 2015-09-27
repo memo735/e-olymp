@@ -1,0 +1,38 @@
+#include <iostream>
+
+using namespace std;
+
+int d[20][20], ans, n, m;
+char ch;
+
+void rec(int x, int y)
+{
+	if (x >= 0 && x < n && y >= 0 && y < m)
+		if (d[x][y])
+		{
+			d[x][y] = 0;
+			rec(x + 1, y);
+			rec(x, y + 1);
+			rec(x - 1, y);
+			rec(x, y - 1);
+		}
+}
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			cin >> ch;
+			if (ch == '#') d[i][j] = 1;
+		}
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			if (d[i][j])
+			{
+				ans++;
+				rec(i, j);
+			}
+	cout << ans << endl;
+}
