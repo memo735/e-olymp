@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+int n, answer = 1;
+pair <int, int> fibo;
+
+int main()
+{
+	cin >> n;
+	fibo.first = fibo.second = 1;
+	while (fibo.second != n)
+	{
+		answer++;
+		swap(fibo.first, fibo.second);
+		fibo.second += fibo.first;
+	}
+	cout << answer << endl;
+}
