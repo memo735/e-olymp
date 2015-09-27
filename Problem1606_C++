@@ -1,0 +1,12 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+
+int main()
+{
+	cin >> str;
+	cout << str[str.length() - 1] + (str[0] == '-' ? str[1] : str[0]) - 48 - 48 << endl;
+}
