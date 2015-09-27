@@ -1,0 +1,18 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+
+int main()
+{
+	cin >> str;
+	cout << str;
+	while (cin)
+	{
+		cin >> str;
+		if (cin) cout << " " << str;
+	}
+	cout << endl;
+}
