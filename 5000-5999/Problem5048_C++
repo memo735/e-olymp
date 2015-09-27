@@ -1,0 +1,20 @@
+#include <iostream>
+
+using namespace std;
+
+int n, k3 = 0, k4 = 0, k5 = 0, tmp;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> tmp;
+		if (tmp == 5) k5++;
+		else
+			if (tmp == 4) k4++;
+			else k3++;
+	}
+	if (k3 < 2 && 4 * (k3 + k4) <= n) cout << "Degree with honors" << endl;
+	else cout << "Ordinary degree" << endl;
+}
