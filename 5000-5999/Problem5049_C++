@@ -1,0 +1,19 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+
+int main()
+{
+	getline(cin, str);
+	if (str.length() > 0)
+	{
+		cout << str[0];
+		for (int i = 1; i < str.length(); i++)
+			if (str[i] != ' ') cout << str[i];
+			else if (str[i] == ' ' && str[i - 1] != ' ') cout << str[i];
+	}
+	cout << endl;
+}
