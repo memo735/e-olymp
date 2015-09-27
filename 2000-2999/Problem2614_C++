@@ -1,0 +1,22 @@
+#include <iostream>
+
+using namespace std;
+
+int n, wr = 1, _count = 0;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		if (_count == wr)
+		{
+			_count = 0;
+			wr++;
+		}
+		if (i != 0) cout << " ";
+		cout << wr;
+		_count++;
+	}
+	cout << endl;
+}
