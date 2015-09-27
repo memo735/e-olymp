@@ -1,0 +1,17 @@
+#include <iostream>
+
+using namespace std;
+
+long a, b;
+
+long f(long param)
+{
+	return param*(param + 1) / 2;
+}
+
+int main()
+{
+	cin >> a; cin >> b;
+	if (a > b) swap(a, b);
+	cout << f(b) - f(a - 1) << endl;
+}
