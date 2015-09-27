@@ -1,0 +1,15 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+double len, A, B, C;
+pair <double, double> xy;
+
+int main()
+{
+	cin >> xy.first >> xy.second >> A >> B >> C;
+	len = (A*xy.first + B*xy.second + C) / sqrt(A*A + B*B);
+	if (len < 0) len *= -1;
+	cout << fixed << len << endl;
+}
