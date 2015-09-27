@@ -1,0 +1,22 @@
+#include <iostream>
+
+using namespace std;
+
+char tmp;
+bool fl = false;
+long long a[2];
+
+int main()
+{
+	while (cin)
+	{
+		cin >> tmp;
+		if (cin)
+		{
+			a[fl] += tmp - 48;
+			if (fl) fl = 0;
+			else fl = 1;
+		}
+	}
+	cout << abs(a[0] * a[1]) << endl;
+}
