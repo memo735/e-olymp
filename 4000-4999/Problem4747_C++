@@ -1,0 +1,23 @@
+#include <iostream>
+
+using namespace std;
+
+int n, power;
+
+int main()
+{
+	cin >> n;
+	for (int i = 2; i <= n; i++)
+	{
+		if (n % i == 0)
+		{
+			power = 0;
+			while (n % i == 0)
+			{
+				power++;
+				n /= i;
+			}
+			cout << i << " " << power << endl;
+		}
+	}
+}
