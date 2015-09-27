@@ -1,0 +1,25 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int n, tmp;
+vector <int> vect;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> tmp;
+		vect.push_back(tmp);
+	}
+	sort(vect.begin(), vect.end());
+	for (int i = 0; i < n; i++)
+	{
+		cout << vect[i];
+		if (i != n - 1) cout << " ";
+	}
+	cout << endl;
+}
