@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+int a, b, l, r;
+bool dot = false;
+
+int main()
+{
+	cin >> str >> a >> b;
+	l = 0; r = str.length() - 1;
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] == a + 48) str[i] = b + 48;
+		if (str[i] == ',') dot = true;
+	}
+	while (str[l] == '0') l++;
+	if (dot) while (str[r] == '0') r--;
+	if (dot && str[1] == ',') l = 0;
+	for (int i = l; i <= r; i++) cout << str[i];
+	if (l > r) cout << 0;
+	cout << endl;
+}
