@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+bool mas[1000][1000];
+long long n, m, answer = 0;
+char tmp;
+vector <pair<long long, long long>> vect;
+
+void rec(long long x, long long y)
+{
+	mas[x][y] = 0;
+	if (x > 1 && mas[x - 1][y]) rec(x - 1, y);
+	if (x < n - 2 && mas[x + 1][y]) rec(x + 1, y);
+	if (y > 1 && mas[x][y - 1]) rec(x, y - 1);
+	if (y < m - 2 && mas[x][y + 1]) rec(x, y + 1);
+}
+
+int main()
+{
+	cin >> n >> m;
+	for (long long i = 0; i < n; i++)
+		for (long long j = 0; j < m; j++)
+		{
+			cin >> tmp;
+			if (tmp == '0')
+			{
+				mas[i][j] = true;
+				vect.push_back(make_pair(i, j));
+			}
+			else mas[i][j] = false;
+		}
+
+	for (long long i = 0; i < vect.size(); i++)
+	{
+		if (mas[vect[i].first][vect[i].second] == true)
+		{
+			rec(vect[i].first, vect[i].second);
+			answer++;
+		}
+	}
+	cout << answer << endl;
+}
