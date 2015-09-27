@@ -1,0 +1,23 @@
+#include <iostream>
+
+using namespace std;
+
+int n;
+
+int main()
+{
+	cin >> n;
+	cout << n << " ";
+	if (n % 100 == 11 || n % 100 == 12 || n % 100 == 13 || n % 100 == 14) cout << "bochek" << endl;
+	else
+	{
+		switch (n % 10)
+		{
+		case 1: cout << "bochka" << endl; break;
+		case 2:
+		case 3:
+		case 4: cout << "bochki" << endl; break;
+		default: cout << "bochek" << endl; break;
+		}
+	}
+}
