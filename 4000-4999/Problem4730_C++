@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+long long n, answer = 1;
+pair <long long, long long> fibo;
+
+int main()
+{
+	cin >> n;
+	fibo.first = fibo.second = 1;
+	for (int i = 1; i < n; i++)
+	{
+		swap(fibo.first, fibo.second);
+		fibo.second += fibo.first;
+	}
+	cout << fibo.second << endl;
+}
