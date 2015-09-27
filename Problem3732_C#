@@ -1,0 +1,29 @@
+using System;
+
+namespace Problem3732
+{
+    internal class Program
+    {
+        private static int Hesabla(int x)
+        {
+            switch (x)
+            {
+                case 1: return 1;
+                case 2: return 3;
+                case 3: return 9;
+                case 4: return 33;
+                case 5: return 153;
+                case 6: return 873;
+                case 7: return 5913;
+                case 8: return 46233;
+                case 9: return 409113;
+            }
+            return 4037913;
+        }
+
+        public static void Main(string[] args)
+        {
+            Console.WriteLine(Hesabla(int.Parse(Console.ReadLine())));
+        }
+    }
+}
