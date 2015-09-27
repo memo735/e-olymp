@@ -1,0 +1,22 @@
+#include <iostream>
+
+using namespace std;
+
+int n;
+
+int main()
+{
+	cin >> n;
+	if (n == 2) cout << "Yes" << endl;
+	else if (n % 2 == 0) cout << "No" << endl;
+	else
+	{
+		for (int i = 3; i*i <= n; i += 2)
+			if (n % i == 0)
+			{
+				cout << "No" << endl;
+				return 0;
+			}
+		cout << "Yes" << endl;
+	}
+}
