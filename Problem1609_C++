@@ -1,0 +1,15 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+char ch;
+long ans = 0;
+
+int main()
+{
+	cin >> str >> ch;
+	for (int i = 0; i < str.length(); i++) ans += str[i] == ch;
+	cout << ans << endl;
+}
