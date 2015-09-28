@@ -1,0 +1,36 @@
+#include <iostream>
+
+using namespace std;
+
+long st, tmp1, tmp2, tmp3, n;
+
+long f(long a, long b, long c)
+{
+	return c + b * 29 + a * 493;
+}
+
+int main()
+{
+	cin >> tmp1 >> tmp2 >> tmp3 >> n;
+	st = f(tmp1, tmp2, tmp3);
+	for (int i = 0; i < n; i++)
+	{
+		cin >> tmp1 >> tmp2 >> tmp3;
+		st -= f(tmp1, tmp2, tmp3);
+		if (st < 0)
+		{
+			cout << -1 << endl;
+			st = -1;
+			return 0;
+		}
+	}
+	long st1, st2, st3;
+	st1 = st / 493;
+	st = st - st1 * 493;
+	st2 = st / 29;
+	st = st - st2 * 29;
+	st3 = st;
+	if (st == -1) cout << -1 << endl;
+	else cout << st1 << " " << st2 << " " << st3 << endl;
+	return 0;
+}
