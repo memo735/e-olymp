@@ -1,0 +1,22 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int n;
+vector <string> vect;
+string tmp;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		vect.push_back("");
+		cin >> vect[i];
+	}
+	sort(vect.begin(), vect.end());
+	for (int i = 0; i < n; i++) cout << vect[i] << endl;
+}
