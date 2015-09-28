@@ -1,0 +1,8 @@
+program p3874;
+var n: Integer;
+
+begin
+  readln(n);
+  if odd(n) then Writeln('Love')
+  else Writeln('Not love');
+end.
