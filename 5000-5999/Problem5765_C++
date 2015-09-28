@@ -1,0 +1,11 @@
+#include <iostream>
+
+using namespace std;
+
+int n, k;
+
+int main()
+{
+	cin >> n; cin >> k;
+	cout << n / k + (bool)(n % k != 0) << " " << n + 1 - k << endl;
+}
