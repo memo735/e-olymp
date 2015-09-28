@@ -1,0 +1,43 @@
+#include <iostream>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+	const int masLen = 262144;
+	int * mas = new int[masLen];
+	memset(mas, 0, masLen * sizeof(int));
+	int mas2[19];
+	char mas1[19][19];
+	int i, n, j, tmp, y;
+	cin >> n;
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < n; ++j) cin >> mas1[i][j];
+
+	mas2[0] = 1;
+	for (i = 1; i < n; i++) mas2[i] = mas2[i - 1] * 2;
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < masLen; j++)
+			if (mas[j] != 0)
+			{
+				bool fl = true;
+				tmp = j + 1;
+				for (y = n - 1; y > i; y--) if (tmp >= mas2[y]) tmp -= mas2[y];
+				if (tmp >= mas2[i]) fl = false;
+				if (fl)
+				{
+					tmp = j + 1;
+					for (y = n - 1; y >= 0; y--)
+						if (tmp >= mas2[y]) tmp -= mas2[y];
+						else if (mas1[i][y] == 'Y') mas[j + mas2[y] + mas2[i]] = mas[j] + 1;
+				}
+			}
+		for (j = 0; j < n; j++) if (mas1[i][j] == 'Y') mas[mas2[j] + mas2[i] - 1] = 1;
+	}
+	int max = 0;
+	for (i = 0; i < masLen; i++) if (mas[i] > max) max = mas[i];
+	cout << max * 2 << endl;
+}
