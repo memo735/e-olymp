@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string>
+
+#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
+
+using namespace std;
+
+int n, m, i, j, ans = 0;
+bool mas[1000][1000];
+string s;
+
+inline bool check_1_lvl(int x, int y);
+inline void check_2_lvl(int x, int y);
+inline void rec(int x, int y);
+
+inline bool check_1_lvl(int x, int y)
+{
+	if (x >= n | x < 0 | y >= m | y < 0) return false;
+	return true;
+}
+
+inline void check_2_lvl(int x, int y)
+{
+	if (mas[x][y] & check_1_lvl(x, y)) rec(x, y);
+}
+
+void rec(int x, int y)
+{
+	mas[x][y] = false;
+	check_2_lvl(x - 1, y);
+	check_2_lvl(x + 1, y);
+	check_2_lvl(x, y - 1);
+	check_2_lvl(x, y + 1);
+}
+
+int main()
+{
+	cin >> n >> m;
+	FOR(i, n)
+	{
+		cin >> s;
+		FOR(j, m) mas[i][j] = s[j] == '1';
+	}
+	FOR(i, n)
+		FOR(j, m)
+		if (mas[i][j])
+		{
+			rec(i, j);
+			ans++;
+		}
+
+	cout << ans << endl;
+}
