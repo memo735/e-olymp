@@ -1,0 +1,24 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int n, value = 1 << 30, tmp;
+string best, read;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		tmp = 0;
+		cin >> read;
+		for (int j = 0; j < read.length(); j++) tmp += read[j] - 48;
+		if (tmp <= value)
+		{
+			value = tmp;
+			best = read;
+		}
+	}
+	cout << best << endl;
+}
