@@ -1,0 +1,24 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main(){
+	int n, temp;
+	cin >> n;
+	vector<vector<bool> > w(n, vector<bool>(n, false));
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < n; ++j){
+			cin >> temp;
+			w[i][j] = temp;
+		}
+
+	vector<int> col(n);
+	for (int i = 0; i < n; ++i) cin >> col[i];
+	int count = 0;
+	for (int i = 0; i < n; ++i)
+		for (int j = i + 1; j < n; ++j) if (w[i][j] && col[i] != col[j]) ++count;
+
+	cout << count << endl;
+	return 0;
+}
