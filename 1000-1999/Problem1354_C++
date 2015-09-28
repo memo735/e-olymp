@@ -1,0 +1,12 @@
+#include <iostream>
+
+int main(){
+	short size, cnt = 0;
+	long tmp;
+	std::cin >> size;
+	for (short i = 0; i < size; i++){
+		std::cin >> tmp;
+		if (tmp > 0 && (tmp + 1 & tmp) == 0) cnt++;
+	}
+	std::cout << cnt << "\n";
+}
