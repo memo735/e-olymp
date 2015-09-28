@@ -1,0 +1,18 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int n, m, tmp, mas[1000000];
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) cin >> mas[i];
+	for (int i = 0; i < m; i++)
+	{
+		cin >> tmp;
+		if (find(mas, mas + n, tmp) != mas + n) cout << "Yes, master!" << endl;
+		else cout << "Silence" << endl;
+	}
+}
