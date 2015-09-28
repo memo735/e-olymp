@@ -1,0 +1,17 @@
+#include <iostream>
+
+using namespace std;
+
+int n, ans = 0;
+bool tmp;
+
+int main()
+{
+	cin >> n;
+	while (cin)
+	{
+		cin >> tmp;
+		if (cin) ans += tmp;
+	}
+	cout << ans << endl;
+}
