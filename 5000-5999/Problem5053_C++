@@ -1,0 +1,17 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+int k, ans = 0;
+
+int main()
+{
+	cin >> k >> str;
+	for (int i = 0; i < str.length(); i++)
+	{
+		ans = (ans * 10 + (str[i] - 48)) % k;
+	}
+	cout << ans << endl;
+}
