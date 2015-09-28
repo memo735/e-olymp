@@ -1,0 +1,24 @@
+#include <iostream>
+
+using namespace std;
+
+long ans = 0, n, dn[10][30];
+
+long func(char k, char index)
+{
+	if (k > 9 || k < 0) return 0;
+	if (index == n - 1) return 1;
+	if (dn[k][index] != -1) return dn[k][index];
+	return dn[k][index] = func(k, index + 1) + func(k + 1, index + 1) + func(k - 1, index + 1);
+}
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < n; j++) dn[i][j] = -1;
+
+	for (char i = 1; i < 10; i++) ans += func(i, 0);
+	cout << ans << endl;;
+	return 0;
+}
