@@ -1,0 +1,12 @@
+#include <iostream>
+
+using namespace std;
+
+int n, k;
+
+int main()
+{
+	cin >> n >> k;
+	if (n & 1 << k - 1) cout << "YES" << endl;
+	else cout << "NO" << endl;
+}
