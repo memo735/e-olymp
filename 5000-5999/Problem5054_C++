@@ -1,0 +1,12 @@
+#include <iostream>
+
+using namespace std;
+
+int n;
+
+int main()
+{
+	cin >> n;
+	if (!(n % 4) && n % 100 || !(n % 400)) cout << "YES" << endl;
+	else cout << "NO" << endl;
+}
