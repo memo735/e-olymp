@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+string str;
+long long test, d[30];
+
+string sANS()
+{
+	for (int j = 0; j < 30; j++) d[j] = 0;
+	for (int j = 0; j < (int)str.length() - 1; j++)
+	{
+		d[str[j] - 65]++;
+		if (d[str[j] - 65] % 4 == 3 && str[j] != str[j + 1]) return "FAKE";
+	}
+	if ((d[str[str.length() - 1] - 65] + 1) % 4 == 3) return "FAKE";
+	return "OK";
+}
+
+int main()
+{
+	cin >> test;
+	for (int i = 0; i < test; i++)
+	{
+		cin >> str;
+		cout << sANS() << endl;
+	}
+}
