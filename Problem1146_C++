@@ -1,29 +1,23 @@
-#include <iostream>
-#include <fstream>
+#include <stdio.h>
 
-using namespace std;
-
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-unsigned long long G, n;
-int i, j;
-
-unsigned long long gcd(unsigned long long a, unsigned long long b)
-{
-	return b ? gcd(b, a % b) : a;
+int GCD(int a, int b) {
+	return b ? GCD(b, a%b) : a;
 }
 
-int main()
-{
-	for (;;)
-	{
-		cin >> n;
-		if (n)
-		{
-			G = 0;
-			for (i = 1; i < n; i++) for (j = i + 1; j <= n; j++) G += gcd(i, j);
-			cout << G << endl;
-		}
-		else return 0;
+int getSum(int n){
+	int G = 0;
+	for (int i = 1; i < n; i++)
+		for (int j = i + 1; j <= n; j++) G += GCD(i, j);
+
+	return G;
+}
+
+int main(){
+	int n;
+	while (true){
+		scanf("%d", &n);
+		if (n == 0) break;
+		printf("%d\n", getSum(n));
 	}
+	return 0;
 }
