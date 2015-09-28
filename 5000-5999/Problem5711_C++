@@ -1,0 +1,11 @@
+#include <iostream>
+using std::cin;
+using std::cout;
+
+
+int main(){
+	int a, b;
+	cin >> a >> b;
+	a + b < 180 ? cout << 180 - (a + b) << "\n" : cout << "-1\n";
+	return 0;
+}
