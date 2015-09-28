@@ -1,0 +1,39 @@
+#include <iostream>
+#include <stack>
+#include <string>
+
+using namespace std;
+
+string str, tmp;
+stack <string> st;
+
+int main()
+{
+	do
+	{
+		cin >> str;
+		if (str == "pop")
+		{
+			cout << st.top() << endl;
+			st.pop();
+		}
+		else
+			if (str == "back") cout << st.top() << endl;
+			else
+				if (str == "size") cout << st.size() << endl;
+				else
+					if (str == "clear")
+					{
+						cout << "ok" << endl;
+						while (!st.empty()) st.pop();
+					}
+					else
+						if (str == "exit") cout << "bye" << endl;
+						else
+						{
+							cin >> str;
+							cout << "ok" << endl;
+							st.push(str);
+						}
+	} while (str != "exit");
+}
