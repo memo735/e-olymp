@@ -1,0 +1,19 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int a, b, result;
+string str;
+
+int main()
+{
+	cin >> a >> b >> str;
+	result = a;
+	if (str == "freeze" && a > b) result = b;
+	else
+		if (str == "heat" && a < b) result = b;
+		else if (str == "auto") result = b;
+
+		cout << result << endl;
+}
