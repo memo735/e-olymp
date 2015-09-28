@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+long a, b;
+
+long f(long a, long b)
+{
+	if (b == 0) return a;
+	return f(b, a % b);
+}
+
+int main()
+{
+	cin >> a >> b;
+	cout << a*b / f(a, b) << endl;
+	return 0;
+}
