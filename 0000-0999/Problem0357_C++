@@ -16,6 +16,5 @@ int main()
 		cin >> tmp;
 		if (cin) if (tmp > MAX) MAX = tmp;
 	}
-	cout.precision(2);
 	cout << fixed << MAX << endl;
 }
