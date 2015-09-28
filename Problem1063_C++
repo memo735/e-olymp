@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int main(){
+	int n, m;
+	cin >> n >> m;
+	vector<vector<bool> > paper(n + 2, vector<bool>(m + 2, false));
+	vector<vector<int> > mark(n + 2, vector<int>(m + 2, 0));
+	char c;
+	for (int i = 1; i <= n; ++i)
+		for (int j = 1; j <= m; ++j){
+			cin >> c;
+			if (c == '#') paper[i][j] = true;
+		}
+	int count = 1;
+	for (int i = 1; i <= n; ++i)
+		for (int j = 1; j <= m; ++j)
+			if (mark[i][j] == 0 && paper[i][j]){
+				queue<pair<int, int> > q;
+				q.push(pair<int, int>(i, j));
+				mark[i][j] = count;
+				while (!q.empty()){
+					int i1 = q.front().first, j1 = q.front().second;
+					q.pop();
+					for (int di = -1; di <= 1; di++)
+						for (int dj = (di == 0) ? -1 : 0; dj <= 1; dj += 2){
+							if (paper[i1 + di][j1 + dj] &&
+								mark[i1 + di][j1 + dj] == 0){
+								q.push(pair<int, int>(i1 + di, j1 + dj));
+								mark[i1 + di][j1 + dj] = count;
+							}
+						}
+				}
+				++count;
+			}
+	cout << --count << endl;
+	return 0;
+}
