@@ -1,0 +1,23 @@
+#include <iostream>
+
+using namespace std;
+
+int dn[3][50], n;
+
+int  rec(char one_count, char len)
+{
+	if (one_count == 3) return 0;
+	if (len >= n) return 0;
+	if (len == n - 1) return 1;
+	if (dn[one_count][len] != -1) return dn[one_count][len];
+	return dn[one_count][len] = rec(one_count + 1, len + 1) + rec(0, len + 1);
+}
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 50; j++) dn[i][j] = -1;
+
+	cout << rec(0, 0) + rec(1, 0) << endl;
+}
