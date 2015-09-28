@@ -1,0 +1,16 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+int main()
+{
+	int a;
+	cin >> a;
+	if (a > 0) cout << a / 100 << a / 100 << a / 10 % 10 << a / 10 % 10 << a % 10 << a % 10 << endl;
+	else
+	{
+		a = abs(a);
+		cout << "-" << a / 100 << a / 100 << a / 10 % 10 << a / 10 % 10 << a % 10 << a % 10 << endl;
+	}
+}
