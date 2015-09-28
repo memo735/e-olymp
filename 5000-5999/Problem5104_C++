@@ -1,0 +1,60 @@
+#include <iostream>
+#include <stdio.h>
+#include <string>
+
+#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
+
+using namespace std;
+
+typedef long long ll;
+typedef unsigned long long ull;
+
+ull n, m;
+string dn[100][100];
+
+void swap(string &strtmp)
+{
+	int length = strtmp.length();
+	char tmp;
+	for (int i = 0; i < length / 2; i++)
+	{
+		tmp = strtmp[i];
+		strtmp[i] = strtmp[length - i - 1];
+		strtmp[length - i - 1] = tmp;
+	}
+}
+
+string sum(string a, string b)
+{
+	string c;
+	swap(a);
+	swap(b);
+	int lengthA = a.length(), lengthB = b.length(), length = (lengthA > lengthB) ? lengthA : lengthB, ost = 0;
+	for (int i = 0; i < length; i++)
+	{
+		if (i < lengthA) ost += a[i] - 48;
+		if (i < lengthB) ost += b[i] - 48;
+		c += ost % 10 + 48;
+		ost /= 10;
+	}
+	if (ost) c += "1";
+	swap(c);
+	return c;
+}
+
+string d(ull a, ull b)
+{
+	if (dn[a][b] != "0") return dn[a][b];
+	return dn[a][b] = sum(d(a - 1, b), d(a, b - 1));
+}
+
+int main()
+{
+	cin >> n >> m;
+	ll i, j;
+	FOR(i, 100)
+		FOR(j, 100) dn[i][j] = "0";
+
+	FOR(i, 100) dn[1][i] = dn[i][1] = "1";
+	cout << d(n, m) << endl;
+}
