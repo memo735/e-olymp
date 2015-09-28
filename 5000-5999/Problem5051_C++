@@ -1,0 +1,11 @@
+#include <iostream>
+
+using namespace std;
+
+int a, b;
+
+int main()
+{
+	cin >> a >> b;
+	cout << (36 * a + b / 16) % 32 << endl;
+}
