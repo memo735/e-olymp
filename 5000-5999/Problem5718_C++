@@ -1,0 +1,21 @@
+#include <iostream>
+
+using namespace std;
+
+#define ll long long
+
+ll n, pos = 0, cnt = 0, ans = 0;
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < 32; i++)
+		if (n & 1 << i)
+		{
+			pos = i;
+			cnt++;
+		}
+
+	for (int i = 0; i < cnt; i++) ans += 1 << pos - i;
+	cout << ans - (1 << cnt) + 1 << endl;
+}
