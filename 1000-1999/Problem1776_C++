@@ -1,0 +1,33 @@
+#include <stdio.h>			// по какой-то причине e-olimp, не хотел видеть getchar
+#include <iostream>
+#include <vector>
+#include <sstream>
+
+using namespace std;
+
+int main(){
+	int n;						// Количество вагонов в поезде
+	int number;					// отвечает за нумерацию вагонов
+	stringstream stream_my;		// принимает поезд из потока ввода, и выдает под одному вагону
+	while (cin >> n, getchar(), n != 0){		// Считываем количество вагонов
+		string s;						// Перед тем как кинуть в поток, мы сохраняем вагон в строке
+		getline(cin, s, '\n');
+		while (s != "0"){
+			vector<int> stalemate;
+			stream_my.str("");
+			stream_my.clear();						// очищаем поток и збрасываем флаги
+			stream_my << s;
+			stream_my >> number;					// мы должны считывать number, а закидывать -- i
+			for (int i = 1; i <= n; i++){			//
+				stalemate.push_back(i);					// кидаем в тупик вагоны по порядку, пока не будет найден number
+				while (!stalemate.empty() && number == stalemate.back()){		// пока в тупике вагоны идут по порядку вывозим их от туда
+					stalemate.pop_back();
+					stream_my >> number;
+				}
+			}
+			cout << (stalemate.empty() ? "Yes" : "No") << endl;		// Если нам что-то помешало вывезти все вагоны из тупика, то ответ No
+			getline(cin, s, '\n');
+		}
+		cout << endl;
+	}
+}
