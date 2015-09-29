@@ -1,0 +1,27 @@
+using System;
+
+namespace Problem5798
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string eded = Console.ReadLine();
+            int min = int.MaxValue;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = i + 1; j < 6; j++)
+                {
+                    for (int k = j + 1; k < 7; k++)
+                    {
+                        for (int l = k + 1; l < 8; l++)
+                        {
+                            min = Math.Min(min, int.Parse(eded[i] + "" + eded[j] + "" + eded[k] + "" + eded[l]));
+                        }
+                    }
+                }
+            }
+            Console.WriteLine(min);
+        }
+    }
+}
