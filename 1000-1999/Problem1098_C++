@@ -1,0 +1,63 @@
+#include <iostream>
+
+using namespace std;
+
+const int n = 8;// Размер поля
+int count_test = 0;// Количество тестов
+int mincountstep = n + 1; //Количество ходов
+int frtest[n]; //расстановка теста
+int fr[n]; //правильная расстановка
+
+bool check(int nf)
+// проверка битых полей
+{
+	if (fr[nf] < 0)  return false; //На всякий случай, чтобы не проверять поля где нет ферзей
+	for (int i = 0; i < n && fr[i] >= 0; i++) {
+		if (i == nf) continue;
+		if (fr[nf] == fr[i]) return false;  // (Горизонталь) 
+		if (nf + fr[nf] == i + fr[i]) return false; // Нисходящая диагональ
+		if (nf - fr[nf] == i - fr[i]) return false; // Восходящая диагональ
+	}
+	return true; //если поле свободно
+}
+
+void calc_min_strok()
+// Вычисление количества ходов и нахождение минимального
+{
+	int countstep = 0; // количество ходов
+	for (int i = 0; i < n; i++) if (frtest[i] != fr[i]) countstep++;
+	if (mincountstep > countstep) mincountstep = countstep;
+}
+
+bool line_up(int i)
+//рекурсивня функция установки ферзей (стек расстановок)
+{
+	if (i > n - 1) return false;
+	for (int j = 0; j < n; j++) {
+		fr[i] = j;
+		if (check(i) == true) {
+			if (i == n - 1) calc_min_strok();
+			else line_up(i + 1);
+		}
+		fr[i] = -1;
+	}
+	return false;
+}
+
+int main()
+{
+	cin >> count_test;
+	//Обнуление начального массива
+	for (int test = 0; test < count_test; test++){
+		mincountstep = n + 1;
+		for (int i = 0; i < n; i++) fr[i] = -1;
+		//ввод данных теста
+		for (int i = 0; i < n; i++) {
+			cin >> frtest[i];
+			frtest[i]--;
+		}
+		line_up(0);
+		cout << mincountstep;
+	}
+	return 0;
+}
