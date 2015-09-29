@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool is_use[1001];
+vector<int> airports[1001];
+int level = 0;					// уровень вложенности dfs
+/*int isFindAnsver = false;		// переменная выхода из цикла*/
+int second_ver = 0;					// переменная запоминает вторую вершину, для ответа
+bool is_second_ver_find = false, is_sort[1001], FIRST_WIN = true, SECOND_WIN = false;
+
+bool dfs(int now_ver){			// Возвращает true если выигрывает первы, и false, если второй
+	is_use[now_ver] = true;
+	bool child;
+	level++;
+	if (level == 2) second_ver = now_ver;
+	if (!is_sort[now_ver]){
+		sort(airports[now_ver].begin(), airports[now_ver].end());
+		is_sort[now_ver] = true;
+	}
+	int count_ver = 0;				// переменная считает вершины в которые можно пойти из данной
+	for (int i = 0; i < airports[now_ver].size(); i++){			// 
+		if (!is_use[airports[now_ver][i]]){
+			// В зависимости от четноси мы должны искать тот ли иной овет от четности зависит то каккой игрок ходит на данный момент
+			child = dfs(airports[now_ver][i]);
+			// Если нечетное, то мы ищем правильных ход первого, иначе правильный ход второго
+			if (level % 2 == 1 ? child == FIRST_WIN : child == SECOND_WIN){
+				if (level == 1){
+					if (child == FIRST_WIN) cout << "First player wins flying to airport " << second_ver << endl;
+					else cout << "First player loses" << endl;
+					return true;
+				}
+				level--;
+				return child;
+			}	// если найден нужный нам ответ на этом уровне
+			count_ver++;
+		}
+	}
+	is_use[now_ver] = false;
+	if (level != 1) return level-- % 2 == 1 ? SECOND_WIN : FIRST_WIN;
+	if (child == FIRST_WIN) cout << "First player wins flying to airport " << second_ver << endl;
+	else cout << "First player loses" << endl;
+}
+
+int main(){
+	int n, k, u, v;
+	cin >> n >> k;
+	for (int i = 0; i < n - 1; i++){
+		cin >> u >> v;
+		airports[u].push_back(v);
+		airports[v].push_back(u);
+	}
+	second_ver = k;
+	dfs(k);
+}
