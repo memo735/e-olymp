@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+vector <int> marsh;
+
+int main() {
+	int n, m1, s, f, max;
+	cin >> n >> m1;
+	if (n < 0 || m1 < 0) { cout << "-1"; return 0; }
+	cin >> s >> f;
+	if (n == 0 || n == 1 || s == 0 || f == 0) { cout << "-1" << endl; return 0; }
+	int M[m1][3];
+	for (int i = 0; i < m1; i++){
+		for (int j = 0; j < 3; j++){
+			cin >> M[i][j];
+			max = M[0][0];
+			if (M[i][j] < 0) { m1 = i; break; }
+			if (M[i][j] < 0) { cout << "-1"; return 0; }
+		}
+	}
+	for (int i = 0; i < m1; i++){
+		for (int j = 0; j<2; j++) if (M[i][j]>max) max = M[i][j];
+	}
+	n = max;
+	int V = n;
+	int h[n];  //массив вершин которые принадлежат минимальному пути от s до f
+	int a[n], b[n], GR[V][V]; //V
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++) GR[i][j] = 0;
+	}
+	//преобразовываю считанные данные  в матрицу смежности между вершинами 
+	for (int i = 0; i < m1; i++){
+		for (int j = 0; j < 3; j++){
+			a[i] = M[i][0];
+			b[i] = M[i][1];
+			GR[a[i] - 1][b[i] - 1] = M[i][2];
+			GR[b[i] - 1][a[i] - 1] = M[i][2];
+		}
+	}
+	int st = s - 1, count, index, i, u;
+	long long distance[V];
+	bool visited[V];
+	for (i = 0; i < V; i++) { distance[i] = LLONG_MAX; visited[i] = false; }
+	distance[st] = 0;
+	long long min;
+	for (count = 0; count < V - 1; count++){
+		min = LLONG_MAX;
+		for (i = 0; i < V; i++)
+			if (!visited[i] && distance[i] <= min) { min = distance[i]; index = i; }
+
+		u = index;
+		visited[u] = true;
+		for (i = 0; i < V; i++){												//V
+			if (!visited[i] && GR[u][i] && distance[u] != LLONG_MAX
+				&& distance[u] + GR[u][i] < distance[i]){
+				distance[i] = distance[u] + GR[u][i];
+				h[i] = u;
+			}
+		}
+	}
+	//вывод расстояния
+	if (n != 0 && n != 1){
+		for (i = 0; i < 1; i++){
+			if (s > n || f > n) { cout << "-1"; break; }
+			if (distance[f - 1] == LLONG_MAX) { cout << "-1" << endl; break; }
+			if (distance[i] != LLONG_MAX){
+				cout << distance[f - 1] << endl;
+				// вывод маршрута	
+				s--; f--;
+				int c = f;
+				while (c != s) {
+					marsh.push_back(c + 1);
+					c = h[c];
+				}
+				marsh.push_back(s + 1);
+				cout << marsh[marsh.size() - 1];
+				for (int t = marsh.size() - 2; t >= 0; t--) cout << " " << marsh[t];
+				cout << endl;
+			}
+		}
+	}
+	return 0;
+}
