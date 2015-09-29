@@ -1,0 +1,13 @@
+using System;
+
+namespace Problem6155
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            ulong n = ulong.Parse(Console.ReadLine());
+            Console.WriteLine((ulong) Math.Pow(2, n) - 1);
+        }
+    }
+}
