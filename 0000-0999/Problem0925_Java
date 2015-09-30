@@ -8,12 +8,12 @@ public class Main {
 
     String[] s = new BufferedReader(new InputStreamReader(System.in)).readLine().split(" ");
 
-    double x1=Double.parseDouble(s[0]);
-    double y1=Double.parseDouble(s[1]);
-    double x2=Double.parseDouble(s[2]);
-    double y2=Double.parseDouble(s[3]);
-    double x3=Double.parseDouble(s[4]);
-    double y3=Double.parseDouble(s[5]);
+    double x1 = Double.parseDouble(s[0]);
+    double y1 = Double.parseDouble(s[1]);
+    double x2 = Double.parseDouble(s[2]);
+    double y2 = Double.parseDouble(s[3]);
+    double x3 = Double.parseDouble(s[4]);
+    double y3 = Double.parseDouble(s[5]);
 
     double l1 = len(x1, y1, x2, y2);
     double l2 = len(x1, y1, x3 ,y3);
