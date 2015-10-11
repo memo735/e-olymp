@@ -1,0 +1,46 @@
+class bottle:
+    def __init__(self, hp, num):
+        self.num=num
+        self.hp=hp
+ 
+def sort1(w): 
+    j = len(w)
+    while j > 1:
+        for i in range(j-1):
+            if w[i].hp > w[i+1].hp:              
+                tmpw = w[i]
+                w[i] = w[i+1]
+                w[i+1] = tmpw
+        j -= 1
+def sort2(w): 
+    j = len(w)
+    while j > 1:
+        for i in range(j-1):
+            if w[i].hp < w[i+1].hp:              
+                tmpw = w[i]
+                w[i] = w[i+1]
+                w[i+1] = tmpw
+        j -= 1
+ 
+x=input().split()
+n, m=int(x[0]), int(x[1])
+a=input().split()
+for i in range(n):
+    a[i]=bottle(int(a[i]), i+1)
+sort1(a)
+b=input().split()
+for i in range(m):
+    b[i]=bottle(int(b[i]), i+1)
+sort2(b)
+result=[]
+count=0
+ 
+for i in range(min(len(a), len(b))):
+    if a[i].hp<b[i].hp:
+        count+=1
+        result.append(str(a[i].num)+' '+str(b[i].num))
+    else:
+        break
+print(count)
+for i in range(len(result)):
+    print(result[i])
