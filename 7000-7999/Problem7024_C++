@@ -1,0 +1,51 @@
+#include<cstdio> 
+#include<cstring> 
+
+using namespace std;
+
+char maps[25][25];
+int r, c, sx, sy, res;
+int dx[] = { -1, 1, 0, 0 };
+int dy[] = { 0, 0, -1, 1 };
+
+void dfs(int a, int b)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		int xx = a + dx[i], yy = b + dy[i];
+		if (xx > 0 && xx <= r && yy > 0 && yy <= c&&maps[xx][yy] == '.')
+		{
+			maps[xx][yy] = '#';
+			res++;
+			dfs(xx, yy);
+		}
+	}
+}
+
+int main()
+{
+	int i, j;
+	while (scanf("%d%d", &c, &r) && r&&c)
+	{
+		memset(maps, 0, sizeof(maps));
+		res = 1;
+		getchar();
+		for (i = 1; i <= r; i++)
+		{
+			for (j = 1; j <= c; j++)
+			{
+				scanf("%c", &maps[i][j]);
+				if (maps[i][j] == '@')
+				{
+					sx = i;
+					sy = j;
+					maps[i][j] = '#';
+				}
+			}
+			getchar();
+		}
+		dfs(sx, sy);
+		printf("%d\n", res);
+	}
+	return 0;
+}
