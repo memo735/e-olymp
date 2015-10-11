@@ -1,0 +1,76 @@
+#include<iostream>
+#include<cstring>
+
+using namespace std;
+
+#define MAX 10000
+
+bool isPrime[MAX], visit[1010], flag;
+int prime[MAX], re[1010], n, m, d, t, sum;
+
+void primeList(){
+	memset(isPrime, true, sizeof(isPrime));
+	for (int i = 2; i <= MAX; ++i){
+		if (isPrime[i]) prime[++prime[0]] = i;
+		for (int j = 1, k; j <= MAX && (k = i * prime[j]) <= MAX; ++j)
+		{
+			isPrime[k] = false;
+			if (i % prime[j] == 0) break;
+		}
+	}
+}
+
+bool judge(int len){
+	int sum;
+	if (len <= 1) return true;
+	for (int i = 0; i < len; ++i){
+		sum = 0;
+		if (i <= len - d){
+			for (int j = i; j - i + 1 <= d; ++j){
+				sum += re[j];
+				if (j - i + 1 > 1 && isPrime[sum]) return false;
+			}
+		}
+		else {
+			for (int j = i; j < len; ++j){
+				sum += re[j];
+				if (j - i + 1 > 1 && isPrime[sum]) return false;
+			}
+		}
+	}
+	return true;
+}
+
+void dfs(int num){
+	if (++t > 4000) return;
+	if (flag) return;
+	if (!judge(num)) return;
+	if (num == m - n + 1){
+		flag = 1;
+		return;
+	}
+	for (int i = n; i <= m && !flag; ++i){
+		if (visit[i]) continue;
+		re[num] = i;
+		visit[i] = 1;
+		dfs(num + 1);
+		visit[i] = 0;
+	}
+}
+
+int main(){
+	primeList();
+	while (cin >> n >> m >> d && n && m && d){
+		flag = false;
+		t = 0;
+		memset(visit, 0, sizeof(visit));
+		dfs(0);
+		if (flag){
+			cout << re[0];
+			for (int i = 1; i < m - n + 1; ++i) cout << "," << re[i];
+			cout << endl;
+		}
+		else cout << "No anti-prime sequence exists." << endl;
+	}
+	return 0;
+}
