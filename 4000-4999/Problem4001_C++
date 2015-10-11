@@ -1,0 +1,31 @@
+#include <iostream>
+
+using namespace std;
+int n, c = 0;
+char ch[101][101];
+
+void kol(int x, int y)
+{
+	if (ch[x][y] == '*' || x + 1 == n || y + 1 == n || x - 1 == -1 || y - 1 == -1) return;
+	c++;
+	ch[x][y] = '*';
+	kol(x, y - 1);
+	kol(x, y + 1);
+	kol(x - 1, y);
+	kol(x + 1, y);
+}
+
+int main()
+{
+	int x, y, i, j, n;
+	string text[100];
+	cin >> n;
+	for (i = 0; i < n; i++) cin >> text[i];
+	for (i = 0; i < n; i++)
+		for (j = 0; j < n; j++) ch[i][j] = text[i][j];
+
+	cin >> x >> y;
+	kol(x - 1, y - 1);
+	cout << c << endl;
+	return 0;
+}
