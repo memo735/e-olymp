@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<map>
+
+using namespace std;
+
+map<int, int>m;
+
+int main()
+{
+	int n;
+	while (scanf("%d", &n) != EOF, n)
+	{
+		int k, p;
+		if (n == 1)
+		{
+			scanf("%d%d", &k, &p);
+			m.insert(pair<int, int>(p, k));
+		}
+		else
+			if (n == 2)
+			{
+				if (m.empty()) printf("0\n");
+				else
+				{
+					printf("%d\n", m.rbegin()->second);
+					m.erase(m.rbegin()->first);
+				}
+			}
+			else
+				if (n == 3)
+				{
+					if (m.empty()) printf("0\n");
+					else
+					{
+						printf("%d\n", m.begin()->second);
+						m.erase(m.begin()->first);
+					}
+				}
+	}
+}
