@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem965
+{
+    internal class Program
+    {
+        private static long Power(long n, long baza)
+        {
+            long temp = n;
+            for (long i = 1; i < baza; ++i)
+            {
+                n = n*temp;
+                if (n > 9973) n = n%9973;
+            }
+            return n;
+        }
+
+        public static void Main(string[] args)
+        {
+            long n = long.Parse(Console.ReadLine());
+            Console.WriteLine(Power(n*n*(n*n + 1)/2, n));
+        }
+    }
+}
