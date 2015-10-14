@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <string.h>
+
+char bin[105];
+int g[20][20], bb[105], len;
+
+int getBit() {
+	int i, ret = 0;
+	for (i = len; i >= 0; i--) {
+		ret = ret * 10 + bb[i];
+		bb[i] = ret / 2;
+		ret %= 2;
+	}
+	while (len >= 0 && bb[len] == 0) len--;
+	return ret;
+}
+
+int main() {
+	int n, x, y, i, j;
+	int dx[] = { 1, 0, -1, 0 };//NESW
+	int dy[] = { 0, 1, 0, -1 };
+	while (scanf("%d %s %d %d", &n, bin, &y, &x) == 4 && n) {
+		x--, y--;
+		len = strlen(bin);
+		memset(bb, 0, sizeof(bb));
+		for (i = 0, j = len - 1; i < len; i++, j--) bb[i] = bin[j] - '0';
+		for (i = n - 1; i >= 0; i--) {
+			for (j = n - 1; j >= 0; j--) g[i][j] = getBit();
+		}
+		int dir = 0, step = 0, found = 0;
+		while (step++ < 1000) {
+			if (x < 0 || y < 0 || x >= n || y >= n) break;
+			if (x == n - 1 && y == n - 1) {
+				found = 1;
+				break;
+			}
+			if (g[x][y] == 0) {//blue
+				g[x][y] = !g[x][y];
+				dir = (dir - 1 + 4) % 4;
+				x += dx[dir], y += dy[dir];
+			}
+			else {//red
+				g[x][y] = !g[x][y];
+				dir = (dir + 1) % 4;
+				x += dx[dir], y += dy[dir];
+			}
+		}
+		puts(found ? "Yes" : "Kaputt!");
+	}
+	return 0;
+}
