@@ -1,0 +1,103 @@
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+
+using namespace std;
+
+const double EPS = 1e-10;
+const int N = 44;
+inline int sgn(double x) { return (x > EPS) - (x < -EPS); }
+
+struct Point {
+	int x, y;
+	Point() {}
+	Point(int x, int y) : x(x), y(y) {}
+	Point operator + (Point a) { return Point(x + a.x, y + a.y); }
+	Point operator - (Point a) { return Point(x - a.x, y - a.y); }
+	Point operator * (int p) { return Point(x * p, y * p); }
+	Point operator / (int p) { return Point(x / p, y / p); }
+};
+
+inline int cross(Point a, Point b) { return a.x * b.y - a.y * b.x; }
+inline int dot(Point a, Point b) { return a.x * b.x + a.y * b.y; }
+inline bool onseg(Point x, Point a, Point b) { return sgn(cross(a - x, b - x)) == 0 && sgn(dot(a - x, b - x)) <= 0; }
+
+bool ptinpoly(Point x, Point *pt, int n) {
+	pt[n] = pt[0];
+	int wn = 0;
+	for (int i = 0; i < n; i++) {
+		if (onseg(x, pt[i], pt[i + 1])) return true;
+		int dr = sgn(cross(pt[i + 1] - pt[i], x - pt[i]));
+		int k1 = sgn(pt[i + 1].y - x.y);
+		int k2 = sgn(pt[i].y - x.y);
+		if (dr > 0 && k1 > 0 && k2 <= 0) wn++;
+		if (dr < 0 && k2 > 0 && k1 <= 0) wn--;
+	}
+	return wn != 0;
+}
+
+struct MFS {
+	int fa[N], cnt;
+	void init() { for (int i = 0; i < N; i++) fa[i] = i; cnt = 0; }
+	int find(int x) { return fa[x] = fa[x] == x ? x : find(fa[x]); }
+	void merge(int x, int y) {
+		int fx = find(x);
+		int fy = find(y);
+		if (fx == fy) return;
+		cnt++;
+		fa[fx] = fy;
+	}
+
+} mfs;
+
+Point poly[N][11];
+char buf[111];
+int sz[N];
+
+bool ssint(Point a, Point b, Point c, Point d) {
+	int s1 = sgn(cross(a - c, b - c));
+	int s2 = sgn(cross(a - d, b - d));
+	int t1 = sgn(cross(c - a, d - a));
+	int t2 = sgn(cross(c - b, d - b));
+	return s1 * s2 < 0 && t1 * t2 < 0;
+}
+
+bool polyint(int a, int b) {
+	poly[a][sz[a]] = poly[a][0];
+	poly[b][sz[b]] = poly[b][0];
+	for (int i = 0; i < sz[a]; i++) {
+		for (int j = 0; j < sz[b]; j++) {
+			if (ssint(poly[a][i], poly[a][i + 1], poly[b][j], poly[b][j + 1])) return true;
+		}
+	}
+	return false;
+}
+
+bool test(int a, int b) {
+	for (int i = 0; i < sz[a]; i++) if (ptinpoly(poly[a][i], poly[b], sz[b])) return true;
+	for (int i = 0; i < sz[b]; i++) if (ptinpoly(poly[b][i], poly[a], sz[a])) return true;
+	if (polyint(a, b)) return true;
+	return false;
+}
+
+int main() {
+	int n;
+	while (cin >> n && n) {
+		gets(buf);
+		char *p;
+		mfs.init();
+		for (int i = 0; i < n; i++) {
+			gets(buf);
+			p = strtok(buf, " ");
+			for (sz[i] = 0; p; sz[i]++) {
+				sscanf(p, "%d", &poly[i][sz[i]].x);
+				p = strtok(NULL, " ");
+				sscanf(p, "%d", &poly[i][sz[i]].y);
+				p = strtok(NULL, " ");
+			}
+			for (int j = 0; j < i; j++) if (test(i, j)) mfs.merge(i, j);
+		}
+		cout << n - mfs.cnt << endl;
+	}
+	return 0;
+}
