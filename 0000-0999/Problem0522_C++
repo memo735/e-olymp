@@ -1,0 +1,24 @@
+#include <cstdio>
+
+int main()
+{
+	int n, m;
+	while (scanf("%d%d", &n, &m) == 2)
+	{
+		int ans = 1000000000;
+		while (m--)
+		{
+			int u, d;
+			scanf("%d%d", &u, &d);
+			if (n*d % (u + d) == 0 && u + d < ans) ans = u + d;
+			else
+			{
+				int x = n*d / (u + d) + 1;
+				int t = x*(u + d) - n*d;
+				if (t < ans) ans = t;
+			}
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
