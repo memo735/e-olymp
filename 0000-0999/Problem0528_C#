@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem528
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            int len = setir.Length;
+            int a = 0, b, c = 0, d = len;
+            foreach (char x in setir) if (x == '1') c++;
+            for (int i = 0; i < len; i++)
+            {
+                if (setir[i] == '0' && setir[(i + 1)%len] == '1') a++;
+            }
+            b = len - c;
+            if (a*d < b*c) Console.WriteLine("SHOOT");
+            else Console.WriteLine(a*d > b*c ? "ROTATE" : "EQUAL");
+        }
+    }
+}
