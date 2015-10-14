@@ -1,0 +1,94 @@
+#include <cstdio>
+#include <algorithm>
+
+#define INF 9999999
+
+using namespace std;
+
+int map[101][101], des[101], dp[101], dq[101], vis[101], son[101], n, m, e, p, q;
+
+int main()
+{
+	int i, j, ta, tb, tc, minindex, minnum;
+	while (~scanf("%d%d%d", &n, &m, &e))
+	{
+		for (i = 1; i <= n; i++) for (j = 1; j <= n; j++) map[i][j] = INF;
+		while (m--)
+		{
+			scanf("%d%d%d", &ta, &tb, &tc);
+			map[ta][tb] = map[tb][ta] = tc;
+		}
+		for (i = 0; i < e; i++) scanf("%d", &des[i]);
+		scanf("%d%d", &p, &q);
+		for (i = 1; i <= n; i++) son[i] = 0, vis[i] = 0, dp[i] = INF;
+		dp[p] = 0;
+		ta = n - 2;
+		while (ta--)
+		{
+			minnum = INF;
+			for (i = 1; i <= n; i++)
+			{
+				if (!vis[i] && dp[i] < minnum && i != q)
+				{
+					minnum = dp[i];
+					minindex = i;
+				}
+			}
+			if (minnum == INF) break;
+			vis[minindex] = 1;
+			for (i = 1; i <= n; i++)
+			{
+				if (!vis[i] && dp[i] > dp[minindex] + map[minindex][i] && i != q)
+				{
+					dp[i] = dp[minindex] + map[minindex][i];
+					son[i] = minindex;
+				}
+			}
+		}
+		for (i = 1; i <= n; i++) vis[i] = 0, dq[i] = INF;
+		dq[q] = 0;
+		ta = n - 1;
+		while (ta--)
+		{
+			minnum = INF;
+			for (i = 1; i <= n; i++)
+			{
+				if (!vis[i] && dq[i] < minnum)
+				{
+					minnum = dq[i];
+					minindex = i;
+				}
+			}
+			if (minnum == INF) break;
+			vis[minindex] = 1;
+			for (i = 1; i <= n; i++)
+			{
+				if (!vis[i] && dq[i] > dq[minindex] + map[minindex][i])
+				{
+					dq[i] = dq[minindex] + map[minindex][i];
+				}
+			}
+		}
+		for (i = 0; i < e; i++) if (dp[des[i]] < INF) break;
+		if (i == e) printf("IMPOSSIBLE\n");
+		else
+		{
+			double ans = INF;
+			for (i = 0; i < e; i++)
+			{
+				if (dp[des[i]] < INF)
+				{
+					double temp = 0;
+					ta = des[i];
+					while (son[ta])
+					{
+						if (dq[ta] < INF) temp = max(temp, (double)dp[ta] / dq[ta] * 160.0);
+						ta = son[ta];
+					}
+					ans = min(ans, temp);
+				}
+			}
+			printf("%.10lf\n", ans);
+		}
+	}
+}
