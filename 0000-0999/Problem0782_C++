@@ -1,0 +1,27 @@
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+bool reliable[21];
+
+int main() {
+	int n, a;
+	while (scanf("%d %d", &n, &a) == 2 && !(n == 0 && a == 0)) {
+		memset(reliable, 1, sizeof(reliable));
+		int count = 0;
+		for (int d = 0; d < a; d++){
+			int x, y;
+			scanf("%d %d", &x, &y);
+			if (y < 0){
+				y = -y;
+				if (reliable[y]) {
+					count++;
+					reliable[y] = false;
+				}
+			}
+		}
+		printf("%d\n", n - count);
+	}
+	return 0;
+}
