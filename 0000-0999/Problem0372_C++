@@ -1,0 +1,131 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <queue>
+
+using namespace std;
+
+#define CLR(x,y) memset(x,y,sizeof(x))
+#define ABS(x) ((x)>0?(x):-(x))
+#define rep(i,x,y) for(i=x;i<y;++i)
+#define SET_NODE(no,a,b,c) {no.x=a;no.y=b;no.val=c;}
+
+const int MAXN = 200;
+const double INF = 1 << 30;
+const double EPS = 0.000001;
+
+int dir[4][2] = { 1, 0, -1, 0, 0, 1, 0, -1 };
+int n, m, tag[MAXN];
+char g[MAXN][MAXN];
+double dist, dis[MAXN][MAXN];
+bool visit[MAXN][MAXN];
+
+typedef struct
+{
+	int x, y;
+	double val;
+}Node;
+Node s, e, node;
+bool operator < (const Node& a, const Node& b)
+{
+	return a.val > b.val;
+}
+bool check(const int& x, const int& y)
+{
+	if (x < 0 || x >= n) return false;
+	if (y < 0 || y >= m) return false;
+	if (g[x][y] == '#') return false;
+	if (visit[x][y]) return false;
+	return true;
+}
+
+double BFS(double len)
+{
+	int i, j;
+	Node tmp;
+	priority_queue<Node> q;
+	q.push(s);
+	CLR(visit, 0);
+	rep(i, 0, n)
+		rep(j, 0, m) dis[i][j] = INF;
+
+	while (!q.empty())
+	{
+		node = q.top();
+		q.pop();
+		visit[node.x][node.y] = true;
+		if (node.x == e.x && node.y == e.y) return node.val;
+		if (check(node.x + 1, node.y)){
+			SET_NODE(tmp, node.x + 1, node.y, node.val + len);
+			if (tmp.val < dis[tmp.x][tmp.y])
+			{
+				dis[tmp.x][tmp.y] = tmp.val;
+				q.push(tmp);
+			}
+		}
+		if (check(node.x - 1, node.y)){
+			SET_NODE(tmp, node.x - 1, node.y, node.val + len);
+			if (tmp.val < dis[tmp.x][tmp.y])
+			{
+				dis[tmp.x][tmp.y] = tmp.val;
+				q.push(tmp);
+			}
+		}
+		if (check(node.x, node.y + 1)){
+			SET_NODE(tmp, node.x, node.y + 1, node.val + 1);
+			if (tmp.val < dis[tmp.x][tmp.y])
+			{
+				dis[tmp.x][tmp.y] = tmp.val;
+				q.push(tmp);
+			}
+		}
+		if (check(node.x, node.y - 1)){
+			SET_NODE(tmp, node.x, node.y - 1, node.val + 1);
+			if (tmp.val < dis[tmp.x][tmp.y])
+			{
+				dis[tmp.x][tmp.y] = tmp.val;
+				q.push(tmp);
+			}
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+	int i, j, t, tt;
+	scanf("%d", &tt);
+	rep(t, 1, tt + 1){
+		scanf("%lf%d", &dist, &n);
+		rep(i, 0, n)
+		{
+			getchar();
+			gets(&g[i][0]);
+		}
+		m = strlen(g[0]);
+		rep(i, 0, n)
+			rep(j, 0, m)
+			if (g[i][j] == 'S')
+			{
+				s.x = i;
+				s.y = j;
+			}
+			else if (g[i][j] == 'E')
+			{
+				e.x = i;
+				e.y = j;
+			}
+		s.val = 0;
+		double res, low = 0, high = 10;
+		double mid = (low + high) / 2;
+		while (ABS(low - high) > EPS)
+		{
+			mid = (low + high) / 2;
+			res = BFS(mid);
+			if (res < dist + EPS) low = mid;
+			else high = mid;
+		}
+		printf("Case #%d: %.3f%%\n", t, mid * 100);
+	}
+	return 0;
+}
