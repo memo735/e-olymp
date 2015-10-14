@@ -1,0 +1,54 @@
+#include <iostream>
+#include <map>
+#include <cstring>
+#include <cstdio>
+
+using namespace std;
+
+int db[10001][11], cnt;
+map<string, int> setID;
+
+int getIndex(char *in){
+	if (setID.count(in)>0) return setID[in];
+	setID[in] = cnt++;
+	return cnt - 1;
+}
+int main(){
+	cnt = 0;
+	char s[90];
+	int n, m;
+	bool found;
+	map<long long, int> dbmap;
+	while (cin >> n){
+		cin >> m;
+		setID.clear();
+		found = false;
+		gets(s);
+		for (int i = 0; i < n; i++){
+			gets(s);
+			char *ptr;
+			ptr = strtok(s, ",");
+			for (int j = 0; ptr != NULL; j++){
+				db[i][j] = getIndex(ptr);
+				ptr = strtok(NULL, ",");
+			}
+		}
+		for (int j = 0; j < m; j++){
+			for (int k = j + 1; k < m; k++){
+				dbmap.clear();
+				for (int i = 0; i < n; i++){
+					long long my = (long long)db[i][j] * 1000000 + db[i][k];
+					if (dbmap.count(my) == 0) dbmap[my] = i;
+					else {
+						found = true;
+						cout << "NO" << endl;
+						cout << dbmap[my] + 1 << " " << i + 1 << endl;
+						cout << j + 1 << " " << k + 1 << endl;
+						k = m, j = m; break;
+					}
+				}
+			}
+		}
+		if (!found) cout << "YES" << endl;
+	}
+}
