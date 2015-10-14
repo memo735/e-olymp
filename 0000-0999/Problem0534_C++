@@ -1,0 +1,36 @@
+#include <forward_list>
+
+using namespace std;
+
+const int INF = 0x3f3f3f3f, maxn = 1010;
+
+int sum[maxn], cost[maxn], dp[maxn][maxn], s[maxn][maxn], n, m;
+
+int main(){
+	while (scanf("%d%d", &n, &m), n || m){
+		sum[0] = cost[0] = 0;
+		for (int i = 1; i <= n; ++i){
+			scanf("%d", sum + i);
+			cost[i] = cost[i - 1] + sum[i - 1] * sum[i];
+			sum[i] += sum[i - 1];
+			dp[i][0] = cost[i];
+			dp[i][i - 1] = 0;
+			s[n + 1][i] = n;
+			s[i][0] = 0;
+		}
+		for (int j = 1; j <= m; ++j){
+			for (int i = n; i > j; --i){
+				dp[i][j] = INF;
+				for (int k = s[i][j - 1]; k <= s[i + 1][j]; ++k){
+					int tmp = cost[i] - cost[k] - sum[k] * (sum[i] - sum[k]);
+					if (dp[k][j - 1] + tmp < dp[i][j]){
+						dp[i][j] = dp[k][j - 1] + tmp;
+						s[i][j] = k;
+					}
+				}
+			}
+		}
+		printf("%d\n", dp[n][m]);
+	}
+	return 0;
+}
