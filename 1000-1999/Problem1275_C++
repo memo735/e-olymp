@@ -1,0 +1,141 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+#define MAX_TILES 100
+#define MAX_MOVES 9
+#define OPPOSITE(x) (((x)=='W')? 'B' : 'W')
+
+#define NO_MOVE         0
+#define FORWARD         1
+#define WALK_FORWARD    1
+#define WALK_BACKWARD   2
+#define HOP_FORWARD     3
+#define HOP_BACKWARD    4
+#define BACKWARD        -1
+
+typedef struct state_t
+{
+	char tiles[MAX_TILES + 1];//nul-terminated, e.g. WWBBFBW
+	int num_tiles;//number of tiles, including F 
+	int num_blocks;//number of blocks, ignoring F
+	int frog_pos;//index of frog
+} state_t;
+
+// Count the number of blocks in the range [first, last] inclusive.
+int count_blocks(const state_t *state, int first, int last)
+{
+	char prev = '\0';
+	int blocks = 0, i;
+	if (first > last)
+	{
+		int t = last;
+		last = first;
+		first = t;
+	}
+	for (i = max(0, first); i <= min(last, state->num_tiles - 1); i++)
+	{
+		char tile = state->tiles[i];
+		if (tile != 'F' && tile != prev)
+		{
+			blocks++;
+			prev = tile;
+		}
+	}
+	return blocks;
+}
+
+// Checks whether the current state is goal.
+int is_goal(const state_t *state)
+{
+	if (state->num_blocks <= 2) return 1;
+	if (state->num_blocks == 3) return (state->tiles[0] == 'W') || (state->tiles[0] == 'F' && state->tiles[1] == 'W');
+	return 0;
+}
+
+//Move the frog one tile FORWARD or BACKWARD.
+int walk(state_t *state, int dir)
+{
+	int pos = state->frog_pos + dir;
+	if (pos >= 0 && pos < state->num_tiles)
+	{
+		state->tiles[state->frog_pos] = state->tiles[pos];
+		state->tiles[pos] = 'F';
+		state->frog_pos = pos;
+		return 1;
+	}
+	return 0;
+}
+
+// Swap the frog with a tile 2 tiles away and flip that tile.
+int hop(state_t *state, int dir)
+{
+	int pos = state->frog_pos + dir * 2;
+	if (pos >= 0 && pos < state->num_tiles)
+	{
+		int nb_chg = -count_blocks(state, pos + dir, state->frog_pos - dir);
+		state->tiles[state->frog_pos] = OPPOSITE(state->tiles[pos]);
+		state->tiles[pos] = 'F';
+		nb_chg += count_blocks(state, pos + dir, state->frog_pos - dir);
+		state->frog_pos = pos;
+		state->num_blocks += nb_chg;
+		return 1;
+	}
+	return 0;
+}
+
+int solve(state_t *state, int max_moves, int last_move)
+{
+	int moves, best_moves = 999;
+	// Check whether the current state is successful.
+	if (is_goal(state)) return 0;
+	// If no more moves are availble, return failure.
+	if (max_moves == 0) return 999;
+	// Try walk forward.
+	if (last_move != WALK_BACKWARD && walk(state, FORWARD))
+	{
+		moves = solve(state, max_moves - 1, WALK_FORWARD);
+		best_moves = min(best_moves, moves);
+		walk(state, BACKWARD);
+	}
+	// Try walk backward.
+	if (last_move != WALK_FORWARD && walk(state, BACKWARD))
+	{
+		moves = solve(state, max_moves - 1, WALK_BACKWARD);
+		best_moves = min(best_moves, moves);
+		walk(state, FORWARD);
+	}
+	// Try hop forward.
+	if (last_move != HOP_BACKWARD && hop(state, FORWARD))
+	{
+		moves = solve(state, max_moves - 1, HOP_FORWARD);
+		best_moves = min(best_moves, moves);
+		hop(state, BACKWARD);
+	}
+	// Try hop backward.
+	if (last_move != HOP_FORWARD && hop(state, BACKWARD))
+	{
+		moves = solve(state, max_moves - 1, HOP_BACKWARD);
+		best_moves = min(best_moves, moves);
+		hop(state, FORWARD);
+	}
+	return 1 + best_moves;
+}
+
+int main()
+{
+	state_t state;
+	int t;
+	for (t = 1; scanf("%s", state.tiles) == 1 && state.tiles[0] != '-'; t++)
+	{
+		int best;
+		state.num_tiles = strlen(state.tiles);
+		state.frog_pos = strchr(state.tiles, 'F') - state.tiles;
+		state.num_blocks = count_blocks(&state, 0, state.num_tiles - 1);
+		best = solve(&state, MAX_MOVES, NO_MOVE);
+		printf("%d. %d\n", t, (best >= 999) ? -1 : best);
+	}
+	return 0;
+}
