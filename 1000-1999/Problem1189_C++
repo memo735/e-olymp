@@ -1,0 +1,55 @@
+#include <cmath>  
+#include <cstdio>  
+#include <cstring>  
+
+using namespace std;
+
+int s[111][111], head[111], n, q, numl, numr, final;
+char sta[111], op[111];
+
+bool judge(int x, int y) {
+	int span = abs(x - y);
+	if (span % 2 == 1) {
+		if (sta[y - 1] == 'U') sta[y - 1] = 'D';
+		else sta[y - 1] = 'U';
+	}
+	if (sta[y - 1] == 'U') return 1;
+	return 0;
+}
+
+int main() {
+	int a, ca = 1;
+	while (scanf("%d", &n) && n) {
+		memset(s, 0, sizeof(s));
+		memset(head, 0, sizeof(head));
+		numl = 0; numr = 0;
+		scanf("%s", sta);
+		scanf("%s", op);
+		scanf("%d", &q);
+		for (int i = 1; i <= n; i++) s[i][0] = i;
+		int len = strlen(op), right, left;
+		for (int i = 0; i < len; i++) {
+			if (op[i] == 'R') {
+				numr++;
+				left = n - numr;
+				right = left + 1;
+				while (head[right] > -1) s[left][++head[left]] = s[right][head[right]--];
+			}
+			else {
+				numl++;
+				left = numl;
+				right = left + 1;
+				while (head[left] > -1) s[right][++head[right]] = s[left][head[left]--];
+			}
+		}
+		final = 1 + numl;
+		printf("Pile %d\n", ca++);
+		for (int i = 0; i < q; i++) {
+			scanf("%d", &a);
+			printf("Card %d is a ", a);
+			if (judge(final, s[final][n - a]) == 0) printf("face down %d.\n", s[final][n - a]);
+			else printf("face up %d.\n", s[final][n - a]);
+		}
+	}
+	return 0;
+}
