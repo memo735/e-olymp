@@ -1,0 +1,39 @@
+#include <forward_list>
+#include <algorithm>
+
+using namespace std;
+const int maxn = 1e5 + 5;
+
+struct seg
+{
+	double l, r;
+	bool operator < (const seg& x) const{
+		return r < x.r || (r == x.r && l > x.l);
+	}
+}S[maxn];
+
+
+int main()
+{
+	int L, D, N;
+	while (~scanf("%d%d%d", &L, &D, &N)){
+		double dis = D;
+		for (int i = 0; i < N; i++){
+			double x, y; scanf("%lf%lf", &x, &y);
+			double r = sqrt(dis*dis - y*y);
+			S[i].l = x - r;
+			S[i].r = x + r;
+		}
+		sort(S, S + N);
+		double cur = -1e9;
+		int ans = 0;
+		for (int i = 0; i < N; i++){
+			if (cur < S[i].l) {
+				cur = S[i].r < L ? S[i].r : L;
+				ans++;
+			}
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
