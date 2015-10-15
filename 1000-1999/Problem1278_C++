@@ -1,0 +1,143 @@
+#include <cstdio>
+#include <utility>
+#include <map>
+
+using namespace std;
+
+struct func
+{
+	int up, down;
+	func(){}
+	func(int num) :up(num), down(1){}
+	int gcd(int a, int b)
+	{
+		if (!b) return a;
+		return gcd(b, a%b);
+	}
+	void simple()
+	{
+		int t = gcd(abs(up), abs(down));
+		up /= t;
+		down /= t;
+		if (down < 0) up *= -1, down *= -1;
+	}
+	func operator+(const func &pos)
+	{
+		func res;
+		res.down = down*pos.down;
+		res.up = up*pos.down + pos.up*down;
+		res.simple();
+		return res;
+	}
+	func operator-(const func &pos)
+	{
+		func res;
+		res.down = down*pos.down;
+		res.up = up*pos.down - pos.up*down;
+		res.simple();
+		return res;
+	}
+	bool operator<(const func &pos) const
+	{
+		return up*pos.down < pos.up*down;
+	}
+	bool operator==(const func &pos) const
+	{
+		return up == pos.up&&down == pos.down;
+	}
+	bool operator!=(const func &pos) const
+	{
+		return up != pos.up || down != pos.down;
+	}
+	bool operator<=(const func &pos) const
+	{
+		return *this < pos || *this == pos;
+	}
+
+};
+int data[100000], de, k, q[100000];
+func dp[10][100000], aver, num[100000];
+
+struct cmp
+{
+	bool operator()(const pair<int, int> &a, const pair<int, int> &b) const
+	{
+		if (dp[a.first][a.second] + func(data[a.second]) != dp[b.first][b.second] + func(data[b.second]))
+			return dp[a.first][a.second] + func(data[a.second]) < dp[b.first][b.second] + func(data[b.second]);
+		return a.second < b.second;
+	}
+};
+func min(func a, func b)
+{
+	if (a.up*b.down < b.up*a.down) return a;
+	return b;
+}
+
+func solve()
+{
+	for (int i = 0; i < de; i++) num[i] = func(data[i]);
+	int down = aver.up / aver.down, up = aver.up%aver.down ? aver.up / aver.down + 1 : aver.up / aver.down;
+	for (int i = 0; i < de; i++)
+		if (data[i] <= down) dp[0][i] = aver - num[i];
+		else dp[0][i] = num[i] - aver;
+		for (int i = 1; i < k; i++)
+		{
+			for (int j = 0; j < de; j++) dp[i][j] = dp[i - 1][j] + aver;
+			int last = -1;
+			func ans = func(0xfffffff);
+			for (int j = 0; j < de; j++)
+			{
+				while (data[j] - data[last + 1] >= up)
+				{
+					last++;
+					if (!last) ans = dp[i - 1][last] - num[last] - aver;
+					else ans = min(ans, dp[i - 1][last] - num[last] - aver);
+				}
+				if (last != -1) dp[i][j] = min(dp[i][j], ans + num[j]);
+			}
+			int s = -1, e = 0;
+			q[0] = 0;
+			for (int j = 1; j<de; j++)
+			{
+				//add
+				while (s != e&&dp[i - 1][j] + num[j] <= dp[i - 1][q[e]] + num[q[e]]) e--;
+				q[++e] = j;
+				//erase
+				while (s != e&&data[j] - data[q[s + 1]]>down) s++;
+				if (s != e) dp[i][j] = min(dp[i][j], dp[i - 1][q[s + 1]] + aver - num[j] + num[q[s + 1]]);
+			}
+		}
+		return dp[k - 1][de - 1];
+}
+
+int main()
+{
+	pair<int, int> d[100000];
+	map<int, int> refer;
+	int n, test = 1;
+	while (scanf("%d%d", &n, &k) != EOF && (n || k))
+	{
+		refer.clear();
+		aver.up = n;
+		aver.down = k;
+		aver.simple();
+		for (int i = 0; i < n; i++) scanf("%d%d", &d[i].first, &d[i].second);
+		for (int i = 0; i < n; i++) refer[d[i].first]++;
+		data[0] = 0;
+		de = 1;
+		for (map<int, int>::iterator i = refer.begin(); i != refer.end(); i++) data[de++] = (i->second);
+		for (int i = 1; i < de; i++) data[i] += data[i - 1];
+		func ans = solve();
+		refer.clear();
+		for (int i = 0; i < n; i++) refer[d[i].second]++;
+		data[0] = 0;
+		de = 1;
+		for (map<int, int>::iterator i = refer.begin(); i != refer.end(); i++) data[de++] = (i->second);
+		for (int i = 1; i < de; i++) data[i] += data[i - 1];
+		ans = min(ans, solve());
+		ans.down *= k;
+		ans.simple();
+		printf("%d. %d/%d\n", test++, ans.up, ans.down);
+	}
+	return 0;
+}
