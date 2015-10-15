@@ -1,0 +1,42 @@
+#include <cstdio>  
+#include <vector>  
+#include <algorithm>  
+
+using namespace std;
+
+const int B = 1000;
+const int N = 100005;
+const int M = 5005;
+
+int n, m, a[N], L[M], R[M], K[M], nums[N];
+vector<int> bucket[N / B];
+
+int main(){
+	while (~scanf("%d%d", &n, &m)){
+		for (int i = 0; i < n; i++) scanf("%d", &a[i]);
+		for (int i = 0; i < m; i++) scanf("%d%d%d", &L[i], &R[i], &K[i]);
+		for (int i = 0; i < n; i++){
+			bucket[i / B].push_back(a[i]);
+			nums[i] = a[i];
+		}
+		sort(nums, nums + n);
+		for (int i = 0; i < n / B; i++) sort(bucket[i].begin(), bucket[i].end());
+		for (int i = 0; i < m; i++){
+			int l = L[i] - 1, r = R[i], k = K[i], lb = -1, ub = n - 1;
+			while (ub - lb > 1){
+				int mid = (lb + ub) / 2, x = nums[mid], tl = l, tr = r, c = 0;
+				while (tl < tr && tl % B != 0) if (a[tl++] <= x) c++;
+				while (tl < tr && tr % B != 0) if (a[--tr] <= x) c++;
+				while (tl < tr){
+					int b = tl / B;
+					c += upper_bound(bucket[b].begin(), bucket[b].end(), x) - bucket[b].begin();
+					tl += B;
+				}
+				if (c >= k) ub = mid;
+				else lb = mid;
+			}
+			printf("%d\n", nums[ub]);
+		}
+	}
+	return 0;
+}
