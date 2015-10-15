@@ -1,0 +1,65 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+typedef long long ll;
+
+struct S {
+	ll x, y, z;
+};
+
+vector<S> data;
+int N;
+
+ll C(ll p) {
+	ll sum = 0;
+	for (int i = 0; i < N; i++) {
+		if (p < data[i].x) continue;
+		ll end_term = min(p, data[i].y);
+		sum += (end_term - data[i].x) / data[i].z + 1;
+	}
+	return sum;
+}
+
+void solve() {
+	N = data.size();
+	ll max_y = -1;
+	for (size_t i = 0; i < N; i++)
+		if (data[i].y > max_y) max_y = data[i].y;
+	// when all C[i] is even
+	if (C(max_y) % 2 == 0) {
+		puts("no corruption");
+		return;
+	}
+	ll lb = 0, ub = max_y;
+	while (ub - lb > 1) {
+		ll mid = (lb + ub) / 2;
+		if (C(mid) % 2 == 1) ub = mid;
+		else lb = mid;
+	}
+	printf("%lld %lld\n", ub, C(ub) - C(lb));
+}
+
+int main() {
+	char inp[50];
+	while (fgets(inp, 50, stdin) != NULL) {
+		size_t len = strlen(inp);
+		if (len >= 1 && inp[len - 1] == '\n') inp[len--] = '\0';
+		if (len == 0) {
+			if (data.size() != 0) {
+				solve();
+				data.clear();
+			}
+		}
+		else {
+			S s; sscanf(inp, "%lld %lld %lld", &s.x, &s.y, &s.z);
+			data.push_back(s);
+		}
+	}
+	if (data.size() != 0) solve();
+	return 0;
+}
