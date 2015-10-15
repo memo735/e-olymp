@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+const int MAXN = 3000, MAXM = 50000;
+struct Edge
+{
+	int to, next;
+}edge[MAXM];
+
+int head[MAXN], tot;
+
+void addedge(int u, int v)
+{
+	edge[tot].to = v; edge[tot].next = head[u];
+	head[u] = tot++;
+}
+
+int uN, linker[MAXN];
+bool used[MAXN];
+
+bool dfs(int u)
+{
+	for (int i = head[u]; i != -1; i = edge[i].next)
+	{
+		int v = edge[i].to;
+		if (!used[v])
+		{
+			used[v] = true;
+			if (linker[v] == -1 || dfs(linker[v]))
+			{
+				linker[v] = u;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+int hungary()
+{
+	int res = 0;
+	memset(linker, -1, sizeof(linker));
+	for (int u = 0; u < uN; u++)
+	{
+		memset(used, false, sizeof(used));
+		if (dfs(u))res++;
+	}
+	return res;
+}
+
+int dir[][2] = { { -1, -2 }, { -2, -1 }, { -2, 1 }, { -1, 2 }, { 1, 2 }, { 2, 1 }, { 2, -1 }, { 1, -2 }, { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+int b[60][60], a[60][60];
+
+int main()
+{
+	int n, m, iCase = 0;
+	while (scanf("%d%d", &n, &m) == 2)
+	{
+		iCase++;
+		if (n == 0 && m == 0)break;
+		uN = 0;
+		int vN = 0;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+			{
+				if ((i + j) % 2 == 0)b[i][j] = uN++;
+				else b[i][j] = vN++;
+			}
+		tot = 0;
+		memset(head, -1, sizeof(head));
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++) scanf("%d", &a[i][j]);
+
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+			{
+				if (a[i][j] == -1)continue;
+				for (int k = 0; k < 12; k++)
+					if (a[i][j] & (1 << k))
+					{
+						int tx = i + dir[k][0];
+						int ty = j + dir[k][1];
+						if (tx < 0 || ty < 0 || tx >= n || ty >= m) continue;
+						if (a[tx][ty] == -1)continue;
+						if ((i + j) % 2 == 0) addedge(b[i][j], b[tx][ty]);
+						else addedge(b[tx][ty], b[i][j]);
+					}
+			}
+		printf("%d. %d\n", iCase, hungary());
+	}
+	return 0;
+}
