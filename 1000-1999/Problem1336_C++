@@ -1,0 +1,27 @@
+#include<stdio.h>
+#include<string.h>
+
+int h[1010], N;
+
+int main()
+{
+	int t = 0;
+	while (true)
+	{
+		scanf("%d", &N);
+		if (N == 0) break;
+		printf("%d. ", ++t);
+		int i, j, k, tot = 0, ans = 0;
+		memset(h, 0, sizeof(h[0]) * N);
+		for (i = 0; i < N; i++)
+			for (j = 0; j < N; j++)
+			{
+				scanf("%d", &k), tot += k;
+				h[i] += k, h[j] -= k;
+			}
+
+		for (i = 0; i < N; i++) if (h[i] > 0) ans += h[i];
+		printf("%d %d\n", tot, ans);
+	}
+	return 0;
+}
