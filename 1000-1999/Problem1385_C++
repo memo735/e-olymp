@@ -1,0 +1,31 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAXN 1010
+int dp[20 * MAXN], v[MAXN], w[MAXN];
+
+int main()
+{
+	int n, k, l;
+	while (scanf("%d", &n), n)
+	{
+		scanf("%d%d", &k, &l);
+		for (int i = 0; i < n; i++) scanf("%d%d", &v[i], &w[i]);
+		for (int i = 0; i <= 20 * n + 99; i++) dp[i] = 99999999;
+		dp[0] = 0;
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = n * 20; j >= 0; j--)
+			{
+				if (dp[j] - k < 0) dp[j] = 0;
+				else dp[j] -= k;
+				if (j - v[i] >= 0 && dp[j - v[i]] + w[i] <= l) dp[j] = min(dp[j - v[i]] + w[i], dp[j]);
+			}
+		}
+		int ans;
+		for (int i = 0; i <= n * 20; i++) if (dp[i] <= l) ans = i;
+		cout << ans << endl;
+	}
+}
