@@ -1,0 +1,64 @@
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+
+typedef long long ll;
+
+using namespace std;
+int step;
+
+int check(string s)
+{
+	for (int i = 0; i < s.size(); i++)
+	{
+		if (s[i] != s[s.size() - 1 - i]) return 0;
+	}
+	return 1;
+}
+
+int pingfang(int x, int y)
+{
+	if (y == 0) return 1;
+	int ans = 1;
+	for (int i = 1; i <= y; i++) ans *= x;
+	return ans;
+}
+
+int main()
+{
+	string s;
+	while (cin >> s)
+	{
+		string s1 = "0";
+		if (s == s1) break;
+		step = 0;
+		int len = 0;
+		while (!check(s))
+		{
+			if (s[s.size() - 1 - len] == s[len]) len++;
+			else
+				if (s[s.size() - 1 - len] < s[len])
+				{
+					step += ((int)(s[len] - '0') - (int)(s[s.size() - 1 - len] - '0'))*pingfang(10, len);
+					s[s.size() - 1 - len] = s[len++];
+				}
+				else
+				{
+					step += ((int)(s[len] - '0') + 10 - (int)(s[s.size() - 1 - len] - '0'))*pingfang(10, len);
+					s[s.size() - 1 - len] = s[len];
+					for (int i = len + 1; i < s.size(); i++)
+					{
+						if (s[s.size() - 1 - i] == '9') s[s.size() - 1 - i] = '0';
+						else
+						{
+							s[s.size() - 1 - i]++;
+							break;
+						}
+					}
+					len = 0;
+				}
+		}
+		cout << step << endl;
+	}
+	return 0;
+}
