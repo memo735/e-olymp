@@ -1,0 +1,165 @@
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<string>
+#include<iostream>
+#include <iomanip>
+
+using namespace std;
+
+#define rep(i, a, b) for (int i = (a); i < (b); ++i)
+#define repf(i, a, b) for (int i = (a); i <= (b); ++i)
+#define repd(i, a, b) for (int i = (a); i >= (b); --i)
+#define clr(x) memset(x,0,sizeof(x))
+#define clrs(x, y) memset(x,y,sizeof(x))
+
+const int maxn = 1000;
+
+struct person
+{
+	int id, score, rate[10];
+	string first, last;
+	void set()
+	{
+		clr(rate);
+		score = 0;
+	}
+}p[maxn];
+
+char input[maxn];
+string temp1, temp2, first[maxn], last[maxn], team[maxn];
+int tmp, team_s[maxn];
+int num[9] = { 0, 10, 8, 6, 5, 4, 3, 2, 1 };
+
+bool cmp1(int i, int j)
+{
+	if (team_s[i] != team_s[j]) return team_s[i] > team_s[j];
+	return team[i] < team[j];
+}
+
+bool cmp2(person p1, person p2)
+{
+	if (p1.score != p2.score) return p1.score  > p2.score;
+	if (p1.rate[1] != p2.rate[1]) return p1.rate[1] > p2.rate[1];
+	if (p1.rate[2] != p2.rate[2]) return p1.rate[2] > p2.rate[2];
+	if (p1.rate[3] != p2.rate[3]) return p1.rate[3] > p2.rate[3];
+	if (p1.rate[4] != p2.rate[4]) return p1.rate[4] > p2.rate[4];
+	if (p1.rate[5] != p2.rate[5]) return p1.rate[5] > p2.rate[5];
+	if (p1.rate[6] != p2.rate[6]) return p1.rate[6] > p2.rate[6];
+	if (p1.rate[7] != p2.rate[7]) return p1.rate[7] > p2.rate[7];
+	if (p1.rate[8] != p2.rate[8]) return p1.rate[8] > p2.rate[8];
+	if (p1.last != p2.last) return p1.last < p2.last;
+	return p1.first < p2.first;
+}
+
+int r[maxn];
+char s[maxn], s1[maxn], s2[maxn];
+
+int main()
+{
+	int n, k = 1;
+	while (scanf("%d", &n) == 1 && n)
+	{
+		getchar();
+		int cnt1 = 0, cnt2 = 0;
+		clr(team_s);
+		rep(i, 0, n)
+		{
+			gets(input);
+			gets(input);
+			repf(j, 1, 8)
+			{
+				scanf("%d", &tmp);
+				cin >> temp1 >> temp2;
+				int a = -1;
+				rep(k, 0, cnt1)
+				{
+					if (first[k] == temp1 && last[k] == temp2)
+					{
+						a = k;
+						break;
+					}
+				}
+				if (a == -1)
+				{
+					last[cnt1] = temp2;
+					first[cnt1] = temp1;
+					person pe;
+					pe.set();
+					pe.rate[j] ++;
+					pe.score += num[j];
+					pe.first = temp1;
+					pe.last = temp2;
+					pe.id = cnt1;
+					p[cnt1] = pe;
+					cnt1++;
+				}
+				else
+				{
+					p[a].rate[j] ++;
+					p[a].score += num[j];
+				}
+				gets(s1);
+				int len = strlen(s1), NUM = 0, S = 0, E = 0;
+				rep(L, 0, len)
+				{
+					if (s1[L] != ' ')
+					{
+						S = L;
+						break;
+					}
+				}
+				repd(L, len - 1, 0)
+					if (s1[L] != ' ')
+					{
+						E = L;
+						break;
+					}
+
+				repf(L, S, E)
+				{
+					s2[NUM] = s1[L];
+					NUM++;
+				}
+				s2[NUM] = '\0';
+				temp1 = s2;
+				int b = -1;
+				rep(k, 0, cnt2)
+				{
+					if (team[k] == temp1)
+					{
+						b = k;
+						break;
+					}
+				}
+				if (b == -1)
+				{
+					team[cnt2] = temp1;
+					team_s[cnt2] = num[j];
+					cnt2++;
+				}
+				else team_s[b] += num[j];
+			}
+			getchar();
+			gets(input);
+		}
+		rep(i, 0, cnt2) r[i] = i;
+		sort(r, r + cnt2, cmp1);
+		sort(p, p + cnt1, cmp2);
+		printf("Season %d:\n", k++);
+		cout << "Drivers Standing:" << endl;
+		rep(i, 0, cnt1) cout << setw(25) << left << p[i].first + " " + p[i].last << " " << p[i].score << endl;
+		cout << endl;
+		cout << "Teams Standing:" << endl;
+		rep(i, 0, cnt2)
+		{
+			int len = team[r[i]].length();
+			rep(j, 0, len - 1) s[j] = team[r[i]][j];
+			s[len - 1] = '\0';
+			temp1 = s;
+			cout << setw(25) << left << temp1 << " " << team_s[r[i]] << endl;
+		}
+		cout << endl;
+	}
+	return 0;
+}
