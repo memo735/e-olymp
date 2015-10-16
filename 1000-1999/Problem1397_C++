@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+
+using namespace std;
+
+const double eps = 1e-6;
+int comp(double x)
+{
+	if (fabs(x) < eps) return 0;
+	if (x > eps) return 1;
+	return -1;
+}
+
+#define maxn 100005
+double dis[maxn];
+int n;
+
+int main()
+{
+	while (scanf("%d", &n) == 1)
+	{
+		double now;
+		int cnt = 0;
+		for (int i = 1; i <= n; i++)
+		{
+			double temp;
+			scanf("%lf", &temp);
+			if (i == 1)
+			{
+				now = temp;
+				cnt++;
+			}
+			else
+			{
+				if (comp(temp - now - 1.0) >= 0)
+				{
+					now = temp;
+					cnt++;
+				}
+			}
+		}
+		printf("%d\n", cnt);
+	}
+}
