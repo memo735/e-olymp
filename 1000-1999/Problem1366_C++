@@ -1,0 +1,31 @@
+#include <cstdio>
+
+using namespace std;
+
+int main()
+{
+	int len, n, i, a, l, r, mid, dp[100001];
+	dp[0] = -1;
+	while (~scanf("%d", &n))
+	{
+		len = 0;
+		for (i = 0; i < n; ++i)
+		{
+			scanf("%d", &a);
+			if (a > dp[len]) dp[++len] = a;
+			else
+			{
+				l = 0, r = len;
+				while (l <= r)
+				{
+					mid = (l + r) >> 1;
+					if (dp[mid] >= a) r = mid - 1;
+					else l = mid + 1;
+				}
+				dp[l] = a;
+			}
+		}
+		printf("%d\n", len);
+	}
+	return 0;
+}
