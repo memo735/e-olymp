@@ -1,0 +1,74 @@
+#include<cstdio>
+
+using namespace std;
+
+const int maxn = 1001;
+int a[maxn][maxn], b[maxn][maxn], numa[maxn*maxn], numb[maxn*maxn];
+
+int main()
+{
+	int n, cas = 1;
+	while (scanf("%d", &n) && n)
+	{
+		for (int i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++)
+			{
+				scanf("%d", &a[i][j]);
+				b[i][j] = (i - 1)*n + j;
+			}
+
+		int ans = 1;
+		for (int c = 1; c <= (n + 1) / 2; c++)
+		{
+			int k = 1;
+			for (int i = c; i <= n + 1 - c; i++)
+			{
+				numa[k] = a[c][i];
+				numb[k++] = b[c][i];
+			}
+			for (int i = c + 1; i <= n + 1 - c; i++)
+			{
+				numa[k] = a[i][n + 1 - c];
+				numb[k++] = b[i][n + 1 - c];
+			}
+			for (int i = n - c; i >= c; i--)
+			{
+				numa[k] = a[n + 1 - c][i];
+				numb[k++] = b[n + 1 - c][i];
+			}
+			for (int i = n - c; i >= c + 1; i--)
+			{
+				numa[k] = a[i][c];
+				numb[k++] = b[i][c];
+			}
+			int st = 0;
+			for (int i = 1; i < k; i++)
+				if (numa[i] == numb[1])
+				{
+					st = i;
+					break;
+				}
+			int cur = 1;
+			for (int i = st; i < k; i++)
+			{
+				if (numa[i] != numb[cur++])
+				{
+					ans = 0;
+					break;
+				}
+			}
+			for (int i = 1; i < st; i++)
+			{
+				if (numa[i] != numb[cur++])
+				{
+					ans = 0;
+					break;
+				}
+			}
+			if (!ans) break;
+		}
+		if (!ans) printf("%d. NO\n", cas++);
+		else printf("%d. YES\n", cas++);
+	}
+	return 0;
+}
