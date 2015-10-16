@@ -1,0 +1,64 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+int pre[50005], id[50005];
+
+int find(int x)
+{
+	if (pre[x] == x) return x;
+	int t = find(pre[x]);
+	pre[x] = t;
+	return t;
+}
+
+void join(int x, int y)
+{
+	int fx = find(x), fy = find(y);
+	if (fx != fy)
+	{
+		if (fx > fy) pre[fx] = fy;
+		else pre[fy] = fx;
+	}
+}
+
+int main()
+{
+	int n, i, n1, n2, x, y;
+	char s[3];
+	while (scanf("%d", &n) != EOF)
+	{
+		n1 = 0, n2 = 0;
+		for (i = 1; i <= n; i++)
+		{
+			pre[i] = i;
+			id[i] = i;
+		}
+		while (scanf("%s", s) != EOF)
+		{
+			if (s[0] == 'e') break;
+			if (s[0] == 'c')
+			{
+				scanf("%d%d", &x, &y);
+				join(id[x], id[y]);
+			}
+			else
+				if (s[0] == 'd')
+				{
+					scanf("%d", &x);
+					id[x] = ++n;
+					pre[n] = n;
+				}
+				else
+					if (s[0] == 'q')
+					{
+						scanf("%d%d", &x, &y);
+						if (find(id[x]) == find(id[y])) n1++;
+						else n2++;
+					}
+		}
+		printf("%d , %d\n", n1, n2);
+	}
+	return 0;
+}
