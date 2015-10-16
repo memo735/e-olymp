@@ -1,0 +1,40 @@
+#include<stdio.h>
+#include<string.h>
+
+const int MAXN = 1000011;
+bool flag[MAXN];
+int primes[MAXN];
+
+int main()
+{
+	int i, j, pi = 0;
+	memset(flag, false, sizeof(flag));
+	flag[1] = 1;
+	for (i = 2; i < MAXN; i++)
+	{
+		if (!flag[i]) primes[pi++] = i;
+		for (j = 0; j < pi && i * primes[j] < MAXN; j++)
+		{
+			flag[i * primes[j]] = true;
+			if (i % primes[j] == 0) break;
+		}
+	}
+	int n, m;
+	while (scanf("%d%d", &n, &m) != EOF)
+	{
+		if (n == -1 && m == -1) break;
+		int count = 0, sum = 0;
+		for (i = 0; i <= m; i++)
+		{
+			if (primes[i] >= n && primes[i] <= m)
+			{
+				count++;
+				if (primes[i] % 4 == 1) sum++;
+			}
+			else if (primes[i] > m) break;
+		}
+		if (n <= 2 && m >= 2) sum++;
+		printf("%d %d %d %d\n", n, m, count, sum);
+	}
+	return 0;
+}
