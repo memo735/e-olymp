@@ -1,0 +1,21 @@
+#include<stdio.h>
+
+int main()
+{
+	int a[7], max, min = 9999999, i, sum;
+	while (true)
+	{
+		max = 0, min = 9999999;
+		sum = 0;
+		for (i = 0; i < 6; i++)
+		{
+			scanf("%d", &a[i]);
+			sum += a[i];
+			if (max < a[i]) max = a[i];
+			if (min > a[i]) min = a[i];
+		}
+		if (!(a[0] | a[1] | a[2] | a[3] | a[4] | a[5])) break;
+		printf("%g\n", (sum - max - min) / 4.0);
+	}
+	return 0;
+}
