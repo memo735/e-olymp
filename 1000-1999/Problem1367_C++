@@ -1,0 +1,68 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+#define ll long long
+
+using namespace std;
+
+int const MAX = 1e4 + 5;
+
+int n, ma, mob[MAX], p[MAX], cnt[MAX], num[MAX];
+bool prime[MAX];
+
+ll cal()
+{
+	for (int i = 1; i <= ma; i++)
+		for (int j = i; j <= ma; j += i) num[i] += cnt[j];
+
+	ll ans = 0;
+	for (int i = 1; i <= ma; i++)
+	{
+		int x = num[i];
+		if (x >= 4) ans += (ll)mob[i] * x * (x - 1) * (x - 2) * (x - 3) / 24;
+	}
+	return ans;
+}
+
+int main()
+{
+	memset(prime, true, sizeof(prime));
+	int pnum = 0;
+	mob[1] = 1;
+	for (int i = 2; i < MAX; i++)
+	{
+		if (prime[i])
+		{
+			p[pnum++] = i;
+			mob[i] = -1;
+		}
+		for (int j = 0; j < pnum && i * p[j] < MAX; j++)
+		{
+			prime[i * p[j]] = false;
+			if (i % p[j] == 0)
+			{
+				mob[i * p[j]] = 0; break;
+			}
+			mob[i * p[j]] = -mob[i];
+		}
+	}
+	while (scanf("%d", &n) != EOF)
+	{
+		ma = 0;
+		memset(cnt, 0, sizeof(cnt));
+		memset(num, 0, sizeof(num));
+		for (int i = 0; i < n; i++)
+		{
+			int tmp;
+			scanf("%d", &tmp);
+			cnt[tmp] ++;
+			ma = max(ma, tmp);
+		}
+		if (n < 4)
+		{
+			printf("0\n"); continue;
+		}
+		printf("%lld\n", cal());
+	}
+}
