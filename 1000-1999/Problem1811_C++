@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main()
+{
+	int m;
+	while (scanf("%d", &m) != EOF&&m != 0)
+	{
+		int z[107] = { 0 }, max = 1, flag = 1, count;
+		for (int c = 1; c <= m; c++) scanf("%d", &z[c]);
+		for (int a = 1; a <= m; a++)
+		{
+			count = z[a] - z[a - 1];
+			for (int b = 1; b <= count; b++)
+				if (max == z[m]) printf("%d\n", flag);
+				else
+				{
+					printf("%d ", flag);
+					max++;
+				}
+
+			flag++;
+		}
+	}
+	return 0;
+}
