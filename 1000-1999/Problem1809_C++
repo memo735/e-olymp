@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <string>
+#include <queue>
+
+using namespace std;
+
+string num[1001] = { "", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth",
+"eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth", "nineteenth", "twentieth" };
+
+string t[1001] = { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty" };
+
+string retNum(int val) {
+	string res;
+	if (val >= 100) {
+		res += t[val / 100] + t[100];
+		val %= 100;
+	}
+	if (val >= 20) {
+		res += t[val / 10 * 10];
+		if (val % 10 != 0) res += t[val % 10];
+		return res;
+	}
+	return res + t[val];
+}
+
+string getNum(int val) {
+	string res;
+	if (val >= 1000) {
+		res += retNum(val / 1000);
+		if (val % 1000 == 0) return res + num[1000];
+		res += t[1000];
+		val %= 1000;
+	}
+	if (val >= 100) {
+		res += retNum(val / 100);
+		if (val % 100 == 0) return res + num[100];
+		res += t[100];
+		val %= 100;
+	}
+	if (val >= 20) {
+		if (val % 10 == 0) return res += num[val];
+		res += retNum(val / 10 * 10);
+		return res + num[val % 10];
+	}
+	return res + num[val];
+}
+
+int judge(string s)
+{
+	int i, m = 0, len = s.length();
+	for (i = 0; i < len; i++) if (s[i] == 't') m++;
+	return m;
+}
+
+int numm[110000];
+
+int main()
+{
+	int n, sum = 5, m = 11, cnt = 3;
+	num[30] = "thirtieth"; t[30] = "thirty";
+	num[40] = "fortieth"; t[40] = "forty";
+	num[50] = "fiftieth"; t[50] = "fifty";
+	num[60] = "sixtieth"; t[60] = "sixty";
+	num[70] = "seventieth"; t[70] = "seventy";
+	num[80] = "eightieth"; t[80] = "eighty";
+	num[90] = "ninetieth"; t[90] = "ninety";
+	num[100] = "hundredth"; t[100] = "hundred";
+	num[1000] = "thousandth"; t[1000] = "thousand";
+	numm[1] = 1;
+	numm[2] = 4;
+	numm[3] = 11;
+	queue <string> que;
+	que.push(getNum(4));
+	que.push(getNum(11));
+	while (!que.empty())
+	{
+		int i, len;
+		string str = que.front();
+		que.pop();
+		len = str.length();
+		for (i = 0; i < len; i++)
+		{
+			if (str[i] == 't')
+			{
+				numm[++cnt] = m + i + 1;
+				string tem = getNum(m + i + 1);
+				sum += judge(tem);
+				if (sum <= 100100) que.push(tem);
+			}
+		}
+		m += str.length();
+	}
+	while (scanf("%d", &n), n) printf("%d\n", numm[n]);
+	return 0;
+}
