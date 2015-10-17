@@ -1,0 +1,220 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+
+#define maxn 1<<29
+
+using namespace std;
+
+int s, t, en, lu[2200], fst[2220], pre[2220], dis[22200], c[111101], f[111101], next1[111101], node[111101];
+
+void add(int u, int v, int w)
+{
+	next1[en] = fst[u];
+	fst[u] = en;
+	node[en] = v;
+	c[en] = w;
+	en++;
+}
+
+void lays()
+{
+	int q[3000], front = 0, end = 0;
+	for (int i = s; i <= t; i++)dis[i] = maxn;
+	q[end++] = s;
+	dis[s] = 0;
+	while (front<end)
+	{
+		int u = q[front++];
+		for (int i = fst[u]; i != -1; i = next1[i])
+		{
+			int v = node[i];
+			if (dis[v] == maxn&&c[i]>f[i])
+			{
+				dis[v] = dis[u] + 1;
+				q[end++] = v;
+			}
+		}
+	}
+}
+
+bool bfs()
+{
+	bool vis[2220];
+	int q[1111111];
+	memset(vis, 0, sizeof(vis));
+	int front = 0, end = 0;
+	q[end++] = s;
+	vis[s] = 1;
+	while (end > front)
+	{
+		int u = q[front++];
+		for (int i = fst[u]; i != -1; i = next1[i])
+		{
+			int v = node[i];
+			if (c[i] > f[i] && !vis[v])
+			{
+				vis[v] = 1;
+				pre[v] = u;
+				lu[v] = i;
+				if (v == t) return true;
+				q[end++] = v;
+			}
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	int ca = 1, m, n, snum, tnum, a[111], b[111], ed[1110][1110], id[2220];
+	bool p[222][222], block[10000];
+	while (scanf("%d%d", &m, &n) != EOF)
+	{
+		if (m == 0 && n == 0) break;
+		en = 0;
+		snum = 0;
+		tnum = 0;
+		s = 0;
+		t = m + n + 1;
+		memset(fst, -1, sizeof(fst));
+		for (int i = 1; i <= m; i++)
+		{
+			scanf("%d", &a[i]);
+			snum += a[i];
+		}
+		for (int i = 1; i <= n; i++)
+		{
+			scanf("%d", &b[i]);
+			tnum += b[i];
+		}
+		if (ca != 1)cout << endl;
+		ca++;
+		if (tnum != snum)
+		{
+			cout << "Impossible" << endl;
+			continue;
+		}
+		for (int i = 1; i <= m; i++)
+		{
+			id[i] = en;
+			add(0, i, a[i]);
+			add(i, 0, 0);
+		}
+		for (int i = 1; i <= n; i++)
+		{
+			id[i + m] = en;
+			add(m + i, m + n + 1, b[i]);
+			add(m + n + 1, m + i, 0);
+		}
+		for (int i = 1; i <= m; i++)
+		{
+			for (int j = 1; j <= n; j++)
+			{
+				ed[i][j] = en;
+				add(i, m + j, 1);
+				add(m + j, i, 0);
+			}
+		}
+		int flow = 0;
+		memset(f, 0, sizeof(f));
+		memset(block, 0, sizeof(block));
+		lays();
+		int top = s;
+		while (dis[t] != maxn)
+		{
+			bool flag = false;
+			int i, v = 0;
+			for (i = fst[top]; i != -1; i = next1[i])
+			{
+				v = node[i];
+				if (c[i] > f[i] && dis[v] == dis[top] + 1 && !block[v])
+				{
+					flag = true;
+					break;
+				}
+			}
+			if (flag)
+			{
+				pre[v] = top;
+				top = v;
+				lu[v] = i;
+				if (top == t)
+				{
+					flow += 1;
+					int j = top;
+					while (j != s)
+					{
+						int k = lu[j];
+						f[k] += 1;
+						f[k ^ 1] -= 1;
+						j = pre[j];
+					}
+					top = s;
+				}
+			}
+			else
+			{
+				block[top] = 1;
+				if (top != s)top = pre[top];
+			}
+			if (block[s])
+			{
+				lays();
+				memset(block, 0, sizeof(block));
+			}
+		}
+		if (flow == tnum)
+		{
+			for (int i = 1; i <= m; i++)
+			{
+				for (int j = 1; j <= n; j++)
+				{
+					int u = ed[i][j];
+					if (f[u])
+					{
+						c[u] = 0;
+						f[id[i]]--;
+						f[id[j + m]]--;
+						if (bfs())
+						{
+							for (int k = t; k != s; k = pre[k])
+							{
+								int v = lu[k];
+								f[v]++;
+								f[v ^ 1]--;
+							}
+						}
+						else
+						{
+							c[u] = 1;
+							f[id[i]]++;
+							f[id[j + m]]++;
+						}
+					}
+					else c[u] = 0;
+				}
+			}
+			memset(p, 0, sizeof(p));
+			for (int i = 1; i <= m; i++)
+			{
+				for (int j = fst[i]; j != -1; j = next1[j])
+				{
+					int v = node[j];
+					if (c[j] && v - m > 0)p[i][v - m] = 1;
+				}
+			}
+			for (int i = 1; i <= m; i++)
+			{
+				for (int j = 1; j <= n; j++)
+				{
+					if (p[i][j])putchar('Y');
+					else putchar('N');
+				}
+				puts("");
+			}
+		}
+		else cout << "Impossible" << endl;
+	}
+	return 0;
+}
