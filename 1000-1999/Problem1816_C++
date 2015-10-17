@@ -1,0 +1,139 @@
+#include <vector> 
+#include <queue> 
+#include <cstdio> 
+#include <string.h>
+
+using namespace std;
+
+int n, s, tot;
+bool vis[1077][11][11][11][11];
+vector<int> tr[17];
+
+struct point
+{
+	int set, d[4], t;
+}now, nt;
+queue<point>q;
+
+inline int b(int x) { return 1 << x; }
+
+void bfs()
+{
+	now.set = 1;
+	memset(now.d, 0, sizeof(now.d));
+	now.t = 0;
+	vis[now.set][0][0][0][0] = 1;
+	q.push(now);
+	while (!q.empty())
+	{
+		now = q.front(); q.pop();
+		if (now.set == tot)
+		{
+			printf("%d\n", now.t);
+			return;
+		}
+		nt.t = now.t + 1;
+		if (n == 4)
+		{
+			for (int i = 0; i < tr[now.d[0]].size(); i++)
+				for (int j = 0; j < tr[now.d[1]].size(); j++)
+					for (int k = 0; k < tr[now.d[2]].size(); k++)
+						for (int u = 0; u < tr[now.d[3]].size(); u++)
+						{
+							nt.d[0] = tr[now.d[0]][i];
+							nt.d[1] = tr[now.d[1]][j];
+							nt.d[2] = tr[now.d[2]][k];
+							nt.d[3] = tr[now.d[3]][u];
+							nt.set = now.set;
+							for (int z = 0; z < n; z++) nt.set |= b(nt.d[z]);
+							if (!vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]])
+							{
+								q.push(nt);
+								vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]] = 1;
+							}
+						}
+		}
+		else if (n == 3)
+		{
+			for (int i = 0; i < tr[now.d[0]].size(); i++)
+				for (int j = 0; j < tr[now.d[1]].size(); j++)
+					for (int k = 0; k < tr[now.d[2]].size(); k++)
+					{
+						nt.d[0] = tr[now.d[0]][i];
+						nt.d[1] = tr[now.d[1]][j];
+						nt.d[2] = tr[now.d[2]][k];
+						nt.d[3] = now.d[3];
+						nt.set = now.set;
+						for (int z = 0; z < n; z++) nt.set |= b(nt.d[z]);
+						if (!vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]])
+						{
+							q.push(nt);
+							vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]] = 1;
+						}
+					}
+		}
+		else if (n == 2)
+		{
+			for (int i = 0; i < tr[now.d[0]].size(); i++)
+				for (int j = 0; j < tr[now.d[1]].size(); j++)
+				{
+					nt.d[0] = tr[now.d[0]][i];
+					nt.d[1] = tr[now.d[1]][j];
+					nt.d[2] = now.d[2];
+					nt.d[3] = now.d[3];
+					nt.set = now.set;
+					for (int z = 0; z < n; z++) nt.set |= b(nt.d[z]);
+					if (!vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]])
+					{
+						q.push(nt);
+						vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]] = 1;
+					}
+				}
+		}
+		else if (n == 1)
+		{
+			for (int i = 0; i < tr[now.d[0]].size(); i++)
+			{
+				nt.d[0] = tr[now.d[0]][i];
+				nt.d[1] = now.d[1];
+				nt.d[2] = now.d[2];
+				nt.d[3] = now.d[3];
+				nt.set = now.set;
+				for (int z = 0; z < n; z++) nt.set |= b(nt.d[z]);
+				if (!vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]])
+				{
+					q.push(nt);
+					vis[nt.set][nt.d[0]][nt.d[1]][nt.d[2]][nt.d[3]] = 1;
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	int p;
+	char in[7];
+	while (scanf("%d", &s) && s)
+	{
+		scanf("%d%d", &n, &p);
+		tot = (1 << s) - 1;
+		for (int i = 0; i <= tot; i++)
+			for (int j = 0; j <= s; j++)
+				for (int k = 0; k <= s; k++)
+					for (int u = 0; u <= s; u++)
+						for (int o = 0; o <= s; o++) vis[i][j][k][u][o] = 0;
+
+		for (int i = 0; i <= 10; i++) tr[i].clear();
+		while (!q.empty()) q.pop();
+		for (int i = 0; i < p; i++)
+		{
+			scanf("%s", in);
+			int a = in[0] - 'A', b = in[1] - 'A';
+			tr[a].push_back(b);
+			tr[b].push_back(a);
+		}
+		bfs();
+	}
+	return 0;
+}
