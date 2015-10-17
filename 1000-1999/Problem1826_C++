@@ -1,0 +1,71 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+
+#define pii pair<int,int>
+
+using namespace std;
+
+const int MAXN = 210;
+const int INF = 0x3f3f3f3f;
+
+char c[30], buf[MAXN];
+int id[300], mat[MAXN][MAXN], f[MAXN][MAXN][30];
+vector<pii > b[30];
+
+int main()
+{
+	bool flag = false;
+	int n;
+	while (scanf("%d", &n) && n){
+		if (!flag) flag = true;
+		else printf("\n");
+		for (int i = 0; i < n; i++){
+			b[i].clear();
+			char s[10];
+			scanf("%s", s);
+			c[i] = s[0];
+			id[c[i]] = i;
+		}
+		for (int i = 0; i < n; i++){
+			for (int j = 0; j < n; j++){
+				char goal[2];
+				int cost;
+				scanf("%d-%s", &cost, goal);
+				mat[i][j] = cost;
+				b[id[goal[0]]].push_back(make_pair(i, j));
+			}
+		}
+		int m;
+		scanf("%d", &m);
+		for (int q = 0; q < m; q++){
+			scanf("%s", buf);
+			int len = strlen(buf);
+			memset(f, INF, sizeof(f));
+			for (int k = 0; k < n; k++)
+				for (int i = 0; i < len; i++) if (id[buf[i]] == k) f[i][i][k] = 0;
+
+			for (int r = 1; r < len; r++)
+				for (int l = r - 1; l >= 0; l--)
+					for (int k = 0; k < n; k++)
+						for (int mid = l; mid < r; mid++)
+							for (int i = 0; i < (int)b[k].size(); i++){
+								int x = b[k][i].first;
+								int y = b[k][i].second;
+								f[l][r][k] = min(f[l][mid][x] + f[mid + 1][r][y] + mat[x][y], f[l][r][k]);
+							}
+
+			int ans = INF, cid = 0;
+			for (int k = 0; k < n; k++){
+				if (f[0][len - 1][k] < ans){
+					ans = f[0][len - 1][k];
+					cid = k;
+				}
+			}
+			printf("%d-%c\n", ans, c[cid]);
+		}
+	}
+	return 0;
+}
