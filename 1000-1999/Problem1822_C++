@@ -1,0 +1,157 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+
+#define MAXN 366
+#define MAXM 51111
+#define INF 111111111
+
+using namespace std;
+
+int nt;
+
+struct Edge
+{
+	int v, next, w;
+}edge[MAXM];
+
+int e, head[MAXN], id[MAXN][MAXN];
+
+inline void add(int u, int v, int w)
+{
+	edge[e].v = v;
+	edge[e].w = w;
+	edge[e].next = head[u];
+	head[u] = e++;
+	edge[e].v = u;
+	edge[e].w = 0;
+	edge[e].next = head[v];
+	head[v] = e++;
+}
+
+int src, des, n, h[MAXN], gap[MAXN];
+
+int dfs(int pos, int cost)
+{
+	if (pos == des) return cost;
+	int j, minh = n - 1, lv = cost, d;
+	for (j = head[pos]; j != -1; j = edge[j].next)
+	{
+		int v = edge[j].v;
+		int w = edge[j].w;
+		if (w > 0)
+		{
+			if (h[v] + 1 == h[pos])
+			{
+				if (lv < edge[j].w) d = lv;
+				else d = edge[j].w;
+				d = dfs(v, d);
+				edge[j].w -= d;
+				edge[j ^ 1].w += d;
+				lv -= d;
+				if (h[src] >= n) return cost - lv;
+				if (lv == 0) break;
+			}
+			if (h[v] < minh) minh = h[v];
+		}
+	}
+	if (lv == cost)
+	{
+		--gap[h[pos]];
+		if (gap[h[pos]] == 0) h[src] = n;
+		h[pos] = minh + 1;
+		++gap[h[pos]];
+	}
+	return cost - lv;
+}
+
+int sap()
+{
+	int ret = 0;
+	memset(gap, 0, sizeof(gap));
+	memset(h, 0, sizeof(h));
+	while (h[src] < n) ret += dfs(src, INF);
+	return ret;
+}
+
+char out[MAXN][MAXN];
+int S, T;
+
+bool ok(int t1, int t2)
+{
+	int k = id[t1][t2];
+	if (edge[k].w == 1)
+	{
+		edge[k].w = 0;
+		return true;
+	}
+	edge[k ^ 1].w = 0;
+	src = S;
+	des = T;
+	int e1 = e;
+	add(S, t1, 1);
+	int e2 = e;
+	add(t2 + nt, T, 1);
+	if (sap())
+	{
+		edge[e1 ^ 1].w = edge[e2 ^ 1].w = 0;
+		return true;
+	}
+	edge[e1].w = edge[e2].w = 0;
+	return false;
+}
+
+int main()
+{
+	int cas = 0, m, t[MAXN], p[MAXN];
+	while (scanf("%d%d", &nt, &m) != EOF)
+	{
+		if (nt == 0 && m == 0) break;
+		if (cas++) puts("");
+		int sum1 = 0, sum2 = 0;
+		memset(head, -1, sizeof(head));
+		e = 0;
+		for (int i = 1; i <= nt; i++)
+		{
+			scanf("%d", &t[i]);
+			sum1 += t[i];
+		}
+		for (int j = 1; j <= m; j++)
+		{
+			scanf("%d", &p[j]);
+			sum2 += p[j];
+		}
+		if (sum1 != sum2)
+		{
+			puts("Impossible");
+			continue;
+		}
+		src = nt + m + 1;
+		des = nt + m + 2;
+		S = nt + m + 3;
+		T = nt + m + 4;
+		n = T;
+		for (int i = 1; i <= nt; i++)
+			for (int j = 1; j <= m; j++)
+			{
+				id[i][j] = e;
+				add(i, j + nt, 1);
+			}
+		for (int i = 1; i <= nt; i++) add(src, i, t[i]);
+		for (int i = 1; i <= m; i++) add(i + nt, des, p[i]);
+		int ans = sap();
+		if (ans != sum1)
+		{
+			puts("Impossible");
+			continue;
+		}
+		for (int i = 1; i <= nt; i++)
+			for (int j = 1; j <= m; j++)
+			{
+				if (ok(i, j)) putchar('N');
+				else putchar('Y');
+				if (j == m) printf("\n");
+			}
+	}
+	return 0;
+}
