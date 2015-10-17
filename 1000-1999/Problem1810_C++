@@ -1,0 +1,31 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int H, M, SH, SM, DH, DM, n, i;
+	cin >> n;
+	while (n--)
+	{
+		cin >> SH >> SM >> DH >> DM;
+		cout << "------+---------" << endl << " time | elapsed" << endl << "------+---------" << endl;
+		if (SH >= 10 && SH <= 12) cout << SH << ":XX | XX";
+		else cout << " " << SH << ":XX | XX";
+		if (SM != 0) cout << " - " << SM << endl;
+		else cout << endl;
+		if (SM + DM >= 60) DH++;
+		i = 1;
+		M = 60 - SM;
+		while (i <= DH)
+		{
+			H = SH + i;
+			if (H > 12) H = H % 12;
+			if (H >= 10 && H <= 12) cout << H << ":XX | XX";
+			else cout << " " << H << ":XX | XX";
+			cout << " + " << M << endl;
+			M += 60, i++;
+		}
+	}
+	return 0;
+}
