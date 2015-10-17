@@ -1,0 +1,65 @@
+using System;
+
+namespace Problem1692
+{
+    internal class Program
+    {
+        private static double Kesr(double x)
+        {
+            return x - (int) x;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            setir = setir.Replace(" ", "");
+            int len = setir.Length;
+            char solMoterize = setir[0];
+            char sagMoterize = setir[len - 1];
+            var massiv = setir.Split(',');
+            string sol = massiv[0].Substring(1);
+            string sag = massiv[1];
+            sag = sag.TrimEnd(')');
+            sag = sag.TrimEnd(']');
+            double a, b;
+            if (sol.Contains("/"))
+            {
+                var mas = sol.Split('/');
+                double c = double.Parse(mas[0]);
+                double d = double.Parse(mas[1]);
+                a = c/d;
+            }
+            else a = double.Parse(sol);
+            if (sag.Contains("/"))
+            {
+                var mas = sag.Split('/');
+                double c = double.Parse(mas[0]);
+                double d = double.Parse(mas[1]);
+                b = c/d;
+            }
+            else b = double.Parse(sag);
+            //Console.WriteLine((int) -4);
+            if (solMoterize == '(')
+            {
+                if (a < 0 && Kesr(a) != 0) a = (int) a;
+                else a = (int) a + 1;
+            }
+            else
+            {
+                if (a > 0 && Kesr(a) != 0) a = (int) a + 1;
+                else a = (int) a;
+            }
+            if (sagMoterize == ')')
+            {
+                if (b > 0 && Kesr(b) != 0) b = (int) b;
+                else b = (int) b - 1;
+            }
+            else
+            {
+                if (b < 0 && Kesr(b) != 0) b = (int) b - 1;
+                else b = (int) b;
+            }
+            Console.WriteLine(b - a + 1);
+        }
+    }
+}
