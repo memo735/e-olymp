@@ -1,0 +1,74 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+struct Page
+{
+	int l, r;
+};
+
+bool cmp(Page a, Page b)
+{
+	if (a.l == b.l)return a.r < b.r;
+	return a.l < b.l;
+}
+
+int main()
+{
+	int n;
+	while (scanf("%d", &n), n)
+	{
+		char str[1005] = { 0 }, word[1005] = { 0 };
+		Page p[1005];
+		getchar();
+		gets(str);
+		int L = strlen(str), pos = 0, nn = 0;
+		for (int i = 0; i < L; ++i)
+		{
+			if (str[i] == ',' || i == L - 1)
+			{
+				if (i == L - 1) word[pos++] = str[i];
+				int l = strlen(word), a = 0, b = 0;
+				bool pp = false;
+				for (int j = 0; j < l; ++j)
+				{
+					if (!pp&&word[j] != '-') a = a * 10 + word[j] - '0';
+					if (word[j] == '-') pp = true;
+					else if (pp == true) b = b * 10 + word[j] - '0';
+				}
+				if (b == 0) b = a;
+				if (b > n) b = n;
+				if (a <= b)
+				{
+					p[nn].l = a;
+					p[nn++].r = b;
+				}
+				memset(word, 0, sizeof(word));
+				pos = 0;
+			}
+			else word[pos++] = str[i];
+		}
+		sort(p, p + nn, cmp);
+		int mx = p[0].r, ans = 0;
+		if (nn) ans += p[0].r - p[0].l + 1;
+		for (int i = 1; i < nn; ++i)
+		{
+			if (p[i].r <= mx) continue;
+			if (p[i].l > mx)
+			{
+				ans += p[i].r - p[i].l + 1;
+				mx = p[i].r;
+			}
+			else if (p[i].r > mx)
+			{
+				ans += p[i].r - mx;
+				mx = p[i].r;
+			}
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
