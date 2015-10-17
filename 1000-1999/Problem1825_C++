@@ -1,0 +1,110 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define INF 0x3f3f3f3f
+
+struct Edge{
+	int u, v, c;
+	Edge() {}
+	Edge(int u, int v, int c) : u(u), v(v), c(c) {}
+}E[160010];
+
+int n, m, cnt, Min_Edge, f[400], dis[400][400];
+bool vis[400];
+
+int cmp(const Edge &a, const Edge &b) {
+	return a.c < b.c;
+}
+
+int LCA(int i)
+{
+	int u = E[i].u, v = E[i].v;
+	memset(vis, 0, sizeof(vis));
+	while (!vis[u])
+	{
+		vis[u] = true;
+		if (u == f[u]) break;
+		u = f[u];
+	}
+	while (!vis[v] && f[v] != v) v = f[v];
+	if (!vis[v]) return -1;
+	return v;
+}
+
+void findCycle(int i) {
+	int lca = LCA(i);
+	if (lca == -1) return;
+	int u = E[i].u, v = E[i].v;
+	Edge MinEdge;
+	MinEdge.c = INF;
+	int fu = f[u];
+	while (fu != u && u != lca)
+	{
+		if (dis[fu][u] < MinEdge.c) MinEdge = Edge(fu, u, dis[fu][u]);
+		fu = f[fu];
+		u = f[u];
+	}
+	int fv = f[v];
+	while (fv != v && v != lca)
+	{
+		if (dis[fv][v] < MinEdge.c) MinEdge = Edge(fv, v, dis[fv][v]);
+		fv = f[fv];
+		v = f[v];
+	}
+	f[MinEdge.v] = MinEdge.v;
+	Min_Edge = INF;
+	for (int i = 0; i < n; i++) if (f[i] != i && dis[f[i]][i] < Min_Edge) Min_Edge = dis[f[i]][i];
+	cnt--;
+}
+
+void AddEdge(int i) {
+	int u = E[i].u, v = E[i].v, c = E[i].c;
+	if (f[u] == u) f[u] = v;
+	else
+		if (f[v] == v) f[v] = u;
+		else
+		{
+			vector<int> vec;
+			while (true)
+			{
+				vec.push_back(u);
+				if (u == f[u]) break;
+				u = f[u];
+			}
+			int size = vec.size();
+			for (int i = size - 1; i > 0; i--) f[vec[i]] = vec[i - 1];
+			f[E[i].u] = E[i].v;
+		}
+
+	Min_Edge = min(Min_Edge, c);
+	cnt++;
+}
+
+int main() {
+	while (scanf("%d", &n) != EOF && n)
+	{
+		scanf("%d", &m);
+		for (int i = 0; i < m; i++)
+		{
+			scanf("%d%d%d", &E[i].u, &E[i].v, &E[i].c);
+			dis[E[i].u][E[i].v] = dis[E[i].v][E[i].u] = E[i].c;
+		}
+		sort(E, E + m, cmp);
+		for (int i = 0; i < n; i++) f[i] = i;
+		int ans = INF;
+		Min_Edge = INF;
+		cnt = 0;
+		for (int i = 0; i < m; i++)
+		{
+			findCycle(i);
+			AddEdge(i);
+			if (cnt == n - 1) ans = min(ans, E[i].c - Min_Edge);
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
