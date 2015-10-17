@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+	int n, m, k, x, y, s, t;
+	int r[60005], c[60005], d1[60005], d2[60005];
+	while (scanf("%d", &n) != EOF)
+	{
+		if (n == 0) break;
+		memset(c, 0, sizeof(c));
+		memset(r, 0, sizeof(r));
+		memset(d1, 0, sizeof(d1));
+		memset(d2, 0, sizeof(d2));
+		scanf("%d", &m);
+		while (m--)
+		{
+			scanf("%d%d%d%d%d", &k, &x, &y, &s, &t);
+			int a, b;
+			for (int j = 0; j < k; j++)
+			{
+				a = x + j*s;
+				b = y + j*t;
+				c[b]++;
+				r[a]++;
+				d1[a + b]++;
+				d2[a - b + n]++;
+			}
+		}
+		int ans = 0, sum = n * 2;
+		for (int i = 0; i <= sum; i++)
+		{
+			if (c[i] > 1) ans += c[i] - 1;
+			if (r[i] > 1) ans += r[i] - 1;
+			if (d1[i] > 1) ans += d1[i] - 1;
+			if (d2[i] > 1) ans += d2[i] - 1;
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
