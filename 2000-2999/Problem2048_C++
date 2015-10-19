@@ -1,0 +1,25 @@
+#include<cstdio>
+#include<cstring>
+
+using namespace std;
+const int maxn = 10e5 + 10;
+char str[maxn], ans[maxn];
+
+int main()
+{
+	while (scanf("%s", str) != EOF)
+	{
+		int len = strlen(str);
+		for (int i = 0; i < len; i++)
+		{
+			if (str[i] == '[' || str[i] == ']') ans[i] = '\0';
+			else ans[i] = str[i];
+		}
+		ans[len] = '\0';
+		for (int i = len - 1; i >= 0; i--) if (str[i] == '[') printf("%s", ans + i + 1);
+		if (str[0] != '['&&str[0] != ']') printf("%s", ans);
+		for (int i = 0; i < len; i++) if (str[i] == ']') printf("%s", ans + i + 1);
+		printf("\n");
+	}
+	return 0;
+}
