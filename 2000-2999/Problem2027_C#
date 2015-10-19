@@ -1,0 +1,28 @@
+using System;
+
+namespace Problem2027
+{
+    internal class Program
+    {
+        private static double Mesafe(int a, int b, int c, int d)
+        {
+            return Math.Sqrt((a - c)*(a - c) + (b - d)*(b - d));
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int x = int.Parse(massiv[0]);
+            int y = int.Parse(massiv[1]);
+            setir = Console.ReadLine();
+            massiv = setir.Split(' ');
+            int r = int.Parse(massiv[0]);
+            int x0 = int.Parse(massiv[1]);
+            int y0 = int.Parse(massiv[2]);
+            double mesafe = Mesafe(x0, y0, x, y);
+            if (mesafe == r) Console.WriteLine("ON BORDER");
+            else Console.WriteLine(mesafe < r ? "YES" : "NO");
+        }
+    }
+}
