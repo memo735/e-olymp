@@ -1,0 +1,82 @@
+#include <algorithm>
+#include <cstdio>
+
+using namespace std;
+
+const int INF = 9999999;
+const int N = 200001;
+
+int n, k, ps, a[N], d[N], sz[1000], b[1000][1000];
+
+void remove(int num)
+{
+	int pos = d[num], cur = pos / ps;
+	int w = lower_bound(b[cur], b[cur] + sz[cur], num) - b[cur];
+	for (int i = w; i < sz[cur] - 1; i++) b[cur][i] = b[cur][i + 1];
+	sz[cur]--;
+	a[d[num]] = INF;
+}
+
+int query(int num)
+{
+	int pos = d[num], cur = pos / ps, s = 0, c = 0;
+	for (int i = 0; i < cur; i++)
+	{
+		if (sz[i])
+		{
+			s += sz[i];
+			c += upper_bound(b[i], b[i] + sz[i], num) - b[i];
+		}
+	}
+	for (int i = cur * ps; i < pos; i++)
+	{
+		if (a[i] != INF)
+		{
+			s++;
+			if (a[i] < num) c++;
+		}
+	}
+	s -= c;
+	for (int i = cur + 1; i < k; i++)
+	{
+		if (sz[i]) s += upper_bound(b[i], b[i] + sz[i], num) - b[i];
+	}
+	int bound = min(n, (cur + 1) * ps);
+	for (int i = pos + 1; i < bound; i++) if (a[i] < num) s++;
+	return s;
+}
+
+int main()
+{
+	int m;
+	while (scanf("%d%d", &n, &m) != EOF)
+	{
+		ps = 800;
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d", &a[i]);
+			b[i / ps][i % ps] = a[i];
+			d[a[i]] = i;
+		}
+		k = (n + ps - 1) / ps;
+		for (int i = 0; i < k - 1; i++)
+		{
+			sz[i] = ps;
+			sort(b[i], b[i] + sz[i]);
+		}
+		sz[k - 1] = n - (k - 1) * ps;
+		sort(b[k - 1], b[k - 1] + sz[k - 1]);
+		long long ans = 0;
+		for (int i = 1; i <= n; i++) ans += query(i);
+		ans = ans / 2;
+		for (int i = 0; i < m; i++)
+		{
+			printf("%lld\n", ans);
+			int tmp;
+			scanf("%d", &tmp);
+			ans -= query(tmp);
+			remove(tmp);
+		}
+	}
+	return 0;
+}
