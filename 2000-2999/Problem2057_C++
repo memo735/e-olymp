@@ -1,0 +1,30 @@
+#include <cstdio>
+#include <algorithm>
+#include <queue>
+
+using namespace std;
+
+int main(){
+	int k, l1[752], l2[752];
+	while (scanf("%d", &k) == 1){
+		for (int i = 0; i < k; ++i) scanf("%d", &l1[i]);
+		sort(l1, l1 + k);
+		for (int i = 1; i < k; ++i){
+			for (int j = 0; j < k; ++j) scanf("%d", &l2[j]);
+			sort(l2, l2 + k);
+			priority_queue<pair<int, int> > p;
+			pair<int, int> pp;
+			for (int j = 0; j < k; ++j) p.push(make_pair(-(l1[j] + l2[0]), 0));
+			for (int j = 0; j < k; ++j){
+				pp = p.top();
+				p.pop();
+				l1[j] = -pp.first;
+				p.push(make_pair(-l1[j] + l2[pp.second] - l2[pp.second + 1], pp.second + 1));
+			}
+		}
+		printf("%d", l1[0]);
+		for (int i = 1; i < k; ++i) printf(" %d", l1[i]);
+		printf("\n");
+	}
+	return 0;
+}
