@@ -1,0 +1,89 @@
+#include <cstdio>
+#include <algorithm>
+
+#define PI pair<int, int>
+
+const int maxn = 100100;
+
+using namespace std;
+
+int N, m;
+inline bool in(int x, int y)
+{
+	return x >= -m && x <= m && y >= -m && y <= m;
+}
+
+PI p[maxn];
+PI a[maxn], b[maxn], c[maxn], d[maxn];
+
+bool chk()
+{
+	int i, ea = -1, eb = -1, ec = -1, ed = -1;
+	for (i = 0; i < N; ++i)
+	{
+		if (in(p[i].first + m, p[i].second - m))
+		{
+			while (ea >= 0 && a[ea].second >= p[i].second - m) ea--;
+			if (ea >= 0 && a[ea].first == p[i].first + m) continue;
+			a[++ea] = make_pair(p[i].first + m, p[i].second - m);
+		}
+		if (in(p[i].first + m, p[i].second + m))
+		{
+			while (eb >= 0 && b[eb].second <= p[i].second + m) eb--;
+			if (eb >= 0 && b[eb].first == p[i].first + m) continue;
+			b[++eb] = make_pair(p[i].first + m, p[i].second + m);
+		}
+	}
+	for (i = N - 1; i >= 0; --i)
+	{
+		if (in(p[i].first - m, p[i].second - m))
+		{
+			while (ec >= 0 && c[ec].second >= p[i].second - m) ec--;
+			if (ec >= 0 && c[ec].first == p[i].first - m) continue;
+			c[++ec] = make_pair(p[i].first - m, p[i].second - m);
+		}
+		if (in(p[i].first - m, p[i].second + m))
+		{
+			while (ed >= 0 && d[ed].second <= p[i].second + m) ed--;
+			if (ed >= 0 && d[ed].first == p[i].first - m) continue;
+			d[++ed] = make_pair(p[i].first - m, p[i].second + m);
+		}
+	}
+	int na = 0, nb = 0, nc = ec + 1, nd = ed + 1, v1, v2;
+	for (i = -m; i <= m; ++i)
+	{
+		if (nc > 0 && c[nc - 1].first == i) nc--;
+		if (nd > 0 && d[nd - 1].first == i) nd--;
+		v1 = m + 1, v2 = -m - 1;
+		if (na <= ea) v1 = min(v1, a[na].second);
+		if (nb <= eb) v2 = max(v2, b[nb].second);
+		if (nc <= ec) v1 = min(v1, c[nc].second);
+		if (nd <= ed) v2 = max(v2, d[nd].second);
+		if (v1 - 1 > v2) return 0;
+		if (na <= ea && a[na].first == i) na++;
+		if (nb <= eb && b[nb].first == i) nb++;
+	}
+	return 1;
+}
+
+int main()
+{
+	int i, cases = 1, ll, rr;
+	while (scanf("%d", &N), N + 1)
+	{
+		for (i = 0; i < N; ++i) scanf("%d %d", &p[i].first, &p[i].second);
+		sort(p, p + N);
+		ll = -1, rr = 1000000;
+		while (rr - ll > 1)
+		{
+			m = (ll + rr) / 2;
+			if (chk()) rr = m;
+			else ll = m;
+		}
+		m = rr;
+		printf("Case %d: ", cases++);
+		if (chk()) printf("%d\n", rr);
+		else puts("never");
+	}
+	return 0;
+}
