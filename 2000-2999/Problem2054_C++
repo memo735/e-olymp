@@ -1,0 +1,171 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+const int N = 50005;
+
+typedef unsigned int UINT32;
+
+inline int count_1(UINT32 x) {
+	const UINT32 m1 = 0x55555555, m2 = 0x33333333, m4 = 0x0f0f0f0f, m8 = 0x00ff00ff, m16 = 0x0000ffff;
+	x = (x & m1) + (x >> 1 & m1);
+	x = (x & m2) + (x >> 2 & m2);
+	x = (x & m4) + (x >> 4 & m4);
+	x = (x & m8) + (x >> 8 & m8);
+	x = (x & m16) + (x >> 16 & m16);
+	return x;
+}
+
+struct LinkCutTree {
+	int n, root, p[N], val[N], l[N], r[N], sz[N], setv[N], col[N];
+	bool rev[N], rt[N];
+
+#define lu l[u]
+#define ru r[u]
+#define pu p[u]
+#define pv p[v]
+
+	void init(int n) {
+		this->n = n;
+		for (int i = 1; i <= n; i++) {
+			rt[i] = 1;
+			l[i] = 0, r[i] = 0, rev[i] = 0, col[i] = 0, sz[i] = 1, setv[i] = 0;
+		}
+	}
+	void update(int u, int c) {
+		if (u == 0) return;
+		val[u] = col[u] = setv[u] = 0;
+		val[u] = col[u] = setv[u] = c;
+	}
+	void Set(int* a, int u, int v) {
+		a[u] = v, pv = u;
+	}
+	void push_up(int u) {
+		col[u] = col[lu] | col[ru] | val[u];
+		sz[u] = sz[lu] + sz[ru] + 1;
+	}
+	void push_down(int u) {
+		if (u == 0) return;
+		if (rev[u]) {
+			swap(lu, ru);
+			rev[lu] ^= 1, rev[ru] ^= 1;
+			rev[u] = 0;
+		}
+		if (setv[u]) {
+			update(lu, setv[u]), update(ru, setv[u]);
+			setv[u] = 0;
+		}
+	}
+	void rotate(int u) {
+		int v = pu;
+		if (rt[v]) pu = pv;
+		else {
+			push_down(pv);
+			Set(pu == l[pv] ? l : r, pv, u);
+		}
+		push_down(v), push_down(u);
+		if (u == l[v]) {
+			Set(l, v, ru);
+			Set(r, u, v);
+		}
+		else {
+			Set(r, v, lu);
+			Set(l, u, v);
+		}
+		if (rt[v]) rt[u] = 1, rt[v] = 0;
+		push_up(v);
+
+	}
+	void Splay(int u) {
+		while (!rt[u]) rotate(u);
+	}
+
+	int Access(int u) {
+		int v = 0;
+		do {
+			Splay(u), push_down(u);
+			rt[ru] = 1, rt[ru = v] = 0, push_up(u);
+			u = p[v = u];
+		} while (u);
+		return v;
+	}
+	void Evert(int u) {
+		rev[Access(u)] ^= 1;
+	}
+	int Root(int u) {
+		for (u = Access(u); push_down(u), lu; u = lu);
+		return u;
+	}
+	void Link(int u, int v) {
+		Evert(u), Splay(u), p[u] = v, Access(u);
+	}
+	int Cut(int v, int u) {//v is current root
+		Evert(v), Splay(v), Access(u), Splay(u);
+		for (v = lu; r[v]; v = r[v]);
+		p[lu] = p[u], rt[lu] = 1, p[u] = lu = 0;
+		return v;
+	}
+	void op1(int u, int v, int c) {
+		if (u == v) return;
+		int fu = Root(u), pa = 0;
+		if (fu != u) pa = Cut(fu, u);
+		if (u == Root(v)) {
+			if (pa) Link(u, pa);
+		}
+		else {
+			Link(u, v);
+			Splay(u);
+			val[u] = 1 << c - 1;
+			push_up(u);
+		}
+	}
+	void op2(int u, int v, int c) {
+		if (Root(u) != Root(v) || u == v) return;
+		Access(v), v = 0;
+		do {
+			Splay(u), push_down(u);
+			if (!p[u]) update(ru, (1 << c - 1)), update(v, (1 << c - 1));
+			rt[ru] = 1, rt[ru = v] = 0, push_up(u);
+			u = p[v = u];
+		} while (u);
+	}
+	void op3(int u, int v) {
+		if (u == v || Root(u) != Root(v)) puts("0 0");
+		else {
+			Access(v), v = 0;
+			do {
+				Splay(u), push_down(u);
+				if (!p[u]) printf("%d %d\n", sz[ru] + sz[v], count_1(col[ru] | col[v]));
+				rt[ru] = 1, rt[ru = v] = 0, push_up(u);
+				u = p[v = u];
+			} while (u);
+		}
+	}
+}T;
+
+int main() {
+	int n, m, c, u, v, op;
+	while (~scanf("%d %d", &n, &m)) {
+		T.init(n);
+		for (int i = 1; i <= n; i++) scanf("%d", &T.p[i]);
+		for (int i = 1; i <= n; i++) {
+			scanf("%d", &c);
+			if (!T.p[i]) continue;
+			T.val[i] = T.col[i] = 1 << c - 1;
+		}
+		for (int i = 0; i < m; i++) {
+			scanf("%d%d%d", &op, &u, &v);
+			if (op == 1) {
+				scanf("%d", &c);
+				T.op1(u, v, c);
+			}
+			else if (op == 3) T.op3(u, v);
+			else if (op == 2) {
+				scanf("%d", &c);
+				T.op2(u, v, c);
+			}
+		}
+	}
+	return 0;
+}
