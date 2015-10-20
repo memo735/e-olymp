@@ -1,0 +1,142 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#define INF (1<<30)
+
+struct segtree{
+	vector<int> datamax, datamin, datasum, delay;
+	int n;
+	void init(int _n){
+		n = 1;
+		while (n < _n) n *= 2;
+		datamax.resize(2 * n);
+		datamin.resize(2 * n);
+		datasum.resize(2 * n);
+		delay.resize(2 * n);
+	}
+	void clear(){
+		datamax.clear();
+		datamin.clear();
+		datasum.clear();
+		delay.clear();
+	}
+	void delaycalc(int k, int l, int r){
+		datamax[k] = delay[k] < 0 ? 0 : datamax[k] + delay[k];
+		datamin[k] = delay[k] < 0 ? 0 : datamin[k] + delay[k];
+		datasum[k] = delay[k] < 0 ? 0 : datasum[k] + delay[k] * (r - l);
+		if (k + 1 < n){
+			for (int i = 1; i <= 2; i++){
+				if (delay[2 * k + i] < 0 && delay[k] > 0) delaycalc(2 * k + i, i == 0 ? l : (l + r) / 2, i == 0 ? (l + r) / 2 : r);
+				delay[2 * k + i] = delay[k] < 0 ? -1 : delay[2 * k + i] + delay[k];
+			}
+		}
+		delay[k] = 0;
+	}
+	void add(int a, int b, int x, int k, int l, int r){
+		if (r <= a || b <= l) delaycalc(k, l, r);
+		else if (a <= l && r <= b){
+			delaycalc(k, l, r);
+			delay[k] = x;
+			delaycalc(k, l, r);
+		}
+		else {
+			delaycalc(k, l, r);
+			add(a, b, x, 2 * k + 1, l, (l + r) / 2);
+			add(a, b, x, 2 * k + 2, (l + r) / 2, r);
+			datamax[k] = max(datamax[2 * k + 1], datamax[2 * k + 2]);
+			datamin[k] = min(datamin[2 * k + 1], datamin[2 * k + 2]);
+			datasum[k] = datasum[2 * k + 1] + datasum[2 * k + 2];
+		}
+	}
+	void add(int a, int b, int x){ add(a, b, x, 0, 0, n); }
+	void reset(int a, int b){ add(a, b, -1, 0, 0, n); }
+	int querymax(int a, int b, int k, int l, int r){
+		if (r <= a || b <= l) return 0;
+		if (a <= l && r <= b){
+			delaycalc(k, l, r);
+			return datamax[k] + delay[k];
+		}
+		delaycalc(k, l, r);
+		int vl = querymax(a, b, 2 * k + 1, l, (l + r) / 2);
+		int vr = querymax(a, b, 2 * k + 2, (l + r) / 2, r);
+		return max(vl, vr);
+	}
+	int querymin(int a, int b, int k, int l, int r){
+		if (r <= a || b <= l) return INF;
+		if (a <= l && r <= b){
+			delaycalc(k, l, r);
+			return datamin[k] + delay[k];
+		}
+		delaycalc(k, l, r);
+		int vl = querymin(a, b, 2 * k + 1, l, (l + r) / 2);
+		int vr = querymin(a, b, 2 * k + 2, (l + r) / 2, r);
+		return min(vl, vr);
+	}
+	int querysum(int a, int b, int k, int l, int r){
+		if (r <= a || b <= l) return 0;
+		if (a <= l && r <= b){
+			delaycalc(k, l, r);
+			return datasum[k] + delay[k] * (r - l);
+		}
+		delaycalc(k, l, r);
+		int vl = querysum(a, b, 2 * k + 1, l, (l + r) / 2);
+		int vr = querysum(a, b, 2 * k + 2, (l + r) / 2, r);
+		return vl + vr;
+	}
+	int querymax(int a, int b){ return querymax(a, b, 0, 0, n); }
+	int querymin(int a, int b){ return querymin(a, b, 0, 0, n); }
+	int querysum(int a, int b){ return querysum(a, b, 0, 0, n); }
+};
+
+segtree S[22];
+
+void add(int x1, int y1, int x2, int y2, int v){
+	for (int i = y1; i <= y2; i++){
+		S[i].add(x1, x2 + 1, v);
+	}
+}
+
+void sete(int x1, int y1, int x2, int y2, int v){
+	for (int i = y1; i <= y2; i++){
+		S[i].reset(x1, x2 + 1);
+		S[i].add(x1, x2 + 1, v);
+	}
+}
+
+void solve(int x1, int y1, int x2, int y2){
+	int maxi = 0, mini = INF, sum = 0;
+	for (int i = y1; i <= y2; i++){
+		sum += S[i].querysum(x1, x2 + 1);
+		mini = min(mini, S[i].querymin(x1, x2 + 1));
+		maxi = max(maxi, S[i].querymax(x1, x2 + 1));
+	}
+	cout << sum << " " << mini << " " << maxi << endl;
+}
+
+int main()
+{
+	int R, C, M;
+	while (cin >> R >> C >> M){
+		for (int i = 0; i < R; i++) S[i].init(C);
+		for (int i = 0; i < M; i++){
+			int t, x1, x2, y1, y2;
+			cin >> t;
+			cin >> x1 >> y1 >> x2 >> y2;
+			--x1; --x2; --y1; --y2;
+			if (t == 1){
+				int v;
+				cin >> v;
+				add(y1, x1, y2, x2, v);
+			}
+			else if (t == 2){
+				int v; cin >> v;
+				sete(y1, x1, y2, x2, v);
+			}
+			else solve(y1, x1, y2, x2);
+		}
+		for (int i = 0; i < R; i++) S[i].clear();
+	}
+}
