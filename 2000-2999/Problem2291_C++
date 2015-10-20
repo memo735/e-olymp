@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <algorithm>
+
+using namespace std;
+
+const double eps = 1e-8;
+int n;
+
+struct point {
+	double x, y;
+	point operator - (const point& t) const {
+		point tmp;
+		tmp.x = x - t.x;
+		tmp.y = y - t.y;
+		return tmp;
+	}
+	point operator + (const point& t) const {
+		point tmp;
+		tmp.x = x + t.x;
+		tmp.y = y + t.y;
+		return tmp;
+	}
+	bool operator == (const point& t) const {
+		return fabs(x - t.x) < eps && fabs(y - t.y) < eps;
+	}
+}p[220];
+
+bool cmpxy(point a, point b)
+{
+	if (a.y != b.y) return a.y < b.y;
+	return a.x < b.x;
+}
+
+double xmult(point p1, point p2, point p0){
+	return (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y);
+}
+
+inline double cross(point a, point b, point c) {
+	return (b.x - a.x)*(c.y - a.y) - (c.x - a.x)*(b.y - a.y);
+}
+
+inline double dis(point a, point b) {
+	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+}
+
+void Grahamxy(point *p, int &n) {
+	if (n < 3) return;
+	int i, m = 0, top = 1;
+	sort(p, p + n, cmpxy);
+	for (i = n; i < 2 * n - 1; i++) p[i] = p[2 * n - 2 - i];
+	for (i = 2; i < 2 * n - 1; i++) {
+		while (top > m && cross(p[top], p[i], p[top - 1]) < eps) top--;
+		p[++top] = p[i];
+		if (i == n - 1)    m = top;
+	}
+	n = top;
+}
+
+inline double PLdis(point p, point l1, point l2){
+	return fabs(cross(p, l1, l2)) / dis(l1, l2);
+}
+
+void judge(point a, point b, double &len)
+{
+	double max = 0;
+	for (int i = 0; i < n; i++)
+	{
+		double tmp = PLdis(p[i], a, b);
+		if (tmp > max) max = tmp;
+	}
+	len = max;
+}
+
+double solve()
+{
+	int i;
+	double tmp, ans = (long long)1 << 62;
+	for (i = 0; i < n; i++)
+	{
+		judge(p[i], p[i + 1], tmp);
+		if (tmp < ans) ans = tmp;
+	}
+	return ans;
+}
+
+int main()
+{
+	int i, cases = 1;
+	while (scanf("%d", &n), n)
+	{
+		for (i = 0; i < n; i++) scanf("%lf%lf", &p[i].x, &p[i].y);
+		Grahamxy(p, n);
+		p[n] = p[0];
+		double ans = solve();
+		printf("Case %d: %.2lf\n", cases++, ans + 0.005);
+	}
+	return 0;
+}
