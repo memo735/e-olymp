@@ -1,0 +1,75 @@
+#include <cstdio>
+#include <iostream>
+#include <vector>
+#include <map>
+
+typedef long long ll;
+
+using namespace std;
+
+
+int main()
+{ // horrible.out
+	map< pair<int, int>, int> H;
+	vector<pair<int, int> > V;
+	ll x = 0, f = 1;
+	char ch = getchar();
+	while (ch<'0' || ch>'9')
+	{
+		if (ch == '-') f = -1;
+		ch = getchar();
+	}
+	while (ch >= '0'&&ch <= '9')
+	{
+		x = x * 10 + ch - '0';
+		ch = getchar();
+	}
+	int n = x*f;
+	if (n == 1)
+	{
+		printf("1\n");
+		printf("1 0\n");
+		return 0;
+	}
+	V.push_back(make_pair(2, -1));
+	for (int i = 1; i <= n; i++)
+	{
+		V.push_back(make_pair(i, 0));
+		int ttt = 0, flag = 1;
+		while (flag)
+		{
+			flag = 0;
+			ttt++;
+			if (ttt % 2 == 1)
+			{
+				for (int ii = 1; ii <= n; ii++)
+				{
+					if (i == ii) continue;
+					if (H[make_pair(ii, i)]) continue;
+					H[make_pair(ii, i)] = 1;
+					V.push_back(make_pair(ii, i));
+					flag = 1;
+					break;
+				}
+			}
+			else
+			{
+				for (int jj = i + 1; jj <= n; jj++)
+				{
+					for (int ii = 1; ii <= n; ii++)
+					{
+						if (ii == jj) continue;
+						if (H[make_pair(ii, -jj)]) continue;
+						H[make_pair(ii, -jj)] = 1;
+						V.push_back(make_pair(ii, -jj));
+						flag = 1;
+						break;
+					}
+					if (flag) break;
+				}
+			}
+		}
+	}
+	printf("%d\n", V.size());
+	for (int i = 0; i < V.size(); i++) printf("%d %d\n", V[i].first, V[i].second);
+}
