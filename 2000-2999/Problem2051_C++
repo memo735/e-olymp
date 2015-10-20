@@ -1,0 +1,29 @@
+#include <map>
+#include <cstdio>
+#include <vector>
+
+using namespace std;
+
+map <int, vector <int> > a;
+
+int main()
+{
+	int n, m, u, v, i, j;
+	while (scanf("%d %d", &n, &m) != EOF)
+	{
+		a.clear();
+		for (i = 0; i < n; i++)
+		{
+			scanf("%d", &j);
+			if (!a.count(j)) a[j] = vector <int>();
+			a[j].push_back(i + 1);
+		}
+		while (m--)
+		{
+			scanf("%d %d", &u, &v);
+			if (!a.count(v) || a[v].size() < u) printf("0\n");
+			else printf("%d\n", a[v][u - 1]);
+		}
+	}
+	return 0;
+}
