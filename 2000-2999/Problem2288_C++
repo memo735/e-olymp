@@ -1,0 +1,119 @@
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+template<class T> T min(const T& a, const T& b, const T& c) {
+	return min(min(a, b), min(a, c));
+}
+template<class T> T max(const T& a, const T& b, const T& c) {
+	return max(max(a, b), max(a, c));
+}
+
+int getch() {
+	int ch;
+	while ((ch = getchar()) != EOF) if (ch != ' '&&ch != '\n') return ch;
+	return EOF;
+}
+
+struct Edge
+{
+	int u, v;
+};
+
+int dfs_clock, vis[50005], pre[50005], iscut[50005];
+vector<int> g[50005];
+
+int dfs1(int u, int fa)
+{
+	int lowu = pre[u] = ++dfs_clock, child = 0;
+	for (int i = 0; i < g[u].size(); i++)
+	{
+		int v = g[u][i];
+		if (!pre[v])
+		{
+			child++;
+			int lowv = dfs1(v, u);
+			lowu = min(lowu, lowv);
+			if (lowv >= pre[u]) iscut[u] = 1;
+		}
+		else if (pre[v] < pre[u] && v != fa) lowu = min(lowu, pre[v]);
+	}
+	if (child == 1 && fa == -1) iscut[u] = 0;
+	return lowu;
+}
+
+void init(int n)
+{
+	memset(iscut, 0, sizeof(iscut));
+	memset(pre, 0, sizeof(pre));
+	memset(vis, 0, sizeof(vis));
+	dfs_clock = 0;
+	for (int i = 1; i <= n + 1; i++) g[i].clear();
+}
+
+int read(int n)
+{
+	int maxid = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		int u, v;
+		scanf("%d%d", &u, &v);
+		g[u].push_back(v);
+		g[v].push_back(u);
+		maxid = max(maxid, u, v);
+	}
+	return maxid;
+}
+
+void dfs2(int u, int &num, int &cut_cnt, int k)
+{
+	num++;
+	vis[u] = 1;
+	for (int i = 0; i < g[u].size(); i++)
+	{
+		int v = g[u][i];
+		if (!iscut[v] && !vis[v]) dfs2(v, num, cut_cnt, k);
+		else if (iscut[v] && vis[v] != k)
+		{
+			cut_cnt++;
+			vis[v] = k;
+		}
+	}
+}
+
+int main()
+{
+	int n, ca = 0;
+	while (scanf("%d", &n) != EOF&&n)
+	{
+		init(n);
+		int m = read(n);
+		dfs1(1, -1);
+		long long ans1 = 0, ans2 = 1;
+		int bcc_cnt = 0;
+		for (int i = 1; i <= m; i++)
+		{
+			if (!iscut[i] && !vis[i])
+			{
+				int num = 0, cut_cnt = 0;
+				dfs2(i, num, cut_cnt, ++bcc_cnt);
+				if (cut_cnt == 1)
+				{
+					ans1++;
+					ans2 *= (long long)num;
+				}
+				else if (cut_cnt == 0)
+				{
+					ans1 = 2;
+					ans2 = (long long)num*(num - 1) / 2;
+				}
+			}
+		}
+		printf("Case %d: %lld %lld\n", ++ca, ans1, ans2);
+	}
+	return 0;
+}
