@@ -1,0 +1,57 @@
+#include <cmath>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+	int T, n;
+	double alfa, beta, vmax, fuel, slope[10005], length[10005];
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%lf%lf%lf%lf", &alfa, &beta, &vmax, &fuel);
+		scanf("%d", &n);
+		double x, y;
+		for (int i = 0; i < n; ++i)
+		{
+			scanf("%lf%lf", &x, &y);
+			slope[i] = y / x;
+			length[i] = sqrt(x * x + y * y) * 0.001;
+		}
+		double left = 0.0, right = vmax, ans = 1e100;
+		for (int k = 0; k < 100; ++k)
+		{
+			double totalFuel = 0, mid = (left + right) * 0.5;
+			for (int i = 0; i < n; ++i)
+			{
+				double cost = max(0.0, alfa * mid + beta * slope[i]);
+				totalFuel += cost * length[i];
+			}
+			if (totalFuel <= fuel)
+			{
+				ans = mid;
+				left = mid;
+			}
+			else right = mid;
+		}
+		if (ans < 1e50)
+		{
+			double totalTime = 0.0;
+			for (int i = 0; i < n; ++i)
+			{
+				double cost = alfa * ans + beta * slope[i];
+				if (cost < 0.0)
+				{
+					double v = min(-beta * slope[i] / alfa, vmax);
+					totalTime += length[i] / v;
+				}
+				else totalTime += length[i] / ans;
+			}
+			printf("%.6lf\n", totalTime);
+		}
+		else printf("IMPOSSIBLE\n");
+	}
+	return 0;
+}
