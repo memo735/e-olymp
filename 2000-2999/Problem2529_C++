@@ -1,0 +1,60 @@
+#include<cstdio>
+#include<cstring>
+
+using namespace std;
+
+int flag, map[15][15];
+
+bool CanPlace(int x, int y, int num){
+	for (int i = 1; i <= 10; i++) if (map[x][i] == num || map[i][y] == num) return false;
+	int row = (x - 1) / 3 * 3 + 1;
+	int col = (y - 1) / 3 * 3 + 1;
+	for (int i = row; i < row + 3; i++){
+		for (int j = col; j < col + 3; j++) if (map[i][j] == num) return false;
+	}
+	return true;
+}
+
+void dfs(int x, int y){
+	if (x == 9 && y > 9){
+		flag = 1;
+		for (int i = 1; i < 10; i++){
+			for (int j = 1; j < 10; j++) printf("%d", map[i][j]);
+			printf("\n");
+		}
+		return;
+	}
+	if (y > 9){
+		x++;
+		y = 1;
+	}
+	if (!map[x][y]){
+		for (int i = 1; i < 10; i++){
+			if (CanPlace(x, y, i)){
+				map[x][y] = i;
+				dfs(x, y + 1);
+				if (flag) return;
+				map[x][y] = 0;
+			}
+		}
+	}
+	else dfs(x, y + 1);
+}
+
+int main(){
+	char str[11];
+	int t, cnt = 0;
+	scanf("%d", &t);
+	while (t--){
+		printf("Scenario #%d:\n", ++cnt);
+		memset(str, 0, sizeof(str));
+		for (int i = 0; i < 9; i++){
+			scanf("%s", str);
+			for (int j = 0; j < 9; j++) map[i + 1][j + 1] = str[j] - '0';
+		}
+		flag = 0;
+		dfs(1, 1);
+		puts("");
+	}
+	return 0;
+}
