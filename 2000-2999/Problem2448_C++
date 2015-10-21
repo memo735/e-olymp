@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <deque>
+
+using namespace std;
+
+struct node{
+	    int num, cnt;
+	    string str;
+}p[830000], tmp, t;
+
+int main(){
+	int p7[8] = { 0, 1, 7, 49, 343, 2401, 16807, 117649 };
+	int num = 1 * p7[1] + 2 * p7[2] + 3 * p7[3] + 4 * p7[4] + 5 * p7[5] + 6 * p7[6];
+	int tu[8][8] = {
+		0, 1, 2, 3, 4, 5, 6, 7,
+		0, 0, 1, 0, 0, 0, 6, 0,
+		0, 1, 0, 3, 0, 0, 0, 7,
+		0, 0, 2, 0, 4, 0, 0, 0,
+		0, 0, 0, 3, 0, 5, 0, 0,
+		0, 0, 0, 0, 4, 0, 6, 7,
+		0, 1, 0, 0, 0, 5, 0, 0,
+		0, 0, 2, 0, 0, 5, 0, 0,
+	};
+	int tnum[8];
+	deque<node> q;
+	p[num].num = num;
+	p[num].cnt = 0;
+	q.push_back(p[num]);
+	while (!q.empty()){
+		tmp = q.front(); q.pop_front();
+		int k;
+		for (int i = 1, n = tmp.num; i < 8; i++){
+			tnum[i] = n % 7;
+			if (tnum[i] == 0) k = i;
+			n /= 7;
+		}
+		for (int j = 1; j < 8; j++)
+			if (tu[k][j]){
+				t.cnt = tmp.cnt + 1;
+				t.num = tmp.num - p7[j] * tnum[j] + p7[k] * tnum[j];
+				if (p[t.num].num == 0) {
+					t.str = tmp.str + (char)(tnum[j] + 'A' - 1);
+					q.push_back(t);
+					p[t.num] = t;
+				}
+			}
+	}
+	string s;
+	int T, t;
+	scanf("%d", &T);
+	while (T--){
+		scanf("%d", &t);
+		cin >> s;
+		int num = 0;
+		for (int i = 0; i < s.length(); i++) num += p7[i + 1] * (s[i] - 'A' + 1);
+		s = p[num].str;
+		string str(s.rbegin(), s.rend());
+		if (p[num].cnt == 0 && num != 114381) cout << t << " " << "NO SOLUTION" << endl;
+		else cout << t << " " << p[num].cnt << " " << str << endl;
+	}
+}
