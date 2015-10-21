@@ -1,0 +1,48 @@
+#include <cstdio>
+#include <iostream>
+#include <cstring>
+#include <queue>
+#include <vector>
+#include <functional>
+
+using namespace std;
+
+
+int main()
+{
+	int n, c[30], f[30][30];
+	char s[55][30];
+	while (cin >> n)
+	{
+		memset(f, 0, sizeof(f));
+		memset(c, -1, sizeof(c));
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%s", s[i]);
+			for (int j = 0; s[i][j]; j++) if (s[i][j] != '.' && c[s[i][j] - 'A'] < 0) c[s[i][j] - 'A'] = 0;
+			if (i)
+				for (int j = 0; s[i][j]; j++)
+					if (s[i][j] != '.' && s[i - 1][j] != '.' && s[i][j] != s[i - 1][j] && f[s[i][j] - 'A'][s[i - 1][j] - 'A'] == 0)
+					{
+						f[s[i][j] - 'A'][s[i - 1][j] - 'A'] = 1;
+						c[s[i - 1][j] - 'A']++;
+					}
+		}
+		priority_queue<int, vector<int>, greater<int> > p;
+		for (int i = 0; i < 26; i++) if (c[i] == 0) p.push(i);
+		while (!p.empty())
+		{
+			int k = p.top();
+			printf("%c", k + 'A');
+			p.pop();
+			for (int i = 0; i < 26; i++)
+				if (f[k][i])
+				{
+					c[i]--;
+					if (c[i] == 0) p.push(i);
+				}
+		}
+		printf("\n");
+	}
+	return 0;
+}
