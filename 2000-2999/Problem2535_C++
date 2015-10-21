@@ -1,0 +1,34 @@
+#include <iostream> 
+#include <cstdio> 
+
+using namespace std;
+
+int main()
+{
+	int tc, c = 0;
+	long long sum, n, m;
+	cin >> tc;
+	while (tc--){
+		c++;
+		cin >> n >> m;
+		if (n > 0 && m > 0) sum = (n + m) * (m - n + 1) / 2;
+		else
+		{
+			if (n < 0 && m < 0)
+			{
+				n = abs(n);
+				m = abs(m);
+				sum = (n + m) * (m - n - 1) / 2;
+			}
+			else
+			{
+				n = abs(n);
+				m = abs(m);
+				if (n > m) sum = (m - n) * (n + m + 1) / 2;
+				else sum = (n + m + 1) * (m - n) / 2;
+			}
+		}
+
+		printf("Scenario #%d:\n%lld\n\n", c, sum);
+	}
+}
