@@ -1,0 +1,73 @@
+#include <iostream> 
+#include <algorithm> 
+#include <cstdio> 
+#include <cstring> 
+
+using namespace std;
+
+int n, small, big, map[105][105], vis[105][105];
+int dirx[4] = { 1, 0, 0, -1 };
+int diry[4] = { 0, 1, -1, 0 };
+
+bool ok(int x, int y)
+{
+	if (x < 0 || x >= n || y < 0 || y >= n) return false;
+	return true;
+}
+
+int dfs(int x, int y)
+{
+	if (map[x][y] < small || map[x][y] > big) return 0;
+	if (x == n - 1 && y == n - 1) return 1;
+	vis[x][y] = 1;
+	for (int i = 0; i < 4; i++)
+	{
+		int xx = x + dirx[i], yy = y + diry[i];
+		if (ok(xx, yy) && !vis[xx][yy] && dfs(xx, yy)) return 1;
+	}
+	return 0;
+}
+
+int main()
+{
+	int t, i, j, Casee = 1;
+	cin >> t;
+	while (t--)
+	{
+		cin >> n;
+		int high = 0, low = 205, mid;
+		for (i = 0; i < n; i++)
+			for (j = 0; j < n; j++)
+			{
+				scanf("%d", &map[i][j]);
+				if (high < map[i][j]) high = map[i][j];
+				if (low > map[i][j]) low = map[i][j];
+			}
+
+		printf("Scenario #%d:\n", Casee++);
+		int ans = 0;
+		high -= low;
+		low = 0;
+		mid = (high + low) / 2;
+		while (low <= high)
+		{
+			small = max(map[0][0] - mid, 0);
+			for (; small <= map[0][0]; small++)
+			{
+				big = small + mid;
+				memset(vis, 0, sizeof(vis));
+				if (dfs(0, 0))
+				{
+					ans = mid;
+					break;
+				}
+			}
+			if (small <= map[0][0]) high = mid - 1;
+			else low = mid + 1;
+			mid = (high + low) / 2;
+		}
+		printf("%d\n", ans);
+		cout << endl;
+	}
+	return 0;
+}
