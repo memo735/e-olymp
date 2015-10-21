@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1005;
+const int INF = 0x3f3f3f3f;
+
+struct Goo {
+	int v1, v2;
+}goo[N];
+
+bool cmp(const Goo &a, const Goo &b) {
+	if (a.v1 != b.v1) return a.v1 > b.v1;
+	return a.v2 < b.v2;
+}
+
+int main() {
+	int t, n, f[N], cost[N];
+	char fir[10];
+	scanf("%d", &t);
+	while (t--) {
+		memset(f, 0, sizeof(f));
+		memset(cost, INF, sizeof(cost));
+		scanf("%d%s", &n, fir);
+		int sum = 0, ff = 1, cnt = 0;
+		for (int i = 1; i <= n; i++) {
+			scanf("%d%d", &goo[i].v1, &goo[i].v2);
+			sum += goo[i].v1;
+		}
+		sort(goo + 1, goo + n + 1, cmp);
+		if (fir[0] == 'P') ff = 2;
+		cost[0] = 0;
+		for (int i = ff; i <= n; i++) {
+			cnt++;
+			int temp = (cnt + 1) / 2;
+			for (int j = temp; j >= 1; j--) {
+				if (f[j - 1] + goo[i].v2 > f[j]) {
+					f[j] = f[j - 1] + goo[i].v2;
+					cost[j] = cost[j - 1] + goo[i].v1;
+				}
+				else if (f[j - 1] + goo[i].v2 == f[j]) cost[j] = min(cost[j], cost[j - 1] + goo[i].v1);
+			}
+		}
+		printf("%d %d\n", sum - cost[(cnt + 1) / 2], f[(cnt + 1) / 2]);
+	}
+	return 0;
+}
