@@ -1,0 +1,54 @@
+#include <cstdio> 
+#include <cmath> 
+
+using namespace std;
+
+int num, start, end, a[20];
+
+void find(int a1, int a2)
+{
+	int i;
+	for (i = 0; i < num; i++)
+	{
+		if (a[i] > a1)
+		{
+			start = i - 1;
+			break;
+		}
+
+	}
+	for (i = 0; i < num; i++)
+	{
+		if (a[i] >= a2)
+		{
+			end = i - 1;
+			break;
+		}
+		if (i == num - 1)
+		{
+			end = i;
+			break;
+		}
+
+	}
+}
+
+int main()
+{
+	int n, m, cas = 0;
+	num = 0;
+	for (int i = 1, triangle = 0; triangle <= 1000000000; triangle += i, i++)
+	{
+		double sqrtdou = sqrt(triangle + 1);
+		int sidelen = (int)sqrtdou;
+		if (sidelen*sidelen == triangle + 1) a[num++] = triangle + 1;
+	}
+	while (scanf("%d%d", &n, &m) == 2)
+	{
+		cas++;
+		if (n == 0 && m == 0) break;
+		find(n, m);
+		printf("Case %d: %d\n", cas, end - start);
+	}
+	return 0;
+}
