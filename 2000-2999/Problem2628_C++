@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+
+#define max 5000000
+
+using namespace std;
+
+int main()
+{
+	long long test, ary[128], i, sum, j, p, t, ar[128];
+	cin >> test;
+	while (test--)
+	{
+		t = 0;
+		for (i = 0;; i++)
+		{
+			cin >> ar[i];
+			if (ar[i] == 0) break;
+			ary[t++] = ar[i];
+		}
+		sort(ary, ary + t);
+		sum = 0;
+		int s;
+		p = 1;
+		for (j = t - 1, p = 1; j >= 0; j--, p++)
+		{
+			s = 1;
+			for (int x = 0; x < p; x++) s = s*ary[j];
+			sum += 2 * s;
+			if (sum > max) break;
+		}
+		if (sum <= max) cout << sum << endl;
+		else cout << "Too expensive" << endl;
+	}
+	return 0;
+}
