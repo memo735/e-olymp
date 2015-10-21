@@ -1,0 +1,51 @@
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+struct Rect
+{
+	int c, h;
+	Rect(int c = 0, int h = 0) :c(c), h(h) {}
+}rect[1010];
+
+int main()
+{
+	char s[1010][1010];
+	int n, m, T, height[1010], ans[1010 << 1];
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d%d", &n, &m);
+		for (int i = 0; i < n; i++) scanf("%s", s[i]);
+		memset(height, 0, sizeof(height));
+		memset(ans, 0, sizeof(ans));
+		for (int i = 0; i < n; i++)
+		{
+			int top = -1;
+			for (int j = 0; j < m; j++)
+			{
+				if (s[i][j] == '#')
+				{
+					top = -1;
+					height[j] = 0;
+				}
+				else
+				{
+					height[j]++;
+					Rect r(j, height[j]);
+					if (top < 0) rect[++top] = r;
+					else
+					{
+						while (top >= 0 && rect[top].h >= r.h) r.c = rect[top--].c;
+						if (top < 0 || r.h - r.c > rect[top].h - rect[top].c) rect[++top] = r;
+					}
+					r = rect[top];
+					ans[r.h + j - r.c + 1]++;
+				}
+			}
+		}
+		for (int i = 2; i <= m + n; i++) if (ans[i]) printf("%d x %d\n", ans[i], i * 2);
+	}
+	return 0;
+}
