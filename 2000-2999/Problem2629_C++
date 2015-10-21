@@ -1,0 +1,37 @@
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+	int k = 0, n, m, x, p[16], dp[65536], cover[65536];
+	while (scanf("%d", &n), n)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			p[i] = 1 << i;
+			scanf("%d", &m);
+			for (int j = 0; j < m; j++)
+			{
+				scanf("%d", &x);
+				p[i] |= 1 << x;
+			}
+		}
+		for (int s = 0; s < 1 << n; s++)
+		{
+			cover[s] = 0;
+			for (int i = 0; i < n; i++) if (s & 1 << i) cover[s] |= p[i];
+		}
+		dp[0] = 0;
+		int all = (1 << n) - 1;
+		for (int s = 1; s < 1 << n; s++)
+		{
+			if (cover[s] != all) dp[s] = 0;
+			else dp[s] = 1;
+			for (int s0 = s; s0; s0 = s0 - 1 & s) dp[s] = max(dp[s], dp[s^s0] + dp[s0]);
+		}
+		printf("Case %d: %d\n", ++k, dp[all]);
+	}
+	return 0;
+}
