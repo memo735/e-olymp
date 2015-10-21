@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+int n, cnt, w[15], dp[1024], state[1024];
+
+void dfs(int num, int c1, int c2, int s)
+{
+	if (num >= n)
+	{
+		if (!dp[s])
+		{
+			state[cnt++] = s;
+			dp[s] = 1;
+		}
+		return;
+	}
+	if (w[num] <= c1) dfs(num + 1, c1 - w[num], c2, s | (1 << num));
+	if (w[num] <= c2) dfs(num + 1, c1, c2 - w[num], s | (1 << num));
+	dfs(num + 1, c1, c2, s);
+}
+
+int main()
+{
+	int t, cas, i, j, news, can1, can2;
+	scanf("%d", &t);
+	for (cas = 1; cas <= t; cas++)
+	{
+		scanf("%d%d%d", &n, &can1, &can2);
+		for (i = 0; i < n; i++) scanf("%d", w + i);
+		cnt = 0;
+		memset(dp, 0, sizeof dp);
+		dfs(0, can1, can2, 0);
+		memset(dp, 0x3f, sizeof dp);
+		dp[0] = 0;
+		for (i = 0; i < (1 << n); i++)
+		{
+			for (j = 0; j < cnt; j++)
+			{
+				if (i&state[j]) continue;
+				news = i | state[j];
+				dp[news] = min(dp[news], dp[i] + 1);
+			}
+		}
+		printf("Scenario #%d:\n%d\n\n", cas, dp[(1 << n) - 1]);
+	}
+	return 0;
+}
