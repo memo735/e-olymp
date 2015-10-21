@@ -1,0 +1,96 @@
+#include <cstdio>
+#include <queue>
+
+using namespace std;
+
+struct SELL
+{
+	int price, num;
+	bool operator <(const SELL &a)const
+	{
+		return price > a.price;
+	}
+};
+
+struct BUY
+{
+	int price, num;
+	bool operator <(const BUY &a)const
+	{
+		return price < a.price;
+	}
+};
+
+int main()
+{
+	int t, n, i, num, price, DP;
+	char ss[8], share[9], at[4];
+	SELL ka;
+	BUY kb;
+	scanf("%d", &t);
+	while (t--)
+	{
+		priority_queue<SELL> quesell;
+		priority_queue<BUY> quebuy;
+		DP = -1;
+		scanf("%d", &n);
+		for (i = 0; i < n; i++)
+		{
+			scanf("%s%d%s%s%d", ss, &num, share, at, &price);
+			if (ss[0] == 'b')
+			{
+				kb.price = price;
+				kb.num = num;
+				quebuy.push(kb);
+			}
+			else
+			{
+				ka.price = price;
+				ka.num = num;
+				quesell.push(ka);
+			}
+			if (!quesell.empty() && !quebuy.empty())
+			{
+				while (true)
+				{
+					if (quesell.empty() || quebuy.empty()) break;
+					BUY li = quebuy.top();
+					SELL wi = quesell.top();
+					if (wi.price <= li.price)
+					{
+						quebuy.pop();
+						quesell.pop();
+						if (wi.num > li.num)
+						{
+							wi.num -= li.num;
+							quesell.push(wi);
+						}
+						else if (wi.num < li.num)
+						{
+							li.num -= wi.num;
+							quebuy.push(li);
+						}
+						DP = wi.price;
+					}
+					else break;
+				}
+				if (!quesell.empty()) printf("%d ", quesell.top().price);
+				else printf("- ");
+				if (!quebuy.empty()) printf("%d ", quebuy.top().price);
+				else printf("- ");
+				if (DP == -1) printf("-\n");
+				else printf("%d\n", DP);
+			}
+			else
+			{
+				if (!quesell.empty()) printf("%d ", quesell.top().price);
+				else printf("- ");
+				if (!quebuy.empty()) printf("%d ", quebuy.top().price);
+				else printf("- ");
+				if (DP == -1) printf("-\n");
+				else printf("%d\n", DP);
+			}
+		}
+	}
+	return 0;
+}
