@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+
+#define mset(a, b) memset(a, b, sizeof(a))
+
+using namespace std;
+
+const int MaxN = 205;
+
+bool visited[MaxN];
+int s, c, p, l;
+
+int gao()
+{
+	int t = s - p;
+	mset(visited, false);
+	int i = 0;
+	while (true) {
+		int tmp = (i * s + l + t) % c;
+		if (visited[tmp]) return -1;
+		visited[tmp] = true;
+		if (tmp == 0) {
+			if (p == 0) return i + 1;
+			return i;
+		}
+		i++;
+	}
+}
+
+int main()
+{
+	int ans = 1;
+	while (scanf("%d%d%d%d", &s, &c, &p, &l) != EOF) {
+		if (!(s || c || p || l)) break;
+		int r = gao();
+		printf("Case %d: ", ans++);
+		if (r == -1) printf("Never\n");
+		else {
+			if (p != 0) printf("%d %d/%d\n", r, s - p, s);
+			else printf("%d %d/%d\n", r, 0, s);
+		}
+	}
+	return 0;
+}
