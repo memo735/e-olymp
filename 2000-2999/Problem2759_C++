@@ -1,0 +1,43 @@
+#include <cstdio>
+#include <cstring>
+
+const int MAXN = 150010;
+
+int k, ecnt, a[MAXN], to[MAXN], next[MAXN], head[MAXN];
+
+inline void addEdge(int u, int v) {
+	to[ecnt] = v;
+	next[ecnt] = head[u]; head[u] = ecnt++;
+}
+
+void dfs(int u, int *ex) {
+	int *now = new int[310];
+	for (int i = 0; i <= k; ++i) now[i] = ex[i];
+	for (int p = head[u]; p; p = next[p]) {
+		dfs(to[p], now);
+	}
+	ex[0] = 0;
+	for (int i = k; i > 0; --i) {
+		ex[i] = now[i];
+		if (ex[i - 1] != -1 && ex[i] < ex[i - 1] + a[u]) ex[i] = ex[i - 1] + a[u];
+	}
+	delete[] now;
+}
+
+int main() {
+	int n, ans[310];
+	while (scanf("%d%d", &n, &k) != EOF) {
+		memset(head, 0, sizeof(head));
+		memset(ans, 255, sizeof(ans));
+		ecnt = 2;
+		int f;
+		for (int i = 1; i <= n; ++i) {
+			scanf("%d%d", &f, &a[i]);
+			addEdge(f, i);
+		}
+		dfs(0, ans);
+		if (ans[k] == -1) puts("impossible");
+		else printf("%d\n", ans[k]);
+	}
+	return 0;
+}
