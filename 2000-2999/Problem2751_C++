@@ -1,0 +1,47 @@
+#include <cstdio>
+#include <cmath>
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int N, cas = 1, n[100], n2[100];
+	while (cin >> N)
+	{
+		if (N == 0) break;
+		for (int i = 0; i < N; i++)
+		{
+			cin >> n[i];
+			n2[i] = n[i];
+		}
+		int ans = 0, kiss = 0;
+		for (int i = 0; i < N; i++)
+		{
+			if (n[i] != n[(i + 1) % N])
+			{
+				kiss = 0;
+				break;
+			}
+			if (i == N - 1) kiss = 1;
+		}
+		while (kiss == 0 && ans <= 1000)
+		{
+			for (int i = 0; i < N; i++) n[i] = fabs(0.0 + n2[i] - n2[(i + 1) % N]);
+			for (int i = 0; i < N; i++) n2[i] = n[i];
+			ans++;
+			for (int i = 0; i < N; i++)
+			{
+				if (n[i] != n[(i + 1) % N])
+				{
+					kiss = 0;
+					break;
+				}
+				if (i == N - 1) kiss = 1;
+			}
+		}
+		if (kiss == 1) printf("Case %d: %d iterations\n", cas++, ans);
+		else printf("Case %d: not attained\n", cas++);
+	}
+	return 0;
+}
