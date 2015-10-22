@@ -1,0 +1,76 @@
+#include <cstring>
+#include <cstdio>
+#include <vector>
+#include <algorithm>
+#include <cassert>
+
+using namespace std;
+
+const int MX = 205, MQ = MX*MX;
+const int dx[8] = { 0, -1, -1, -1, 0, 1, 1, 1 };
+const int dy[8] = { -1, -1, 0, 1, 1, 1, 0, -1 };
+
+int T;
+
+int main() {
+	int n, m, i, j, k, l, x, y, nx, ny, b0x, b0y, b1x, b1y, bx, by, cx, cy, fi, fr, cnt, qx[MQ], qy[MQ], u[MX][MX];
+	vector <int> ans;
+	char s[MX][MX];
+	bool bad, first;
+	while (++T) {
+		scanf("%d%d", &n, &m);
+		if (n == 0 && m == 0) break;
+		for (i = 0; i < n; i++) scanf("%s", s[i]);
+		bad = true;
+		ans.clear();
+		for (i = 0; i < n; i++) for (j = 0; j < m; j++) if (s[i][j] == '1' && u[i][j] != T) {
+			fi = 0; fr = 1;
+			qx[0] = i, qy[0] = j;
+			u[i][j] = T;
+			while (fi < fr) {
+				x = qx[fi], y = qy[fi++];
+				for (k = 0; k < 8; k++) {
+					nx = x + dx[k], ny = y + dy[k];
+					if (nx >= 0 && nx < n && ny >= 0 && ny < m && s[nx][ny] == '1' && u[nx][ny] != T) {
+						qx[fr] = nx, qy[fr++] = ny;
+						u[nx][ny] = T;
+					}
+				}
+			}
+			if (fr < 5) continue;
+			bad = false;
+			b0x = bx = i, b0y = by = j;
+			cx = i, cy = j - 1;
+			cnt = 0;
+			first = true;
+			while (++cnt) {
+				for (k = 0; k < 8; k++) if (cx - bx == dx[k] && cy - by == dy[k]) break;
+				for (l = 0; l < 8; l++) {
+					x = bx + dx[(k + l) % 8];
+					y = by + dy[(k + l) % 8];
+					assert(x >= 0 && x < n && y >= 0 && y < m);
+					if (s[x][y] == '1') break;
+				}
+				if (first) {
+					b1x = x, b1y = y;
+					first = false;
+				}
+				else if (b0x == bx && b0y == by && b1x == x && b1y == y) break;
+				cx = bx + dx[(k + l + 7) % 8];
+				cy = by + dy[(k + l + 7) % 8];
+				bx = x, by = y;
+			}
+			ans.push_back(cnt - 1);
+		}
+		printf("Case %d\n", T);
+		if (bad) puts("no objects found"); else {
+			sort(ans.begin(), ans.end());
+			for (i = 0; i < ans.size(); i++) {
+				if (i) putchar(' ');
+				printf("%d", ans[i]);
+			}
+			puts("");
+		}
+	}
+	return 0;
+}
