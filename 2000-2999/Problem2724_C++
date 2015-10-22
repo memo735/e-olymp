@@ -1,0 +1,27 @@
+#include <iostream>
+
+int main(){
+	int t, ca = 1, a[110];
+	scanf("%d", &t);
+	while (t--){
+		int n, i, j;
+		scanf("%d", &n);
+		for (i = 1; i <= n; i++) scanf("%d", &a[i]);
+		int win;
+		i = 1, j = n;
+		while (true){
+			if (j - i + 1 == 2){
+				if (a[1] > a[2]) win = 1;
+				else win = 2;
+				break;
+			}
+			int ii = i, jj = j;
+			while (ii <= jj) a[ii++] += a[jj--];
+			i = 1, j = (j + 1) / 2;
+		}
+		printf("Case #%d: ", ca++);
+		if (win == 1) puts("Alice");
+		else puts("Bob");
+	}
+	return 0;
+}
