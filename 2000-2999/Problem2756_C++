@@ -1,0 +1,93 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+#define N 1010
+
+int dir[4][2] = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+
+struct position {
+	int x, y, to;
+} u, v, S, T, qu[N * N * 4];
+
+int main() {
+	int cas = 1, n, m, mod, ans, dp[N][N][4][2];
+	char maz[N][N], face[10];
+	while (~scanf("%d%d%d", &n, &m, &mod)) {
+		if (!mod) break;
+		memset(maz, '*', sizeof(maz));
+		for (int i = 1; i <= n; i++) scanf("%s", maz[i] + 1);
+		scanf("%d%d%d%d%s", &S.x, &S.y, &T.x, &T.y, face);
+		memset(dp, -1, sizeof(dp));
+		S.x++, S.y++;
+		T.x++, T.y++;
+		u.x = S.x, u.y = S.y;
+		if (face[0] == 'N') u.to = 0;
+		else if (face[0] == 'E') u.to = 1;
+		else if (face[0] == 'S') u.to = 2;
+		else u.to = 3;
+		dp[u.x][u.y][u.to][0] = 0;
+		dp[u.x][u.y][u.to][1] = 1;
+		int l = 0, r = 1;
+		qu[0] = u;
+		while (l < r) {
+			u = qu[l++];
+			int nowtime = dp[u.x][u.y][u.to][0] + 1;
+			int nowways = dp[u.x][u.y][u.to][1];
+			v = u;
+			v.x += dir[v.to][0];
+			v.y += dir[v.to][1];
+			if (maz[v.x][v.y] == '.') {
+				if (dp[v.x][v.y][v.to][0] == -1) {
+					dp[v.x][v.y][v.to][0] = nowtime;
+					qu[r++] = v;
+					dp[v.x][v.y][v.to][1] = nowways % mod;
+				}
+				else if (dp[v.x][v.y][v.to][0] == nowtime) {
+					dp[v.x][v.y][v.to][1] += nowways;
+					dp[v.x][v.y][v.to][1] %= mod;
+				}
+			}
+			v = u;
+			v.to = (u.to + 1) % 4;
+			if (maz[v.x][v.y] == '.') {
+				if (dp[v.x][v.y][v.to][0] == -1) {
+					dp[v.x][v.y][v.to][0] = nowtime;
+					qu[r++] = v;
+					dp[v.x][v.y][v.to][1] = nowways % mod;
+				}
+				else if (dp[v.x][v.y][v.to][0] == nowtime) {
+					dp[v.x][v.y][v.to][1] += nowways;
+					dp[v.x][v.y][v.to][1] %= mod;
+				}
+			}
+			v = u;
+			v.to = (u.to + 3) % 4;
+			if (maz[v.x][v.y] == '.') {
+				if (dp[v.x][v.y][v.to][0] == -1) {
+					dp[v.x][v.y][v.to][0] = nowtime;
+					qu[r++] = v;
+					dp[v.x][v.y][v.to][1] = nowways % mod;
+				}
+				else if (dp[v.x][v.y][v.to][0] == nowtime) {
+					dp[v.x][v.y][v.to][1] += nowways;
+					dp[v.x][v.y][v.to][1] %= mod;
+				}
+			}
+		}
+		int best = -1;
+		for (int i = 0; i < 4; i++)
+			if (best == -1 || best > dp[T.x][T.y][i][0]) best = dp[T.x][T.y][i][0];
+		if (best == -1) {
+			printf("Case %d: %d -1\n", cas++, mod);
+			continue;
+		}
+		ans = 0;
+		for (int i = 0; i < 4; i++)
+			if (dp[T.x][T.y][i][0] == best) ans = (ans + dp[T.x][T.y][i][1]) % mod;
+
+		printf("Case %d: %d %d\n", cas++, mod, ans);
+	}
+	return 0;
+}
