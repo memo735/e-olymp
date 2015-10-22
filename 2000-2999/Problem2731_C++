@@ -1,0 +1,39 @@
+#include <iostream>
+
+using namespace std;
+
+int n, m, ans, g[11][11];
+bool vis[11][11];
+int d[4][2] = { 0, 1, 0, -1, 1, 0, -1, 0 };
+
+void dfs(int x, int y){
+	if (vis[x][y]) return;
+	vis[x][y] = 1;
+	int i;
+	if (x == 1 || y == 1 || x == n || y == m) ans++;
+	for (i = 0; i < 4; i++){
+		int xx = x + d[i][0], yy = y + d[i][1];
+		if (xx<1 || yy<1 || xx>n || yy>m) continue;
+		if (g[xx][yy] >= g[x][y]) dfs(xx, yy);
+	}
+}
+
+int main(){
+	int t, ca = 1;
+	scanf("%d", &t);
+	while (t--){
+		scanf("%d%d", &n, &m);
+		int i, j, k, s;
+		scanf("%d%d", &k, &s);
+		for (i = 1; i <= n; i++){
+			for (j = 1; j <= m; j++){
+				scanf("%d", &g[i][j]);
+				vis[i][j] = 0;
+			}
+		}
+		ans = 0;
+		dfs(k, s);
+		printf("Case #%d: %d\n", ca++, ans);
+	}
+	return 0;
+}
