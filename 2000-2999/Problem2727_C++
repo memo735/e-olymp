@@ -1,0 +1,30 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct node{
+	int id, v;
+}p[33];
+
+bool cmp(node a, node b)
+{
+	return a.v < b.v;
+}
+
+int main(){
+	int t, ca = 1;
+	scanf("%d", &t);
+	while (t--){
+		int i, n, ans = 0;
+		scanf("%d", &n);
+		for (i = 1; i <= n; i++){
+			scanf("%d", &p[i].v);
+			p[i].id = i;
+		}
+		sort(p + 1, p + 1 + n, cmp);
+		for (i = 1; i <= n; i++) ans += abs(p[i].id - i);
+		printf("Case #%d: %d\n", ca++, ans / 2);
+	}
+	return 0;
+}
