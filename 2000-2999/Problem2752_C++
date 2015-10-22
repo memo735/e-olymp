@@ -1,0 +1,41 @@
+#include <iostream>  
+#include <string.h>  
+#include <algorithm>  
+
+using namespace std;
+
+int Minimize(char *s, int len)
+{
+	int i = 0, j = 1, k = 0, t;
+	while (i < len && j < len && k < len)
+	{
+		t = s[(i + k) % len] - s[(j + k) % len];
+		if (!t) ++k;
+		else
+		{
+			if (t > 0) i = i + k + 1;
+			else j = j + k + 1;
+			if (i == j) ++j;
+			k = 0;
+		}
+	}
+	return min(i, j);
+}
+
+int main()
+{
+	int len;
+	char str[300100];
+	while (~scanf("%s", str))
+	{
+		len = strlen(str);
+		str[len] = str[0];
+		for (int i = 0; i < len; ++i) str[i] = (str[i + 1] - str[i] + 8) % 8 + '0';
+		str[len] = 0;
+		int pos = Minimize(str, len);
+		printf("%s", str + pos);
+		str[pos] = 0;
+		puts(str);
+	}
+	return 0;
+}
