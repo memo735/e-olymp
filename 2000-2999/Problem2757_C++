@@ -1,0 +1,80 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+struct name
+{
+	char str[100];
+	int k;
+}nn[300];
+
+int num;
+
+int findd(char *s)
+{
+	for (int i = 0; i < num; i++)
+	{
+		if (strcmp(s, nn[i].str) == 0)
+		{
+			nn[i].k++;
+			return nn[i].k;
+		}
+	}
+	strcpy(nn[num].str, s);
+	nn[num++].k = 0;
+	return 0;
+}
+
+int digit(int k)
+{
+	int s = k, t = 0;
+	while (s != 0)
+	{
+		s /= 10;
+		t++;
+	}
+	return t;
+}
+
+int main()
+{
+	int n, cas = 0, maxlen;
+	char ss[300], st[100];
+	while (scanf("%d %d", &n, &maxlen) == 2 && (n || maxlen))
+	{
+		getchar();
+		num = 0;
+		printf("Case %d\n", ++cas);
+		for (int i = 0; i < n; i++)
+		{
+			gets(ss);
+			int len = strlen(ss);
+			int lac = len - 1;
+			while (ss[lac] != ' ') lac--;
+			if (isupper(ss[0])) st[0] = ss[0] + 32;
+			else st[0] = ss[0];
+			int len1 = 1;
+			for (int j = lac + 1; j < len && len1 < maxlen; j++)
+			{
+				if (isupper(ss[j])) st[len1++] = ss[j] + 32;
+				else if (islower(ss[j])) st[len1++] = ss[j];
+			}
+			st[len1] = '\0';
+			int k = findd(st);
+			if (k == 0)
+			{
+				puts(st);
+				continue;
+			}
+			int m = digit(k), le = maxlen - len1;
+			if (len1 + m <= maxlen)
+			{
+				printf("%s%d\n", st, k);
+				continue;
+			}
+			st[len1 - m + le] = '\0';
+			printf("%s%d\n", st, k);
+		}
+	}
+	return 0;
+}
