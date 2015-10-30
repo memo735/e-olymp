@@ -1,0 +1,17 @@
+using System;
+
+namespace Problem2863
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(1);
+            for (int i = 3; i <= n; i = i + 2)
+            {
+                if (n%i == 0) Console.WriteLine(i);
+            }
+        }
+    }
+}
