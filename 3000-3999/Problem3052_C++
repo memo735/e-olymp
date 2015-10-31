@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+#define N 605
+#define M 6005
+
+vector<int> g[M];
+int mark[M];
+int link[M];
+int dir[4][2] = { 0, 1, 0, -1, -1, 0, 1, 0 };
+
+int find(int k)
+{
+	int i;
+	for (i = 0; i < g[k].size(); i++)
+	{
+		int v = g[k][i];
+		if (!mark[v])
+		{
+			mark[v] = 1;
+			if (link[v] == -1 || find(link[v]))
+			{
+				link[v] = k;
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+int solve(int n)
+{
+	int i, ans = 0;
+	memset(link, -1, sizeof(link));
+	for (i = 0; i < n; i++)
+	{
+		memset(mark, 0, sizeof(mark));
+		ans += find(i);
+	}
+	return ans;
+}
+
+int main()
+{
+	int i, j, n, T, cas = 1, cnt, id[N][N];
+	char str[N][N];
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d", &n);
+		cnt = 0;
+		for (i = 0; i < n; i++)
+		{
+			scanf("%s", str[i]);
+			for (j = 0; j < n; j++) if (str[i][j] == '#') id[i][j] = cnt++;
+		}
+		for (i = 0; i < M; i++) g[i].clear();
+		for (i = 0; i < n; i++)
+		{
+			for (j = 0; j < n; j++)
+			{
+				int x, y, u, v, k;
+				if (str[i][j] == '.') continue;
+				u = id[i][j];
+				for (k = 0; k < 4; k++)
+				{
+					x = dir[k][0] + i;
+					y = dir[k][1] + j;
+					if (x >= 0 && x < n&&y >= 0 && y < n&&str[x][y] == '#')
+					{
+						v = id[x][y];
+						g[u].push_back(v);
+						g[v].push_back(u);
+					}
+				}
+			}
+		}
+		int ans = solve(cnt);
+		printf("Case %d: %d\n", cas++, ans / 2);
+	}
+	return 0;
+}
