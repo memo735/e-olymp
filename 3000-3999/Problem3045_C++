@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+
+using namespace std;
+
+
+int main()
+{
+	char str[1000];
+	int T, n;
+	scanf("%d", &T);
+	int iCase = 0;
+	while (T--)
+	{
+		iCase++;
+		scanf("%d", &n);
+		cin.getline(str, 100);
+		int t1 = 0, t2 = 0, t3 = 0, t4 = 0;
+		for (int k = 0; k < n; k++)
+		{
+			cin.getline(str, 1000);
+			int tmp = 0;
+			int len = strlen(str);
+			bool flag = false;
+			for (int i = 0; i < len; i++)
+			{
+				if (str[i] == ' ' && str[i + 1] == 'n') tmp++;
+				else if (str[i] == ' ' && str[i + 1] == 'y')
+				{
+					tmp++;
+					if (tmp == 1) t1++;
+					else t2++;
+					flag = true;
+				}
+			}
+			if (tmp == 0) t4++;
+			else if (flag == false) t3++;
+		}
+		printf("Roll-call: %d\n", iCase);
+		printf("Present: %d out of %d\n", t1, n);
+		printf("Needs to study at home: %d out of %d\n", t2, n);
+		printf("Needs remedial work after school: %d out of %d\n", t3, n);
+		printf("Absent: %d out of %d\n", t4, n);
+	}
+	return 0;
+}
