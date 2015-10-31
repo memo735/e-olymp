@@ -1,0 +1,113 @@
+#include <iostream>
+#include <queue>
+#include <cstring>
+
+using namespace std;
+
+int total;
+
+struct e{
+	int data, cost;
+	e *next;
+};
+
+e edge[500];
+
+struct node{
+	int data, w;
+	friend bool operator <(node a, node b) { return a.w > b.w; }
+};
+
+void solve(){
+	int i, d[500], v[500];
+	memset(v, 0, sizeof(v));
+	for (i = 2; i <= total; i++) d[i] = 10000000;
+	d[1] = 0;
+	node a;
+	a.data = 1;
+	a.w = 0;
+	priority_queue<node> q;
+	q.push(a);
+	while (!q.empty())
+	{
+		a = q.top();
+		q.pop();
+		if (a.data == total)
+		{
+			cout << a.w << " blips" << endl;
+			return;
+		}
+		if (v[a.data]) continue;
+		v[a.data] = 1;
+		e *p = edge[a.data].next;
+		while (p)
+		{
+			if (d[p->data] > a.w + p->cost)
+			{
+				d[p->data] = a.w + p->cost;
+				node b;
+				b.data = p->data;
+				b.w = d[p->data];
+				q.push(b);
+			}
+			p = p->next;
+		}
+	}
+	cout << "Holiday" << endl;
+}
+
+void add(int s, int t, int w){
+	e *p = new e;
+	p->data = t;
+	p->next = edge[s].next;
+	p->cost = w;
+	edge[s].next = p;
+}
+
+int main(){
+	int i, j, s, t, n, m;
+	char c;
+	while (cin >> n >> m)
+	{
+		if (n == 0 && m == 0) return 0;
+		total = (n + 1)*(m + 1);
+		for (i = 1; i <= total; i++) edge[i].next = 0;
+		for (i = 0; i <= 2 * n; i++)
+		{
+			if (i % 2 == 0)
+				for (j = 1; j <= m; j++)
+				{
+					t = i / 2;
+					cin >> s >> c;
+					if (s == 0) continue;
+					if (c == '*')
+					{
+						add(t*(m + 1) + j, t*(m + 1) + j + 1, 2520 / s);
+						add(t*(m + 1) + j + 1, t*(m + 1) + j, 2520 / s);
+					}
+					else
+						if (c == '<') add(t*(m + 1) + j + 1, t*(m + 1) + j, 2520 / s);
+						else add(t*(m + 1) + j, t*(m + 1) + j + 1, 2520 / s);
+				}
+			else
+			{
+				for (j = 0; j <= m; j++)
+				{
+					t = i / 2;
+					cin >> s >> c;
+					if (s == 0) continue;
+					if (c == '*')
+					{
+						add(t*(m + 1) + j + 1, t*(m + 1) + j + 1 + m + 1, 2520 / s);
+						add(t*(m + 1) + j + 1 + m + 1, t*(m + 1) + j + 1, 2520 / s);
+					}
+					else
+						if (c == '^') add(t*(m + 1) + j + 1 + m + 1, t*(m + 1) + j + 1, 2520 / s);
+						else add(t*(m + 1) + j + 1, t*(m + 1) + j + 1 + m + 1, 2520 / s);
+				}
+			}
+		}
+		solve();
+	}
+	return 0;
+}
