@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+long long gcd2(long long a, long long b, long long &x, long long &y)
+{
+	if (b == 0)
+	{
+		x = 1;
+		y = 0;
+		return a;
+	}
+	long long d = gcd2(b, a%b, x, y);
+	long long t = x;
+	x = y;
+	y = t - a / b*y;
+	return d;
+}
+
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		long long a, b, x = 0, y = 0;
+		scanf("%lld/%lld", &a, &b);
+		long long p = gcd2(a, b, x, y);
+		if (p != 1)
+		{
+			printf("%lld/%lld\n", a / p, b / p);
+			continue;
+		}
+		if (a == 1)
+		{
+			printf("1/%lld\n", b - 1);
+			continue;
+		}
+		long long x1, y1;
+		if (x > 0)
+		{
+			x1 = (a + y) % a;
+			y1 = (b - x) % b;
+		}
+		else
+		{
+			x1 = (a - y) % a;
+			y1 = (b + x) % b;
+		}
+		printf("%lld/%lld\n", x1, y1);
+	}
+	return 0;
+}
