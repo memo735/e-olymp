@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+char his[65555] = { 0 };
+
+int main(){
+	int a, b, c, s, t1, t2;//unsigned int 16bits
+	while (scanf("%d", &a), a)
+	{
+		t1 = 0;
+		t2 = ~0;
+		scanf("%d%d%u", &b, &c, &s);
+		memset(his, 0, sizeof(his));
+		while (his[s] == 0)
+		{
+			his[s] = 1;
+			t1 = t1 | s;
+			t2 = t2 & s;
+			s = (a*s + b) % c;
+		}
+		for (int i = 15; i >= 0; i--)
+		{
+			int t = 1 << i, one = t & t1;
+			if (one == (t & t2)) printf("%d", one == 0 ? 0 : 1);
+			else printf("?");
+		}
+		printf("\n");
+	}
+	return 0;
+}
