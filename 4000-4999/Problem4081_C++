@@ -1,0 +1,52 @@
+#include <stdio.h>  
+#include <algorithm>
+
+using namespace std;
+
+#define MAXN 1000010  
+int m[MAXN][20], numEqualL[MAXN], numEqualR[MAXN];
+
+void RMQInit(int n)
+{
+	int i, j;
+	for (i = 1; i <= n; i++) m[i][0] = numEqualL[i] + numEqualR[i] - 1;
+	for (j = 1; (1 << j) <= n; j++)
+		for (i = 1; i + (1 << j) - 1 <= n; i++) m[i][j] = max(m[i][j - 1], m[i + (1 << (j - 1))][j - 1]);
+}
+
+int RMQ(int l, int r)
+{
+	int x = min(numEqualR[l], r - l + 1);
+	int y = min(numEqualL[r], r - l + 1);
+	l += x;
+	r -= y;
+	if (r < l) return max(x, y);
+	int t = r - l + 1, k = 0;
+	while (t > 1){ t >>= 1; k++; }
+	return max(max(x, y), max(m[l][k], m[r - (1 << k) + 1][k]));
+}
+
+int main()
+{
+	int n, q, i, a[MAXN];
+	while (scanf("%d", &n), n)
+	{
+		scanf("%d", &q);
+		for (i = 1; i <= n; i++)
+		{
+			scanf("%d", &a[i]);
+			numEqualL[i] = 1;
+			numEqualR[i] = 1;
+		}
+		for (i = 2; i <= n; i++) if (a[i] == a[i - 1]) numEqualL[i] += numEqualL[i - 1];
+		for (i = n - 1; i > 0; i--) if (a[i] == a[i + 1]) numEqualR[i] += numEqualR[i + 1];
+		RMQInit(n);
+		int l, r;
+		while (q--)
+		{
+			scanf("%d%d", &l, &r);
+			printf("%d\n", RMQ(l, r));
+		}
+	}
+	return 0;
+}
