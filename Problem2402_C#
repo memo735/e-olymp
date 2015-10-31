@@ -1,0 +1,91 @@
+using System;
+
+namespace Problem2402
+{
+    internal class Program
+    {
+        private static void Main()
+        {
+            string[] arr = Console.ReadLine().Split(' ');
+            int m = int.Parse(arr[0]);
+            int n = int.Parse(arr[1]);
+            int p = int.Parse(arr[2]);
+            int q = int.Parse(arr[3]);
+            int x1 = int.Parse(arr[4]) - 1;
+            int y1 = int.Parse(arr[5]) - 1;
+            int x2 = int.Parse(arr[6]) - 1;
+            int y2 = int.Parse(arr[7]) - 1;
+            int tmp = 8;
+            if (p == q) tmp = 4;
+            int[,] desk = new int[m, n];
+            for (int i = 0; i < m; i++)
+                for (int j = 0; j < n; j++) desk[i, j] = -1;
+
+            int d = 0;
+            desk[x1, y1] = d;
+            int[] dx = {p, -p, p, -p, q, q, -q, -q}; // смещения, соответствующие соседям ячейки
+            int[] dy = {q, q, -q, -q, p, -p, p, -p}; // справа, снизу, слева и сверху
+            int k;
+
+            bool stop;
+            do
+            {
+                stop = true;
+                for (int i = 0; i < m; i++)
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (desk[i, j] == d)
+                        {
+                            for (k = 0; k < tmp; ++k)
+                                if (i + dx[k] < m && i + dx[k] >= 0 && j + dy[k] >= 0 && j + dy[k] < n)
+                                {
+                                    if (desk[i + dx[k], j + dy[k]] == -1)
+                                    {
+                                        stop = false;
+                                        desk[i + dx[k], j + dy[k]] = d + 1;
+                                    }
+                                }
+                        }
+                    }
+                d++;
+            } while (!stop && desk[x2, y2] == -1);
+            Console.WriteLine(desk[x2, y2]);
+            if (desk[x2, y2] != -1)
+            {
+                int[] px = new int[d + 1];
+                int[] py = new int[d + 1];
+                int len = desk[x2, y2];
+                int x = x2, y = y2;
+                d = len;
+                while (d > 0)
+                {
+                    px[d] = x;
+                    py[d--] = y;
+                    for (k = 0; k < tmp; ++k)
+                        try
+                        {
+                            if (desk[x + dx[k], y + dy[k]] == d)
+                            {
+                                x = x + dx[k];
+                                y = y + dy[k];
+                                break;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
+                }
+                px[0] = x1;
+                py[0] = y1;
+                for (int i = 0; i < len + 1; i++)
+                {
+                    Console.Write(px[i] + 1);
+                    Console.Write(" ");
+                    Console.Write(py[i] + 1);
+                    Console.WriteLine(" ");
+                }
+            }
+        }
+    }
+}
