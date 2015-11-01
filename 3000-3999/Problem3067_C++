@@ -1,0 +1,41 @@
+#include <stdio.h>  
+#include <algorithm>
+
+using namespace std;
+
+int n, b, Mid, city[500002];
+
+int solve()
+{
+	int i, t = b;
+	for (i = 0; i < n; ++i)
+	{
+		int r = city[i] / Mid;
+		if (city[i] % Mid) ++r;
+		t -= r;
+	}
+	return t;
+}
+
+int main()
+{
+	int i;
+	while (scanf("%d %d", &n, &b), n != -1 && b != -1)
+	{
+		int Max = 0, Min = 1;
+		for (i = 0; i < n; ++i)
+		{
+			scanf("%d", &city[i]);
+			Max = max(Max, city[i]);
+		}
+		Max++;
+		while (Min < Max)
+		{
+			Mid = (Min + Max) / 2;
+			if (solve() < 0) Min = Mid + 1;
+			else Max = Mid;
+		}
+		printf("%d\n", Max);
+	}
+	return 0;
+}
