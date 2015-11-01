@@ -1,0 +1,58 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <map>
+
+using namespace std;
+
+typedef struct{
+	char name[55];
+} Pub;
+
+Pub p[2005];
+
+int main()
+{
+	int i, j, k, n, ans, top, flag[2005], counts[2005], visited[2005], b[2005][25];
+	char a[2005][55];
+	map<string, int>m;
+	while (scanf("%d%d", &k, &n)){
+		if (k == 0 && n == 0)  break;
+		m.clear();
+		top = 0;
+		ans = 0;
+		memset(counts, 0, sizeof(counts));
+		memset(flag, 0, sizeof(flag));
+		memset(p, 0, sizeof(p));
+		for (i = 1; i <= n; i++){
+			scanf("%s", a[i]);
+			if (m.find(a[i]) == m.end()) m[a[i]] = ++top;
+			for (j = 1; j <= k; j++){
+				scanf("%d", &b[i][j]);
+				counts[b[i][j]]++;
+			}
+		}
+		for (i = 1; i <= n; i++){
+			if (counts[i] != k && flag[i] != 1){
+				ans++;
+				flag[i] = 1;
+			}
+			memset(visited, 0, sizeof(visited));
+			for (j = 1; j <= k; j++){
+				if (visited[b[i][j]] == 1 && flag[b[i][j]] != 1){
+					ans++;
+					flag[b[i][j]] = 1;
+				}
+				visited[b[i][j]] = 1;
+				if (m[a[i]] == m[a[b[i][j]]] && flag[b[i][j]] != 1){
+					ans++;
+					flag[b[i][j]] = 1;
+				}
+			}
+		}
+		if (!ans) printf("NO PROBLEMS FOUND\n");
+		else if (ans == 1) printf("1 PROBLEM FOUND\n");
+		else printf("%d PROBLEMS FOUND\n", ans);
+	}
+	return 0;
+}
