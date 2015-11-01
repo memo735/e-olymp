@@ -1,0 +1,120 @@
+#include<iostream>  
+#include<cstring>  
+#include<cstdio>  
+
+using namespace std;
+
+char ch[10], str[105], str1[105], s[10][10];
+int vis[10], res[10];
+
+int creat(int b, int e)
+{
+	if (b > e) return 0;
+	int p = -1, cnt = 0, flag = 0;
+	for (int i = b; i <= e; ++i)
+	{
+		if (str[i] == '(')      cnt++;
+		else if (str[i] == ')') cnt--;
+		else if ((str[i] == '+' || str[i] == '-') && !cnt){ flag = 1; p = i; }
+		else if ((str[i] == '*' || str[i] == '/') && !cnt && !flag)  p = i;
+	}
+	if (p == -1)
+	{
+		if (str[b] <= '9' && str[b] >= '0')
+		{
+			int res = 0; int n = 0;
+			sscanf(&str[b], "%d%n", &res, &n);
+			return res;
+		}
+		return creat(b + 1, e - 1);
+	}
+	switch (str[p])
+	{
+	case '+': return creat(b, p - 1) + creat(p + 1, e);
+	case '-': return creat(b, p - 1) - creat(p + 1, e);
+	case '*': return creat(b, p - 1) * creat(p + 1, e);
+	default: break;
+	}
+}
+
+int EXP(char st[])
+{
+	strcpy(str, st);
+	return creat(0, strlen(str) - 1);
+}
+
+bool dfs(int p, int n, int m)
+{
+	if (p == n)
+	{
+		char strr[105];
+
+		memset(strr, 0, sizeof(strr));
+		int pos = 0;
+		for (int i = 0; i < strlen(str1); ++i)
+		{
+			if (str1[i] <= 'z' && str1[i] >= 'a')
+				strcat(strr, s[res[pos++]]);
+			else
+			{
+				ch[0] = str1[i];
+				ch[1] = '\0';
+				strcat(strr, ch);
+			}
+		}
+		int a = EXP(strr);
+		if (a == m) return true;
+		return false;
+	}
+	for (int i = 0; i < n; ++i)
+	{
+		if (!vis[i])
+		{
+			vis[i] = true;
+			res[p] = i;
+			if (dfs(p + 1, n, m)) return true;
+			vis[i] = false;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	int m, n;
+	char cha[10];
+	while (~scanf("%d", &n))
+	{
+		int num[10];
+
+		if (!n) return 0;
+		memset(str1, 0, sizeof(str1));
+		memset(res, 0, sizeof(res));
+		memset(num, 0, sizeof(num));
+		memset(vis, 0, sizeof(vis));
+		int pos, r;
+		for (int i = 0; i < n; ++i)
+		{
+			scanf("%d", &num[i]);
+			memset(ch, 0, sizeof(ch));
+			memset(cha, 0, sizeof(cha));
+			pos = 0;
+			r = num[i];
+			if (!r) cha[pos++] = '0';
+			while (r)
+			{
+				cha[pos++] = '0' + r % 10;
+				r /= 10;
+			}
+			for (int j = 0; j < pos; ++j)
+				ch[j] = cha[pos - 1 - j];
+			ch[pos] = '\0';
+			strcpy(s[i], ch);
+		}
+		scanf("%d", &m);
+		scanf("%s", str1);
+		if (dfs(0, n, m)) printf("YES\n");
+		else printf("NO\n");
+	}
+	return 0;
+}
