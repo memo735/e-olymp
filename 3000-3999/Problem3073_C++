@@ -1,0 +1,30 @@
+#include <cstdio>
+
+using namespace std;
+
+#define N 10000002
+const int mod = 1000000007;
+
+int main(){
+	bool a[N] = { 1, 1, 0 };
+	int sum[N] = { 0, 1 };
+	int i, j, p[680000], num = 0;
+	for (i = 2; i < 3164; i++)
+		if (!a[i]) for (j = i*i; j < N; j += i) a[j] = 1;
+
+	for (long long i = 2; i < N; i++)
+		if (!a[i])  p[num++] = i, sum[i] = sum[i - 1];
+		else sum[i] = sum[i - 1] * i%mod;
+		int temp;
+		long long n, ans;
+		while (scanf("%I64d", &n) && n){
+			ans = sum[n];
+			for (i = 0; p[i] * 2 <= n; i++){
+				int k = 0;
+				for (temp = n; temp;) k += (temp /= p[i]);
+				if (!(k & 1)) ans = p[i] * ans%mod;
+			}
+			printf("%I64d\n", ans);
+		}
+		return 0;
+}
