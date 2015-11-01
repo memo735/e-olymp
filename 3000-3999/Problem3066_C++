@@ -1,0 +1,152 @@
+#include <cstdio>
+#include <cstdlib>
+#include <algorithm>
+
+using namespace std;
+
+typedef long long LL;
+
+struct node{
+	LL x, y;
+	int id;
+} w[150010];
+
+LL ty[150010];
+int ny;
+
+struct Tree{
+	int l, r;
+	LL val;
+} tree[1050010];
+
+bool cmp1(const node &a, const node &b){
+	if (a.x != b.x) return a.x < b.x;
+	if (a.y != b.y) return a.y < b.y;
+	return a.id < b.id;
+}
+
+bool cmp2(const node &a, const node &b){
+	if (a.x != b.x) return a.x < b.x;
+	if (a.y != b.y) return a.y > b.y;
+	return a.id<b.id;
+}
+
+bool cmp3(const node &a, const node &b){
+	if (a.x != b.x) return a.x > b.x;
+	if (a.y != b.y) return a.y < b.y;
+	return a.id < b.id;
+}
+
+bool cmp4(const node &a, const node &b){
+	if (a.x != b.x) return a.x > b.x;
+	if (a.y != b.y) return a.y > b.y;
+	return a.id < b.id;
+}
+
+int findy(LL y){
+	int l = 0, r = ny - 1;
+	while (l <= r){
+		int mid = l + r >> 1;
+		if (ty[mid] < y) l = mid + 1;
+		else if (ty[mid] > y) r = mid - 1;
+		else return mid + 1;
+	}
+}
+
+void build(int L, int R, int x){
+	tree[x].l = L;
+	tree[x].r = R;
+	tree[x].val = 1000000000000;
+	if (L == R) return;
+	int mid = L + R >> 1;
+	build(L, mid, x << 1);
+	build(mid + 1, R, x << 1 | 1);
+}
+
+LL find(int L, int R, int x){
+	if (tree[x].l >= L&&tree[x].r <= R) return tree[x].val;
+	int mid = (tree[x].l + tree[x].r) >> 1;
+	if (R <= mid) return find(L, R, x << 1);
+	if (L > mid) return find(L, R, x << 1 | 1);
+	return min(find(L, mid, x << 1), find(mid + 1, R, x << 1 | 1));
+}
+
+void update(int id, int x, LL val){
+	if (tree[x].l == tree[x].r){
+		tree[x].val = min(tree[x].val, val);
+		return;
+	}
+	int mid = (tree[x].l + tree[x].r) >> 1;
+	if (id <= mid) update(id, x << 1, val);
+	else update(id, x << 1 | 1, val);
+	tree[x].val = min(tree[x << 1].val, tree[x << 1 | 1].val);
+}
+
+int main(){
+	LL ans[100010];
+	int n, q, cs = 0;
+	while (scanf("%d", &n) && n != -1){
+		if (cs) printf("\n");
+		else cs = 1;
+		for (int i = 0; i < n; ++i){
+			scanf("%lld%lld", &w[i].x, &w[i].y);
+			w[i].id = -1;
+			ty[i] = w[i].y;
+		}
+		scanf("%d", &q);
+		for (int i = 0; i < q; ++i){
+			ans[i] = 1000000000000;
+			scanf("%lld%lld", &w[i + n].x, &w[i + n].y);
+			w[i + n].id = i;
+			ty[i + n] = w[i + n].y;
+		}
+		sort(ty, ty + n + q);
+		ny = 0;
+		for (int i = 1; i < n + q; ++i) if (ty[i] != ty[ny]) ty[++ny] = ty[i];
+		ny++;
+		LL my = ty[ny - 1], iy = ty[0];
+		//1
+		build(1, ny, 1);
+		sort(w, w + n + q, cmp1);
+		LL mx = w[n + q - 1].x, ix = w[0].x;
+		for (int i = 0; i < n + q; ++i){
+			if (w[i].id != -1){
+				int j = findy(w[i].y);
+				ans[w[i].id] = min(ans[w[i].id], find(1, j, 1) - (my - w[i].y) - (mx - w[i].x));
+			}
+			else update(findy(w[i].y), 1, (my - w[i].y) + (mx - w[i].x));
+		}
+		//2
+		build(1, ny, 1);
+		sort(w, w + n + q, cmp2);
+		for (int i = 0; i < n + q; ++i){
+			if (w[i].id != -1){
+				int j = findy(w[i].y);
+				ans[w[i].id] = min(ans[w[i].id], find(j, ny, 1) - (w[i].y - iy) - (mx - w[i].x));
+			}
+			else update(findy(w[i].y), 1, (w[i].y - iy) + (mx - w[i].x));
+		}
+		//3
+		build(1, ny, 1);
+		sort(w, w + n + q, cmp3);
+		for (int i = 0; i < n + q; ++i){
+			if (w[i].id != -1){
+				int j = findy(w[i].y);
+				ans[w[i].id] = min(ans[w[i].id], find(1, j, 1) - (my - w[i].y) - (w[i].x - ix));
+			}
+			else update(findy(w[i].y), 1, my - w[i].y + (w[i].x - ix));
+		}
+		//4
+		build(1, ny, 1);
+		sort(w, w + n + q, cmp4);
+		for (int i = 0; i < n + q; ++i){
+			if (w[i].id != -1){
+				int j = findy(w[i].y);
+				ans[w[i].id] = min(ans[w[i].id], find(j, ny, 1) - (w[i].y - iy) - (w[i].x - ix));
+			}
+			else update(findy(w[i].y), 1, (w[i].y - iy) + (w[i].x - ix));
+		}
+		for (int i = 0; i < q; ++i) printf("%lld\n", ans[i]);
+	}
+	return 0;
+}
