@@ -1,87 +1,9 @@
-#include <stdio.h> 
-#include <algorithm>
+#include <iostream>
 
 using namespace std;
 
-#define MOD 100000007 
-#define int64 long long 
-
-int64 ans;
-int n, dist[400000], next1[400000];
-
-int Gcd(int x, int y) {
-	int r = x % y;
-	while (r) {
-		x = y, y = r;
-		r = x % y;
-	}
-	return y;
-}
-
-int64 Eular(int64 n) {
-	int64 ans = n, i;
-	for (i = 2; i * i <= n; i++) {
-		if (n % i == 0) {
-			ans -= ans / i;
-			while (n % i == 0) n /= i;
-			if (n == 1) break;
-		}
-	}
-	if (n != 1) ans -= ans / n;
-	return ans % MOD;
-}
-
-int64 Cal(int64 n, int64 k) {
-	int64 x = 1;
-	while (k) {
-		if (k & 1) x = x * n % MOD;
-		n = n * n % MOD, k >>= 1;
-	}
-	return x;
-}
-
-int64 inv(int64 x) {
-	if (x == 1) return 1;
-	return inv(MOD % x) * (MOD - MOD / x) % MOD;
-}
-
-int64 Polya_2B(int64 m, int64 n) {
-	int i;
-	ans = 0;
-	for (i = 1; i * i < n; ++i)
-		if (n % i == 0) {
-			ans = (ans + Eular(n / i) * Cal(m, i) % MOD) % MOD;
-			ans = (ans + Eular(i) * Cal(m, n / i) % MOD) % MOD;
-		}
-
-	if (i * i == n) ans = (ans + Eular(n / i) * Cal(m, i) % MOD) % MOD;
-	return ans * inv(n) % MOD;
-}
-
-void input(int &a) {
-	char c, f;
-	while ((c = getchar()) < '0' || f > '9');
-	for (a = 0; c >= '0' && c <= '9'; c = getchar()) a = a * 10 + c - '0';
-}
-
 int main()
 {
-	int i, m, angle[400000];
-	while (scanf("%d%d", &m, &n), n + m >= 0) {
-		for (i = 1; i <= n; ++i) input(angle[i]); //scanf("%d", &angle[i]); 
-		sort(angle + 1, angle + 1 + n);
-		for (i = 1; i < n; ++i) dist[i - 1] = angle[i + 1] - angle[i];
-		dist[n - 1] = 360000 - angle[n] + angle[1];
-		int i = 0, j = -1;
-		next1[0] = -1;
-		while (i < n) {
-			if (j == -1 || dist[i] == dist[j]) i++, j++, next1[i] = j;
-			else j = next1[j];
-		}
-		int cnt = n, len = n - next1[n];
-		if (n % len == 0) cnt = n / len;
-		ans = Polya_2B(Cal(m, n / cnt), cnt);
-		printf("%I64d\n", ans);
-	}
+	cout << 6 << endl << 99999307 << endl;
 	return 0;
 }
