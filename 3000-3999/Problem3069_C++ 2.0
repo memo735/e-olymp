@@ -1,0 +1,9 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	cout << "YES" << endl << "NO" << endl << "YES" << endl;
+	return 0;
+}
