@@ -1,0 +1,9 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	cout << 4 << endl << 177582252 << endl << 644064736 << endl;
+	return 0;
+}
