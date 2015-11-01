@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <cmath>
+#include <iostream>
+
+using namespace std;
+
+#define eps 1e-6
+#define PI acos(-1.0) 
+
+bool zero(double n){
+	return  n<eps && n>-eps;
+}
+
+double dis(double x1, double y1, double x2, double y2){
+	return sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+}
+
+double angle(double a, double b, double c){
+	return acos((a*a + b*b - c*c) / (2 * a*b));
+}
+
+bool check(double n){
+	return zero(n - (int)(n + 0.5));
+}
+
+int main()
+{
+	double x[3], y[3], a, b, c, A, B, C;
+	while (scanf("%lf%lf", &x[0], &y[0])){
+		scanf("%lf%lf", &x[1], &y[1]);
+		scanf("%lf%lf", &x[2], &y[2]);
+		a = dis(x[0], y[0], x[1], y[1]);
+		b = dis(x[1], y[1], x[2], y[2]);
+		c = dis(x[2], y[2], x[0], y[0]);
+		A = angle(a, b, c) / PI;
+		B = angle(b, c, a) / PI;
+		C = angle(c, a, b) / PI;
+		int i;
+		for (i = 3; i <= 1000; i++) if (check(A*i) && check(B*i) && check(C*i)) break;
+		cout << i << endl;
+	}
+}
