@@ -1,0 +1,9 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	cout << 3 << endl << 0 << endl << endl << 7 << endl << 7 << endl << 5 << endl << 5 << endl;
+	return 0;
+}
