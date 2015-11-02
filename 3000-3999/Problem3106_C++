@@ -1,0 +1,211 @@
+#include <stdio.h> 
+#include <string.h> 
+#include <math.h> 
+#include <algorithm> 
+
+using namespace std;
+
+const double eps = 1e-8;
+const double Pi = acos(-1.0);
+
+struct Point
+{
+	double x, y;
+} seg[10][2], star;
+
+struct Line
+{
+	double a, b, c;
+} line[10];
+
+struct Node
+{
+	Point p;
+	int l;
+} link[10];
+
+int n, sum, ans[100];
+bool mark[367];
+
+double xmult(Point p1, Point p2, Point p0)
+{
+	return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y - p0.y);
+}
+bool isIntersected(Point s1, Point e1, Point s2, Point e2)
+{
+	return max(s1.x, e1.x) + eps > min(s2.x, e2.x) &&
+		max(s2.x, e2.x) + eps > min(s1.x, e1.x) &&
+		max(s1.y, e1.y) + eps > min(s2.y, e2.y) &&
+		max(s2.y, e2.y) + eps > min(s1.y, e1.y) &&
+		xmult(s2, e1, s1) * xmult(e1, e2, s1) + eps > 0 &&
+		xmult(s1, e2, s2) * xmult(e2, e1, s2) + eps > 0;
+}
+
+bool online(Point s, Point e, Point p)
+{
+	return fabs(xmult(e, p, s)) < eps && (((p.x - s.x) * (p.x - e.x) < eps) && ((p.y - s.y) * (p.y - e.y) < eps));
+}
+
+bool intersect_A(Point s1, Point e1, Point s2, Point e2)
+{
+	return isIntersected(s1, e1, s2, e2) && !online(s1, e1, s2) && !online(s1, e1, e2) && !online(s2, e2, s1) && !online(s2, e2, e1);
+}
+
+Line makeline(Point p1, Point p2)
+{
+	Line tl;
+	double sign = 1.0;
+	tl.a = p2.y - p1.y;
+	if (tl.a < 0)
+	{
+		sign = -1.0;
+		tl.a = sign * tl.a;
+	}
+	tl.b = sign * (p1.x - p2.x);
+	tl.c = sign * (p1.y * p2.x - p1.x * p2.y);
+	return tl;
+}
+
+Point symmetry(Line l, Point p)
+{
+	Point tp;
+	tp.x = ((l.b * l.b - l.a * l.a) * p.x - 2 * l.a * l.b * p.y - 2 * l.a * l.c) / (l.a * l.a + l.b * l.b);
+	tp.y = ((l.a * l.a - l.b * l.b) * p.y - 2 * l.a * l.b * p.x - 2 * l.b * l.c) / (l.a * l.a + l.b * l.b);
+	return tp;
+}
+
+Point intersection(Point u1, Point u2, Point v1, Point v2)
+{
+	Point ans = u1;
+	double t = ((u1.x - v1.x) * (v1.y - v2.y) - (u1.y - v1.y) * (v1.x - v2.x)) / ((u1.x - u2.x) * (v1.y - v2.y) - (u1.y - u2.y) * (v1.x - v2.x));
+	ans.x += (u2.x - u1.x) * t;
+	ans.y += (u2.y - u1.y) * t;
+	return ans;
+}
+
+double angle(Point o, Point s, Point e)
+{
+	double a1 = atan2(s.y - o.y, s.x - o.x);
+	double a2 = atan2(e.y - o.y, e.x - o.x);
+	double ret = a2 - a1;
+	if (ret < -1.0 * Pi) ret += 2 * Pi;
+	if (ret > Pi) ret -= 2 * Pi;
+	return ret;
+}
+
+double lsangle(Point p1, Point p2, Point p11, Point p22)
+{
+	Point o, s, e;
+	o.x = o.y = 0;
+	s.x = p1.x - p2.x;
+	s.y = p1.y - p2.y;
+	e.x = p11.x - p22.x;
+	e.y = p11.y - p22.y;
+	return angle(o, s, e);
+}
+
+int deel(double x)
+{
+	x += 0.5;
+	return (int)x;
+}
+
+bool check(Point a, Point b)
+{
+	for (int i = 1; i <= n; i++)
+		if (intersect_A(a, b, seg[i][0], seg[i][1])) return false;
+	return true;
+}
+
+void cal(int l, Point px, int deep)
+{
+	Point per, next;
+	per = px;
+	for (int i = deep - 1; i > 0; i--)
+	{
+		if (!intersect_A(per, link[i].p, seg[link[i].l][0], seg[link[i].l][1])) return;
+		next = intersection(per, link[i].p, seg[link[i].l][0], seg[link[i].l][1]);
+		if (!check(per, next)) return;
+		per = next;
+	}
+	if (!check(per, star)) return;
+	double ret = atan2(per.y, per.x) * 180.0 / Pi;
+	if (ret < -0.5) ret += 360;
+	int rets = deel(ret);
+	if (!mark[rets])
+	{
+		mark[rets] = true;
+		ans[sum++] = rets;
+	}
+}
+
+void dfs(int deep)
+{
+	if (deep > 7) return;
+	Point o = link[deep - 1].p;
+	int nline = link[deep - 1].l;
+	Point to, px;
+	double ag;
+	for (int i = 1; i <= n; i++)
+	{
+		if (i == nline) continue;
+		to = symmetry(line[i], o);
+		if (intersect_A(o, to, seg[i][0], seg[i][1]))
+		{
+			ag = lsangle(o, to, seg[i][0], seg[i][1]);
+			if (fabs(ag - Pi * 0.5) < eps || fabs(ag + Pi * 0.5) < eps)
+			{
+				if (deep < 5)
+				{
+					px = intersection(to, o, seg[i][0], seg[i][1]);
+					link[deep].l = i;
+					link[deep].p = to;
+					if (check(px, o)) cal(i, px, deep);
+				}
+			}
+		}
+		if (intersect_A(to, star, seg[i][0], seg[i][1]))
+		{
+			px = intersection(to, star, seg[i][0], seg[i][1]);
+			link[deep].l = i;
+			link[deep].p = star;
+			if (check(px, star)) cal(i, px, deep);
+		}
+		link[deep].p = to;
+		link[deep].l = i;
+		dfs(deep + 1);
+	}
+}
+
+bool cmp(int a, int b)
+{
+	return a < b;
+}
+
+int main()
+{
+	star.x = 0.0;
+	star.y = 0.0;
+	while (scanf("%d", &n), n)
+	{
+		sum = 0;
+		memset(mark, 0, sizeof(mark));
+		for (int i = 1; i <= n; i++)
+		{
+			scanf("%lf%lf%lf%lf", &seg[i][0].x, &seg[i][0].y, &seg[i][1].x, &seg[i][1].y);
+			line[i] = makeline(seg[i][0], seg[i][1]);
+		}
+		link[0].p = star;
+		link[0].l = 0;
+		dfs(1);
+		if (sum == 0)
+		{
+			printf("no danger\n");
+			continue;
+		}
+		sort(ans, ans + sum, cmp);
+		for (int i = 0; i < sum - 1; i++) printf("%d ", ans[i]);
+		printf("%d\n", ans[sum - 1]);
+	}
+	return 0;
+}
