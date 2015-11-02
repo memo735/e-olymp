@@ -1,0 +1,81 @@
+#include <cstdio>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+template <class T> void checkmax(T &t, T x) { if (x > t) t = x; }
+
+typedef long long ll;
+
+int wei(ll a) {
+	int ans = 0;
+	while (a) {
+		a /= 10;
+		ans++;
+	}
+	checkmax(ans, 1);
+	return ans;
+}
+
+int oowei(ll a) {
+	int ans = 0;
+	while (a) {
+		if (a % 10 != 0) ans++;
+		a /= 10;
+	}
+	checkmax(ans, 1);
+	return ans;
+}
+
+int main() {
+	ll a, b;
+	int cas = 1;
+	while (cin >> a >> b) {
+		if (a + b == 0) break;
+		printf("Problem %d\n", cas++);
+		ll c = a * b;
+		int Wa = wei(a), Wb = wei(b), Wc = wei(c);
+		if (c == 0) {
+			int dd = max(Wa, Wb);
+			if (a != 0) cout << a << endl;
+			else for (int i = 1; i < dd; i++) putchar(' ');
+			cout << a << endl;
+			if (b != 0) cout << b << endl;
+			else for (int i = 1; i < dd; i++) putchar(' ');
+			cout << b << endl;
+			for (int i = 0; i < dd; i++) putchar('-');
+			puts("");
+			for (int i = 1; i < dd; i++) putchar(' ');
+			cout << c << endl;
+			continue;
+		}
+		int oWb = oowei(b);
+		for (int i = 0; i < Wc - Wa; i++) putchar(' ');
+		cout << a << endl;
+		for (int i = 0; i < Wc - Wb; i++) putchar(' ');
+		cout << b << endl;
+		for (int i = 0; i < Wc; i++) putchar('-');
+		puts("");
+		int cc = 0;
+		ll ad = 0;
+		while (b) {
+			ll d = b % 10;
+			b /= 10;
+			if (d == 0) { ad += 1; cc++; continue; }
+			d *= a;
+			ll Wd = wei(d);
+			for (int i = 0; i < Wc - Wd - cc; i++) putchar(' ');
+			cout << d;
+			while (ad > 0) putchar('0'), ad -= 1;
+			cout << endl;
+			cc++;
+		}
+		if (oWb > 1) {
+			for (int i = 0; i < Wc; i++) putchar('-');
+			puts("");
+			cout << c << endl;
+		}
+	}
+	return 0;
+}
