@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+#include <cstdio>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+int ans = 0, T, N, V[30], vis[1 << 22];
+vector<int> tnum[30], tab[39];
+
+void dfs(int val, int v, int mask, int num){
+	if (val > 22) return;
+	if (v == 22){
+		if (val <= 22){
+			tab[val].push_back(mask);
+			tnum[val].push_back(num);
+		}
+		return;
+	}
+	dfs(val, v + 1, mask, num);
+	dfs(val + v + 1, v + 1, mask + (1 << v), num + 1);
+}
+
+void work(int p, int mask, int num){
+	if (vis[mask]) return;
+	vis[mask] = 1;
+	ans = max(ans, num);
+	if (p == T + 1) return;
+	for (int i = 0; i < tab[V[p]].size(); i++){
+		int v = tab[V[p]][i];
+		if (v >= (1 << N)) continue;
+		if (!(mask&v)) work(p + 1, mask + v, num + tnum[V[p]][i]);
+	}
+}
+
+int main(){
+	int cas = 0;
+	dfs(0, 0, 0, 0);
+	while (cin >> N >> T){
+		memset(vis, 0, sizeof vis);
+		if (N == 0 && T == 0) break;
+		for (int i = 1; i <= T; i++) scanf("%d", V + i);
+		ans = 0;
+		work(1, 0, 0);
+		printf("Game %d: %d\n", ++cas, ans);
+	}
+	return 0;
+}
