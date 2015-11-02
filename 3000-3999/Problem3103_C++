@@ -1,0 +1,73 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+#define MAXN 20020
+
+class edge
+{
+public:
+	int u, v, w, next;
+}e[50010];
+
+int n, ans, lnk[MAXN], up[MAXN], down[MAXN];
+
+void add(int u, int v, int w)
+{
+	e[n].u = u;
+	e[n].v = v;
+	e[n].w = w;
+	e[n].next = lnk[u];
+	lnk[u] = n++;
+}
+
+void dfs(int u, int f)
+{
+	for (int i = lnk[u]; ~i; i = e[i].next)
+	{
+		int v = e[i].v;
+		if (v == f) continue;
+		dfs(v, u);
+		if (e[i].w)
+		{
+			up[u] += max(1, up[v]);
+			ans += down[v];
+		}
+		else
+		{
+			down[u] += max(1, down[v]);
+			ans += up[v];
+		}
+	}
+	int tmp = min(up[u], down[u]);
+	up[u] -= tmp;
+	down[u] -= tmp;
+	ans += tmp;
+}
+
+int main()
+{
+	int N, T, cas = 0;
+	scanf("%d", &T);
+	while (T--)
+	{
+		memset(lnk, -1, sizeof(lnk));
+		memset(up, 0, sizeof(up));
+		memset(down, 0, sizeof(down));
+		n = 0;
+		scanf("%d", &N);
+		for (int i = 1; i < N; i++)
+		{
+			int u, v;
+			scanf("%d%d", &u, &v);
+			add(u, v, 1); add(v, u, 0);
+		}
+		ans = 0;
+		dfs(0, -1);
+		ans += up[0] + down[0];
+		printf("Case %d: %d\n", ++cas, ans);
+	}
+	return 0;
+}
