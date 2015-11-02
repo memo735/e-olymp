@@ -1,0 +1,132 @@
+#include <iostream>  
+#include <cstdio>  
+#include <cstring>  
+#include <map>  
+
+using namespace std;
+
+const int MAXN = 210;
+int eid, vis[MAXN * 2], head[MAXN * 2];
+
+struct Edge{
+	int v, next;
+} e[MAXN*MAXN * 2];
+
+void addedge(int u, int v){
+	e[eid].v = v;
+	e[eid].next = head[u];
+	head[u] = eid++;
+}
+
+bool dfs(int u, int v){
+	vis[u] = 1;
+	if (u == v) return true;
+	for (int i = head[u]; i != -1; i = e[i].next){
+		if (!vis[e[i].v] && dfs(e[i].v, v)) return true;
+	}
+	return false;
+}
+
+int main(){
+	int u, v, t, cnt, cas = 0;
+	map<string, int> nou, ver;
+	char str[100100], s1[MAXN], s2[MAXN], s3[MAXN], s4[MAXN], s5[MAXN], s6[MAXN];
+	scanf("%d", &t);
+	getchar();
+	while (t--){
+		printf("Case #%d:\n", ++cas);
+		cnt = 0; eid = 0;
+		nou.clear(); ver.clear();
+		memset(head, -1, sizeof(head));
+		while (gets(str)){
+			int len = strlen(str);
+			if (str[len - 1] == '!'){
+				printf("\n");
+				break;
+			}
+			int num = sscanf(str, "%s %s %s %s %s %s", s1, s2, s3, s4, s5, s6);
+			if (num == 3){
+				len = strlen(s3);
+				if (s3[len - 1] == '.'){
+					s3[len - 1] = '\0';
+					if (s2[0] == 'a'){
+						if (!nou[s1]) nou[s1] = ++cnt;
+						if (!nou[s3]) nou[s3] = ++cnt;
+						u = nou[s1];
+						v = nou[s3];
+					}
+					else
+					{
+						if (!nou[s1]) nou[s1] = ++cnt;
+						if (!ver[s3]) ver[s3] = ++cnt;
+						u = nou[s1];
+						v = ver[s3];
+					}
+					addedge(u, v);
+				}
+				else
+				{
+					s3[len - 1] = '\0';
+					if (s1[0] == 'a'){
+						if (!nou[s2]) nou[s2] = ++cnt;
+						if (!nou[s3]) nou[s3] = ++cnt;
+						u = nou[s2];
+						v = nou[s3];
+					}
+					else
+					{
+						if (!nou[s2]) nou[s2] = ++cnt;
+						if (!ver[s3]) ver[s3] = ++cnt;
+						u = nou[s2];
+						v = ver[s3];
+					}
+					memset(vis, 0, sizeof(vis));
+					if (dfs(u, v)) printf("Y");
+					else printf("M");
+				}
+			}
+			else
+			{
+				len = strlen(s6);
+				if (s6[len - 1] == '.'){
+					s6[len - 1] = '\0';
+					if (s5[0] == 'a'){
+						if (!ver[s4]) ver[s4] = ++cnt;
+						if (!nou[s6]) nou[s6] = ++cnt;
+						u = ver[s4];
+						v = nou[s6];
+					}
+					else
+					{
+						if (!ver[s4]) ver[s4] = ++cnt;
+						if (!ver[s6]) ver[s6] = ++cnt;
+						u = ver[s4];
+						v = ver[s6];
+					}
+					addedge(u, v);
+				}
+				else
+				{
+					s6[len - 1] = '\0';
+					if (s1[0] == 'a'){
+						if (!ver[s5]) ver[s5] = ++cnt;
+						if (!nou[s6]) nou[s6] = ++cnt;
+						u = ver[s5];
+						v = nou[s6];
+					}
+					else
+					{
+						if (!ver[s5]) ver[s5] = ++cnt;
+						if (!ver[s6]) ver[s6] = ++cnt;
+						u = ver[s5];
+						v = ver[s6];
+					}
+					memset(vis, 0, sizeof(vis));
+					if (dfs(u, v)) printf("Y");
+					else printf("M");
+				}
+			}
+		}
+	}
+	return 0;
+}
