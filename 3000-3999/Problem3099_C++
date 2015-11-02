@@ -1,0 +1,62 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+#define Rep(c, a, b) for (int c = a; c < b; c++)
+#define Nre(c, a, b) for (int c = a; c > b; c--)
+
+int main()
+{
+	int T, R, N, x, SG[25][3500], mov[3][2] = { { 0, -1 }, { -1, 0 }, { -1, -1 } }, RS[25];
+	long long C, y, sg, sgs;
+	bool mex[35000];
+	Rep(i, 0, 25) Rep(j, 0, 3500)
+	{
+		memset(mex, 0, sizeof mex);
+		Rep(k, 0, 3)
+		{
+			int maxl = max(i, j);
+			Rep(l, 1, maxl + 1)
+			{
+				int x = i + l * mov[k][0], y = j + l * mov[k][1];
+				if (0 <= x && x < 25 && 0 <= y && y < 3500) mex[SG[x][y]] = 1;
+			}
+		}
+		Rep(k, 0, 35000) if (!mex[k]) { SG[i][j] = k; break; }
+	}
+	Rep(i, 0, 25)
+	{
+		RS[i] = -1;
+		Nre(j, 3500 - 2, -1)
+		{
+			bool isl = 1;
+			int det = 3500 - 1 - j, s = j - det * 10;
+			if (i > 17) s = j - det;
+			Rep(k, s, j + 1) if (SG[i][k + det] != SG[i][k] + det) { isl = 0; break; }
+			if (isl) { RS[i] = j; break; }
+		}
+	}
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d%lld%d", &R, &C, &N);
+		sgs = 0;
+		while (N--)
+		{
+			scanf("%d%lld", &x, &y);
+			x--; y--;
+			if (y < 3500) sg = SG[x][y];
+			else
+			{
+				long long l = 3500 - 1 - RS[x], s = 3500 + (y - 3500) % l - l;
+				sg = y - s + SG[x][s];
+			}
+			sgs ^= sg;
+		}
+		puts(sgs ? "YES" : "NO");
+	}
+	return 0;
+}
