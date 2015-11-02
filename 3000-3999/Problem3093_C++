@@ -1,0 +1,89 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+#define maxnode 4100000
+
+struct bign
+{
+	int d[80], len;
+};
+
+void add(bign & a, bign & b, bign & c)
+{
+	c.len = max(a.len, b.len);
+	int carry = 0;
+	for (int i = 0; i < c.len; ++i)
+	{
+		int now = carry + (i < a.len)*a.d[i] + (i < b.len)*b.d[i];
+		c.d[i] = now % 10;
+		carry = now / 10;
+	}
+	if (carry) c.d[c.len++] = 1;
+	if (c.len > 60)
+	{
+		for (int i = 0; i < 60; ++i) c.d[i] = c.d[i + 1]; --c.len;
+		for (int i = 0; i < 60; ++i) a.d[i] = a.d[i + 1]; --a.len;
+		for (int i = 0; i < 60; ++i) b.d[i] = b.d[i + 1]; --b.len;
+	}
+}
+
+struct Trie
+{
+	int ch[maxnode][10], val[maxnode], sz;
+	Trie()
+	{
+		sz = 1;
+		memset(ch[0], 0, sizeof(ch[0]));
+		memset(val, -1, sizeof(val));
+	}
+	void insert(bign s, int v)
+	{
+		int u = 0;
+		for (int i = s.len - 1; i >= max(s.len - 41, 0); --i)
+		{
+			int c = s.d[i];
+			if (!ch[u][c])
+			{
+				memset(ch[sz], 0, sizeof(ch[sz]));
+				if (val[sz] == -1) val[sz] = v;
+				ch[u][c] = sz++;
+			}
+			u = ch[u][c];
+		}
+	}
+	int find(char *s)
+	{
+		int u = 0;
+		for (int i = 0; s[i]; ++i)
+		{
+			int c = s[i] - '0';
+			if (!ch[u][c]) return -1;
+			u = ch[u][c];
+		}
+		return val[u];
+	}
+} trie;
+
+int main()
+{
+	bign tmp[3];
+	tmp[0].len = tmp[1].len = 1, tmp[0].d[0] = tmp[1].d[0] = 1;
+	trie.insert(tmp[1], 0);
+	for (int i = 2; i < 100000; ++i)
+	{
+		add(tmp[(i + 2) % 3], tmp[(i + 1) % 3], tmp[i % 3]);
+		trie.insert(tmp[i % 3], i);
+	}
+	int T, ca = 0;
+	char st[80];
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%s", st);
+		printf("Case #%d: %d\n", ++ca, trie.find(st));
+	}
+	return 0;
+}
