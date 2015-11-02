@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <stdio.h>
+#include <sstream>
+
+using namespace std;
+
+int m;
+vector<int> node[10000];
+
+int check(int id)
+{
+	for (int i = 1; i <= m; i++)
+	{
+		int num = 0;
+		for (int j = 0; j < node[i].size(); j++) if (id & 1 << node[i][j]) num++;
+		if (num == 0 || num == node[i].size()) return 0;
+	}
+	return 1;
+}
+
+int main()
+{
+	int test;
+	string ans;
+	scanf("%d", &test);
+	while (test--)
+	{
+		int n;
+		string str;
+		scanf("%d%d", &n, &m);
+		getline(cin, str);
+		for (int i = 1; i <= m; i++) node[i].clear();
+		for (int i = 1; i <= m; i++)
+		{
+			getline(cin, str);
+			stringstream sin;
+			sin << str;
+			int a;
+			while (sin >> a) node[i].push_back(a - 1);
+		}
+		int mm = 1 << n, flage = 0;
+		for (int i = 1; i < mm; i++)
+			if (check(i))
+			{
+				flage = 1; break;
+			}
+
+		if (flage) ans += 'Y';
+		else ans += 'N';
+	}
+	cout << ans;
+	return 0;
+}
