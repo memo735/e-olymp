@@ -1,0 +1,113 @@
+#include <cstdio>
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+#define ll long long
+
+ll ab(ll x)
+{
+	return x > 0 ? x : -x;
+}
+
+ll mul(ll a, ll b, ll M)
+{
+	ll r = 0;
+	while (b)
+	{
+		if (b & 1)
+		{
+			r += a;
+			if (r > M) r -= M;
+		}
+		b >>= 1;
+		a <<= 1;
+		if (a > M) a -= M;
+	}
+	return r;
+}
+
+ll pow(ll a, ll b, ll M)
+{
+	ll r = 1;
+	while (b)
+	{
+		if (b & 1) r = mul(r, a, M);
+		b >>= 1;
+		a = mul(a, a, M);
+	}
+	return r;
+}
+
+bool miller_rabin(ll a, ll n)
+{
+	if (a >= n) return true;
+	ll r = 0, s = n - 1, j;
+	while (!(s & 1)) s >>= 1, r++;
+	ll x = pow(a, s, n);
+	if (x == 1) return true;
+	for (j = 0; j < r; j++, x = mul(x, x, n)) if (x == n - 1) return true;
+	return false;
+}
+
+bool isprime(ll n)
+{
+	int base[] = { 2, 3, 5, 7, 11, 13, 17, 19 };
+	for (int i = 0; i < 5; i++) if (!miller_rabin(base[i], n)) return false;
+	return true;
+}
+
+ll gcd(ll a, ll b)
+{
+	return b ? gcd(b, a%b) : a;
+}
+
+ll rho(ll n)
+{
+	ll x, y, d, c = -1;
+	if (!(n % 2)) return 2;
+	while (1)
+	{
+		y = x = 2;
+		while (1)
+		{
+			x = mul(x, x, n); x = (x - c) % n;
+			y = mul(y, y, n); y = (y - c) % n;
+			y = mul(y, y, n); y = (y - c) % n;
+			d = gcd(ab(y - x), n);
+			if (d == n) break;
+			if (d > 1) return d;
+		}
+		c--;
+	}
+}
+
+void FindFactor(ll n, ll Factor[], int &nFactor)
+{
+	if (isprime(n)) Factor[nFactor++] = n;
+	else
+	{
+		ll fact = rho(n);
+		FindFactor(fact, Factor, nFactor);
+		FindFactor(n / fact, Factor, nFactor);
+	}
+}
+
+int main()
+{
+	ll N;
+	while (cin >> N, N)
+	{
+		int cnt = 0;
+		ll a[9999] = { 0 };
+		FindFactor(N, a, cnt);
+		map<ll, int> m;
+		map<ll, int>::iterator it;
+		for (int i = 0; i < cnt; i++) m[a[i]]++;
+		ll ans = 2;
+		for (it = m.begin(); it != m.end(); it++) if (it->first > 2) ans *= (2 * it->second + 1);
+		cout << ans << endl;
+	}
+	return 0;
+}
