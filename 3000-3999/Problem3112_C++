@@ -1,0 +1,59 @@
+#include<list>
+#include<cmath>
+#include<iostream>
+
+using namespace std;
+
+struct node
+{
+	double a, b, r;
+};
+
+int he(node &nod, list<node> &ll)
+{
+	int flag = 0;
+	double a = 0, b = 0, rr = 0;
+	list<node>::iterator it;
+	it = ll.begin();
+	while (it != ll.end())
+	{
+		double ma = it->a, mb = it->b, mr = it->r;
+		double dist = sqrt((nod.a - ma)*(nod.a - ma) + (nod.b - mb)*(nod.b - mb));
+		if (dist > mr&&dist > nod.r) it++;
+		else
+		{
+			a += ma;
+			b += mb;
+			rr += mr*mr;
+			flag++;
+			it = ll.erase(it);
+		}
+	}
+	if (flag)
+	{
+		flag++;
+		a += nod.a; b += nod.b; rr += nod.r*nod.r;
+		a = a / flag; b = b / flag; rr = sqrt(rr);
+		nod.a = a; nod.b = b; nod.r = rr;
+		return 1;
+	}
+	return 0;
+}
+
+int main()
+{
+	int n, i;
+	while (cin >> n, n)
+	{
+		list<node> ll;
+		node nod;
+		for (i = 1; i <= n; ++i)
+		{
+			cin >> nod.a >> nod.b >> nod.r;
+			while (he(nod, ll));
+			ll.push_back(nod);
+		}
+		cout << ll.size() << endl;
+	}
+	return 0;
+}
