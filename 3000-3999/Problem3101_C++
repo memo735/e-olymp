@@ -1,0 +1,90 @@
+#include <cstdio>
+#include <iostream>
+#include <cstring>
+#include <vector>
+
+using namespace std;
+
+class rec
+{
+public:
+	int x, y, a, b;
+	rec(int x, int y, int a, int b) : x(x), y(y), a(a), b(b) {};
+};
+
+vector<rec> q;
+int ans, use[5], m[5][5];
+
+int ab(int x)
+{
+	return x > 0 ? x : -x;
+}
+
+int get(int x, int y, int k)
+{
+	for (int i = 0; i < 5; i++) for (int j = 0; j < 5; j++)
+		if (m[i][j] == k) return ab(x + i - q[k].x) + ab(y + j - q[k].y);
+}
+
+bool ok(int k, int x, int y)
+{
+	for (int i = 0; i < q[k].a; i++) for (int j = 0; j < q[k].b; j++) if (~m[x + j][y + i]) return false;
+	return true;
+}
+
+void check(int k)
+{
+	if (k > q.size())
+	{
+		for (int i = 1; i <= 16; i++) for (int j = 1; j <= 16; j++)
+		{
+			int tmp = 0;
+			for (int l = 0; l < q.size(); l++) tmp += get(i, j, l);
+			if (ans == -1 || ans > tmp) ans = tmp;
+		}
+		return;
+	}
+	for (int i = 0; i < 5; i++) for (int j = 0; j < 5; j++) if (m[i][j] == -1)
+	{
+		for (int l = 0; l < q.size(); l++) if (use[l] == false && i + q[l].b <= 5 && j + q[l].a <= 5)
+		{
+			if (ok(l, i, j) == false) continue;
+			use[l] = true;
+			for (int a = 0; a < q[l].a; a++) for (int b = 0; b < q[l].b; b++) m[i + b][j + a] = l;
+			check(k + 1);
+			for (int a = 0; a < q[l].a; a++) for (int b = 0; b < q[l].b; b++) m[i + b][j + a] = -1;
+			use[l] = false;
+		}
+		return;
+	}
+}
+
+int main()
+{
+	int T;
+	cin >> T;
+	while (T--)
+	{
+		ans = -1;
+		int cas, vst[23][23];
+		memset(m, -1, sizeof(m));
+		memset(vst, 0, sizeof(vst));
+		memset(use, 0, sizeof(use));
+		q.clear();
+		char mat[23][23];
+		for (int i = 1; i <= 20; i++) scanf("%s", mat[i] + 1);
+		for (int i = 1; i <= 20; i++) for (int j = 1; j <= 20; j++) if (mat[i][j] == 'x'&&!vst[i][j])
+		{
+			int a, b;
+			for (a = 0; mat[i][j + a] == 'x'; a++);
+			for (b = 0; mat[i + b][j] == 'x'; b++);
+			for (int x = 0; x < a; x++) for (int y = 0; y < b; y++) vst[i + y][j + x] = 1;
+			q.push_back(rec(i, j, a, b));
+		}
+		check(1);
+		printf("Case %d: ", ++cas);
+		if (~ans) cout << ans << endl;
+		else cout << "invalid data" << endl;
+	}
+	return 0;
+}
