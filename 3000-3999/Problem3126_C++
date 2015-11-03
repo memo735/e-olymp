@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+int n, row, res, ans[101], g[101][101];
+
+void dfs(int cur)
+{
+	if (cur == n)
+	{
+		int i, j, c;
+		for (i = row - 1; i >= 0; --i)
+		{
+			c = g[i][n];
+			for (j = i + 1; j < n; ++j) c ^= ans[j] && g[i][j];
+			ans[i] = c;
+		}
+		c = 0;
+		for (i = 0; i < n; ++i) c += ans[i];
+		res = min(c, res);
+	}
+	else
+	{
+		ans[cur] = 0;
+		dfs(cur + 1);
+		ans[cur] = 1;
+		dfs(cur + 1);
+	}
+}
+
+int gauss()
+{
+	int i, j, k, col;
+	for (row = 0, col = 0; col < n; ++col)
+	{
+		for (i = row; i < n; ++i) if (g[i][col]) break;
+		if (i == n) continue;
+		if (i != row) for (j = 0; j <= n; ++j) swap(g[i][j], g[row][j]);
+		for (i = row + 1; i < n; ++i)
+			if (g[i][col]) for (j = col; j <= n; ++j) g[i][j] ^= g[row][j];
+		++row;
+	}
+	for (i = row; i < n; ++i) if (g[i][n]) return -1;
+	for (i = 0; i < row; ++i)
+		if (!g[i][i])
+		{
+			for (j = i + 1; j < n; ++j) if (g[i][j]) break;
+			if (j == n) break;
+			for (k = 0; k < n; ++k) swap(g[k][i], g[k][j]);
+		}
+
+	res = 101;
+	dfs(row);
+	return res;
+}
+
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		int l, r, i, j, D;
+		scanf("%d%d", &n, &D);
+		memset(g, 0, sizeof(g));
+		for (i = 0; i < n; ++i)
+		{
+			scanf("%d", &g[i][n]);
+			l = max(0, i - D);
+			r = min(n - 1, i + D);
+			for (j = l; j <= r; ++j) g[j][i] = 1;
+		}
+		int ans = gauss();
+		printf(ans == -1 ? "impossible\n" : "%d\n", ans);
+	}
+	return 0;
+}
