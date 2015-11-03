@@ -1,0 +1,85 @@
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+const int INF = 0x3fffffff;
+
+struct tNode
+{
+	int x, len;
+} Node[1010];
+
+bool comp(const tNode &a, const tNode &b)
+{
+	return a.x < b.x;
+}
+
+int main()
+{
+	int t, n, DP[1010][1010];
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d", &n);
+		for (int i = 0; i < n; ++i) scanf("%d%d", &Node[i].x, &Node[i].len);
+		int captain = Node[0].x;
+		sort(Node, Node + n, comp);
+		for (int i = 0; i < n; ++i)
+		{
+			if (captain == Node[i].x)
+			{
+				captain = i;
+				break;
+			}
+		}
+		for (int i = 0; i < captain; ++i) DP[i][0] = -INF;
+		for (int i = n - 1; i > captain; --i) DP[i][0] = INF;
+		DP[0][1] = Node[0].x;
+		DP[0][2] = INF;
+		for (int i = 1; i < captain; ++i)
+		{
+			for (int j = 1; j <= i + 1; ++j)
+			{
+				DP[i][j] = DP[i - 1][j];
+				if (DP[i - 1][j - 1] <= Node[i].x) DP[i][j] = min(DP[i][j], max(DP[i - 1][j - 1] + Node[i].len, Node[i].x));
+				else DP[i][j] = INF;
+			}
+			DP[i][i + 2] = INF;
+		}
+		DP[n - 1][1] = Node[n - 1].x;
+		DP[n - 1][2] = -INF;
+		for (int i = n - 2; i > captain; --i)
+		{
+			for (int j = 1; j <= n - i; ++j)
+			{
+				DP[i][j] = DP[i + 1][j];
+				if (DP[i + 1][j - 1] >= Node[i].x) DP[i][j] = max(DP[i][j], min(DP[i + 1][j - 1] - Node[i].len, Node[i].x));
+				else DP[i][j] = -INF;
+			}
+			DP[i][n - i + 1] = -INF;
+		}
+		int left = Node[captain].x - Node[captain].len / 2.0;
+		int right = Node[captain].x + Node[captain].len / 2.0;
+		if (Node[captain].len % 2 != 0) right++;
+		int lmax = 0, rmax = 0;
+		for (int j = captain; j >= 0; --j)
+		{
+			if (DP[captain - 1][j] <= left)
+			{
+				lmax = j;
+				break;
+			}
+		}
+		for (int j = n - captain - 1; j >= 0; --j)
+		{
+			if (DP[captain + 1][j] >= right)
+			{
+				rmax = j;
+				break;
+			}
+		}
+		printf("%d\n", 1 + lmax + rmax);
+	}
+	return 0;
+}
