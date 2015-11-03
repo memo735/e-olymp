@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <math.h>
+
+int main()
+{
+	int cas, m, n, x, y, a, b, flag;
+	scanf("%d", &cas);
+	while (cas--)
+	{
+		flag = 0;
+		scanf("%d", &n);
+		m = (int)sqrt(1.0*n);
+		for (a = m; a >= 1; a--)
+		{
+			if (n%a == 0)
+			{
+				b = n / a;
+				if ((b - a) % 2 == 0 && (a + b) % 2 == 0)
+				{
+					flag = 1;
+					x = (a + b) / 2;
+					y = (b - a) / 2;
+					printf("%d %d\n", y, x);
+					break;
+				}
+			}
+		}
+		if (flag == 0) printf("IMPOSSIBLE\n");
+	}
+	return 0;
+}
