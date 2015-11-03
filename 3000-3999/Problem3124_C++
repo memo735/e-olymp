@@ -1,0 +1,53 @@
+#include <cstdio>
+#include <queue>
+
+using namespace std;
+
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+bool vis[510][510];
+char G[510][510];
+int H, W, C, Sx, Sy, Dx, Dy;
+const int dx[] = { 0, 0, -1, 1 }, dy[] = { -1, 1, 0, 0 };
+
+struct Node {
+	int x, y, s;
+	Node(int i = 0, int j = 0, int k = 0) : x(i), y(j), s(k) {}
+	bool operator<(const Node &a) const { return s > a.s; }
+};
+
+int bfs() {
+	priority_queue<Node> q;
+	q.push(Node(Sx, Sy, 0));
+	vis[Sx][Sy] = true;
+	while (!q.empty()) {
+		Node t = q.top(); q.pop();
+		if (t.x == Dx && t.y == Dy) return t.s;
+		rep(i, 4) {
+			int x = t.x + dx[i], y = t.y + dy[i];
+			if (x < 0 || x >= H || y < 0 || y >= W) continue;
+			if (G[x][y] == '#' || vis[x][y]) continue;
+			if (G[x][y] == '@') q.push(Node(x, y, t.s + C + 1));
+			else if (G[x][y] == '.') q.push(Node(x, y, t.s + 1));
+			vis[x][y] = true;
+		}
+	}
+	return -1;
+}
+
+int main() {
+	int t;
+	scanf("%d\n", &t);
+	while (t--) {
+		scanf("%d %d %d", &H, &W, &C);
+		rep(i, H) {
+			scanf("%s", G[i]);
+			rep(j, W) {
+				vis[i][j] = false;
+				if (G[i][j] == 'S') Sx = i, Sy = j;
+				if ((i == H - 1 || i == 0 || j == 0 || j == W - 1) && G[i][j] != '#') Dx = i, Dy = j;
+			}
+		}
+		printf("%d\n", bfs() + 1);
+	}
+	return 0;
+}
