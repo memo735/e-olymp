@@ -1,0 +1,20 @@
+#include <cstdio>
+
+using namespace std;
+
+int main(){
+	double x, y, a, b, s, f;
+	while (scanf("%lf%lf", &x, &y) && (x + 1 || y + 1)){
+		s = f = 0;
+		while (scanf("%lf%lf", &a, &b) && (a || b)){
+			if (b < y)
+			{
+				s += a - x;
+				f += y - b;
+			}
+			x = a;
+			y = b;
+		}
+		printf("%.0lf\n", s / f*y);
+	}
+}
