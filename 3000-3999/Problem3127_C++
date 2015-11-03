@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <string.h>
+#include <map>
+
+using namespace std;
+
+int top, edgenum, head[16000], Stack[16000];
+bool mark[16000];
+
+struct Edge{
+	int to, nex;
+} edge[40000];
+
+void addedge(int u, int v){
+	Edge E = { v, head[u] };
+	edge[edgenum] = E;
+	head[u] = edgenum++;
+}
+
+bool dfs(int x)
+{
+	if (mark[x ^ 1]) return false;
+	if (mark[x]) return true;
+	mark[x] = true;
+	Stack[top++] = x;
+	for (int i = head[x]; i != -1; i = edge[i].nex) if (!dfs(edge[i].to)) return false;
+	return true;
+}
+
+bool solve(int n){
+	for (int i = 0; i < 2 * n; i += 2)
+		if (!mark[i] && !mark[i ^ 1])
+		{
+			top = 0;
+			if (!dfs(i))
+			{
+				while (top) mark[Stack[--top]] = false;
+				if (!dfs(i ^ 1)) return false;
+			}
+		}
+	return true;
+}
+
+int main()
+{
+	int n, m, u, v;
+	while (scanf("%d%d", &n, &m) != EOF)
+	{
+		memset(head, -1, sizeof(head));
+		memset(mark, 0, sizeof(mark));
+		edgenum = 0;
+		for (int i = 0; i < m; i++)
+		{
+			scanf("%d%d", &u, &v);
+			u--;
+			v--;
+			addedge(u, v ^ 1);
+			addedge(v, u ^ 1);
+		}
+		if (solve(n))
+		{
+			for (int i = 0; i < 2 * n; i++) if (mark[i]) printf("%d\n", i + 1);
+		}
+		else puts("NIE");
+	}
+	return 0;
+}
