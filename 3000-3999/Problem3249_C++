@@ -1,0 +1,66 @@
+#include <cstdio>
+#include <string.h>
+#include <algorithm>
+
+const int mod = 10000000;
+int n;
+
+struct LL
+{
+	int t[41], cnt;
+	LL()
+	{
+		memset(t, 0, sizeof(t));
+		cnt = 1;
+	}
+	void carry()
+	{
+		for (int i = 1; i <= cnt; ++i)
+		{
+			t[i + 1] += t[i] / mod;
+			t[i] %= mod;
+		}
+		if (t[cnt + 1])  ++cnt;
+	}
+	void print()
+	{
+		printf("%d", t[cnt]);
+		for (int i = cnt - 1; i; --i)
+			printf("%07d", t[i]);
+		printf("\n");
+	}
+} a[2][31][31], b[2][31][31], c[2][31][31];
+
+LL operator + (const LL& x, const LL& y)
+{
+	LL z;
+	z.cnt = std::max(x.cnt, y.cnt);
+	for (int i = 1; i <= z.cnt; ++i) z.t[i] = x.t[i] + y.t[i];
+	z.carry();
+	return z;
+}
+
+LL operator * (const LL& x, int p)
+{
+	LL y = x;
+	for (int i = 1; i <= y.cnt; ++i) y.t[i] *= p;
+	y.carry();
+	return y;
+}
+
+int main()
+{
+	scanf("%d", &n);
+	a[1][0][0].t[1] = 1;
+	for (int i = 1; i <= n; ++i)
+		for (int j = 0; j <= n; ++j)
+			for (int k = 0; k <= n; ++k)
+			{
+				if (i + j + k == 1)  continue;
+				if (i - 1)  a[i & 1][j][k] = (b[i & 1 ^ 1][j][k] + c[i & 1 ^ 1][j][k])*(i - 1);
+				if (j)  b[i & 1][j][k] = (a[i & 1][j - 1][k] + c[i & 1][j - 1][k])*j;
+				if (k)  c[i & 1][j][k] = (a[i & 1][j][k - 1] + b[i & 1][j][k - 1])*k;
+			}
+	b[n & 1][n][n].print();
+	return 0;
+}
