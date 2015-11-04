@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+int n, num[10010];
+
+int solve()
+{
+	int ans = 0, dp[10010];
+	memset(dp, 0, sizeof(dp));
+	num[0] = 32770;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = i - 1; j >= 0; j--) if (num[i] <= num[j]) dp[i] = max(dp[i], dp[j] + 1);
+		ans = max(ans, dp[i]);
+	}
+	return ans;
+}
+
+int main()
+{
+	int data, cases = 1;
+label: n = 0;
+	while (scanf("%d", &data), data != -1) num[++n] = data;
+	if (n != 0)
+	{
+		printf("Test #%d:\n  maximum possible interceptions: %d\n\n", cases++, solve());
+		goto label;
+	}
+	return 0;
+}
