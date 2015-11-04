@@ -1,0 +1,31 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int ncases;
+	scanf("%d", &ncases);
+	while (ncases--)
+	{
+		int i, n, sum[110], f[110], p[110];
+		scanf("%d", &n);
+		for (i = 0; i < n; i++)
+		{
+			int need;
+			scanf("%d%d", &need, &p[i]);
+			sum[i] = (i == 0 ? 0 : sum[i - 1]) + need;
+			int j, min = 999999999;
+			for (j = 0; j < i; j++)
+			{
+				int t = (sum[i] - sum[j] + 10)*p[i] + f[j];
+				if (t < min)  min = t;
+			}
+			int t = (sum[i] + 10)*p[i];
+			if (t < min) min = t;
+			f[i] = min;
+		}
+		printf("%d\n", f[n - 1]);
+	}
+	return 0;
+}
