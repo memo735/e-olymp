@@ -1,0 +1,22 @@
+import java.math.BigDecimal;
+import java.util.Scanner;
+
+public class Main
+{
+	public static void main(String[] args)
+	{
+		Scanner cin = new Scanner(System.in);
+		while (cin.hasNext())
+		{
+			String str = cin.next();
+			BigDecimal Fin = new BigDecimal(0);
+			for (int i = 2; i<str.length(); i++)
+			{
+				BigDecimal sub = new BigDecimal((int)str.charAt(i) - 48);
+				BigDecimal mom = new BigDecimal(8);
+				Fin = Fin.add(sub.divide(mom.pow(i - 1)));
+			}
+			System.out.println(str + " [8] = " + Fin + " [10]");
+		}
+	}
+}
