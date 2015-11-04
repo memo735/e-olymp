@@ -1,0 +1,46 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int n, color[30], map[30][30];
+
+bool isLegal(int x, int temp)
+{
+	for (int i = 1; i < x; i++)
+		if (map[i][x] && color[i] == temp) return false;
+	return true;
+}
+
+bool dfs(int x, int c)
+{
+	if (x > n) return true;
+	for (int i = 1; i <= c; i++)
+	{
+		if (isLegal(x, i))
+		{
+			color[x] = i;
+			if (dfs(x + 1, c)) return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	char str[30];
+	while (cin >> n && n)
+	{
+		int i, j;
+		memset(map, 0, sizeof(map));
+		for (i = 1; i <= n; i++)
+		{
+			cin >> str;
+			for (j = 2; str[j]; j++) map[str[0] - 'A' + 1][str[j] - 'A' + 1] = map[str[j] - 'A' + 1][str[0] - 'A' + 1] = true;
+		}
+		for (i = 1; i <= 4; i++) if (dfs(1, i)) break;
+		if (i == 1) cout << i << " channel needed." << endl;
+		else cout << i << " channels needed." << endl;
+	}
+	return 0;
+}
