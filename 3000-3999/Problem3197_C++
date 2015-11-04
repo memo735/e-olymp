@@ -1,19 +1,31 @@
-#include <cstdio>
-
-using namespace std;
+#include <stdio.h>
 
 int main()
 {
-	int cases, data[9];
-	scanf("%d", &cases);
-	while (cases--){
-		for (int i = 0; i < 9; i++) scanf("%x", &data[i]);
-		unsigned ans = 0;
-		for (int i = 0; i < 32; i++){
-			unsigned sum = 0;
-			for (int j = 0; j < 8; j++) sum += data[j] ^ ans;
-			if ((sum & 1 << i) != ((data[8] ^ ans) & 1 << i)) ans |= 1 << i;
+	int KASE;
+	scanf("%d", &KASE);
+	while (KASE--)
+	{
+		int i, j, t, sum, ans = 0, a[8], b[32];
+		for (i = 0; i < 32; i++) b[i] = 0;
+		for (i = 0; i < 8; i++) scanf("%x", &a[i]);
+		scanf("%x", &sum);
+		for (i = 0; i < 32; i++)
+		{
+			t = 0;
+			for (j = 0; j < 8; j++) t += (a[j] ^ 0) & 1;
+			t = (t + ans) & 1;
+			if (t == (((sum) ^ 0) & 1)) b[i] = 0;
+			else b[i] = 1;
+			t = 0;
+			if (b[i] == 1) for (j = 0; j < 8; j++) t += (a[j] ^ 1) & 1;
+			else for (j = 0; j < 8; j++) t += (a[j] ^ 0) & 1;
+			for (j = 0; j < 8; j++) a[j] = a[j] >> 1;
+			ans = (ans + t) >> 1;
+			sum = sum >> 1;
 		}
+		ans = 0;
+		for (i = 31; i >= 0; i--) ans = ans + (b[i] << i);
 		printf("%x\n", ans);
 	}
 	return 0;
