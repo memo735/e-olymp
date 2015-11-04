@@ -1,0 +1,36 @@
+Program Problem3250;
+var a,d,f: Array[1..100000] of longint; n,i,j,len,test:longint;
+
+function search(k:longint):longint;
+var i,j,m:longint;
+begin
+  i:=1; j:=len;
+  m:=d[(i+j) div 2];
+  while (i<=j) do
+    begin
+      m:=(i+j) div 2;
+      if (d[m]<k) and (d[m+1]>=k) then exit(m)
+      else if (d[m]<k) then i:=m+1
+      else j:=m-1;
+    end;
+end;
+
+begin
+  read(test);
+  while (test>0) do
+  begin
+    read(n); len:=1;
+    fillchar(d,sizeof(d),0);
+    for i:=1 to n do read(a[i]);
+    d[1]:=a[1]; f[1]:=1;
+    for i:=2 to n do
+      begin
+        if (a[i]>d[len]) then begin inc(len); d[len]:=a[i]; f[i]:=len; end
+        else
+          if (a[i]<=d[1]) then begin d[1]:=a[i]; f[i]:=1; end
+          else begin j:=search(a[i]); d[j+1]:=a[i]; f[i]:=j+1; end;
+      end;
+    writeln(len);
+    dec(test);
+  end;
+end.
