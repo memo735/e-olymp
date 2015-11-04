@@ -1,0 +1,46 @@
+#include <stdio.h>
+
+#define inf 0x3f3f3f3f
+
+int main()
+{
+	int t, v, w, N, ans[105], map[105][105];
+	while (scanf("%d", &N) != EOF && N){
+		for (int i = 1; i <= N; i++){
+			for (int j = 1; j <= N; j++){
+				if (i == j) map[i][j] = 0;
+				else map[i][j] = inf;
+			}
+		}
+		for (int u = 1; u <= N; u++){
+			scanf("%d", &t);
+			while (t--){
+				scanf("%d %d", &v, &w);
+				map[u][v] = w;
+			}
+			ans[u] = -1;
+		}
+		//Floyd
+		for (int k = 1; k <= N; k++){
+			for (int i = 1; i <= N; i++){
+				for (int j = 1; j <= N; j++){
+					if (i == k || i == j) continue;
+					if (map[i][k] != inf && map[k][j] != inf && map[i][k] + map[k][j] < map[i][j]) map[i][j] = map[i][k] + map[k][j];
+				}
+			}
+		}
+		for (int i = 1; i <= N; i++){
+			for (int j = 1; j <= N; j++) if (map[i][j] > ans[i])ans[i] = map[i][j];
+		}
+		int min = inf, index = 0;
+		for (int i = 1; i <= N; i++){
+			if (ans[i] < min){
+				min = ans[i];
+				index = i;
+			}
+		}
+		if (min == inf) printf("disjoint\n");
+		else printf("%d %d\n", index, min);
+	}
+	return 0;
+}
