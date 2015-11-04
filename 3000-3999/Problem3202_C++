@@ -1,0 +1,79 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+vector<int> xs, ys, zs, rs;
+
+void dfs(int idx, vector<bool> &exists, vector<vector<int> > &con){
+	if (!exists[idx]) return;
+	exists[idx] = false;
+	for (int i = 0; i < con[idx].size(); i++) dfs(con[idx][i], exists, con);
+}
+
+int calc(double h){
+	int n = rs.size();
+	vector<double> hrs(n);
+	vector<bool> exists(n, false);
+	for (int i = 0; i < n; i++){
+		if (h < zs[i] - rs[i] || zs[i] + rs[i] < h) continue;
+		exists[i] = true;
+		double dz = fabs(h - zs[i]);
+		hrs[i] = sqrt(rs[i] * rs[i] - dz*dz);
+	}
+	vector<vector<int> > con(n);
+	for (int i = 0; i < n; i++){
+		if (!exists[i]) continue;
+		for (int j = i + 1; j < n; j++){
+			if (!exists[j]) continue;
+			int dx = xs[i] - xs[j], dy = ys[i] - ys[j];
+			if (dx*dx + dy*dy <= (hrs[i] + hrs[j])*(hrs[i] + hrs[j])) con[i].push_back(j), con[j].push_back(i);
+		}
+	}
+	int ans = 0;
+	for (int i = 0; i < n; i++){
+		if (!exists[i]) continue;
+		dfs(i, exists, con);
+		ans++;
+	}
+	return ans;
+}
+
+int main(){
+	while (true){
+		int n;
+		cin >> n;
+		if (!n) break;
+		xs = ys = zs = rs = vector<int>(n);
+		for (int i = 0; i < n; i++) cin >> xs[i] >> ys[i] >> zs[i] >> rs[i];
+		vector<double> events;
+		for (int i = 0; i < n; i++){
+			events.push_back(zs[i] + rs[i]);
+			events.push_back(zs[i] - rs[i]);
+			for (int j = i + 1; j < n; j++){
+				int dx = xs[j] - xs[i], dy = ys[j] - ys[i], dz = zs[j] - zs[i];
+				if (dx == 0 && dy == 0) continue;
+				double diff = sqrt(dx*dx + dy*dy + dz*dz);
+				if (rs[i] + rs[j] < diff || diff + min(rs[i], rs[j]) < max(rs[i], rs[j])) continue;
+				double a1 = atan(dz / sqrt(dx*dx + dy*dy));
+				double a2 = acos((diff*diff + rs[i] * rs[i] - rs[j] * rs[j]) / (2 * diff*rs[i]));
+				events.push_back(zs[i] + rs[i] * sin(a1 + a2));
+				events.push_back(zs[i] + rs[i] * sin(a1 - a2));
+			}
+		}
+		sort(events.begin(), events.end());
+		string ans = "";
+		int cur = 0;
+		for (int i = 0; i < events.size() - 1; i++){
+			int count = calc((events[i + 1] + events[i]) / 2.0);
+			if (cur == count) continue;
+			ans += '0' + (cur < count);
+			cur = count;
+		}
+		ans += '0';
+		cout << ans.size() << endl << ans << endl;
+	}
+	return 0;
+}
