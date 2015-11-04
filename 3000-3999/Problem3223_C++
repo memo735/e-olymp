@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+int main()
+{
+	string s;
+	int i, j, c, r, index, ans[3000];
+	while (cin >> s)
+	{
+		index = 1;
+		for (i = s.length() - 1; i > 1; --i)
+		{
+			ans[0] += s[i] - '0';
+			r = 0;
+			for (j = 0; j < index; ++j)
+			{
+				c = (ans[j] + r * 10) / 8;
+				r = (ans[j] + r * 10) % 8;
+				ans[j] = c;
+			}
+			while (r)
+			{
+				ans[j++] = r * 10 / 8;
+				r = r * 10 % 8;
+			}
+			index = j;
+		}
+		cout << s << " [8] = 0.";
+		for (i = 1; i < index; ++i) cout << ans[i];
+		cout << " [10]" << endl;
+	}
+}
