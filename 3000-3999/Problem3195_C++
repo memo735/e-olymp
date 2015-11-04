@@ -1,0 +1,35 @@
+#include<iostream>
+
+using namespace std;
+
+void gcd(int a, int b, int& d, int& x, int& y)
+{
+	if (!b) { d = a; x = 1; y = 0; }
+	else { gcd(b, a%b, d, y, x); y -= x*(a / b); }
+}
+
+int main()
+{
+	int a, b, c, d, x, y, ans, x1 = 0, y1 = 0;
+	while (cin >> a >> b >> c && (a || b || c))
+	{
+		int f = 1;
+		if (a < b) { swap(a, b); f = 0; }
+		gcd(a, b, d, x, y);
+		x = x*c / d; y = y*c / d;
+		int t = d*y / a, mins = 0x3f3f3f3f3f3fll;
+		for (int i = t - 2; i <= t + 2; i++)
+		{
+			ans = abs(x + b / d*i) + abs(y - a / d*i);
+			if (ans < mins)
+			{
+				mins = ans;
+				x1 = abs(x + b / d*i);
+				y1 = abs(y - a / d*i);
+			}
+		}
+		if (f) cout << x1 << " " << y1 << endl;
+		else cout << y1 << " " << x1 << endl;
+	}
+	return 0;
+}
