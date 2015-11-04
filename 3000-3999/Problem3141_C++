@@ -1,0 +1,81 @@
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+
+using namespace std;
+
+struct pointer	{
+	double x, y;
+} ans[120];
+
+const double eps = 0.01;
+
+int main(){
+	int wid, heg, door, p;
+	while (scanf("%d%d%d%d", &wid, &heg, &door, &p) != EOF){
+		if (wid == 0 && heg == 0 && door == 0 && p == 0) break;
+		double ye = 0, xe = wid, ys = heg;
+		double parea = 1.0*wid*heg / p;
+		double part1 = (wid - door)*heg / 2.0;
+		double part2 = wid*heg / 2.0;
+		double part3 = door*heg / 2.0;
+		double tmp;
+		for (int i = 0; i < p; i++){
+			tmp = parea;
+			if (part1 > eps){
+				if (tmp - eps > part1){
+					tmp -= part1;
+					part1 = 0;
+				}
+				else if (fabs(tmp - part1) <= eps){
+					ans[i].x = wid; ans[i].y = heg;
+					part1 = 0;
+					continue;
+				}
+				else {
+					double yy = tmp * 2 / (wid - door);
+					ye += yy;
+					ans[i].x = wid; ans[i].y = ye;
+					part1 -= tmp;
+					continue;
+				}
+			}
+			if (part2 > eps){
+				if (tmp - eps > part2){
+					tmp -= part2;
+					part2 = 0;
+				}
+				else if (fabs(tmp - part2) <= eps){
+					ans[i].x = 0; ans[i].y = heg;
+					part2 = 0;
+					continue;
+				}
+				else {
+					double xx = tmp * 2 / heg;
+					xe -= xx;
+					ans[i].x = xe; ans[i].y = heg;
+					part2 -= tmp;
+					continue;
+				}
+			}
+			if (part3 > eps){
+				if (tmp - eps > part3){
+					part2 = 0;
+				}
+				else if (fabs(tmp - part3) <= eps){
+					ans[i].x = 0; ans[i].y = 0;
+				}
+				else{
+					double yy = tmp * 2 / door;
+					ys -= yy;
+					ans[i].x = 0; ans[i].y = ys;
+					part2 -= tmp;
+				}
+			}
+		}
+		printf("%.3lf %.3lf", ans[0].x, ans[0].y);
+		for (int i = 1; i < p - 1; i++) printf(" %.3lf %.3lf", ans[i].x, ans[i].y);
+		printf("\n");
+	}
+	return 0;
+}
