@@ -1,0 +1,64 @@
+program Problem3219;
+const maxn=100000;
+var map: array[1..100,1..100] of longint;
+    n,pos,min:longint;
+
+procedure init;
+var i,j,k,l,m:longint;
+begin
+ readln(n);
+ if n=0 then halt;
+ for i:=1 to n do
+     for j:=1 to n do if i<>j then map[i,j]:=maxn else map[i,j]:=0;
+  
+  for i:=1 to n do
+      begin
+          read(l);
+          if l<>0 then
+             begin
+                for j:=1 to l do
+                  begin
+                     read(m,k);
+                     map[i,m]:=k;
+                  end;
+             end;
+         readln;
+    end;
+ end;
+
+procedure floyd;
+var i,j,k:longint;
+begin
+for k:=1 to n do
+   for i:=1 to n do
+      for j:=1 to n do
+         if(i<>j)and(j<>k)and(i<>k)
+           and(map[i,j]<>map[1,1])and(map[j,k]<>map[1,1])and(map[i,k]<>map[1,1])
+           and(map[i,k]+map[k,j]<map[i,j]) then map[i,j]:=map[i,k]+map[k,j];
+end;
+
+procedure check;
+var i,j,max:longint;
+begin
+  min:=maxn;
+    for i:=1 to n do
+     begin
+      max:=0;
+      for j:=1 to n do if map[i,j]>max then max:=map[i,j];
+      if max<min then
+        begin
+          pos:=i;
+          min:=max;
+         end;
+      end;
+if min=maxn then writeln('disjoint') else writeln(pos,' ',min);
+end;
+
+begin
+  while not eof do
+    begin
+      init;
+      floyd;
+      check;
+    end;
+end.
