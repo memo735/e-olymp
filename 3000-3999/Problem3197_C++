@@ -1,0 +1,20 @@
+#include <cstdio>
+
+using namespace std;
+
+int main()
+{
+	int cases, data[9];
+	scanf("%d", &cases);
+	while (cases--){
+		for (int i = 0; i < 9; i++) scanf("%x", &data[i]);
+		unsigned ans = 0;
+		for (int i = 0; i < 32; i++){
+			unsigned sum = 0;
+			for (int j = 0; j < 8; j++) sum += data[j] ^ ans;
+			if ((sum & 1 << i) != ((data[8] ^ ans) & 1 << i)) ans |= 1 << i;
+		}
+		printf("%x\n", ans);
+	}
+	return 0;
+}
