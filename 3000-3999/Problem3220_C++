@@ -1,0 +1,85 @@
+#include <cstdio>  
+#include <string.h>
+
+using namespace std;
+
+char ans[50], g[50][50], tp[50][50];
+int n, in[50];
+
+void addTopo(int i, int j, int c)
+{
+	int t = g[i][j] - 'A';
+	if (t != c && !tp[c][t])
+	{
+		++in[t];
+		tp[c][t] = 1;
+	}
+}
+
+void topoSort(int k)
+{
+	if (k == n)
+	{
+		ans[k] = 0;
+		puts(ans);
+		return;
+	}
+	for (int i = 0; i < 26; ++i)
+	{
+		if (in[i] == 0)
+		{
+			ans[k] = i + 'A';
+			in[i] = -1;
+			for (int j = 0; j < 26; ++j) if (tp[i][j]) --in[j];
+			topoSort(k + 1);
+			in[i] = 0;
+			for (int j = 0; j < 26; ++j) if (tp[i][j]) ++in[j];
+		}
+	}
+}
+
+int main()
+{
+	int h, w, c, x1[50], y1[50], x2[50], y2[50];
+
+	while (~scanf("%d%d", &h, &w))
+	{
+		for (int i = 0; i < 26; ++i)
+		{
+			x1[i] = y1[i] = 50;
+			x2[i] = y2[i] = 0;
+		}
+		memset(in, -1, sizeof(in));
+		for (int i = 0; i < h; ++i)
+		{
+			scanf("%s", g[i]);
+			for (int j = 0; j < w; ++j)
+			{
+				if ((c = g[i][j] - 'A') < 0) continue;
+				if (i < x1[c]) x1[c] = i;
+				if (i > x2[c]) x2[c] = i;
+				if (j < y1[c]) y1[c] = j;
+				if (j > y2[c]) y2[c] = j;
+				in[c] = 0;
+			}
+		}
+		memset(tp, 0, sizeof(tp));
+		for (int c = n = 0; c < 26; ++c)
+		{
+			if (in[c] < 0) continue;
+			for (int i = x1[c]; i <= x2[c]; ++i)
+			{
+				addTopo(i, y1[c], c);
+				addTopo(i, y2[c], c);
+			}
+			for (int j = y1[c]; j <= y2[c]; ++j)
+			{
+				addTopo(x1[c], j, c);
+				addTopo(x2[c], j, c);
+			}
+			++n;
+		}
+		topoSort(0);
+	}
+	return 0;
+}
