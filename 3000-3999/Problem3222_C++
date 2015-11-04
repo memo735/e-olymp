@@ -1,0 +1,70 @@
+#include <cstdio>
+#include <cstring>
+#include <queue>
+
+using namespace std;
+
+const int inf = 10000000;
+int n, ed, isok, vis[205], G[205][205];
+
+void dfs(int u)
+{
+	vis[u] = 1;
+	if (isok)    return;
+	if (u == ed)   { isok = 1; return; }
+	for (int i = 0; i < n; i++){
+		if (G[u][i] != inf&&!vis[i]){
+			dfs(i);
+			vis[i] = 0;
+		}
+	}
+}
+
+int main()
+{
+	char str1[100], str2[100];
+	int u, v, dist[205];
+	scanf("%d%d", &n, &ed);
+	memset(G, 0, sizeof(G));
+	memset(vis, 0, sizeof(vis));
+	for (int i = 0; i < n; i++)    dist[i] = inf;
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++) G[i][j] = inf;
+	}
+	while (scanf("%s%s", str1, str2) == 2){
+		sscanf(str1, "%d", &u);
+		sscanf(str2, "%d", &v);
+		G[u][v] = 1;
+	}
+	//bfs();
+	queue<int>que;
+	memset(vis, 0, sizeof(vis));
+	que.push(ed);
+	dist[ed] = 0;
+	vis[ed] = 1;
+	while (!que.empty()){
+		int tmp = que.front();
+		que.pop();
+		vis[tmp] = 0;
+		for (int i = 0; i<n; i++){
+			if (G[i][tmp] != inf&&dist[i]>dist[tmp] + 1){
+				dist[i] = dist[tmp] + 1;
+				if (!vis[i]){
+					vis[i] = 1;
+					que.push(i);
+				}
+			}
+		}
+	}
+	int pos = 0;
+	for (int i = 0; i<n; i++){
+		if (i == ed)   continue;
+		memset(vis, 0, sizeof(vis));
+		isok = 0;
+		vis[i] = 1;
+		dfs(0);
+		if (!isok && dist[pos]>dist[i]) pos = i;
+	}
+	printf("Put guards in room %d.\n", pos);
+	return 0;
+}
