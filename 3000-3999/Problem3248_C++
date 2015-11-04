@@ -1,0 +1,28 @@
+#include <iostream> 
+
+using   namespace  std;
+
+int  main()
+{
+	int  N, M, x = 0, a[501] = { 0 }, b[501] = { 0 }, f[501][501] = { 0 };
+	cin >> N >> M;
+	for (int i = 1; i <= M; ++i)
+		for (int j = 1; j <= N; ++j) f[i][j] = 0xFFFFFFF;
+
+	for (int i = 1; i <= N; ++i){
+		cin >> x;
+		a[i] = a[i - 1];
+		b[i] = b[i - 1];
+		if (x) a[i] ++;
+		else  b[i] ++;
+		f[1][i] = a[i] * b[i];
+	}
+	for (int i = 2; i <= M; ++i)
+		for (int j = i; j <= N; ++j){
+			for (int t = i - 1; t < j; ++t)
+				if (f[i][j] > f[i - 1][t] + (a[j] - a[t]) * (b[j] - b[t]))
+					f[i][j] = f[i - 1][t] + (a[j] - a[t]) * (b[j] - b[t]);
+		}
+	cout << f[M][N] << endl;
+	return   0;
+}
