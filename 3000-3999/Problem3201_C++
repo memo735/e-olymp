@@ -1,0 +1,84 @@
+#include <cstdio>
+#include <map>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool adjacent(pair<int, int> p1, pair<int, int> p2,
+	pair<int, int> p3, pair<int, int> p4){
+	int
+		x1 = p1.first, y1 = p1.second,
+		x2 = p2.first, y2 = p2.second,
+		x3 = p3.first, y3 = p3.second,
+		x4 = p4.first, y4 = p4.second;
+	if ((x2 - x1)*(y4 - y3) != (x4 - x3)*(y2 - y1)) return false;
+	if ((x2 - x1)*(y3 - y1) != (x3 - x1)*(y2 - y1)) return false;
+	return min(p1, p2) < max(p3, p4) && min(p3, p4) < max(p1, p2);
+}
+
+bool adjacent(vector<pair<int, int> > &v1, vector<pair<int, int> > &v2){
+	for (int i = 0; i < v1.size() - 1; i++)
+		for (int j = 0; j < v2.size() - 1; j++)
+			if (adjacent(v1[i], v1[i + 1], v2[j], v2[j + 1])) return true;
+
+	return false;
+}
+
+int dfs(int idx, int n, int t, vector<int> &state, vector<vector<bool> > &con){
+	if (idx == n) return t;
+	vector<bool> v(t, false);
+	for (int i = 0; i < idx; i++) if (con[idx][i]) v[state[i]] = true;
+	int ans = 100;
+	for (int i = 0; i < t; i++)
+		if (!v[i]){
+			state[idx] = i;
+			ans = min(ans, dfs(idx + 1, n, t, state, con));
+		}
+	state[idx] = t;
+	ans = min(ans, dfs(idx + 1, n, t + 1, state, con));
+	return ans;
+}
+
+int main(){
+	while (true){
+		int n;
+		map<string, int> name2id;
+		scanf("%d", &n);
+		if (!n) break;
+		vector<int> ids(n);
+		vector<vector<pair<int, int> > > ps(n);
+		for (int i = 0; i < n; i++){
+			char buf[32];
+			scanf("%s", buf);
+			string name = buf;
+			int id;
+			if (name2id.find(name) == name2id.end()){
+				id = name2id.size();
+				name2id[name] = id;
+			}
+			else id = name2id[name];
+			ids[i] = id;
+			while (true){
+				int x, y;
+				scanf("%d", &x);
+				if (x == -1) break;
+				scanf("%d", &y);
+				ps[i].push_back(make_pair(x, y));
+			}
+			ps[i].push_back(ps[i][0]);
+		}
+		int sz = name2id.size();
+		vector<vector<bool> > connects(sz, vector<bool>(sz, false));
+		for (int i = 0; i < n; i++){
+			for (int j = i + 1; j < n; j++){
+				if (ids[i] == ids[j]) continue;
+				if (connects[ids[i]][ids[j]]) continue;
+				if (adjacent(ps[i], ps[j])) connects[ids[i]][ids[j]] = connects[ids[j]][ids[i]] = true;
+			}
+		}
+		vector<int> state(sz);
+		printf("%d\n", dfs(0, sz, 0, state, connects));
+	}
+	return 0;
+}
