@@ -1,0 +1,20 @@
+var ma: array[0..500,0..1] of integer;
+    i,j,k,l,m,n,a,b,c: longint;
+    f: array[0..500,0..500] of longint;
+begin
+  readln(n,m);
+  for i:=1 to n do
+    begin
+      read(a);
+      ma[i]:=ma[i-1];
+      inc(ma[i,a]);
+    end;
+  fillchar(f,sizeof(f),26);
+  f[0,0]:=0;
+  for k:=1 to m do
+    for i:=k to n-m+k do
+      for j:=k-1 to i-1 do
+        if f[k-1,j]+(ma[i,1]-ma[j,1])*(ma[i,0]-ma[j,0])<f[k,i] then
+          f[k,i]:=f[k-1,j]+(ma[i,1]-ma[j,1])*(ma[i,0]-ma[j,0]);
+  writeln(f[k,n]);
+end.
