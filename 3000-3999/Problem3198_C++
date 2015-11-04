@@ -1,0 +1,87 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <string>
+
+using namespace std;
+
+struct file{
+	bool is_dir;
+	int parent;
+	map<string, int> entries;
+	file(bool dir, int p){
+		is_dir = dir;
+		parent = p;
+	}
+};
+
+vector<file> files;
+
+void add_file(int wd, string &path, int idx){
+	if (path.size() == idx) return;
+	int eidx = idx;
+	while (path.size() != eidx && path[eidx] != '/') eidx++;
+	string trg = path.substr(idx, eidx - idx);
+	if (files[wd].entries.find(trg) == files[wd].entries.end()){
+		int inode = files.size();
+		files[wd].entries[trg] = inode;
+		files.push_back(file(path.size() != eidx, wd));
+		if (path.size() != eidx) add_file(inode, path, eidx + 1);
+	}
+	else add_file(files[wd].entries[trg], path, eidx + 1);
+}
+
+int find(int wd, string &path, int idx){
+	if (path.size() == idx)
+	{
+		if (files[wd].is_dir){
+			if (files[wd].entries.find("index.html") == files[wd].entries.end()) return -1;
+			int inode = files[wd].entries["index.html"];
+			if (files[inode].is_dir) return -1;
+			return inode;
+		}
+		return wd;
+	}
+	int eidx = idx;
+	while (path.size() != eidx && path[eidx] != '/') eidx++;
+	string trg = path.substr(idx, eidx - idx);
+	int inode;
+	if (trg == ".") inode = wd;
+	else if (trg == ".."){
+		inode = files[wd].parent;
+		if (inode == -1) return -1;
+	}
+	else{
+		if (files[wd].entries.find(trg) == files[wd].entries.end()) return -1;
+		inode = files[wd].entries[trg];
+	}
+	bool slash = (path.size() != eidx);
+	if (slash && !files[inode].is_dir) return -1;
+	return find(inode, path, eidx + slash);
+}
+
+int main(){
+	while (true){
+		int n, m;
+		cin >> n >> m;
+		if (!(n | m)) break;
+		string line;
+		getline(cin, line);
+		files.clear();
+		files.push_back(file(true, -1));
+		while (n--){
+			getline(cin, line);
+			add_file(0, line, 1);
+		}
+		while (m--){
+			getline(cin, line);
+			int inode1 = find(0, line, 1);
+			getline(cin, line);
+			int inode2 = find(0, line, 1);
+			if (inode1 == -1 || inode2 == -1) cout << "not found" << endl;
+			else if (inode1 == inode2) cout << "yes" << endl;
+			else cout << "no" << endl;
+		}
+	}
+	return 0;
+}
