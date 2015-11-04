@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <string.h>
+
+int n, m, winner, tu[10][10][10];
+bool over;
+
+int getcolor(int x, int y, int z)
+{
+	if (x <= 0 || y <= 0 || z <= 0 || x > n || y > n || z > n) return 0;
+	return tu[x][y][z];
+}
+
+int move[][3] = {
+	{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+	{ 1, 1, 0 }, { 1, -1, 0 },
+	{ 1, 0, 1 }, { 1, 0, -1 },
+	{ 0, 1, 1 }, { 0, 1, -1 },
+	{ 1, 1, 1 }, { 1, 1, -1 }, { 1, -1, 1 }, { -1, 1, 1 }
+};
+
+bool isover(int x, int y, int z)
+{
+	int i, cnt, color, tox, toy, toz;
+	color = tu[x][y][z];
+	if (color == 0) printf("error in isover\n");
+	for (i = 0; i < 13; ++i)
+	{
+		cnt = 1;
+		tox = x + move[i][0], toy = y + move[i][1], toz = z + move[i][2];
+		while (getcolor(tox, toy, toz) == color)
+		{
+			cnt++;
+			tox += move[i][0], toy += move[i][1], toz += move[i][2];
+		}
+		tox = x - move[i][0], toy = y - move[i][1], toz = z - move[i][2];
+		while (getcolor(tox, toy, toz) == color)
+		{
+			cnt++;
+			tox -= move[i][0], toy -= move[i][1], toz -= move[i][2];
+		}
+		if (cnt >= m){
+			over = true;
+			winner = color;
+			return true;
+		}
+	}
+	return false;
+}
+
+void putpoint(int x, int y, int color)
+{
+	int z;
+	z = n + 1;
+	// get the position
+	while (getcolor(x, y, z) == 0 && z >= 1) z--;
+	z++;
+	tu[x][y][z] = color;
+	isover(x, y, z);
+}
+
+int main()
+{
+	while (true)
+	{
+		int x, y, color = 1, nn, overstep = 0;
+		scanf("%d%d%d", &n, &m, &nn);
+		if (n == 0 && m == 0 && nn == 0) break;
+		over = false;
+		memset(tu, 0, sizeof(tu));
+		while (nn--)
+		{
+			scanf("%d%d", &x, &y);
+			if (!over)
+			{
+				overstep++;
+				putpoint(x, y, color);
+				if (color == 1) color = 2;
+				else color = 1;
+			}
+		}
+		if (over)
+		{
+			if (winner == 1) printf("Black %d\n", overstep);
+			else printf("White %d\n", overstep);
+		}
+		else printf("Draw\n");
+	}
+	return 0;
+}
