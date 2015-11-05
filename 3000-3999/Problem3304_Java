@@ -1,0 +1,56 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    class Input {
+        String ename;
+        int syear;
+        int eyear;
+        public Input(String s, int i1, int i2) {
+            ename = s;
+            syear = i1;
+            eyear = i2;
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line = "";
+        String[] sp;
+        int N, Q;
+        int ey, wy, q;
+        List<Main.Input> inputs;
+        String ename;
+        while((line = br.readLine()) != null) {
+            sp = line.split(" ");
+            N = Integer.parseInt(sp[0]);
+            Q = Integer.parseInt(sp[1]);
+            if(N == 0 && Q == 0) break ;
+            inputs = new ArrayList<Main.Input>();
+            for(; N>0; N--) {
+                line = br.readLine();
+                sp = line.split(" ");
+                ey = Integer.parseInt(sp[1]);
+                wy = Integer.parseInt(sp[2]);
+                inputs.add(new Main().new Input(sp[0], wy-ey, wy));
+            }
+            for(; Q>0; Q--) {
+                ename = "Unknown";
+                line = br.readLine();
+                q = Integer.parseInt(line);
+                for(Main.Input input : inputs) {
+                    if(q > input.syear && q <= input.eyear) {
+                        ename = (new StringBuilder().append(input.ename).append(" ").append(q-input.syear)).toString();
+                        break ;
+                    }
+                }
+                System.out.println(ename);
+            }
+        }
+        br.close();
+    }
+}
