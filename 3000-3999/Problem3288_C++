@@ -1,0 +1,66 @@
+#include <algorithm>
+#include <cstdio>
+#include <iostream>
+
+using namespace std;
+
+typedef long long LL;
+const int NUM = 999997;
+
+LL dp[NUM], best[NUM], dist[NUM], parent[NUM], ending[NUM];
+int index;
+
+void makeLeaf(int par, int hei) {
+	parent[index] = par;
+	best[index] = dist[index] = 0;
+	ending[index] = 1;
+	dp[index++] = hei;
+}
+
+int main() {
+	LL INF = 10000000, res[NUM], height[NUM], child[NUM][2];
+	INF *= INF;
+	int n;
+	cin >> n;
+	index = n;
+	parent[1] = -1;
+	height[1] = 0;
+	for (int i = 1; i < n; i++) {
+		dist[i] =  ending[i] = 0;
+		best[i] =  res[i] =  dp[i] = INF;
+		int p, q;
+		scanf("%d %d", &p, &q);
+		if (p == n) {
+			child[i][0] = index;
+			makeLeaf(i, height[i] + 1);
+		}
+		else {
+			height[p] = height[i] + 1;
+			parent[p] = i;
+			child[i][0] = p;
+		}
+		if (q == n) {
+			child[i][1] = index;
+			makeLeaf(i, height[i] + 1);
+		}
+		else {
+			height[q] = height[i] + 1;
+			parent[q] = i;
+			child[i][1] = q;
+		}
+	}
+	for (int i = index - 1; i >= 1; i--) {
+		int par = parent[i];
+		if (i < n) {
+			int p = child[i][0], q = child[i][1];
+			best[i] = min(best[p] + ending[q] + dist[q], best[q] + ending[p] + dist[p]) + 1;
+			best[i] = dp[i] = min(best[i], dp[p] + dp[q] + 2 + height[i]);
+		}
+		if (i > 1) {
+			ending[par] += ending[i];
+			dist[par] += ending[i] + dist[i];
+		}
+	}
+	cout << dp[1] << endl;
+	return 0;
+}
