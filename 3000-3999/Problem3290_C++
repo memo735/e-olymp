@@ -1,0 +1,153 @@
+#include <cmath>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+int sgn(double x)
+{
+	if (abs(x) < 1e-6) return 0;
+	return x > 0 ? 1 : -1;
+}
+
+struct Point{
+	double x, y;
+	Point(){};
+	Point(double x1, double y1) { x = x1, y = y1; }
+};
+
+typedef Point Vector;
+int n, v1, v2;
+Point p[1024], s1, s2, news1, news2;
+
+Point readp(){
+	int x, y;
+	scanf("%d%d", &x, &y);
+	return Point(x, y);
+}
+
+Vector operator + (Vector a, Vector b) { return Vector(a.x + b.x, a.y + b.y); }
+Vector operator - (Vector a, Vector b) { return Vector(a.x - b.x, a.y - b.y); }
+Vector operator * (Vector a, double b) { return Vector(a.x * b, a.y * b); }
+Vector operator / (Vector a, double b) { return Vector(a.x / b, a.y / b); }
+double operator * (Vector a, Vector b) { return a.x * b.x + a.y * b.y; }
+double operator % (Vector a, Vector b) { return a.x * b.y - a.y * b.x; }
+bool operator == (Point a, Point b) { return sgn(a.x - b.x) == 0 && sgn(a.y - b.y) == 0; }
+double Length(Vector v) { return sqrt(v.x * v.x + v.y * v.y); }
+double Len2(Vector v) { return v.x * v.x + v.y * v.y; }
+Vector Unitv(Vector v) { return v / Length(v); }
+bool PoiInCir(Point p, Point c, double r) { return sgn(Len2(p - c) - r * r) <= 0; }
+
+bool PoiOnSeg(Point p, Point p1, Point p2){
+	if (sgn((p - p1) % (p - p2)) != 0) return false;
+	if (sgn((p1 - p) * (p2 - p)) > 0) return false;
+	return true;
+}
+
+int findf(Point s1){
+	int f = n + 10;
+	for (int i = 0; i + 1 < n; i++) if (PoiOnSeg(s1, p[i], p[i + 1])) f = min(f, i);
+	return f;
+}
+
+void maxtime(Point s1, double &maxt1, double &maxt2){
+	maxt1 = 0;
+	Point nowp = s1;
+	int f = findf(s1);
+	for (int i = f + 1; i < n; i++){
+		maxt1 += Length(nowp - p[i]);
+		nowp = p[i];
+	}
+	nowp = s1;
+	maxt2 = 0;
+	for (int i = f; i >= 0; i--){
+		maxt2 += Length(nowp - p[i]);
+		nowp = p[i];
+	}
+	maxt1 /= v1;
+	maxt2 /= v1;
+}
+
+Point getto(Point s1, double t, int dir){
+	double nowt = 0;
+	Point nowp = s1;
+	int f = findf(nowp);
+	if (dir == 1)
+	{
+		for (int i = f + 1; i < n; i++){
+			if (nowp == p[i]) continue;
+			double needt = Length(nowp - p[i]) / v1;
+			if (sgn(nowt + needt - t) >= 0){
+				nowp = nowp + Unitv(p[i] - nowp) * (t - nowt) * v1;
+				break;
+			}
+			nowt += needt;
+			nowp = p[i];
+		}
+	}
+	else
+	{
+		for (int i = f; i >= 0; i--){
+			if (nowp == p[i]) continue;
+			double needt = Length(nowp - p[i]) / v1;
+			if (sgn(nowt + needt - t) >= 0){
+				nowp = nowp + Unitv(p[i] - nowp) * (t - nowt) * v1;
+				break;
+			}
+			nowt += needt;
+			nowp = p[i];
+		}
+	}
+	return nowp;
+}
+
+double solve(Point sta, Point aim, double maxt, int dir){
+	double l = 0.0, r = maxt, mid;
+	int tt = 100;
+	while (r - l > 1e-10 && tt--){
+		mid = (l + r) * 0.5;
+		Point p1 = getto(aim, mid, dir);
+		if (PoiInCir(p1, sta, mid * v2)) r = mid;
+		else l = mid;
+	}
+	return l;
+}
+
+double solve1(){
+	double maxt1, maxt2, t1, t2;
+	maxtime(s1, maxt1, maxt2);
+	t1 = solve(s2, s1, maxt1, 1);
+	if (sgn(t1 - maxt1) == 0) return 1e20;
+	news2 = getto(s1, t1, 1);
+	news1 = getto(s1, t1, 2);
+	if (sgn(t1 - maxt2) >= 0) return t1;
+	maxtime(news1, maxt1, maxt2);
+	t2 = solve(news2, news1, maxt2, 2);
+	return t1 + t2;
+}
+
+double solve2(){
+	double maxt1, maxt2, t1, t2;
+	maxtime(s1, maxt1, maxt2);
+	t2 = solve(s2, s1, maxt2, 2);
+	if (sgn(t2 - maxt2) == 0) return 1e20;
+	news2 = getto(s1, t2, 2);
+	news1 = getto(s1, t2, 1);
+	if (sgn(t2 - maxt1) >= 0) return t2;
+	maxtime(news1, maxt1, maxt2);
+	t1 = solve(news2, news1, maxt1, 1);
+	return t1 + t2;
+}
+
+int main(){
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) p[i] = readp();
+	s1 = readp(); scanf("%d", &v1);
+	s2 = readp(); scanf("%d", &v2);
+	double maxt1, maxt2;
+	maxtime(s1, maxt1, maxt2);
+	double ans = min(solve1(), solve2());
+	ans = min(ans, max(maxt1, maxt2));
+	printf("%.10f\n", ans);
+	return 0;
+}
