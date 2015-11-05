@@ -1,0 +1,32 @@
+#include <iostream>
+#include <cstdio>
+#include <string.h>
+
+using namespace std;
+
+int ans[10007];
+
+void solve(int value)
+{
+	for (int i = 2; i*i <= value; i++)
+	{
+		while (value%i == 0){
+			ans[i]++;
+			value = value / i;
+		}
+	}
+	if (value != 1) ans[value] += 1;
+}
+
+int main()
+{
+	int num[11];
+	memset(ans, 0, sizeof(ans));
+	for (int i = 0; i < 10; i++) scanf("%d", &num[i]);
+	for (int i = 0; i < 10; i++) solve(num[i]);
+	long long res = 1;
+	for (int i = 2; i < 10007; i++) res *= ans[i] + 1, res = res % 10;
+	res = res % 10;
+	printf("%lld\n", res);
+	return 0;
+}
