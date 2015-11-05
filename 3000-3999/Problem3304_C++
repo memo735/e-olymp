@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+class Era{
+public:
+	string name;
+	int s, e;
+	bool operator<(const Era & e) const { return s < e.s; }
+	Era(string str, int a, int b) :name(str), s(a), e(b){}
+	Era();
+};
+
+Era::Era(){
+}
+
+void func(Era era[], int n){
+	int a;
+	cin >> a;
+	for (int i = 0; i < n; i++){
+		if (era[i].s < a && a <= era[i].e){
+			cout << era[i].name << ' ' << a - era[i].s << endl;
+			return;
+		}
+	}
+	cout << "Unknown" << endl;
+}
+
+int main(){
+	int n, q;
+	while (true){
+		cin >> n >> q;
+		if (n == 0 && q == 0)break;
+		Era era[n];
+		for (int i = 0; i < n; i++){
+			string str;
+			int a, b;
+			cin >> str >> a >> b;
+			era[i] = Era(str, b - a, b);
+		}
+		sort(era, era + n);
+		for (int i = 0; i < q; i++) func(era, n);
+	}
+	return 0;
+}
