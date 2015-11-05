@@ -1,0 +1,114 @@
+#include <utility>
+#include <stack>
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+char *s;
+typedef pair<long long, long long> P;
+
+long long moduler(long long k){
+	return k % 1000000007;
+	//1000000007.
+}
+P ord(P a, P b){
+	return P(moduler(b.first*a.second + a.first*b.second + a.first*b.first), moduler(a.second*b.second));
+}
+
+P notd(P a) { return P(moduler(a.second), moduler(a.first)); }
+
+struct S{
+	P now;
+	long long back;
+};
+
+stack<S> sta;
+
+void solve(){
+	P now, result;
+	S tmp;
+	long long t;
+expr:
+	tmp.now = now;
+	tmp.back = 0;
+	sta.push(tmp);
+	goto term;
+back_0:
+	now = result;
+	while (*s == '|'){
+		s++;
+		tmp.now = now;
+		tmp.back = 1;
+		sta.push(tmp);
+		goto term;
+	back_1: now = ord(now, result);
+	}
+	if (sta.empty()){
+		cout << now.first << endl;
+		return;
+	}
+	else
+	{
+		result = now;
+		goto __back;
+	}
+term:
+	tmp.now = now;
+	tmp.back = 2;
+	sta.push(tmp);
+	goto factor;
+back_2: now = result;
+loop2:
+	if (*s != '&') goto exit_loop2;
+	s++;
+	tmp.now = now;
+	tmp.back = 3;
+	sta.push(tmp);
+	goto factor;
+back_3: now = notd(ord(notd(now), notd(result))); goto loop2;
+exit_loop2: result = now; goto __back;
+factor:
+	now = P(0, 0);
+	while (*s == '~'){
+		now.first = !now.first;
+		s++;
+	}
+	if (*s == '('){
+		s++;
+		tmp.now = now;
+		tmp.back = 4;
+		sta.push(tmp);
+		goto expr;
+	back_4:
+		s++;
+		result = now.first ? notd(result) : result;
+		goto __back;
+	}
+	s++;
+	result = P(1, 1);
+	goto __back;
+__back:
+	t = sta.top().back;
+	now = sta.top().now;
+	sta.pop();
+	if (t == 0) goto back_0;
+	else if (t == 1) goto back_1;
+	else if (t == 2) goto back_2;
+	else if (t == 3) goto back_3;
+	else if (t == 4) goto back_4;
+}
+
+int main(){
+	char tmp[1111111], is[1111111];
+	cin >> is;
+	long long now = 0;
+	for (long long i = 0; is[i]; i++){
+		if (isdigit(is[i])) continue;
+		tmp[now++] = is[i];
+	}
+	memset(is, 0, sizeof(is));
+	for (long long i = 0; tmp[i]; i++) is[i] = tmp[i];
+	s = is;
+	solve();
+}
