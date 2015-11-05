@@ -1,0 +1,81 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <cstdio>
+#include <string.h>
+
+using namespace std;
+
+#define REP(i,x,n) for(int i = x; i < (int)(n); i++)
+#define rep(i,n) REP(i,0,n)
+
+const int dx[] = { 0, 1, 0, -1 };
+const int dy[] = { 1, 0, -1, 0 };
+
+int HP;
+int maxHP;
+int C;
+char a[100][100];
+int damageList[26];
+vector<int> damage;
+int P;
+int potion[12];
+int dp[1 << 12];
+
+bool solve(){
+	memset(dp, 0, sizeof(dp));
+	dp[0] = HP;
+	for (int i = 0; i < damage.size(); i++){
+		for (int j = 0; j < (1 << P); j++){
+			if (dp[j] <= 0) continue;
+			for (int k = 0; k < P; k++){
+				if (j >> k & 1) continue;
+				int usedPotion = j | 1 << k;
+				dp[usedPotion] = max(dp[usedPotion], min(maxHP, dp[j] + potion[k]));
+			}
+		}
+		for (int j = 0; j < 1 << P; j++) dp[j] -= damage[i];
+	}
+	bool ans = false;
+	for (int i = 0; i < 1 << P; i++) if (dp[i] > 0) ans = true;
+	return ans;
+}
+
+int main(){
+	while (cin >> HP >> maxHP && (HP | maxHP)){
+		int R;
+		cin >> R >> C;
+		rep(i, R) rep(j, C) cin >> a[i][j];
+		int T;
+		cin >> T;
+		memset(damageList, 0, sizeof(damageList));
+		rep(i, T){
+			char alpha;
+			int val;
+			cin >> alpha >> val;
+			damageList[alpha - 'A'] = val;
+		}
+		int S;
+		cin >> S;
+		int nx = 0, ny = 0;
+		damage.clear();
+		rep(i, S){
+			char dir;
+			int val, idx = 0;
+			cin >> dir >> val;
+			if (dir == 'R') idx = 0;
+			if (dir == 'D') idx = 1;
+			if (dir == 'L') idx = 2;
+			if (dir == 'U') idx = 3;
+			rep(j, val){
+				nx += dx[idx];
+				ny += dy[idx];
+				damage.push_back(damageList[a[nx][ny] - 'A']);
+			}
+		}
+		cin >> P;
+		rep(i, P) cin >> potion[i];
+		puts(solve() ? "YES" : "NO");
+	}
+	return 0;
+}
