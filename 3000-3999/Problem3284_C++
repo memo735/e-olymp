@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int n; cin >> n;
+	long long cnt = 0;
+	for (int i = 0; i < n; i++)
+	{
+		int a, b;
+		char c;
+		cin >> a >> c >> b;
+		c == '(' ? cnt += b : cnt -= b;
+		cnt ? cout << "No" << endl : cout << "Yes" << endl;
+	}
+	return 0;
+}
