@@ -1,0 +1,28 @@
+#include <forward_list>
+#include <iostream>
+
+using namespace std; 
+
+#define REP(i,x,n) for(int i = x; i < (int)(n); i++)
+#define rep(i, n) REP(i, 0, n)
+
+int main(){
+	int n, m, a[100], b[100];
+	double dp[1 << 14], p;
+	cin >> n >> m >> p;
+	p /= 100;
+	rep(i, m) cin >> a[i] >> b[i], a[i]--, b[i]--;
+	rep(i, 1 << n) if (i){
+		int l = 0;
+		for (; !(l&i); l++);
+		dp[i] = 1;
+		for (int s = i; s; s = s - 1 & i){
+			if (s == i || !(s&l))continue;
+			double tmp = dp[s];
+			rep(j, m) if (i & 1 << a[j] && i & 1 << b[j] && (s >> a[j] & 1) != (s >> b[j] & 1)) tmp *= p;
+			dp[i] -= tmp;
+		}
+	}
+	printf("%.12f\n", dp[(1 << n) - 1]);
+	return 0;
+}
