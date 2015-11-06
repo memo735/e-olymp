@@ -1,0 +1,45 @@
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int q, r, re, p[10];
+	long long tmp, ans, dp[100], c[100][100];
+	long long MOD = 1000000007LL;
+	for (int i = 0; i < 100; ++i) {
+		c[i][0] = c[i][i] = 1;
+		for (int j = 1; j < i; ++j) c[i][j] = (c[i - 1][j] + c[i - 1][j - 1]) % MOD;
+	}
+	scanf("%d", &re);
+	for (int ri = 1; ri <= re; ++ri) {
+		q = 0;
+		for (int i = 1; i <= 9; ++i) {
+			scanf("%d", &p[i]);
+			q += p[i];
+		}
+		ans = 0;
+		for (int i = 1; i <= 9; ++i) {
+			if (p[i] == 0) continue;
+			--p[i];
+			r = 0;
+			dp[0] = 1;
+			fill(dp + 1, dp + q, 0);
+			for (int j = 1; j <= 9; ++j) {
+				r += p[j];
+				for (int k = r; k >= 0; --k) {
+					tmp = 0;
+					for (int l = min(k, p[j]); l >= 0; --l) tmp = (tmp + c[k][l] * dp[k - l]) % MOD;
+					dp[k] = tmp;
+				}
+			}
+			tmp = 0;
+			for (int j = 0; j < q; ++j) {
+				tmp = (tmp * 10 + i) % MOD;
+				ans = (ans + tmp * dp[j]) % MOD;
+			}
+			++p[i];
+		}
+		printf("%lld\n", ans);
+	}
+	return 0;
+}
