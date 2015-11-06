@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+int a, b, c[1100], d[1100], e[1100];
+
+int can(int M){
+	int fin[1100], next1[1100];
+	for (int i = 0; i < M; i++) fin[i] = 0;
+	for (int i = 0; i < a; i++) next1[i] = 0;
+	int last = 0, rem = a;
+	for (int i = 0; i < b; i++){
+		for (int j = 0; j < M; j++){
+			if (fin[j] <= i){
+				for (int k = 0; k < a; k++){
+					if (~next1[k] && next1[k] <= i){
+						next1[k] = -1;
+						fin[j] = i + c[k];
+						last = max(last, fin[j]);
+						rem--;
+						break;
+					}
+				}
+			}
+		}
+		for (int j = 0; j < a; j++) if (~next1[j] && i == next1[j] + d[j]) next1[j] = next1[j] + d[j] + e[j];
+		if (!rem) break;
+	}
+	for (int i = 0; i < a; i++) if (~next1[i])last = 9999999;
+	if (last <= b) return 1;
+	return 0;
+}
+
+int main(){
+	while (scanf("%d%d", &a, &b), a){
+		for (int i = 0; i < a; i++) scanf("%d%d%d", c + i, d + i, e + i);
+		int left = 0, right = 1001;
+		while (left + 1 < right){
+			int M = (left + right) / 2;
+			if (can(M)) right = M;
+			else left = M;
+		}
+		int tr = right;
+		for (int i = 1; i <= 10 && tr - i > 0; i++) if (can(tr - i)) right = tr - i;
+		printf("%d\n", right);
+	}
+}
