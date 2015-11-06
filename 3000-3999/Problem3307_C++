@@ -3,8 +3,6 @@
 
 using namespace std;
 
-#define rep(i,a) for(int i=0;i<a;i++)
-
 int main()
 {
 	string dice[6][3];
