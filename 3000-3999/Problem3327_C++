@@ -1,0 +1,27 @@
+#include <cstdio>
+
+using namespace std;
+
+long long sg(long long x)
+{
+	return x % 2 == 0 ? x / 2 : sg(x / 2);
+}
+
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		int n;
+		long long a, ans = 0;
+		scanf("%d", &n);
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%lld", &a);
+			ans ^= sg(a);
+		}
+		puts(ans == 0 ? "NO" : "YES");
+	}
+	return 0;
+}
