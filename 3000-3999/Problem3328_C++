@@ -1,0 +1,42 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int re, n, m, p[65536], q[65536];
+	vector<int> a, b, v[65536];
+	scanf("%d", &re);
+	for (int ri = 1; ri <= re; ++ri) {
+		scanf("%d%d", &n, &m);
+		a.resize(1 << n);
+		for (int i = 0; i < (1 << n); ++i) {
+			scanf("%d", &p[i]);
+			a[i] = i;
+			q[i] = p[i];
+			v[i].clear();
+		}
+		while (a.size() > 1) {
+			b.clear();
+			for (int i = 0; i < a.size(); i += 2) {
+				int x = a[i], y = a[i + 1];
+				q[x] = min(p[x], q[x] + m);
+				q[y] = min(p[y], q[y] + m);
+				if (q[x] >= q[y]) {
+					q[x] -= q[y];
+					b.push_back(x);
+					v[x].push_back(y);
+				}
+				else {
+					q[y] -= q[x];
+					b.push_back(y);
+					v[y].push_back(x);
+				}
+			}
+			a.swap(b);
+		}
+		printf("%d\n", a[0] + 1);
+		for (int i = 0; i < n; ++i) printf("%d%c", v[a[0]][i] + 1, i == n - 1 ? '\n' : ' ');
+	}
+	return 0;
+}
