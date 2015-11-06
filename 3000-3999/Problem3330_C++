@@ -1,0 +1,110 @@
+#include <string.h>
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 2501;
+
+vector<long long> v[maxn], g[maxn], suo[maxn];
+long long n, top, cnt, bcnt, dfn[maxn], low[maxn], sta[maxn], belong[maxn];
+bool vis[maxn], mark[maxn];
+
+void tarjan(long long x){
+	long long i;
+	low[x] = dfn[x] = cnt++;
+	sta[top++] = x;
+	vis[x] = true;
+	for (i = 0; i < v[x].size(); i++){
+		long long y = v[x][i];
+		if (low[y] == -1){
+			tarjan(y);
+			if (low[y] <= low[x]) low[x] = low[y];
+		}
+		else if (vis[y]) low[x] = min(low[x], dfn[y]);//the edge add a circle
+	}
+	if (dfn[x] == low[x]){
+		long long y;
+		do{
+			y = sta[--top];
+			belong[y] = bcnt;
+			low[y] = 2 * n;
+			vis[y] = false;
+		} while (y != x);
+		bcnt++;
+	}
+}
+
+long long dfs(long long x, long long f, long long &sum)
+{
+	long long i;
+	for (i = 0; i<g[x].size(); i++)
+	{
+		long long y = g[x][i];
+		if (y == f)continue;
+		if (mark[y])continue;
+		sum += suo[y].size();
+		mark[y] = 1;
+		dfs(y, x, sum);
+	}
+}
+
+int main(){
+	int T;
+	cin >> T;
+	while (T--){
+		long long i, j, k, m, x, y, sum = 0, t[maxn];
+		cin >> n >> m;
+		top = bcnt = cnt = 0;
+		for (i = 0; i <= n; i++){
+			v[i].clear();
+			vis[i] = 0;
+			low[i] = -1;
+			dfn[i] = -1;
+		}
+		for (i = 0; i < m; i++)
+		{
+			cin >> x >> y;
+			v[x].push_back(y);
+		}
+		//getscc();
+		for (i = 1; i <= n; i++) if (low[i] == -1) tarjan(i);
+		for (i = 0; i <= n; i++)
+		{
+			g[i].clear();
+			suo[i].clear();
+		}
+		for (i = 1; i <= n; i++)suo[belong[i]].push_back(i);
+		for (i = 0; i < bcnt; i++)
+		{
+			long long t = suo[i].size();
+			sum += t*(t - 1);
+		}
+		for (i = 0; i < bcnt; i++)
+		{
+			memset(mark, 0, sizeof(mark));
+			for (j = 0; j < suo[i].size(); j++)
+			{
+				long long x = suo[i][j];
+				for (k = 0; k < v[x].size(); k++)
+				{
+					long long y = v[x][k];
+					if (belong[y] == i) continue;
+					if (mark[belong[y]]) continue;
+					mark[belong[y]] = 1;
+					g[i].push_back(belong[y]);
+				}
+			}
+		}
+		for (i = 0; i < bcnt; i++)
+		{
+			memset(mark, 0, sizeof(mark));
+			t[i] = 0;
+			dfs(i, -1, t[i]);
+		}
+		for (i = 0; i < bcnt; i++) sum += t[i] * suo[i].size();
+		cout << sum << endl;
+	}
+	return 0;
+}
