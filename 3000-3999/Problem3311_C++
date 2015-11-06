@@ -1,0 +1,69 @@
+#include <cstdio>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+const int N = 10005;
+const int M = N * 4;
+int e, n, fst[N], to[M], nxt[M], dist[M], cost[M];
+
+void add(int u, int v, int c, int d) {
+	to[e] = v;
+	cost[e] = c;
+	dist[e] = d;
+	nxt[e] = fst[u];
+	fst[u] = e++;
+}
+
+int prim() {
+	bool in[N];
+	int ret = 0, dis[N], need[N];
+	memset(in, false, sizeof in);
+	memset(dis, 0x3f, sizeof dis);
+	memset(need, 0x3f, sizeof need);
+	queue<int>q;
+	q.push(1);
+	in[1] = true;
+	dis[1] = need[1] = 0;
+	while (!q.empty()) {
+		int u = q.front(); q.pop();
+		in[u] = false;
+		for (int i = fst[u]; ~i; i = nxt[i]) {
+			int v = to[i], c = cost[i], d = dist[i];
+			if (dis[v] > dis[u] + d) {
+				dis[v] = dis[u] + d;
+				need[v] = c;
+				if (!in[v]) {
+					q.push(v);
+					in[v] = true;
+				}
+			}
+			else if (dis[v] == dis[u] + d&&need[v] > c) {
+				need[v] = c;
+				if (!in[v]) {
+					q.push(v);
+					in[v] = true;
+				}
+			}
+		}
+	}
+	for (int i = 1; i <= n; i++) ret += need[i];
+	return ret;
+}
+
+int main() {
+	int m;
+	while (scanf("%d %d", &n, &m) && n) {
+		e = 0;
+		memset(fst, -1, sizeof fst);
+		for (int i = 0; i < m; i++) {
+			int u, v, c, d;
+			scanf("%d%d%d%d", &u, &v, &d, &c);
+			add(u, v, c, d);
+			add(v, u, c, d);
+		}
+		printf("%d\n", prim());
+	}
+	return 0;
+}
