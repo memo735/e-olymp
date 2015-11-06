@@ -1,0 +1,41 @@
+#include <set>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+
+int main() {
+	string rank1 = "23456789TJQKA", suit = "DCHS";
+	int re, c;
+	char buf[80];
+	set<int> s;
+	vector<int> a, b;
+	scanf("%d", &re);
+	for (int ri = 1; ri <= re; ++ri)
+	{
+		a.clear();
+		for (int i = 0; i < 52; ++i) a.push_back(i);
+		b.clear();
+		for (int i = 0; i < 26; ++i)
+		{
+			scanf("%s", buf);
+			b.push_back(rank1.find(buf[0]) << 2 ^ suit.find(buf[1]));
+		}
+		sort(b.begin(), b.end());
+		s.clear();
+		set_difference(a.begin(), a.end(), b.begin(), b.end(), insert_iterator<set<int> >(s, s.begin()));
+		c = 0;
+		for (int i = 0; i < 26; ++i) {
+			set<int>::iterator it = s.upper_bound(b[i]);
+			if (it != s.begin())
+			{
+				s.erase(--it);
+				++c;
+			}
+		}
+		printf("%d\n", c);
+	}
+	return 0;
+}
