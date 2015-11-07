@@ -1,0 +1,86 @@
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+int ans, sum, num[15], a[15], b[15], c[15];
+bool in[15], vis[15];
+
+bool ok()
+{
+	c[0] = sum - a[0] - a[1] - a[5] - a[4] + a[2] + a[3];
+	if (c[0] & 1) return 0;
+	c[0] /= 2;
+	c[1] = sum - c[0] - a[0] - a[1];
+	c[2] = sum - c[0] - a[4] - a[5];
+	c[3] = sum - a[1] - a[2] - a[0] - a[5] + a[3] + a[4];
+	if (c[3] & 1) return 0;
+	c[3] /= 2;
+	c[4] = sum - c[3] - a[5] - a[0];
+	c[5] = sum - c[3] - a[1] - a[2];
+	memset(in, 0, sizeof(in));
+	bool fl;
+	for (int i = 0; i < 6; i++)
+	{
+		fl = 0;
+		for (int j = 0; j < 6; j++)
+			if (in[j] == 0)
+			{
+				if (b[j] == c[i])
+				{
+					in[j] = 1;
+					fl = 1;
+					break;
+				}
+			}
+		if (fl == 0) return 0;
+	}
+	return 1;
+}
+
+int dfs(int d, int s)
+{
+	if (d == 6)
+	{
+		int k1 = 0, k2 = 0;
+		for (int i = 0; i < 12; i++)
+			if (vis[i]) a[k1++] = num[i];
+			else b[k2++] = num[i];
+			sort(a, a + 6);
+			sort(b, b + 6);
+			do
+			{
+				if (ok()) ans++;
+			} while (next_permutation(a, a + k1));
+	}
+	else
+	{
+		for (int i = s; i < 12; i++)
+		{
+			vis[i] = 1;
+			dfs(d + 1, i + 1);
+			vis[i] = 0;
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+	while (scanf("%d", num))
+	{
+		if (num[0] == 0) break;
+		sum = num[0];
+		for (int i = 1; i<12; i++)
+			scanf("%d", num + i), sum += num[i];
+		if (sum % 3) printf("0\n");
+		else
+		{
+			sum /= 3;
+			ans = 0;
+			dfs(0, 0);
+			printf("%d\n", ans / 12);
+		}
+	}
+	return 0;
+}
