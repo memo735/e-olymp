@@ -1,0 +1,29 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	int n, INF = 1 << 29;
+	while (cin >> n){
+		int pos[10001], time[10001], l[10001], r[10001], pl[10001], pr[10001];
+		for (int i = 0; i < n; i++) cin >> pos[i] >> time[i];
+		for (int i = n - 2; i >= 0; i--){
+			fill(l, l + n, INF);
+			fill(r, r + n, INF);
+			l[i] = r[i] = 0;
+			for (int j = i + 1; j < n; j++){
+				if (pl[j] + abs(pos[i] - pos[i + 1]) < time[i]) l[j] = min(l[j], pl[j] + abs(pos[i] - pos[i + 1]));
+				if (pr[j] + abs(pos[i] - pos[j]) < time[i]) l[j] = min(l[j], pr[j] + abs(pos[i] - pos[j]));
+				if (l[j - 1] + abs(pos[i] - pos[j]) < time[j]) r[j] = min(r[j], l[j - 1] + abs(pos[i] - pos[j]));
+				if (r[j - 1] + abs(pos[j - 1] - pos[j]) < time[j]) r[j] = min(r[j], r[j - 1] + abs(pos[j - 1] - pos[j]));
+			}
+			copy(l, l + n, pl);
+			copy(r, r + n, pr);
+		}
+		int ans = min(l[n - 1], r[n - 1]);
+		if (ans >= INF) cout << "No solution" << endl;
+		else cout << ans << endl;
+	}
+	return 0;
+}
