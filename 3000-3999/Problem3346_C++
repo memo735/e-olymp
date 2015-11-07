@@ -1,0 +1,54 @@
+#include <iostream>
+
+int p[20000], w[20000];
+
+void init(int n)
+{
+	for (int i = 0; i <= n; i++)
+	{
+		p[i] = i;
+		w[i] = 0;
+	}
+}
+
+void unio(int x, int y)
+{
+	p[x] = y;
+	w[x] = abs(x - y) % 1000;
+}
+
+int find(int x)
+{
+	if (p[x] == x) return x;
+	find(p[x]); w[x] += w[p[x]];
+	p[x] = find(p[x]);
+}
+
+int main()
+{
+	int t, n, x, y;
+	char ch;
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d", &n);
+		init(n);
+		getchar();
+		while (scanf("%c", &ch) && ch != 'O')
+		{
+			if (ch == 'E')
+			{
+				scanf("%d", &x);
+				find(x);
+				printf("%d\n", w[x]);
+			}
+			else
+			{
+				scanf("%d%d", &x, &y);
+				unio(x, y);
+			}
+			getchar();
+		}
+	}
+	return 0;
+}
