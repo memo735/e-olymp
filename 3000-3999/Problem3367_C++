@@ -1,0 +1,48 @@
+#include <cstdio>
+#include <string.h>
+
+using namespace std;
+
+int f[50000][2];
+
+void pd(int k, int tt)
+{
+	if (f[k][0] == -1 || f[k][0] > tt) f[k][0] = tt;
+	if (f[k][1] == -1 || f[k][1] < tt) f[k][1] = tt;
+}
+
+int main()
+{
+	int T, n, l, h, a[155];
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d%d%d", &l, &h, &n);
+		for (int i = 1; i <= n; i++) scanf("%d", &a[i]);
+		if (l == 0) printf("Sallow swallow swallows.");
+		else
+		{
+			memset(f, -1, sizeof(f));
+			f[0][0] = f[0][1] = 0;
+			int d = h - l + 1, m = (h + d - 1) / d, mod = h%d;
+			for (int i = 0; i < n; i++)
+				for (int j = m; j >= 0; j--)
+				{
+					if (f[j][0] == -1) continue;
+					int low = f[j][0], high = f[j][1];
+					int tt = low + a[i + 1];
+					int k = (tt + d - 1 - mod) / d;
+					if (mod) k++;
+					if (tt <= h)pd(k, tt);
+					tt = high + a[i + 1];
+					k = (tt + d - 1 - mod) / d;
+					if (mod) k++;
+					if (tt <= h) pd(k, tt);
+				}
+			if (f[m][0] == -1) printf("Sallow swallow wallows in dust.");
+			else printf("Sallow swallow swallows.");
+		}
+		if (T) printf("\n");
+	}
+	return 0;
+}
