@@ -1,0 +1,15 @@
+#include<stdio.h>
+
+int main()
+{
+	int term, n, k;
+	while (scanf("%d", &term) != EOF && term > 0)
+	{
+		n = term;
+		k = 0;
+		while (n > 0) n -= ++k;
+		if (k % 2) printf("TERM %d IS %d/%d\n", term, 1 - n, k + n);
+		else printf("TERM %d IS %d/%d\n", term, k + n, 1 - n);
+	}
+	return 0;
+}
