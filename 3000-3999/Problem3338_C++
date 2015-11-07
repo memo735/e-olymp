@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int a, b, c, d;
+	while (true)
+	{
+		cin >> a >> b >> c >> d;
+		if (a == 0 && b == 0 && c == 0 && d == 0) break;
+		int temp, count = 0;
+		while (true)
+		{
+			if (a == b && a == c && a == d) break;
+			count++;
+			temp = a;
+			a = abs(a - b);
+			b = abs(b - c);
+			c = abs(c - d);
+			d = abs(d - temp);
+		}
+		cout << count << endl;
+	}
+	return 0;
+}
