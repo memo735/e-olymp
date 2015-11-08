@@ -1,0 +1,111 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <set>
+
+using namespace std;
+
+typedef vector< vector<int> > Field;
+int dx[] = { 1, -1, 0, 0 }, dy[] = { 0, 0, 1, -1 };
+
+struct State {
+	Field field;
+	char cost;
+	State() {}
+	State(Field f, char c) : field(f), cost(c) {}
+};
+
+struct Water {
+	char x, y, dir;
+	int t;
+	Water() {}
+	Water(char x, char y, char dir, int t) : x(x), y(y), dir(dir), t(t) {}
+};
+
+bool isEmpty(Field field) {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) if (field[i][j] > 0) return false;
+	}
+	return true;
+}
+
+Field click(Field field, int sx, int sy) {
+	if (field[sx][sy] + 1 < 5) field[sx][sy]++;
+	else {
+		field[sx][sy] = 0;
+		queue<Water> Q;
+		for (int k = 0; k < 4; k++) Q.push(Water(sx, sy, k, 0));
+		int prev = 0;
+		while (!Q.empty()) {
+			Water water = Q.front();
+			Q.pop();
+			if (prev != water.t) {
+				prev = water.t;
+				for (int i = 0; i < 4; i++) {
+					for (int j = 0; j < 4; j++) {
+						if (field[i][j] >= 5) {
+							field[i][j] = 0;
+							for (int k = 0; k < 4; k++) Q.push(Water(i, j, k, water.t + 1));
+						}
+					}
+				}
+			}
+			if (water.dir == -1);
+			else {
+				int nx = water.x + dx[water.dir], ny = water.y + dy[water.dir];
+				if (0 <= nx && nx < 4 && 0 <= ny && ny < 4) {
+					if (field[nx][ny] != 0) {
+						field[nx][ny]++;
+						Q.push(Water(nx, ny, -1, water.t + 1));
+					}
+					else Q.push(Water(nx, ny, water.dir, water.t + 1));
+				}
+			}
+		}
+	}
+	return field;
+}
+
+int main() {
+	Field field(4, vector<int>(4, 0));
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			int v; cin >> v;
+			field[i][j] = v;
+		}
+	}
+	int ans = -1;
+	if (isEmpty(field)) ans = 0;
+	else {
+		queue<State> Q;
+		Q.push(State(field, 0));
+		set<Field> memo;
+		memo.insert(field);
+		while (!Q.empty()) {
+			State stt = Q.front();
+			Q.pop();
+			Field nextField;
+			for (int i = 0; i < 4; i++) {
+				for (int j = 0; j < 4; j++) {
+					if (stt.field[i][j] == 0) continue;
+					nextField = click(stt.field, i, j);
+					if (memo.find(nextField) == memo.end()) {
+						if (isEmpty(nextField)) {
+							ans = stt.cost + 1;
+							goto end;
+						}
+						else {
+							if (stt.cost + 1 < 5) {
+								Q.push(State(nextField, stt.cost + 1));
+								memo.insert(nextField);
+							}
+						}
+					}
+				}
+			}
+		}
+	end:;
+	}
+	cout << ans << endl;
+	return 0;
+}
