@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+vector<vector<int>> plates, hasH, hasI;
+vector<int> cntPlates;
+int H, dp[52][2502];
+
+bool input(){
+	int n;
+	if (!(cin >> n)) return false;
+	plates = vector<vector<int>>(n);
+	vector<int> hs;
+	for (int i = 0; i < n; i++){
+		int k, t;
+		cin >> k;
+		for (int j = 0; j < k; j++){
+			cin >> t;
+			if (plates[i].empty() == false && plates[i].back() == t) continue;
+			plates[i].push_back(t);
+			hs.push_back(t);
+		}
+	}
+	sort(hs.begin(), hs.end());
+	hs.erase(unique(hs.begin(), hs.end()), hs.end());
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < plates[i].size(); j++) plates[i][j] = lower_bound(hs.begin(), hs.end(), plates[i][j]) - hs.begin();
+	}
+	H = hs.size();
+	hasH = vector<vector<int>>(n);
+	for (int i = 0; i < n; i++){
+		hasH[i] = vector<int>(H + 1);
+		for (int j = 0; j < plates[i].size(); j++) hasH[i][plates[i][j]] = 1;
+	}
+	cntPlates = vector<int>(H + 1);
+	hasI = vector<vector<int>>(H + 1);
+	for (int i = 0; i < H + 1; i++){
+		for (int j = 0; j < n; j++){
+			if (hasH[j][i]){
+				cntPlates[i]++;
+				hasI[i].push_back(j);
+			}
+		}
+	}
+	return true;
+}
+
+int dfs(int back, int h){
+	if (h == H) return 0;
+	if (dp[back][h] >= 0) return dp[back][h];
+	int cntSplit = 0, cntStack = 0, ret = 99999999;
+	for (int k = 0; k < hasI[h].size(); k++){
+		int i = hasI[h][k];
+		if (i == back) continue;
+		if (hasH[i][h]){
+			cntStack++;
+			if (plates[i].back() == h) continue;
+			cntSplit++;
+		}
+	}
+	for (int k = 0; k < hasI[h].size(); k++){
+		int i = hasI[h][k];
+		if (i == back) continue;
+		if (hasH[i][h]){
+			int nh = h + 1;
+			while (cntPlates[nh] == 1 && hasH[i][nh]) nh++;
+			int d = 0;
+			if (plates[i].back() == nh - 1 && nh - 1 != h) d = -1;
+			if (plates[i].back() == nh && cntPlates[nh]>1) d = -1;
+			ret = min(ret, dfs(i, nh) + cntSplit + cntStack + d);
+		}
+	}
+	return dp[back][h] = ret;
+}
+
+int main() {
+	for (int testCase = 1; input(); testCase++){
+		cout << "Case " << testCase << ": ";
+		memset(dp, -1, sizeof(dp));
+		cout << dfs(plates.size(), 0) - 1 << endl;
+	}
+	return 0;
+}
