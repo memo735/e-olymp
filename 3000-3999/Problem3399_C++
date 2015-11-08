@@ -1,0 +1,103 @@
+#include <iostream>
+
+using namespace std;
+
+char tmp[6][6], now[8][6], str[60][60], ch[20] = "FRBLUD";
+int used[8], h[] = { 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 }, w[] = { 5, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4 };
+int black[8][3] = { { 1, 2, 5 }, { 2, 3, 5 }, { 0, 1, 5 }, { 0, 3, 5 }, { 1, 2, 4 }, { 2, 3, 4 }, { 0, 1, 4 }, { 0, 3, 4 } };
+int pat[24][6] = { { 0, 1, 2, 3, 4, 5 }, { 1, 2, 3, 0, 4, 5 }, { 2, 3, 0, 1, 4, 5 }, { 3, 0, 1, 2, 4, 5 }, { 3, 2, 1, 0, 5, 4 },
+				{ 2, 1, 0, 3, 5, 4 }, { 1, 0, 3, 2, 5, 4 }, { 0, 3, 2, 1, 5, 4 }, { 5, 1, 4, 3, 0, 2 }, { 1, 4, 3, 5, 0, 2 },
+				{ 4, 3, 5, 1, 0, 2 }, { 3, 5, 1, 4, 0, 2 }, { 3, 4, 1, 5, 2, 0 }, { 4, 1, 5, 3, 2, 0 }, { 1, 5, 3, 4, 2, 0 },
+				{ 5, 3, 4, 1, 2, 0 }, { 0, 5, 2, 4, 1, 3 }, { 5, 2, 4, 0, 1, 3 }, { 2, 4, 0, 5, 1, 3 }, { 4, 0, 5, 2, 1, 3 },
+				{ 4, 2, 5, 0, 3, 1 }, { 2, 5, 0, 4, 3, 1 }, { 5, 0, 4, 2, 3, 1 }, { 0, 4, 2, 5, 3, 1 } };
+char tkz[11][6][6] = { { "DLU..", "..FRB" }, { "U...", "FRBL", "D..." }, { "U...", "FRBL", ".D.." }, { "U...", "FRBL", "..D." },
+					{ "U...", "FRBL", "...D" }, { ".U..", "FRBL", ".D.." }, { ".U..", "FRBL", "..D." }, { "LU..", ".FR.", "..DB" },
+					{ ".U..", "FRB.", "..DL" }, { "..U.", "FRB.", "..DL" }, { "U...", "FRB.", "..DL" } };
+
+struct cube{
+	char p[6]; //FRBLUD
+	cube(){}
+};
+
+cube t[8];
+
+int solve(int a){
+	if (a == 8) return 1;
+	for (int i = 0; i < 8; i++){
+		if (!used[i]){
+			for (int j = 0; j < 24; j++){
+				bool ok = true;
+				for (int k = 0; k < 6; k++) now[a][k] = t[i].p[pat[j][k]];
+				for (int k = 0; k < 3; k++) if (now[a][black[a][k]] != '#') ok = false;
+				for (int k = 0; k < a; k++){
+					for (int l = 0; l < 6; l++){
+						if (now[k][l] != '#'&&now[a][l] != '#'&&now[k][l] != now[a][l]) ok = false;
+						for (int m = 0; m < 6; m++) if (l != m&&now[k][l] != '#'&&now[k][l] == now[a][m]) ok = false;
+					}
+				}
+				if (!ok) continue;
+				used[i] = 1;
+				if (solve(a + 1)) return 1;
+				used[i] = 0;
+			}
+		}
+	}
+	return 0;
+}
+
+int main(){
+	int a, b, sz = 0;
+	scanf("%d%d", &a, &b);
+	for (int i = 0; i < a; i++) scanf("%s", str[i]);
+	for (int u = 0; u < 2; u++){
+		for (int r = 0; r < 4; r++){
+			for (int i = 0; i < a; i++){
+				for (int j = 0; j < b; j++){
+					for (int k = 0; k < 11; k++){
+						if (i + h[k] > a || j + w[k] > b) continue;
+						bool ok = true;
+						for (int l = 0; l < h[k]; l++)
+							for (int m = 0; m < w[k]; m++) if (str[i + l][j + m] == '.'&&tkz[k][l][m] != '.') ok = false;
+						if (ok){
+							for (int l = 0; l < h[k]; l++)
+								for (int m = 0; m < w[k]; m++){
+									if (tkz[k][l][m] != '.'){
+										for (int n = 0; n < 6; n++) if (tkz[k][l][m] == ch[n]) t[sz].p[n] = str[i + l][j + m];
+										str[i + l][j + m] = '.';
+									}
+								}
+							sz++;
+						}
+					}
+				}
+			}
+			for (int i = 0; i < 11; i++){
+				for (int j = 0; j < h[i]; j++){
+					for (int k = 0; k < w[i]; k++) tmp[w[i] - 1 - k][j] = tkz[i][j][k];
+				}
+				swap(h[i], w[i]);
+				for (int j = 0; j < h[i]; j++)
+					for (int k = 0; k < w[i]; k++) tkz[i][j][k] = tmp[j][k];
+			}
+		}
+		for (int i = 0; i < 11; i++){
+			for (int j = 0; j < h[i]; j++){
+				for (int k = 0; k < w[i]; k++){
+					if (tkz[i][j][k] == 'R') tkz[i][j][k] = 'L';
+					else if (tkz[i][j][k] == 'L') tkz[i][j][k] = 'R';
+					tmp[j][w[i] - 1 - k] = tkz[i][j][k];
+				}
+			}
+			for (int j = 0; j < h[i]; j++)
+				for (int k = 0; k < w[i]; k++) tkz[i][j][k] = tmp[j][k];
+		}
+	}
+	for (int i = 0; i < 8; i++){
+		int cnt = 0;
+		for (int j = 0; j < 6; j++) if (t[i].p[j] != '#') cnt++;
+		if (cnt != 3) { printf("No\n"); return 0; }
+	}
+	int ret = solve(0);
+	if (ret) printf("Yes\n");
+	else printf("No\n");
+}
