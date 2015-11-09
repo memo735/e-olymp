@@ -1,0 +1,48 @@
+#include <string.h>
+#include <iostream>
+
+using namespace std;
+
+int mx, x[50], num[50], can[50][50];
+bool g[50][50];
+
+bool dfs(int tot, int cnt){
+	int i, j, k, tuan[50];
+	if (tot == 0){
+		if (cnt > mx){
+			mx = cnt;
+			for (i = 0; i < mx; i++) tuan[i] = x[i];
+			return true;
+		}
+		return false;
+	}
+	for (i = 0; i < tot; i++){
+		if (cnt + (tot - i) <= mx) return false;
+		if (cnt + num[can[cnt][i]] <= mx) return false;
+		k = 0;
+		x[cnt] = can[cnt][i];
+		for (j = i + 1; j < tot; j++) if (g[can[cnt][i]][can[cnt][j]]) can[cnt + 1][k++] = can[cnt][j];
+		if (dfs(k, cnt + 1)) return false;
+	}
+	return false;
+}
+
+int main(){
+	int n, i, j, k;
+	while (scanf("%d", &n) && n){
+		memset(g, 0, sizeof(g));
+		for (i = 1; i <= n; i++){
+			for (j = 1; j <= n; j++) scanf("%d", &g[i][j]);
+		}
+		mx = 1;
+		for (i = n; i >= 1; i--){
+			k = 0;
+			x[0] = i;
+			for (j = i + 1; j <= n; j++) if (g[i][j]) can[1][k++] = j;
+			dfs(k, 1);
+			num[i] = mx;
+		}
+		printf("%d\n", mx);
+	}
+	return 0;
+}
