@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+int dx[] = { -1, -1, -1, 0, 0, 0, 1, 1, 1 };
+int dy[] = { -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+int id, sz, ir[20], ic[20], row[100], col[100];
+long long quvvet10[19];
+
+struct wolf{
+	long long t;
+	int s;
+	wolf() { t = 0; s = 0; }
+};
+
+bool operator<(const wolf&a, const wolf&b){
+	if (a.t != b.t) return a.t < b.t;
+	return a.s < b.s;
+}
+
+map<wolf, int> dp;
+
+int solve(int a, wolf b){
+	if (dp.count(b)) return dp[b];
+	bool dame = false;
+	for (int i = 0; i < id; i++){
+		int cnt = 0;
+		for (int j = a; j < sz; j++) if (abs(ir[i] - row[j]) <= 1 && abs(ic[i] - col[j]) <= 1) cnt++;
+		if (cnt < b.t % quvvet10[i + 1] / quvvet10[i]) { dame = true; break; }
+	}
+	if (dame) return dp[b] = 99999999;
+	if (a == sz) return dp[b] = 0;
+	int ret = 99999999;
+	b.s++;
+	bool ok = true;
+	for (int i = 0; i < id; i++){
+		if (abs(ir[i] - row[a]) <= 1 && abs(ic[i] - col[a]) <= 1 && b.t%quvvet10[i + 1] / quvvet10[i] == 0) ok = false;
+	}
+	if (ok){
+		for (int i = 0; i < id; i++) if (abs(ir[i] - row[a]) <= 1 && abs(ic[i] - col[a]) <= 1) b.t -= quvvet10[i];
+		ret = min(ret, solve(a + 1, b) + 1);
+		for (int i = 0; i < id; i++) if (abs(ir[i] - row[a]) <= 1 && abs(ic[i] - col[a]) <= 1) b.t += quvvet10[i];
+	}
+	ret = min(ret, solve(a + 1, b));
+	b.s--;
+	return dp[b] = ret;
+}
+
+int main(){
+	int a, b, u[17][17], v[17][17];
+	char str[17][17];
+	quvvet10[0] = 1;
+	for (int i = 1; i < 19; i++) quvvet10[i] = quvvet10[i - 1] * 10;
+	while (scanf("%d%d", &a, &b), a){
+		id = sz = 0;
+		dp.clear();
+		wolf st;
+		for (int i = 0; i < a; i++) scanf("%s", str[i]);
+		for (int i = 0; i < a; i++)
+			for (int j = 0; j < b; j++) v[i][j] = u[i][j] = 0;
+
+		for (int i = 0; i < a; i++){
+			for (int j = 0; j < b; j++){
+				if ('0' <= str[i][j] && str[i][j] <= '9'){
+					ir[id] = i;
+					ic[id++] = j;
+					st.t += quvvet10[id - 1] * (str[i][j] - '0');
+					v[i][j] = str[i][j] - '0';
+					for (int k = 0; k < 9; k++){
+						if (0 <= i + dx[k] && i + dx[k] < a && 0 <= j + dy[k] && j + dy[k] < b && str[i + dx[k]][j + dy[k]] != '.') u[i + dx[k]][j + dy[k]]++;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < a; i++)
+			for (int j = 0; j < b; j++)
+				if (u[i][j]){
+					row[sz] = i;
+					col[sz++] = j;
+				}
+		printf("%d\n", solve(0, st));
+	}
+	return 0;
+}
