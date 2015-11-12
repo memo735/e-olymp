@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+int main(){
+	int a, b, p, q, r, c[100], d[100], e[100], ijk[51][51][1024], v[51][51][1024];
+	vector<pair<int, int> > g[100], rev[100];
+	vector<int> h[1100];
+	while (scanf("%d%d", &a, &b), a){
+		d[0] = 0;
+		d[a - 1] = 1000;
+		c[0] = c[a - 1] = 0;
+		for (int i = 1; i < a - 1; i++) scanf("%d%d", c + i, d + i);
+		for (int i = 0; i < 1100; i++) h[i].clear();
+		for (int i = 0; i < a; i++) h[d[i]].push_back(i);
+		for (int i = 0; i < 1100; i++){
+			for (int j = 0; j < h[i].size(); j++) e[h[i][j]] = j;
+		}
+		for (int i = 0; i < 110; i++) g[i].clear();
+		for (int i = 0; i < 110; i++) rev[i].clear();
+		for (int i = 0; i < b; i++){
+			scanf("%d%d%d", &p, &q, &r);
+			p--; q--;
+			g[p].push_back(make_pair(q, r));
+			rev[q].push_back(make_pair(p, r));
+		}
+		for (int i = 0; i < a; i++){
+			for (int j = 0; j < a; j++){
+				for (int k = 0; k < 1024; k++){
+					ijk[i][j][k] = 999999999;
+					v[i][j][k] = 0;
+				}
+			}
+		}
+		ijk[0][0][0] = 0;
+		priority_queue<pair<pair<int, int>, pair<int, int> > >Q;
+		Q.push(make_pair(make_pair(0, 0), make_pair(0, 0)));
+		while (Q.size()){
+			int cost = -Q.top().first.first, bit = Q.top().first.second;
+			int at1 = Q.top().second.first, at2 = Q.top().second.second;
+			Q.pop();
+			if (v[at1][at2][bit]) continue;
+			if (at1 == a - 1 && at2 == a - 1) break;
+			v[at1][at2][bit] = 1;
+			if (d[at1] < d[at2]){
+				for (int i = 0; i < g[at1].size(); i++){
+					int to = g[at1][i].first;
+					if (d[at1] > d[to]) continue;
+					int tob = 0, adc = g[at1][i].second + c[to];
+					if (d[at1] < d[to]){
+						if (d[to] >= d[at2]){
+							tob = 1 << e[at2];
+							if (d[to] == d[at2]) tob |= 1 << e[to];
+							if (to == at2)adc -= c[to];
+						}
+						else tob = 1 << e[to];
+					}
+					else
+					{
+						if (bit & 1 << e[to]) adc -= c[to];
+						tob = bit;
+						tob |= 1 << e[to];
+					}
+					if (!v[to][at2][tob] && ijk[to][at2][tob] > cost + adc){
+						ijk[to][at2][tob] = cost + adc;
+						Q.push(make_pair(make_pair(-ijk[to][at2][tob], tob), make_pair(to, at2)));
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < rev[at2].size(); i++){
+					int to = rev[at2][i].first;
+					if (d[at2] > d[to]) continue;
+					int tob = 0;
+					if (d[at1] == d[at2]) tob = bit;
+					int adc = rev[at2][i].second + c[to];
+					if (d[at2] < d[to]){
+						if (d[to] >= d[at1]){
+							tob |= 1 << e[at1];
+							if (d[to] == d[at1]) tob |= 1 << e[to];
+							if (to == at1)adc -= c[to];
+						}
+						else tob |= 1 << e[to];
+					}
+					else
+					{
+						if (bit & 1 << e[to]) adc -= c[to];
+						tob = bit;
+						tob |= 1 << e[to];
+					}
+					if (!v[at1][to][tob] && ijk[at1][to][tob]>cost + adc){
+						ijk[at1][to][tob] = cost + adc;
+						Q.push(make_pair(make_pair(-ijk[at1][to][tob], tob), make_pair(at1, to)));
+					}
+				}
+			}
+		}
+		int ret = 999999999;
+		for (int i = 0; i < 1024; i++) ret = min(ret, ijk[a - 1][a - 1][i]);
+		if (ret > 99999999) printf("-1\n");
+		else printf("%d\n", ret);
+	}
+}
