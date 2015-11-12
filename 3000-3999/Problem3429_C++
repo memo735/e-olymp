@@ -1,0 +1,81 @@
+#include <string.h>
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+struct S
+{
+	int id, time;
+	char str[3];
+};
+
+int main()
+{
+	int n;
+	S s[1010];
+	while (scanf("%d", &n), n)
+	{
+		int y, m, h, mm, id, max_id = 0;
+		char str[3];
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d/%d %d:%d %s %d", &y, &m, &h, &mm, str, &id);
+			s[i].id = id, s[i].time = h * 60 + mm, strcpy(s[i].str, str);
+			max_id = max(max_id, id);
+		}
+		bool is_at1 = false, is_at2 = false;
+		int _beg_time = -1, temp_time = 0, max_time = 0;
+		for (int j = 1; j <= max_id; j++)
+		{
+			for (int i = 0; i < n; i++)
+			{
+				if (s[i].id == 0)
+				{
+					if (s[i].str[0] == 'I')
+					{
+						is_at1 = true;
+						if (is_at2 == true) _beg_time = s[i].time;
+					}
+					else
+					{
+						is_at1 = false;
+						if (is_at2 == true)
+						{
+							if (_beg_time != -1)
+							{
+								temp_time += s[i].time - _beg_time;
+								_beg_time = -1;
+							}
+						}
+					}
+				}
+				else
+				{
+					if (s[i].id == j)
+					{
+						if (s[i].str[0] == 'I')
+						{
+							is_at2 = true;
+							if (is_at1 == true) _beg_time = s[i].time;
+						}
+						else
+						{
+							is_at2 = false;
+							if (_beg_time != -1)
+							{
+								temp_time += s[i].time - _beg_time;
+								_beg_time = -1;
+							}
+						}
+					}
+				}
+			}
+			max_time = max(max_time, temp_time);
+			_beg_time = -1;
+			temp_time = 0;
+		}
+		printf("%d\n", max_time);
+	}
+	return 0;
+}
