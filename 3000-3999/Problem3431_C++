@@ -1,0 +1,72 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+#include <stdio.h>
+
+using namespace std;
+
+string a[310], s[2000];
+int ans, T[360], turn[360];
+
+bool cmp(string a, string b)
+{
+	if (a.length() != b.length()) return a.length()>b.length();
+	return a < b;
+}
+
+void dfs(int p, int n, int m)
+{
+	int i, x, len = s[p].length(), temp[260];
+	if (p > m)
+	{
+		ans++;
+		for (x = 0; x < 26; x++) T[x] = turn[x];
+		return;
+	}
+	for (i = 1; i <= n; i++)
+	{
+		if (len != a[i].length()) continue;
+		for (x = 0; x < 26; x++) temp[x] = turn[x];
+		for (x = 0; x < len; x++)
+		{
+			if (turn[s[p][x] - 'A'] != -1 && turn[s[p][x] - 'A'] != a[i][x] - 'A') break;
+			if (turn[a[i][x] - 'A'] != -1 && turn[a[i][x] - 'A'] != s[p][x] - 'A') break;
+			turn[s[p][x] - 'A'] = a[i][x] - 'A', turn[a[i][x] - 'A'] = s[p][x] - 'A';
+		}
+		if (x == len) dfs(p + 1, n, m);
+		if (ans > 1) return;
+		for (x = 0; x < 26; x++) turn[x] = temp[x];
+	}
+}
+
+
+int main()
+{
+	int n, m, len, x, i;
+	string out[2000];
+	char ss[2000];
+	while (~scanf("%d", &n) && n)
+	{
+		for (i = 1; i <= n; i++) scanf("%s", ss), a[i] = ss;
+		sort(a + 1, a + 1 + n, cmp);
+		m = 0;
+		while (scanf("%s", ss) && ss[strlen(ss) - 1] != '.') s[++m] = ss, out[m] = ss;
+		ss[strlen(ss) - 1] = '\0', s[++m] = ss, out[m] = ss;
+		sort(s + 1, s + 1 + m, cmp);
+		memset(turn, -1, sizeof(turn));
+		ans = 0;
+		dfs(1, n, m);
+		if (ans == 1)
+		{
+			for (i = 1; i <= m; i++)
+			{
+				len = out[i].length();
+				for (x = 0; x < len; x++) printf("%c", T[out[i][x] - 'A'] + 'A');
+				if (i != m) printf(" ");
+			}
+			puts(".");
+		}
+		else puts("-.");
+	}
+	return 0;
+}
