@@ -1,0 +1,55 @@
+#include <bitset>
+#include <stdio.h>
+
+using namespace std;
+
+bitset<626> r[626];
+
+bool gao(int n) {
+	int c = 0;
+	for (int i = 0; i < n; ++i) {
+		while (c < n) {
+			for (int j = i; j < n; ++j) {
+				if (r[j].test(c)) {
+					swap(r[i], r[j]);
+					goto BURA;
+				}
+			}
+			++c;
+		}
+	BURA:
+		if (c < n) {
+			for (int j = i + 1; j < n; ++j) {
+				if (r[j].test(c)) r[j] ^= r[i];
+			}
+			++c;
+		}
+		else if (r[i].test(n)) return false;
+	}
+	return true;
+}
+
+int main() {
+	int n, m, d, t;
+	while (scanf("%d%d%d", &m, &n, &d) != EOF && d > 0) {
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < m; ++j) {
+				r[i * m + j].reset();
+				r[i * m + j].set(i * m + j);
+				scanf("%d", &t);
+				if (t != 0) r[i * m + j].set(n * m);
+			}
+		}
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < m; ++j) {
+				for (int ii = 0; ii < n; ++ii) {
+					for (int jj = 0; jj < m; ++jj) {
+						if (abs(i - ii) + abs(j - jj) == d) r[i * m + j].set(ii * m + jj);
+					}
+				}
+			}
+		}
+		puts(gao(n * m) ? "1" : "0");
+	}
+	return 0;
+}
