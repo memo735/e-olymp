@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef long long LL;
+
+const LL p = 1000000000LL;
+LL n4[5][5] = { 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 2, 0, 1, 0, 0, -2, 0, 0, 1, 0, 1, 0, 0, 0 };
+LL n5[5][5] = { 0, 0, 0, 0, 0, 0, 11, 1, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0 };
+LL _n4[5] = { 0, 12, 4, 2, 0 }, _n5[5] = { 0, 154, 14, 1, 0 };
+LL c[5][5], d[5][5];
+int s;
+
+void mul(LL a[5][5], LL b[5][5])
+{
+	int i, j, k;
+	memset(d, 0, sizeof(d));
+	for (i = 1; i <= s; ++i)
+		for (j = 1; j <= s; ++j)
+			for (k = 1; k <= s; ++k) d[i][k] = (d[i][k] + a[i][j] * b[j][k]) % p;
+}
+
+void work(LL a[5][5], int y)
+{
+	int i;
+	memset(c, 0, sizeof(c));
+	for (i = 1; i <= s; ++i)  c[i][i] = 1;
+	for (; y; y >>= 1)
+	{
+		if (y & 1)
+		{
+			mul(c, a);
+			memcpy(c, d, sizeof(d));
+		}
+		mul(a, a);
+		memcpy(a, d, sizeof(d));
+	}
+}
+
+int power(int y)
+{
+	LL x = 2LL, t = 1LL;
+	for (; y; y >>= 1)
+	{
+		if (y & 1)  t = (t*x) % p;
+		x = x*x % p;
+	}
+	return t;
+}
+
+int main()
+{
+	LL f[5];
+	int i, j, n, m, ans = 0;
+	scanf("%d%d", &n, &m);
+	memset(f, 0, sizeof(f));
+	if (n&m & 1)  ans = 0;
+	else if (n == 2)  ans = 2;
+	else if (n == 3)  ans = power(m >> 1);
+	else if (n == 4)
+	{
+		s = 4;
+		if (m <= 4)  ans = _n4[s - m + 1];
+		else
+		{
+			work(n4, m - s);
+			for (i = 1; i <= s; ++i)
+				for (j = 1; j <= s; ++j) f[j] = (f[j] + _n4[i] * c[i][j]) % p;
+			ans = (f[1] + p) % p;
+		}
+	}
+	else if (n == 5)
+	{
+		s = 3, m >>= 1;
+		if (m <= 3)  ans = _n5[s - m + 1] << 1;
+		else
+		{
+			work(n5, m - s);
+			for (i = 1; i <= s; ++i)
+				for (j = 1; j <= s; ++j) f[j] = (f[j] + _n5[i] * c[i][j]) % p;
+			ans = ((f[1] << 1) % p + p) % p;
+		}
+	}
+	printf("%d\n", ans);
+	return 0;
+}
