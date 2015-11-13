@@ -1,0 +1,46 @@
+#include <algorithm>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+vector<pair<int, int> > e[101];
+
+int gao(int n, int m) {
+	int d[101][101], ret = 1000000007;
+	priority_queue<pair<int, pair<int, int> > > pq;
+	fill(d[0], d[n], ret);
+	d[0][0] = 0;
+	pq.push(make_pair(-d[0][0], make_pair(0, 0)));
+	while (!pq.empty()) {
+		int u = -pq.top().first, v = pq.top().second.first, w = pq.top().second.second;
+		pq.pop();
+		if (d[v][w] != u) continue;
+		if (u > m) break;
+		if (v == n - 1) ret = min(ret, w);
+		for (vector<pair<int, int> >::const_iterator it = e[v].begin(); it != e[v].end(); ++it) {
+			if (w + 1 < n && d[it->first][w + 1] > d[v][w]) {
+				d[it->first][w + 1] = d[v][w];
+				pq.push(make_pair(-d[it->first][w + 1], make_pair(it->first, w + 1)));
+			}
+			if (d[it->first][w] > d[v][w] + it->second) {
+				d[it->first][w] = d[v][w] + it->second;
+				pq.push(make_pair(-d[it->first][w], make_pair(it->first, w)));
+			}
+		}
+	}
+	return ret;
+}
+
+int main() {
+	int n, m, a, b, c, d;
+	while (scanf("%d%d%d", &n, &m, &d) != EOF && n > 0) {
+		for (int i = 0; i < n; ++i) e[i].clear();
+		for (int i = 0; i < m; ++i) {
+			scanf("%d%d%d", &a, &b, &c);
+			e[--a].push_back(make_pair(--b, c));
+		}
+		printf("%d\n", gao(n, d));
+	}
+	return 0;
+}
