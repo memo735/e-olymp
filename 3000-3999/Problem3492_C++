@@ -1,0 +1,38 @@
+#include <stdio.h>
+#include <iostream>
+
+using namespace std;
+
+int find_set(int x, int* p)
+{
+	return x == p[x] ? x : (p[x] = find_set(p[x], p));
+}
+
+void union_set(int u, int v, int& c, int* p)
+{
+	u = find_set(u, p);
+	v = find_set(v, p);
+	if (u != v) {
+		p[u] = v;
+		c++;
+	}
+}
+
+int main()
+{
+	char s[5];
+	int c1, c2, n, m, k, p1[1010], p2[1010];
+	while (~scanf("%d%d%d", &n, &m, &k) && n) {
+		c1 = c2 = 0;
+		for (int i = 1; i <= n; i++) p1[i] = p2[i] = i;
+		for (int i = 0; i < m; i++) {
+			int u, v;
+			scanf("%s %d%d", s, &u, &v);
+			if (s[0] == 'R') union_set(u, v, c1, p1);
+			else union_set(u, v, c2, p2);
+		}
+		if (k >= n - 1 - c1 && k <= c2) printf("1\n");
+		else printf("0\n");
+	}
+	return 0;
+}
