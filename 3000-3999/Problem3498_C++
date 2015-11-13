@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define MAX_N 1120
+
+int main(){
+	int tbl[15][1 + MAX_N];
+	bool primes[1 + MAX_N];
+	memset(tbl, 0, sizeof(tbl));
+	memset(primes, 1, sizeof(primes));
+	for (int i = 2; i <= MAX_N; i++){
+		if (!primes[i]) continue;
+		for (int j = 2 * i; j <= MAX_N; j += i) primes[j] = false;
+	}
+	tbl[0][0] = 1;
+	for (int i = 2; i <= MAX_N; i++)
+		if (primes[i])
+			for (int j = 14; j > 0; j--)
+				for (int k = i; k <= MAX_N; k++) tbl[j][k] += tbl[j - 1][k - i];
+
+	while (true){
+		int a, b;
+		cin >> a >> b;
+		if (!(a | b)) break;
+		cout << tbl[b][a] << endl;
+	}
+	return 0;
+}
