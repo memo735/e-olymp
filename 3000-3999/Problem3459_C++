@@ -1,0 +1,63 @@
+#include <string.h>
+#include <vector>
+#include <string>
+#include <map>
+#include <iostream>
+
+using namespace std;
+
+#define MAXN 1001
+int degree[MAXN], visit[MAXN];
+vector<int> edge[MAXN];
+
+int dfs(int u)
+{
+	int ans = 0;
+	for (int i = 0; i < edge[u].size(); i++)
+	{
+		int v = edge[u][i];
+		if (visit[v] == 1) continue;
+		visit[v] = 1;
+		if (degree[v]) ans += dfs(v);
+		else ans += 1;   //1
+	}
+	return ans;
+}
+
+int main()
+{
+	int n, group[MAXN];
+	map<string, int> mst;
+	while (cin >> n && n != 0)
+	{
+		mst.clear();
+		memset(degree, 0, sizeof(degree));
+		memset(visit, 0, sizeof(visit));
+		for (int i = 0; i < MAXN; i++) edge[i].clear();
+		int top = 0;
+		string temp, str;
+		for (int i = 0; i < n; i++)
+		{
+			cin >> str;
+			int flag = 1, ok = 0, start = 0, en;
+			while (flag)
+			{
+				if (!ok) en = str.find(':', start);
+				else
+				{
+					en = str.find(',', start);
+					if (en == -1) en = str.size() - 1;
+				}
+				temp = str.substr(start, en - start);
+				if (mst.find(temp) == mst.end()) mst[temp] = ++top;
+				if (!ok) degree[mst[temp]]++, ok = mst[temp];
+				else edge[ok].push_back(mst[temp]), group[i] = ok;
+				if (str[en] == '.') flag = 0;
+				start = en + 1;
+			}
+		}
+		int ans = dfs(1);
+		cout << ans << endl;
+	}
+	return 0;
+}
