@@ -1,0 +1,38 @@
+#include <map>
+#include <stdio.h>
+
+using namespace std;
+
+int main() {
+	int n, s, w, q, a[100001];
+	long long ans;
+	map<int, int> mp;
+	while (scanf("%d%d%d%d", &n, &s, &w, &q) != EOF && n > 0) {
+		for (int i = 0; i < n; ++i) {
+			a[i] = (s / 7) % 10;
+			if (s % 2 == 0) s = s / 2;
+			else s = (s / 2) ^ w;
+		}
+		ans = 0;
+		if (q == 2 || q == 5) {
+			s = 0;
+			for (int i = 0; i < n; ++i) {
+				if (a[i] != 0) ++s;
+				if (a[i] % q == 0) ans += s;
+			}
+		}
+		else {
+			mp.clear();
+			s = 1;
+			w = 0;
+			for (int i = n - 1; i >= 0; --i) {
+				++mp[w];
+				w = (1LL * a[i] * s + w) % q;
+				s = 10LL * s % q;
+				if (a[i] != 0) ans += mp[w];
+			}
+		}
+		printf("%lld\n", ans);
+	}
+	return 0;
+}
