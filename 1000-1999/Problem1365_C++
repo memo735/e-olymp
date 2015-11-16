@@ -1,53 +1,37 @@
-#include <string.h>
 #include <stdio.h>
 #include <algorithm>
 
-#define INF_INT32 536870912
+using namespace std;
 
-int n, finish, start, tmp, w[100][100], d[100], used[100];
-
-void prrr(){
-	for (int i = 0; i<n; i++) printf("%d ", d[i]);
-	printf("\n");
-}
-
-void In(){
-	freopen("input.txt", "r", stdin);
-	freopen("output.txt", "w", stdout);
-	scanf("%d%d%d", &n, &start, &finish);
-	start--; finish--;
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < n; j++){
-			scanf("%d", &tmp);
-			if (tmp != -1 && i != j) w[i][j] = tmp;
-			else w[i][j] = INF_INT32;
-		}
-}
-
-void Init(){
-	for (int i = 0; i < 100; i++) d[i] = w[start][i];
-	d[start] = 0;
-}
-
-int FindMin(){
-	int Min = INF_INT32, v = -1;
-	for (int i = 0; i < n; i++)
-		if (!used[i] && d[i] < Min){
-			Min = d[i];
-			v = i;
-		}
-	return v;
-}
+int d[100], used[100], w[100][100];
 
 void Relax(int v, int to){
-	d[to] = std::min(d[to], d[v] + w[v][to]);
+	d[to] = min(d[to], d[v] + w[v][to]);
 }
 
 int main(){
-	In();
-	Init();
+	int n, tmp, start, finish;
+	scanf("%d%d%d", &n, &start, &finish);
+	start--; finish--;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++){
+			scanf("%d", &tmp);
+			if (tmp != -1 && i != j) w[i][j] = tmp;
+			else w[i][j] = 536870912;
+		}
+	}
+	for (int i = 0; i < 100; i++) d[i] = w[start][i];
+	d[start] = 0;
 	for (int cnt = 0; cnt < n; cnt++){
-		int v = FindMin();
+		int v = -1, Min = 536870912;
+		for (int i = 0; i < n; i++)
+		{
+			if (!used[i] && d[i] < Min){
+				Min = d[i];
+				v = i;
+			}
+		}
 		if (v == -1){
 			d[finish] = -1;
 			break;
