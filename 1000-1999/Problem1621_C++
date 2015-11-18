@@ -1,0 +1,14 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	long n, m, ans;
+	cin >> n;
+	m = abs(n);
+	if (m % 2 == 0) ans = m / 2 * (m + 1);
+	else ans = (m + 1) / 2 * m;
+	if (n > 0) cout << ans << endl;
+	else cout << 1 - ans << endl;
+}
