@@ -6,7 +6,7 @@ namespace Problem7330
     {
         private static void Main(string[] args)
         {
-            long n = long.Parse(Console.ReadLine());
+            int n = int.Parse(Console.ReadLine());
             Console.WriteLine(n - Math.Ceiling(n/3.0));
         }
     }
