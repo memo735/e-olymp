@@ -1,0 +1,70 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int INF = 1 << 29;
+
+// R = 0, D = 1, L = 2, U = 3;
+const int dx[] = { 0, 1, 0, -1 }, dy[] = { 1, 0, -1, 0 };
+const char cc[] = { 'R', 'D', 'L', 'U' };
+
+int H, W;
+char G[10][10];
+string ans;
+bool success;
+
+void dfs(int x, int y, int dir, int remain, string op){
+	if (success) return;
+
+	if (remain == 1){
+		ans = op;
+		success = true;
+		return;
+	}
+	for (int k = 0; k < 4; k++){
+		if (k == (dir + 2) % 4) continue;
+		int nx = x, ny = y;
+		bool findLeaf = false;
+		while (true){
+			nx += dx[k];
+			ny += dy[k];
+			if (!(0 <= nx&&nx < H && 0 <= ny&&ny < W)) break;
+			if (G[nx][ny] == 'o'){
+				findLeaf = true;
+				break;
+			}
+		}
+		if (findLeaf){
+			G[x][y] = '.';
+			string tmp = op + cc[k];
+			dfs(nx, ny, k, remain - 1, tmp);
+			G[x][y] = 'o';
+		}
+	}
+}
+
+int main(){
+	int leaf = 0, sx = 0, sy = 0, dir = 0;
+	cin >> H >> W;
+	for(int i = 0; i < H; i++){
+		for(int j = 0; j < W; j++){
+			cin >> G[i][j];
+			if (G[i][j] == 'o') leaf++;
+			else if (G[i][j] != '.'){
+				sx = i;
+				sy = j;
+				if (G[i][j] == 'R') dir = 0;
+				if (G[i][j] == 'D') dir = 1;
+				if (G[i][j] == 'L') dir = 2;
+				if (G[i][j] == 'U') dir = 3;
+				G[i][j] = 'o';
+				leaf++;
+			}
+		}
+	}
+	success = false;
+	dfs(sx, sy, dir, leaf, string());
+	cout << ans << endl;
+	return 0;
+}
