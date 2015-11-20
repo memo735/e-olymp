@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int dp[6001][2];
+vector<int> c[6001];
+
+void TreeDp(int x)
+{
+	for (int i = 0; i<c[x].size(); i++)
+	{
+		int y = c[x][i];
+		TreeDp(y);
+		dp[x][1] += dp[y][0];
+		dp[x][0] += max(dp[y][0], dp[y][1]);
+	}
+}
+
+int main()
+{
+	int a, b, i, n, v[6001];
+	scanf("%d", &n) != EOF;
+	memset(dp, 0, sizeof(dp));
+	memset(v, 0, sizeof(v));
+	for (i = 1; i <= n; ++i) scanf("%d", &dp[i][1]);
+	while (scanf("%d%d", &a, &b) != EOF)
+	{
+		if (a + b == 0) break;
+		c[b].push_back(a);
+		v[a] = 1;
+	}
+	for (i = 1; i <= n; i++)
+		if (v[i] == 0)
+		{
+			TreeDp(i);
+			break;
+		}
+	printf("%d\n", max(dp[i][0], dp[i][1]));
+	return 0;
+}
