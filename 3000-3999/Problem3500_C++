@@ -1,0 +1,72 @@
+#include <iostream>
+#include <stdio.h>
+
+using namespace std;
+
+int f[401];
+
+int find(int x)
+{
+	if (x != f[x]) f[x] = find(f[x]);
+	return f[x];
+}
+
+void union_set(int x, int y)
+{
+	int px = find(x), py = find(y);
+	if (px != py) f[px] = py;
+}
+
+int main()
+{
+	int n, m, r, t, c[401], w[401], mark[401];
+	bool dp[101][101];
+	for (scanf("%d", &t); t > 0; t--)
+	{
+		for (int i = 1; i <= 400; i++)
+		{
+			mark[i] = c[i] = w[i] = 0;
+			f[i] = i;
+		}
+		for (int i = 0; i <= 100; i++)
+			for (int j = 0; j <= 100; j++)
+				dp[i][j] = false;
+		dp[0][0] = true;
+		n = 1;
+		scanf("%d%d", &m, &r);
+		for (int i = 0; i < r; i++)
+		{
+			int x, y;
+			scanf("%d%d", &x, &y);
+			union_set(x, y + 200);
+		}
+		for (int i = 1; i <= m; i++)
+		{
+			int father;
+			father = find(i);
+			if (mark[father]) c[mark[father]]++;
+			else
+			{
+				mark[father] = n;
+				c[n++]++;
+			}
+			father = find(i + 200);
+			if (mark[father]) w[mark[father]]++;
+			else
+			{
+				mark[father] = n;
+				w[n++]++;
+			}
+		}
+		int res = 0;
+		for (int i = 1; i<n; i++)
+			for (int j = m / 2; j >= c[i]; j--)
+				for (int k = m / 2; k >= w[i]; k--)
+					if (dp[j - c[i]][k - w[i]])
+					{
+						dp[j][k] = true;
+						if (j == k) res = res>k ? res : k;
+					}
+		printf("%d\n", res);
+	}
+}
