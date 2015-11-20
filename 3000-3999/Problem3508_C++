@@ -1,0 +1,39 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+int main()
+{
+	const double PI = acos(-1.0), e = exp(1.0);
+	int n;
+	while (scanf("%d", &n) != -1)
+	{
+		int tn, num, i;
+		double sum, n1, n2, n3;
+		if (n <= 10)
+		{
+			tn = n;
+			sum = 1;
+			while (2 * tn - 5 > 0)
+			{
+				sum = sum*(2 * tn - 5);
+				tn--;
+			}
+			for (i = 0; sum > 10; i++) sum = sum / 10;
+			printf("%.3lfE%d\n", sum, i);
+			continue;
+		}
+		tn = 2 * n - 5;
+		n1 = 0.5*log(2 * PI*tn) + tn*(log(tn) - 1) + 1 / (12.0*tn);
+		tn = n - 3;
+		n2 = 0.5*log(2 * PI*tn) + tn*(log(tn) - 1) + 1 / (12.0*tn);
+		n3 = (n - 3)*log(2.0);
+		n1 = (n1 - n2 - n3)*log10(e);
+		num = n1;
+		n1 = modf(n1, &n2);
+		n1 = pow(10, n1);
+		printf("%.3lfE%d\n", n1, num);
+	}
+	return 0;
+}
