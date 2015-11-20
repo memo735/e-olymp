@@ -1,0 +1,76 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <queue>
+#include <string.h>
+
+using namespace std;
+
+const long long mod = 1000000007;
+
+vector<int> vs, g[1010], rg[1010];
+bool use[1010];
+int ord[1010];
+
+void fdfs(int v){
+	use[v] = 1;
+	for (int u : g[v]) if (!use[u]) fdfs(u);
+	vs.push_back(v);
+}
+
+void rdfs(int v, int k){
+	use[v] = 1;
+	ord[v] = k;
+	for (int u : rg[v]) if (!use[u]) rdfs(u, k);
+}
+
+int main(){
+	int n, m;
+	cin >> n >> m;
+	for (int i = 0; i < m; i++){
+		int a, b;
+		cin >> a >> b; a--; b--;
+		g[a].push_back(b);
+		rg[b].push_back(a);
+	}
+	memset(use, 0, sizeof(use));
+	vs.clear();
+	for (int i = 0; i < n; i++) if (!use[i]) fdfs(i);
+	memset(use, 0, sizeof(use));
+	int k = 0;
+	for (int i = vs.size() - 1; i >= 0; i--) if (!use[vs[i]]) rdfs(vs[i], k++);
+	vector<vector<int> > ng(k);
+	for (int v = 0; v < n; v++)
+		for (int u : g[v]){
+			if (ord[v] != ord[u]) ng[ord[v]].push_back(ord[u]);
+		}
+
+	vector<int> deg(k, 0);
+	for (int v = 0; v < k; v++){
+		sort(ng[v].begin(), ng[v].end());
+		ng[v].erase(unique(ng[v].begin(), ng[v].end()), ng[v].end());
+		for (int u : ng[v])deg[u]++;
+	}
+	queue<int> q;
+	for (int v = 0; v < k; v++) if (deg[v] == 0) q.push(v);
+	vector<int> to;
+	while (q.size()){
+		int v = q.front(); q.pop();
+		to.push_back(v);
+		for (int u : ng[v]){
+			deg[u]--;
+			if (deg[u] == 0) q.push(u);
+		}
+	}
+	vector<long long> dp0(k, 1), dp1(k, 1);
+	long long ans = 1;
+	for (int i = 0; i < k; i++){
+		int v = to[i];
+		for (int u : ng[v]){
+			(dp0[u] *= dp0[v]) %= mod;
+			(dp1[u] *= dp0[v] + dp1[v]) %= mod;
+		}
+		if (ng[v].empty()) (ans *= dp0[v] + dp1[v]) %= mod;
+	}
+	cout << ans << endl;
+}
