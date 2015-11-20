@@ -1,0 +1,82 @@
+#include <iostream>
+
+using namespace std;
+
+int Map[10][10];
+bool flag;
+
+bool judge(int x, int y)
+{
+	int i, j, k;
+	for (i = x / 3 * 3; i < x / 3 * 3 + 3; i++)
+	{
+		for (j = y / 3 * 3; j < y / 3 * 3 + 3; j++)
+		{
+			if (i == x && y == j) continue;
+			if (Map[x][y] == Map[i][j]) return false;
+		}
+	}
+	k = Map[x][y];
+	for (j = 0; j < 9; j++)
+	{
+		if (j == y) continue;
+		if (Map[x][j] == k) return false;
+	}
+	for (i = 0; i < 9; i++)
+	{
+		if (i == x) continue;
+		if (Map[i][y] == k) return false;
+	}
+	return true;
+}
+
+int dfs(int n)
+{
+	int i;
+	if (n < 0)
+	{
+		flag = true;
+		return 1;
+	}
+	if (Map[n / 9][n % 9] != 0) dfs(n - 1);
+	else
+	{
+		for (i = 1; i <= 9; i++)
+		{
+			Map[n / 9][n % 9] = i;
+			if (judge(n / 9, n % 9))
+			{
+				dfs(n - 1);
+				if (flag) return 1;
+			}
+			Map[n / 9][n % 9] = 0;
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+	int cla, i, j;
+	char s[10][10];
+
+	scanf("%d", &cla);
+	getchar();
+	while (cla--)
+	{
+		flag = false;
+		for (i = 0; i < 9; i++)
+		{
+			gets(s[i]);
+			for (j = 0; j < 9; j++) Map[i][j] = s[i][j] - '0';
+		}
+		dfs(80);
+		for (i = 0; i < 9; i++)
+		{
+			for (j = 0; j < 9; j++) printf("%d", Map[i][j]);
+			printf("\n");
+		}
+		printf("\n");
+	}
+	return 0;
+}
