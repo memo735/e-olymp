@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int tc, n, r;
+	string s;
+	cin >> tc;
+	while (tc--)
+	{
+		cin >> n >> r >> s;
+		cout << n << " ";
+		for (int i = 0; i < s.size(); i++)
+			for (int j = 0; j < r; j++) cout << s[i];
+		cout << "\n";
+	}
+	return 0;
+}
