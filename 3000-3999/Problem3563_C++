@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 100001;
+
+long pre, parg, a[maxn], b[maxn], c[maxn], s[maxn], m[maxn];
+
+long gcd(long x, long y){
+	if (y == 0) return x;
+	return gcd(y, x%y);
+}
+
+long ex(long x, long p, long mod){
+	long a = 1;
+	while (p){
+		if (p % 2) a = a*x % mod;
+		x = x*x % mod;
+		p /= 2;
+	}
+	return a;
+}
+
+long geo(long x, long p, long mod){	//1+x+..+x^(p-1)
+	if (p == 0) return 0;
+	long a = 0, s = 1, t = 1;
+	while (p){
+		if (p % 2){
+			a = (a + s*t) % mod;
+			s = s*x % mod;
+		}
+		t = t*(1 + x) % mod;
+		x = x*x % mod;
+		p /= 2;
+	}
+	return a;
+}
+
+long getord(long M, long a){
+	long p = 1, H = sqrt(M) + 1;
+	vector<pair<int, int>> babies;
+	for (int i = 0; i < H; i++){
+		babies.push_back(pair<int, int>(p, i));
+		p = p*a % M;
+	}
+	long q = p;
+	sort(babies.begin(), babies.end());
+	for (int i = 1; i <= H; i++){
+		int pos = upper_bound(babies.begin(), babies.end(), pair<int, int>(p, H)) - babies.begin() - 1;
+		if (pos >= 0 && babies[pos].first == p) return i*H - babies[pos].second;
+		p = p*q % M;
+	}
+	return 0;
+}
+
+void getnext(long M, long L, int id){
+	long p = L, gs[101];
+	gs[0] = 1;
+	for (int i = 0; i < 100; i++){
+		gs[i + 1] = gcd(p, M);
+		if (gs[i] == gs[i + 1]){
+			a[id] = i;
+			s[id] = geo(L, i, M);
+			long g = gs[i];
+			c[id] = ex(L, i, M);
+			M /= g;
+			break;
+		}
+		p = p*L % M;
+	}
+	if (M == pre){ m[id] = parg; return; }
+	long o = getord(M, L), ss = geo(L, o, M);
+	m[id] = M / gcd(M, ss)*o;
+	pre = M, parg = m[id];
+}
+
+long getans(long b, long M, long L){ return (2 * ex(L, b, M) + M - 1) % M; }
+
+int solve(long N, long M, long L){
+	pre = -1;
+	if (N == 0) return 1;
+	if (N == 1) return L%M;
+	if (N == 2) return getans(1, M, L);
+	if (N == 3) return getans(2, M, L);
+	if (N == 4) return getans(2 * (L + 1), M, L);
+	m[++N] = M;
+	for (long x = N - 1; x >= 4; x--) getnext(m[x + 1], L, x);
+	b[4] = 2 * (L + 1) % m[4];
+	for (long x = 4; x < N; x++){
+		long p = (b[x] - a[x]) % m[x];
+		if (p < 0) p += m[x];
+		b[x + 1] = 2 * (s[x] + c[x] * geo(L, p, m[x + 1])) % m[x + 1];
+	}
+	return (b[N] * (L - 1) + 1) % M;
+}
+
+int main(){
+	for (int t = 1;; t++){
+		long N, M, L;
+		cin >> N >> M >> L;
+		if (M == 0) break;
+		printf("Case %d: %d\n", t, solve(N, M, L));
+	}
+}
