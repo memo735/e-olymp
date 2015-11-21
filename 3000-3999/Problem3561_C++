@@ -1,0 +1,75 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int  MAXN = 10001;
+int nokori, finalAns, parent[MAXN];
+bool isBase[MAXN];
+
+int searchRoot(int v) {
+	if (parent[v] == v) return v;
+	return parent[v] = searchRoot(parent[v]);
+}
+
+void append(int v, int u, int cost) {
+	v = searchRoot(v);
+	u = searchRoot(u);
+	if (v != u) {
+		if (isBase[u] && isBase[v]) {
+			if (nokori == 0) return;
+			nokori--;
+		}
+		finalAns -= cost;
+		if (isBase[u]) {
+			parent[v] = u;
+			return;
+		}
+		parent[u] = v;
+	}
+}
+
+bool solve(int caseNum) {
+	for (int i = 0; i < MAXN; i++) {
+		parent[i] = i;
+		isBase[i] = false;
+	}
+	int N, T, K;
+	cin >> N >> T >> K;
+	nokori = T - K - 1;
+	finalAns = 0;
+	if (N == 0 && T == 0 && K == 0) return false;
+	vector<pair<int, pair<int, int>> > input;
+	for (int i = 0; i < N - 1; i++) {
+		int p, q, r;
+		scanf("%d%d%d", &p, &q, &r);
+		p--; q--;
+		input.push_back(make_pair(r, make_pair(p, q)));
+		finalAns += r;
+	}
+	for (int i = 0; i < T; i++) {
+		int p;
+		scanf("%d", &p);
+		p--;
+		isBase[p] = true;
+	}
+	sort(input.begin(), input.end());
+	reverse(input.begin(), input.end());
+	for (int i = 0; i < N - 1; i++)  {
+		int v = input[i].second.first, u = input[i].second.second;
+		int cost = input[i].first;
+		append(v, u, cost);
+	}
+	printf("Case %d: %d\n", caseNum, finalAns);
+	return true;
+}
+
+int main() {
+	int i = 1;
+	while (true) {
+		if (!solve(i)) break;
+		i++;
+	}
+	return 0;
+}
