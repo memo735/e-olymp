@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+
+#define rep(i,n) for(int i=0;i<(int)(n);i++)
+
+using namespace std;
+
+long mod = 1000000007;
+int H, W, dx[4] = { 1, 0, -1, 0 }, dy[4] = { 0, 1, 0, -1 }, n[500][15];
+string s[500];
+
+long ex(long x, long p){
+	long a = 1;
+	while (p){
+		if (p % 2) a = a*x % mod;
+		x = x*x % mod;
+		p /= 2;
+	}
+	return a;
+}
+
+long inv(long a) { return ex(a, mod - 2); }
+
+long det(vector<vector<long>> a){
+	int N = a.size();
+	if (N == 0) return 1;
+	int B = a[0].size() / 3;
+	long ans = 1;
+	for (int i = 0; i < N; i++){
+		if (a[i][B] == 0){
+			for (int j = i + 1; j < N; j++){
+				if (B - (j - i) < 0) break;
+				if (a[j][B - (j - i)] != 0){
+					int d = j - i;
+					for (int k = d; k <= 2 * B + d; k++) swap(a[i][k], a[j][k - d]);
+					ans *= -1;
+					break;
+				}
+			}
+			if (a[i][B] == 0) return 0;
+		}
+		for (int j = i + 1; j < N; j++){
+			if (B - (j - i) < 0) break;
+			int d = j - i;
+			long c = a[j][B - d] * inv(a[i][B]) % mod;
+			for (int k = B; k <= 3 * B; k++) a[j][k - d] = (a[j][k - d] - c*a[i][k]) % mod;
+		}
+		ans = ans*a[i][B] % mod;
+	}
+	if (ans < 0) ans += mod;
+	return ans;
+}
+
+bool is(int x, int y) { return 0 <= x && x < H && 0 <= y && y < W && s[x][y] == '.'; }
+
+int main(){
+	int tt = 0;
+	while (true){
+		tt++;
+		cin >> H >> W;
+		if (H == 0) break;
+		for (int i = 0; i < H; i++) cin >> s[i];
+		int N = 0;
+		for (int i = 0; i < H; i++)
+			for (int j = 0; j < W; j++){
+				if (s[i][j] == '#') n[i][j] = -1;
+				else n[i][j] = N++;
+			}
+
+		vector<vector<long>> a(N - 1, vector<long>(3 * W + 1, 0));
+		for (int i = 0; i < H; i++)
+			for (int j = 0; j < W; j++){
+				if (!is(i, j)) continue;
+				if (n[i][j] == N - 1) break;
+				for (int d = 0; d < 4; d++){
+					int x = i + dx[d], y = j + dy[d];
+					if (!is(x, y)) continue;
+					if (n[x][y] != N - 1) a[n[i][j]][n[x][y] - n[i][j] + W]++;
+					a[n[i][j]][W]++;
+				}
+			}
+		cout << "Case " << tt << ": " << det(a) << endl;
+	}
+}
