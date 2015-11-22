@@ -1,0 +1,102 @@
+#include <queue>
+#include <iostream>
+
+#define inf 0x3fffffff
+#define mp(a,b) make_pair(a,b)
+
+using namespace std;
+
+#define N 64
+int n, m, num;
+int mx[] = { 1, -1, 0, 0, 0 }, my[] = { 0, 0, 0, 1, -1 };
+
+int sgnInt(int x){
+	if (x < 0) return -1;
+	return x > 0;
+}
+
+struct WAll {
+	int sx, sy, ex, ey;
+} w[11];
+
+int inmap(int x, int y) {
+	if (x >= 0 && x < n && y >= 0 && y < m)return 1;
+	return 0;
+}
+
+struct Point{
+	long x, y;
+	Point(const long &x = 0, const long &y = 0) :x(x), y(y){}
+	Point operator - (const Point  &a) const{ return Point(x - a.x, y - a.y); }
+	bool operator <= (const Point &a) const{ return x < a.x || x == a.x && y <= a.y; }
+	bool operator >= (const Point &a) const{ return x > a.x || x == a.x && y >= a.y; }
+	friend long det(const Point &a, const Point &b){ return a.x * b.y - a.y * b.x; }
+	void in(){ scanf("%ld %ld", &x, &y); }
+};
+
+struct Line{
+	Point s, t;
+	Line(const Point &s = Point(), const Point &t = Point()) :s(s), t(t){}
+	bool isSameSide(const Point &a, const Point &b) const {
+		long k1 = det(a - s, t - s), k2 = det(b - s, t - s);
+		return  sgnInt(k1) * sgnInt(k2) > 0;
+	}
+	friend bool lineInsectLine(Line &l1, Line &l2){
+		if (l1.t <= l1.s) swap(l1.s, l1.t);
+		if (l2.t <= l2.s) swap(l2.s, l2.t);
+		if (det(l2.s - l1.s, l1.t - l1.s) == 0 && det(l2.t - l1.s, l1.t - l1.s) == 0
+			&& det(l1.s - l2.s, l2.t - l2.s) == 0 && det(l1.t - l2.s, l2.t - l2.s) == 0){
+			bool res1 = l2.s <= l1.t && l2.s >= l1.s, res2 = l2.t <= l1.t && l2.t >= l1.s,
+				res3 = l1.s <= l2.t && l1.s >= l2.s, res4 = l1.t <= l2.t && l1.t >= l2.s;
+			return res1 || res2 || res3 || res4;
+		}
+		return !l1.isSameSide(l2.s, l2.t) && !l2.isSameSide(l1.s, l1.t);
+	}
+	void in(){ s.in(); t.in(); }
+};
+
+int check(int x, int y, int xx, int yy){
+	Point p1(x, y), p2(xx, yy);
+	Line l1(p1, p2);
+	for (int i = 0; i < num; i++){
+		Point p3(w[i].sx, w[i].sy), p4(w[i].ex, w[i].ey);
+		Line l2(p3, p4);
+		if (lineInsectLine(l1, l2)) return 1;
+	}
+	return 0;
+}
+
+int main() {
+	int sx, sy, ex, ey, dis[N][N][32][32];
+	queue<pair<pair<int, int>, pair<int, int>> > qe;
+	while (cin >> m >> n) {
+		cin >> sy >> sx >> ey >> ex;
+		cin >> num;
+		for (int i = 0; i < num; i++) cin >> w[i].sy >> w[i].sx >> w[i].ey >> w[i].ex;
+		while (!qe.empty())qe.pop();
+		qe.push(mp(mp(sx, sy) , mp(16 , 16)));
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				for (int k = 0; k < N / 2; k++)
+					for (int x = 0; x < N / 2; x++) dis[i][j][k][x] = inf;
+			}
+		}
+		dis[sx][sy][16][16] = 0;
+		while (!qe.empty()) {
+			pair<pair<int, int>, pair<int, int>> tp = qe.front();
+			qe.pop();
+			for (int i = 0; i < 5; i++) {
+				int vx = tp.second.first + mx[i] - 16, vy = tp.second.second + my[i] - 16;
+				int tx = tp.first.first + vx, ty = tp.first.second + vy;
+				if (inmap(tx, ty) && vx > -16 && vy > -16 && vx < 16 && vy < 16 && !check(tp.first.first, tp.first.second, tx, ty)) {
+					if (dis[tx][ty][vx + 16][vy + 16] > dis[tp.first.first][tp.first.second][vx - mx[i] + 16][vy - my[i] + 16] + 1) {
+						dis[tx][ty][vx + 16][vy + 16] = dis[tp.first.first][tp.first.second][vx - mx[i] + 16][vy - my[i] + 16] + 1;
+						qe.push(mp(mp(tx, ty), mp(vx + 16, vy + 16)));
+					}
+				}
+			}
+		}
+		cout << dis[ex][ey][16][16] << endl;
+	}
+	return 0;
+}
