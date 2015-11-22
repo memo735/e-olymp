@@ -1,0 +1,115 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <assert.h>
+
+using namespace std;
+
+const int MOD = 1000000009;
+long W, H, N;
+
+void matmul(vector<vector<int> > &a, const vector<vector<int> > &b) {
+	assert(a.size() > 0);
+	assert(b.size() > 0);
+	int H = a.size(), W = b[0].size(), K = b.size();
+	assert(K == a[0].size());
+	vector<vector<int> > res(H, vector<int>(W, 0));
+	for (int r = 0; r < H; ++r) {
+		for (int c = 0; c < W; ++c) {
+			long tmp = 0;
+			for (int k = 0; k < K; ++k) {
+				tmp += (long)(a[r][k]) * b[k][c];
+				tmp %= MOD;
+			}
+			res[r][c] = static_cast<int>(tmp);
+		}
+	}
+	a.swap(res);
+}
+
+void matvec(const vector<vector<int> > &m, vector<int> &v) {
+	assert(m.size() > 0);
+	int H = m.size(), W = m[0].size();
+	assert(W == v.size());
+	vector<int> res(H, 0);
+	for (int r = 0; r < H; ++r) {
+		long tmp = 0;
+		for (int c = 0; c < W; ++c) {
+			tmp += (long)(m[r][c]) * v[c];
+			tmp %= MOD;
+		}
+		res[r] = tmp;
+	}
+	v.swap(res);
+}
+
+vector<vector<int> > matpow(const vector<vector<int> > &a, long x) {
+	int N = a.size();
+	assert(N == a[0].size());
+	if (x == 0) {
+		vector<vector<int> > res(N, vector<int>(N, 0));
+		for (int i = 0; i < N; ++i) res[i][i] = 1;
+		return res;
+	}
+	if (x == 1) return a;
+	vector<vector<int> > half = matpow(a, x / 2), res = half;
+	matmul(res, half);
+	if (x % 2 == 1) matmul(res, a);
+	return res;
+}
+
+void solve(int CASE) {
+	vector<pair<long, int> > obstacles(N);
+	for (int i = 0; i < N; ++i) {
+		cin >> obstacles[i].second >> obstacles[i].first;
+		--obstacles[i].second;
+	}
+	sort(obstacles.begin(), obstacles.end());
+	vector<int> vec(W, 0);
+	vector<vector<int> > mat(W, vector<int>(W, 0));
+	for (int r = 0; r < W; ++r) {
+		if (r > 0) mat[r][r - 1] = 1;
+		mat[r][r] = 1;
+		if (r + 1 < W) mat[r][r + 1] = 1;
+	}
+	vec[0] = 1;
+	long cur = 1;
+	int pos = 0;
+	while (pos < N && obstacles[pos].first == cur) ++pos;
+	while (pos < N) {
+		long next_depth = obstacles[pos].first, x = next_depth - cur - 1;
+		assert(x >= 0);
+		vector<vector<int> > mm = matpow(mat, x);
+		matvec(mm, vec);
+		vector<int> next_vec(W, 0);
+		for (int c = 0; c < W; ++c) {
+			if (pos < N && obstacles[pos] == make_pair(next_depth, c)) ++pos;
+			else {
+				long tmp = 0;
+				if (c > 0) tmp += vec[c - 1];
+				tmp += vec[c];
+				if (c + 1 < W) tmp += vec[c + 1];
+				next_vec[c] = tmp % MOD;
+			}
+		}
+		vec.swap(next_vec);
+		cur = next_depth;
+	}
+	// Last
+	if (cur < H) {
+		long x = H - cur;
+		vector<vector<int> > mm = matpow(mat, x);
+		matvec(mm, vec);
+	}
+	cout << "Case " << CASE << ": " << vec[W - 1] << endl;
+}
+
+int main() {
+	int CASE = 1;
+	while (true) {
+		cin >> W >> H >> N;
+		if (!H && !W && !N) break;
+		solve(CASE++);
+	}
+	return 0;
+}
