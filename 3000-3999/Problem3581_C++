@@ -1,0 +1,27 @@
+#include <iostream>
+
+int main()
+{
+	int n = 1;
+	char s[10];
+	while (gets(s))
+	{
+		printf("Case %d: ", n++);
+		if (s[1] == ' ') printf("UNIQUE\n");
+		else
+		{
+			if (s[1] == '#')
+			{
+				if (s[0] == 'G') s[0] = 'A', s[1] = 'b';
+				else s[0] += 1, s[1] = 'b';
+			}
+			else
+			{
+				if (s[0] == 'A') s[0] = 'G', s[1] = '#';
+				else s[0] -= 1, s[1] = '#';
+			}
+			puts(s);
+		}
+	}
+	return 0;
+}
