@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const long mod = 1000000007;
+
+long a[101], cnm[10001][101];
+
+void solve(long n)
+{
+	long i, j, k, s, Sum = 0, dp[101][10001];
+	memset(dp, 0, sizeof(dp));
+	for (i = 0; i <= 100; i++) dp[i][0] = 1;
+	for (i = 1, s = 0; i <= n; i++)
+	{
+		s = s + a[i];
+		for (j = 1; j <= s; j++)
+		{
+			dp[i][j] = dp[i - 1][j];
+			for (k = 1; k <= a[i]; k++)
+				if (k <= j) dp[i][j] = (dp[i][j] + cnm[j][k] * dp[i - 1][j - k] % mod) % mod;
+			if (i == n) Sum = (Sum + dp[i][j]) % mod;
+		}
+	}
+	printf("%ld\n", Sum);
+}
+
+int main()
+{
+	long T = 0, i, j, n;
+	for (i = 0; i <= 10000; i++) cnm[i][0] = 1;
+	for (i = 1; i <= 10000; i++)
+	{
+		for (j = 1; j <= i&&j <= 100; j++)
+		{
+			if (i == j) cnm[i][j] = 1;
+			else cnm[i][j] = (cnm[i - 1][j] + cnm[i - 1][j - 1]) % mod;
+		}
+	}
+	while (scanf("%I64d", &n) > 0)
+	{
+		for (i = 1; i <= n; i++) scanf("%I64d", &a[i]);
+		printf("Case %ld: ", ++T);
+		solve(n);
+	}
+	return 0;
+}
