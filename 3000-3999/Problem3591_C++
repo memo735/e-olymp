@@ -1,0 +1,108 @@
+#include <string.h>
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+const int M = 110;
+int e, t = 0, cnt[M][M], vis[M][M];
+int dir[][2] = { { 0, 1 }, { 1, 0 }, { -1, 0 }, { 0, -1 } };
+
+struct node
+{
+	int x, y, step;
+};
+
+void bfs(int x, int y)
+{
+	queue<node>dict;
+	node cur, next;
+	cur.x = x, cur.y = y, cur.step = 0;
+	dict.push(cur);
+	memset(vis, 0, sizeof(vis));
+	vis[x][y] = 1;
+	int ok = 1;
+	while (!dict.empty())
+	{
+		cur = dict.front();
+		dict.pop();
+		for (int i = 0; i < 4; i++)
+		{
+			int tx = cur.x + dir[i][0], ty = cur.y + dir[i][1];
+			if (tx >= 0 && ty >= 0 && tx < M && ty < M && cnt[tx][ty] && !vis[tx][ty])
+			{
+				vis[tx][ty] = 1;
+				next.x = tx;
+				next.y = ty;
+				next.step = cur.step + 1;
+				if (cnt[next.x][next.y] == e)
+				{
+					ok = 0;
+					cout << "Case " << ++t << ": " << next.step << endl;
+					break;
+				}
+				dict.push(next);
+			}
+		}
+		if (!ok) break;
+	}
+	if (ok) cout << "Case " << ++t << ": " << "impossible" << endl;
+}
+
+int main()
+{
+	int s, si = 0, sj = 0, primer[M*M];
+	memset(primer, 0, sizeof(primer));
+	for (int i = 2; i <= M; i++)
+	{
+		if (!primer[i]) for (int j = i*i; j <= M*M; j += i) primer[j] = 1;
+	}
+	primer[1] = 1;
+	memset(cnt, 0, sizeof(cnt));
+	int x = 0, y = 0, tot = M*M;
+	cnt[0][0] = tot;
+	while (tot > 1)
+	{
+		while (y + 1 < M && !cnt[x][y + 1])
+		{
+			if (!primer[--tot]) cnt[x][++y] = 0;
+			else cnt[x][++y] = tot;
+		}
+		while (x + 1 < M && !cnt[x + 1][y])
+		{
+			if (!primer[--tot]) cnt[++x][y] = 0;
+			else cnt[++x][y] = tot;
+		}
+		while (y - 1 >= 0 && !cnt[x][y - 1])
+		{
+			if (!primer[--tot]) cnt[x][--y] = 0;
+			else cnt[x][--y] = tot;
+		}
+		while (x - 1 >= 0 && !cnt[x - 1][y])
+		{
+			if (!primer[--tot]) cnt[--x][y] = 0;
+			else cnt[--x][y] = tot;
+		}
+	}
+	while (cin >> s >> e)
+	{
+		if (s == e) cout << 0 << endl;
+		int flag = 1;
+		for (int i = 0;; i++)
+		{
+			for (int j = 0; j < M; j++)
+			{
+				if (cnt[i][j] == s)
+				{
+					flag = 0;
+					si = i;
+					sj = j;
+					break;
+				}
+			}
+			if (!flag) break;
+		}
+		bfs(si, sj);
+	}
+	return 0;
+}
