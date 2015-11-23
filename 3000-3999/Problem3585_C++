@@ -1,0 +1,84 @@
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+char pat[4][110];
+int len[4];
+
+long long deal(int a, int b, int c)
+{
+	int re = 0, i = 0;
+	if (len[0] > 1 && a == len[0]) i = 1;
+	int i1 = 10; if (a > len[0]) i1 = 1;
+	if (len[0] >= a && pat[0][a - 1] != '?')
+	{
+		i = pat[0][a - 1] - '0';
+		i1 = i + 1;
+	}
+	for (; i < i1; i++)
+	{
+		int j = 0;
+		if (len[1] > 1 && a == len[1]) j = 1;
+		int j1 = 10;
+		if (a > len[1]) j1 = 1;
+		if (len[1] >= a && pat[1][a - 1] != '?')
+		{
+			j = pat[1][a - 1] - '0';
+			j1 = j + 1;
+		}
+		for (; j < j1; j++)
+		{
+			int k = 0;
+			if (len[2] > 1 && a == len[2]) k = 1;
+			int k1 = 10; if (a > len[2]) k1 = 1;
+			if (len[2] >= a && pat[2][a - 1] != '?')
+			{
+				k = pat[2][a - 1] - '0';
+				k1 = k + 1;
+			}
+			for (; k < k1; k++)
+			{
+				int sum = i + j + b;
+				if (sum % 10 == k && sum / 10 == c) re++;
+			}
+		}
+	}
+	return re;
+}
+
+int main()
+{
+	int cas = 1;
+	char str[110];
+	long long dp[110][11];
+	while (scanf("%s", str) != EOF)
+	{
+		int t = 2, lens = 0;
+		for (int i = strlen(str) - 1; i >= 0; i--)
+		{
+			if (str[i] == '=' || str[i] == '+')
+			{
+				pat[t--][lens] = '\0';
+				lens = 0;
+				continue;
+			}
+			pat[t][lens++] = str[i];
+			if (i == 0) pat[t][lens] = '\0';
+		}
+		for (int i = 0; i < 3; i++) len[i] = strlen(pat[i]);
+		int ma = 0;
+		for (int i = 0; i < 3; i++) ma = max(ma, len[i]);
+		memset(dp, 0, sizeof(dp));
+		dp[0][0] = 1;
+		for (int i = 1; i <= ma; i++)
+			for (int j = 0; j < 2; j++)
+			{
+				for (int k = 0; k < 2; k++) dp[i][k] += dp[i - 1][j] * deal(i, j, k);
+			}
+		cout << "Case " << cas++ << ": " << dp[ma][0] << "\n";
+	}
+	return 0;
+}
