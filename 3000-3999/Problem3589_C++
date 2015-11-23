@@ -1,0 +1,86 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAXN 50001
+#define MAXM 100001
+#define inf 1<<30
+int parent[MAXN];
+
+struct Edge{
+	int u, v, w;
+} W[MAXM], B[MAXM];
+
+int n, m, k, sum, cnt, cntw, cntb;
+
+int Find(int x)
+{
+	if (x == parent[x]) return x;
+	parent[x] = Find(parent[x]);
+	return parent[x];
+}
+
+int cmp(const Edge &p, const Edge &q)
+{
+	return p.w < q.w;
+}
+
+bool Union(int u, int v)
+{
+	int r1 = Find(u), r2 = Find(v);
+	if (r1 == r2) return false;
+	parent[r1] = r2;
+	return true;
+}
+
+bool Judge(int w)
+{
+	for (int i = 0; i <= n; i++) parent[i] = i;
+	cnt = sum = 0;
+	int la = 0, lb = 0;
+	while (la < cntw || lb < cntb){
+		if (W[la].w + w <= B[lb].w){
+			if (Union(W[la].u, W[la].v))
+			{
+				sum += W[la].w + w;
+				cnt++;
+			}
+			la++;
+		}
+		else
+		{
+			if (Union(B[lb].u, B[lb].v)) sum += B[lb].w;
+			lb++;
+		}
+	}
+	if (cnt >= k) return true;
+	return false;
+}
+
+int main()
+{
+	int u, v, w, tag, ans, t = 1;
+	while (~scanf("%d%d%d", &n, &m, &k)){
+		cntw = cntb = 0;
+		while (m--){
+			scanf("%d%d%d%d", &u, &v, &w, &tag);
+			if (tag) B[cntb].u = u, B[cntb].v = v, B[cntb++].w = w;
+			else W[cntw].u = u, W[cntw].v = v, W[cntw++].w = w;
+		}
+		sort(B, B + cntb, cmp);
+		sort(W, W + cntw, cmp);
+		B[cntb].w = W[cntw].w = inf;
+		int l = -100, r = 100, mid;
+		while (l <= r){
+			mid = (l + r) >> 1;
+			if (Judge(mid)){
+				ans = sum - mid*k;
+				l = mid + 1;
+			}
+			else r = mid - 1;
+		}
+		printf("Case %d: %d\n", t++, ans);
+	}
+	return 0;
+}
