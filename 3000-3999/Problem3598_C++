@@ -1,0 +1,104 @@
+#include <iostream>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+const int maxn = 1001, inf = 1 << 30;
+
+int dx[4] = { -1, 0, 1, 0 }, dy[4] = { 0, 1, 0, -1 };
+
+struct node{
+	int x, y;
+	void init(int i, int j) { x = i; y = j; }
+};
+
+queue<node> Q;
+
+int main()
+{
+	int W, H, N, Sx = 0, Sy = 0, Gx = 0, Gy = 0, dir[maxn], cost[maxn][4], dis[maxn][maxn];
+	char str[maxn], mp[maxn][maxn];
+	bool vis[maxn][maxn];
+	while (scanf("%d%d%d", &W, &H, &N) == 3 && W)
+	{
+		scanf("%s", str);
+		dir[0] = 0;
+		for (int i = 1; i <= N; i++)
+		{
+			if (str[i - 1] == 'L') dir[i] = (dir[i - 1] + 3) % 4;
+			else dir[i] = (dir[i - 1] + 1) % 4;
+		}
+		for (int i = 0; i <= W + 1; i++)
+		{
+			for (int j = 0; j <= H + 1; j++) mp[i][j] = '#';
+		}
+		for (int i = 1; i <= W; i++)
+		{
+			scanf("%s", str);
+			for (int j = 1; j <= H; j++)
+			{
+				mp[i][j] = str[j - 1];
+				if (mp[i][j] == 'S')
+				{
+					Sx = i; Sy = j;
+					mp[i][j] = '.';
+				}
+				else if (mp[i][j] == 'G'){
+					Gx = i; Gy = j;
+					mp[i][j] = '.';
+				}
+			}
+		}
+		for (int i = N; i >= 0; i--)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				if (dir[i] == j) cost[i][j] = 0;
+				else
+				{
+					if (i == N) cost[i][j] = inf;
+					else cost[i][j] = cost[i + 1][j] + 1;
+				}
+			}
+		}
+		node now, cur;
+		int ans = 0;
+		memset(dis, -1, sizeof(dis));
+		memset(vis, 0, sizeof(vis));
+		now.init(Sx, Sy);
+		dis[Sx][Sy] = 0;
+		vis[Sx][Sy] = 1;
+		while (!Q.empty()) Q.pop();
+		Q.push(now);
+		while (!Q.empty())
+		{
+			cur = Q.front();
+			Q.pop();
+			int dd = dis[cur.x][cur.y];
+			vis[cur.x][cur.y] = 0;
+			for (int k = 0; k < 4; k++)
+			{
+				int x = cur.x + dx[k], y = cur.y + dy[k];
+				if (mp[x][y] == '.' && cost[dd][k] < inf){
+					int tmp = dd + cost[dd][k];
+					if (dis[x][y] == -1 || tmp < dis[x][y]){
+						dis[x][y] = tmp;
+						if (x == Gx && y == Gy)
+						{
+							ans = 1;
+							break;
+						}
+						if (!vis[x][y]){
+							now.init(x, y);
+							Q.push(now);
+							vis[x][y] = 1;
+						}
+					}
+				}
+			}
+		}
+		puts(ans ? "Yes" : "No");
+	}
+	return 0;
+}
