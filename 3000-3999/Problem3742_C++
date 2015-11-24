@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const char * digitFormat = "%.1d";
+
+struct BigInt
+{
+	int amount, digits[210];
+	static int P;
+	BigInt()
+	{
+		memset(digits, 0, sizeof(digits));
+		amount = 1;
+	}
+	BigInt(int n)
+	{
+		memset(digits, 0, sizeof(digits));
+		amount = 0;
+		while (n)
+		{
+			digits[amount++] = n % 10;
+			n /= 10;
+		}
+	}
+	void output()
+	{
+		printf("%d", digits[amount - 1]);
+		for (int i = amount - 2; i >= 0; i--) printf(digitFormat, digits[i]);
+	}
+	friend BigInt operator * (const BigInt &a, const BigInt &b);
+	BigInt powNmod10powP(int n, int p)
+	{
+		BigInt res(1);
+		BigInt cur = *this;
+		P = p;
+		while (n)
+		{
+			if (n & 1) res = res * cur;
+			cur = cur * cur;
+			n /= 2;
+		}
+		return res;
+	}
+};
+
+BigInt operator * (const BigInt &a, const BigInt &b)
+{
+	BigInt res;
+	for (int i = 0; i < a.amount; i++)
+	{
+		int r = 0;
+		for (int j = 0; j < b.amount | r; j++)
+		{
+			// блокируем просчет более старших разрядов эффект this  = this % 10^P
+			if (i + j >= BigInt::P) break;
+			res.digits[i + j] += a.digits[i] * b.digits[j] + r;
+			r = res.digits[i + j] / 10;
+			res.digits[i + j] -= r*10;
+		}
+	}
+	int pos = a.amount + b.amount;
+	while (pos > 0 && !res.digits[pos]) pos--;
+	res.amount = pos + 1;
+	return res;
+}
+
+int BigInt::P;
+
+int main()
+{
+	int n, p;
+	cin >> n >> p;
+	BigInt a(n);
+	a.powNmod10powP(n, p).output();
+	return 0;
+}
