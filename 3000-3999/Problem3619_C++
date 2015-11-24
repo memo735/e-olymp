@@ -1,0 +1,115 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <string>
+#include <queue>
+#include <math.h>
+
+using namespace std;
+
+enum
+{
+	N, E, S, W
+};
+
+const int NODE = 1001;
+vector<int> edge[NODE];
+pair<int, int> XY[NODE];
+
+class State{
+public:
+	int d, step, pos, cost;
+	bool operator<(const State &s) const{
+		if (cost != s.cost) return cost >s.cost;
+		return step > s.step;
+	}
+};
+
+int getD(pair<int, int> from, pair<int, int> to){
+	if (to.second > from.second) return N;
+	if (to.first > from.first) return E;
+	if (to.second < from.second) return S;
+	return W;
+}
+
+bool canGo(int from, int to){
+	if (from == N){
+		if (to == S || to == E) return false;
+		return true;
+	}
+	if (from == E){
+		if (to == W || to == S) return false;
+		return true;
+	}
+	if (from == S){
+		if (to == N || to == W) return false;
+		return true;
+	}
+	if (from == W){
+		if (to == E || to == N) return false;
+		return true;
+	}
+}
+
+int getCost(int from, int to){
+	return max(abs(XY[from].first - XY[to].first), abs(XY[from].second - XY[to].second));
+}
+
+int BFS(int start, int goal){
+	int visited[NODE][4];
+	for (int i = 0; i < NODE; i++){
+		for (int j = 0; j < 4; j++) visited[i][j] = 10000000;
+	}
+	priority_queue<State> Q;
+	for (int i = 0; i < 4; i++){
+		Q.push(State{ i, 1, start, 0 });
+		visited[start][i] = 0;
+	}
+	while (!Q.empty()){
+		State now = Q.top();
+		Q.pop();
+		if (now.cost > visited[now.pos][now.d]) continue;
+		if (now.pos == goal) return now.step;
+		for (int i = 0; i < edge[now.pos].size(); i++){
+			int to = edge[now.pos][i];
+			int nextd = getD(XY[now.pos], XY[to]);
+			int nextCost = now.cost + getCost(now.pos, to);
+			if (!canGo(now.d, nextd)) continue;
+			if (visited[to][nextd] < nextCost) continue;
+			visited[to][nextd] = nextCost;
+			Q.push(State{ nextd, now.step + 1, to, nextCost });
+		}
+	}
+	return -1;
+}
+
+int main(){
+	int node, e;
+	while (cin >> node >> e){
+		if (node == 0 && e == 0) break;
+		for (int i = 0; i < NODE; i++){
+			edge[i].clear();
+			XY[i] = make_pair(-1, -1);
+		}
+		map<string, int> M;
+		int cnt = 1;
+		for (int i = 0; i < node; i++){
+			string name;
+			cin >> name;
+			if (M[name] == 0) M[name] = cnt++;
+			cin >> XY[M[name] - 1].first >> XY[M[name] - 1].second;
+		}
+		for (int i = 0; i < e; i++){
+			string from, to;
+			cin >> from >> to;
+			int f = M[from] - 1, t = M[to] - 1;
+			edge[f].push_back(t);
+			edge[t].push_back(f);
+		}
+		string src, dst;
+		cin >> src >> dst;
+		int res = BFS(M[src] - 1, M[dst] - 1);
+		if (res < 0) cout << "impossible" << endl;
+		else cout << res << endl;
+	}
+}
