@@ -1,0 +1,75 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+int h(int a, int b)
+{
+	int x = 0;
+	for (int i = 0; i < 4; i++) x += a % 10 == b % 10, a /= 10, b /= 10;
+	return x;
+}
+
+int b(int a, int b)
+{
+	int x = 0, aa = a, bb;
+	for (int i = 0; i < 4; i++){
+		bb = b;
+		for (int j = 0; j < 4; j++){
+			if (i != j&&aa % 10 == bb % 10) x++;
+			bb /= 10;
+		}
+		aa /= 10;
+	}
+	return x;
+}
+
+bool differ(int x)
+{
+	bool vis[10] = { false };
+	for (int i = 0; i < 4; i++){
+		if (vis[x % 10]) return false;
+		vis[x % 10] = true;
+		x /= 10;
+	}
+	return true;
+}
+
+int main()
+{
+	int n, hit, blow, att;
+	vector<int> ans, all, temp;
+	for (int i = 123; i <= 9876; i++) if (differ(i)) all.push_back(i);
+	while (scanf("%d", &n), n){
+		ans = all;
+		for (int i = 1; i <= n; i++){
+			scanf("%d%d%d", &att, &hit, &blow);
+			temp.clear();
+			for (vector<int>::iterator iter = ans.begin(); iter != ans.end(); ++iter)
+				if (h(*iter, att) == hit && b(*iter, att) == blow) temp.push_back(*iter);
+
+			ans = temp;
+		}
+		if (ans.empty()) puts("????");
+		else if (ans.size() == 1) printf("%04d\n", ans[0]);
+		else if (ans.size() <= 24){
+			bool hb[5][5];
+			for (vector<int>::iterator iter1 = all.begin(); iter1 != all.end(); ++iter1){
+				memset(hb, false, sizeof hb);
+				for (vector<int>::iterator iter2 = ans.begin(); iter2 != ans.end(); ++iter2){
+					int th = h(*iter1, *iter2), tb = b(*iter1, *iter2);
+					if (hb[th][tb]) goto next;
+					else hb[th][tb] = true;
+				}
+				printf("%04d\n", *iter1);
+				goto end;
+			next:;
+			}
+			puts("????");
+		end:;
+		}
+		else puts("????");
+	}
+	return 0;
+}
