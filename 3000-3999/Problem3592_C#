@@ -1,0 +1,33 @@
+using System;
+
+namespace Problem3592
+{
+    internal static class Program
+    {
+        private static int Hesabla(string s)
+        {
+            if (s == "I") return 1;
+            if (s == "II") return 2;
+            if (s == "III") return 3;
+            if (s == "IV") return 4;
+            if (s == "V") return 5;
+            if (s == "VI") return 6;
+            if (s == "VII") return 7;
+            if (s == "VIII") return 8;
+            if (s == "IX") return 9;
+            if (s == "X") return 10;
+            if (s == "XI") return 11;
+            return 12;
+        }
+
+        private static void Main(string[] args)
+        {
+            string setir;
+            int i = 1;
+            while ((setir = Console.ReadLine()) != null)
+            {
+                Console.WriteLine("Case {0}: {1}", i++, Hesabla(setir));
+            }
+        }
+    }
+}
