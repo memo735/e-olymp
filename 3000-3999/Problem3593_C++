@@ -1,0 +1,47 @@
+#include <iostream>  
+#include <string.h>  
+
+#define MAXN 101  
+char str[MAXN][MAXN];
+long vis[MAXN][MAXN][4];
+int move[4][2] = { 0, -1, 1, 0, 0, 1, -1, 0 };
+
+int main()
+{
+	int i, j, x = 0, y = 0, z = 0, tx, ty, H, W, cnt;
+	long L;
+	char *p = "NESW";
+	while (scanf("%d%d%lld", &H, &W, &L), H || W || L){
+		memset(vis, 0, sizeof(vis));
+		memset(str, 0, sizeof(str));
+		for (i = 1; i <= H; i++) {
+			scanf("%s", str[i] + 1);
+			for (j = 1; j <= W; j++) {
+				if (str[i][j] != '.'&&str[i][j] != '#'){
+					x = j; y = i;
+					if (str[i][j] == 'N') z = 0;
+					if (str[i][j] == 'E') z = 1;
+					if (str[i][j] == 'S') z = 2;
+					if (str[i][j] == 'W') z = 3;
+					str[i][j] = '.';
+				}
+			}
+		}
+		for (cnt = 0; L; L--, cnt++){
+			if (vis[y][x][z]){
+				L = L % (cnt - vis[y][x][z]);
+				if (!L) break;
+			}
+			vis[y][x][z] = cnt;
+			while (true){
+				tx = x + move[z][0];
+				ty = y + move[z][1];
+				if (str[ty][tx] == '.') break;
+				z = (z + 1) % 4;
+			}
+			x = tx, y = ty;
+		}
+		printf("%d %d %c\n", y, x, *(p + z));
+	}
+	return 0;
+}
