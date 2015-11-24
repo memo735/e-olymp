@@ -1,0 +1,68 @@
+using System;
+using System.Numerics;
+
+namespace Problem3662
+{
+    internal static class Program
+    {
+        private static bool Sade(BigInteger x)
+        {
+            if ((x == 0) || (x == 1)) return false;
+            if ((x == 2) || (x == 3)) return true;
+            if (x%2 == 0) return false;
+            int kok = (int) Math.Sqrt((double) x) + 1;
+            for (BigInteger i = 3; i < kok; i = i + 2)
+            {
+                if (x%i == 0) return false;
+            }
+            return true;
+        }
+
+        private static BigInteger NovbetiSade(BigInteger x)
+        {
+            if ((x == 0) || (x == 1)) return 2;
+            if (x == 2) return 3;
+            x = x%2 == 0 ? x + 1 : x + 2;
+            BigInteger max = BigInteger.Pow(2, 1000);
+            for (BigInteger i = x; i < max; i = i + 2)
+            {
+                if (Sade(i)) return i;
+            }
+            return 0;
+        }
+
+        private static BigInteger bolenSayi(BigInteger x)
+        {
+            if (Sade(x)) return 2;
+            BigInteger say = 1;
+            BigInteger bolen = 2;
+            while (x > 1)
+            {
+                BigInteger tekrar = 0;
+                while (x%bolen == 0)
+                {
+                    x = BigInteger.Divide(x, bolen);
+                    tekrar++;
+                }
+                if (tekrar > 0) say = say*(tekrar + 1);
+                bolen = NovbetiSade(bolen);
+            }
+            return say;
+        }
+
+        private static BigInteger Fakt(BigInteger n)
+        {
+            BigInteger cavab = 1;
+            for (int i = 1; i <= n; i++) cavab = cavab*i;
+            return cavab;
+        }
+
+        public static void Main(string[] args)
+        {
+            BigInteger n = BigInteger.Parse(Console.ReadLine());
+            BigInteger say = bolenSayi(Fakt(n));
+            say = BigInteger.ModPow(say, 1, 1000000009);
+            Console.WriteLine(say);
+        }
+    }
+}
