@@ -1,0 +1,28 @@
+#include <iostream>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+	long a, b, p, dp[100001];
+	while (cin >> a >> b >> p, p){
+		memset(dp, 0, sizeof(dp));
+		dp[0] = 1;
+		long ans = 0;
+		for (long i = a; i <= b; i++){
+			if (i > a) dp[i - a] = (dp[i - a] + dp[i - a - 1]) % p;
+			ans = (ans + dp[i - a]) % p;
+			for (long j = i; j <= b; j *= 10){
+				long ten = 1;
+				while (ten <= j) ten *= 10;
+				long x = max(i - a + 1, j - a), y = min(b - a + 1, ten - a);
+				dp[x] = (dp[x] + dp[i - a]) % p;
+				dp[y] = (dp[y] + p - dp[i - a]) % p;
+			}
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}
