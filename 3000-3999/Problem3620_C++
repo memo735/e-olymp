@@ -1,0 +1,38 @@
+#include<iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	int n;
+	string m;
+	while (cin >> n >> m, n || m != "0"){
+		long M = 0, k = 1;
+		for (int i = m.size() - 1; i >= 0; i--){
+			if ('0' <= m[i] && m[i] <= '9') M += (m[i] - '0')*k;
+			else M += (m[i] - 'A' + 10)*k;
+			k *= n;
+		}
+		int f[11], pr[] = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31 };
+		for (int i = 0; i < 11; i++){
+			int tmp = n;
+			f[i] = 0;
+			while (!(tmp%pr[i])){
+				tmp /= pr[i];
+				f[i]++;
+			}
+		}
+		long ans = 1LL << 62;
+		for (int i = 0; i < 11; i++){
+			if (f[i]){
+				long tmp = M, sum = 0;
+				while (pr[i] <= tmp){
+					sum += tmp / pr[i];
+					tmp /= pr[i];
+				}
+				ans = min(ans, sum / f[i]);
+			}
+		}
+		cout << ans << endl;
+	}
+}
