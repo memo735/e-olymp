@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	double x[1001], y[1001];
+	int a;
+	while (scanf("%d", &a), a){
+		for (int i = 0; i < a; i++) scanf("%lf%lf", x + i, y + i);
+		double gx, gy, low = 999999999;
+		scanf("%lf%lf", &gx, &gy);
+		for (int i = 0; i < a; i++){
+			double t = gx / x[i];
+			low = min(low, -4.9*t*t + y[i] * t);
+		}
+		double left = -999999999, right = 999999999;
+		for (int i = 0; i < 100; i++){
+			double at = 0, M = (left + right) / 2;
+			for (int j = 0; j < a; j++){
+				if (x[j] * M > y[j]) continue;
+				at += (y[j] / x[j] - M)*(x[j] * x[j] / 9.8);
+			}
+			if (at > gx) left = M;
+			else right = M;
+		}
+		double ty = 0;
+		for (int i = 0; i < a; i++){
+			if (x[i] * left > y[i]) continue;
+			double dx = (y[i] / x[i] - left)*(x[i] * x[i] / 9.8);
+			ty += -4.9 / x[i] / x[i] * dx*dx + y[i] / x[i] * dx;
+		}
+		if (low - 1e-9 < gy && gy < ty + 1e-9) printf("Yes\n");
+		else printf("No\n");
+	}
+}
