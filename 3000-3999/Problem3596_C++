@@ -1,0 +1,70 @@
+#include <iostream>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+char rg[210] = "1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162";
+
+int main(){
+	char str[101], to[101];
+	long quvvet10[17];
+	quvvet10[0] = 1;
+	for (int i = 1; i < 17; i++) quvvet10[i] = quvvet10[i - 1] * 10;
+	while (true){
+		scanf("%s", str);
+		if (str[0] == '#') break;
+		long ret = 9999999999999999;
+		int n = strlen(str);
+		bool OK = true;
+		for (int i = 0; i < n; i++) if (rg[i] != str[i]) OK = false;
+		if (OK){ printf("1\n"); continue; }
+		bool oz = true;
+		for (int i = 0; i < n; i++) if (str[i] != '0') oz = false;
+		if (oz){
+			long at = 2;
+			for (int i = 1; i <= n; i++) at += (quvvet10[i] - quvvet10[i - 1])*i;
+			printf("%ld\n", at);
+			continue;
+		}
+		for (int i = 1; i <= n; i++){
+			for (int j = 0; j < i; j++){
+				if (str[j] == '0') continue;
+				long fi = 0, la = 0;
+				for (int k = 0; k < i - j; k++) fi = fi * 10 + str[j + k] - '0';
+				for (int k = 0; k < j; k++) la = la * 10 + str[k] - '0';
+				long s = la + 1, t = fi;
+				while (s % 10 == 0) s /= 10;
+				while (t % 10 == 0) t /= 10;
+				long f = fi*quvvet10[j] + la;
+				if (s == 1 && (j == 0 || la)){
+					if (t == 1) f = quvvet10[i] - 1;
+					else f = (fi - 1)*quvvet10[j] + la;
+				}
+				f++;
+				long F = f;
+				bool ok = true;
+				int at = j;
+				while (at < n){
+					sprintf(to, "%ld", f);
+					int len = strlen(to);
+					for (int k = 0; k < len; k++){
+						if (at >= n) break;
+						if (to[k] != str[at]) ok = false;
+						at++;
+					}
+					f++;
+				}
+				if (ok){
+					long at1 = -j;
+					for (int k = 1; k < i; k++) at1 += (quvvet10[k] - quvvet10[k - 1])*k;
+					at1 += (F - quvvet10[i - 1])*i;
+					if (at1 < 0) continue;
+					ret = min(ret, at1 + 1);
+				}
+			}
+		}
+		printf("%ld\n", ret);
+	}
+	return 0;
+}
