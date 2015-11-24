@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+char t[64][64];
+int H, W;
+
+class Block{
+public:
+	vector<vector<char> > b;
+	void turn(){
+		vector<vector<char> >  newb;
+		for (int j = 0; j < b[0].size(); j++){
+			vector<char> tmp;
+			for (int i = b.size() - 1; i >= 0; i--) tmp.push_back(b[i][j]);
+			newb.push_back(tmp);
+		}
+		b = newb;
+	}
+};
+
+bool invalid(int y, int x, Block &b){
+	for (int i = 0; i < b.b.size(); i++){
+		for (int j = 0; j < b.b[i].size(); j++){
+			if (b.b[i][j] == '.') continue;
+			if (y + i < 0 || y + i >= H || x + j < 0 || x + j >= W) return true;
+			if (t[y + i][x + j] == '#') return true;
+		}
+	}
+	return false;
+}
+
+void put(int y, int x, Block &b){
+	for (int i = 0; i < b.b.size(); i++){
+		for (int j = 0; j < b.b[i].size(); j++){
+			if (b.b[i][j] == '.') continue;
+			t[y + i][x + j] = b.b[i][j];
+		}
+	}
+}
+
+void erase(int y, int x, Block &b){
+	for (int i = 0; i < b.b.size(); i++){
+		for (int j = 0; j < b.b[i].size(); j++){
+			if (b.b[i][j] == '.') continue;
+			t[y + i][x + j] = '.';
+		}
+	}
+}
+
+int calc(){
+	int ret = 0;
+	for (int i = 0; i < H; i++){
+		bool ok = true;
+		for (int j = 0; j < W; j++){
+			if (t[i][j] == '.'){
+				ok = false;
+				break;
+			}
+		}
+		if (ok) ret++;
+	}
+	return ret;
+}
+
+Block b[4];
+
+int main(){
+	int T;
+	cin >> T;
+	for (int tc = 0; tc < T; tc++){
+		int h, w;
+		cin >> h >> w;
+		b[0].b = vector<vector<char> >(h, vector<char>(w));
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++) cin >> b[0].b[i][j];
+		}
+		for (int i = 0; i < b[0].b.size(); i++){
+			if (b[0].b[i] == vector<char>(b[0].b[i].size(), '.')) b[0].b.erase(b[0].b.begin() + i--);
+		}
+		b[0].turn();
+		for (int i = 0; i < b[0].b.size(); i++){
+			if (b[0].b[i] == vector<char>(b[0].b[i].size(), '.')) b[0].b.erase(b[0].b.begin() + i--);
+		}
+		for (int i = 1; i < 4; i++){
+			b[i] = b[i - 1];
+			b[i].turn();
+		}
+		cin >> H >> W;
+		for (int i = 0; i < H; i++){
+			for (int j = 0; j < W; j++) cin >> t[i][j];
+		}
+		int maxi = -1;
+		for (int id = 0; id < 4; id++){
+			for (int i = 0; i < H; i++){
+				for (int j = 0; j < W; j++){
+					if (invalid(i, j, b[id])) continue;
+					put(i, j, b[id]);
+					maxi = max(calc(), maxi);
+					erase(i, j, b[id]);
+				}
+			}
+		}
+		cout << maxi << endl;
+	}
+	return 0;
+}
