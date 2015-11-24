@@ -1,0 +1,64 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define inf 0x3f3f3f3f
+int n, base[10005];
+
+struct data
+{
+	int e, w;
+} p[3];
+
+int cmp(data a, data b)
+{
+	return a.w < b.w;
+}
+
+int findx(int s, int x)
+{
+	int low = s, high = n, mid;
+	while (low < high)
+	{
+		mid = (low + high) / 2;
+		if (base[mid] < x) low = mid + 1;
+		else high = mid;
+	}
+	if (base[low] > x) low--;
+	return low;
+}
+
+int main()
+{
+	int s, t, f[10005];
+	for (int i = 0; i < 3; i++) cin >> p[i].e;
+	for (int i = 0; i < 3; i++) cin >> p[i].w;
+	sort(p, p + 3, cmp);
+	cin >> n >> s >> t;
+	if (s > t)
+	{
+		int temp = t;
+		t = s;
+		s = temp;
+	}
+	for (int i = 2; i <= n; i++)
+	{
+		cin >> base[i];
+		f[i] = inf;
+	}
+	f[s] = 0;
+	for (int i = s; i <= t; i++)
+	{
+		for (int k = 0; k < 3; k++)
+		{
+			for (int j = findx(i, p[k].e + base[i]); j > i; j--)
+			{
+				if (f[j] > f[i] + p[k].w) f[j] = f[i] + p[k].w;
+				else break;
+			}
+		}
+	}
+	cout << f[t] << endl;
+	return 0;
+}
