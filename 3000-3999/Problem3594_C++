@@ -1,0 +1,37 @@
+#include <algorithm>
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int n, m;
+vector<int> sat, sche, dp;
+
+int dfs(int S){
+	if (dp[S] >= 0) return dp[S];
+	int ret = 0;
+	for (int i = 0; i < n; i++){
+		if ((S & sche[i]) == sche[i]) ret = max(ret, sat[i] + dfs(S - sche[i]));
+	}
+	return dp[S] = ret;
+}
+
+int main(){
+	while (cin >> n, n){
+		sat.clear(); sat.resize(n);
+		sche.clear(); sche.resize(n);
+		dp.clear(); dp.resize(1 << 17, -1);
+		for (int i = 0; i < n; i++){
+			cin >> m >> sat[i];
+			sche.push_back(0);
+			while (m--){
+				int s, t;
+				cin >> s >> t;
+				s -= 6;
+				t -= 6;
+				for (int j = s; j < t; j++) sche[i] |= 1 << j;
+			}
+		}
+		cout << dfs(131071) << endl;
+	}
+}
