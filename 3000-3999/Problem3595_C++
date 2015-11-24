@@ -1,0 +1,72 @@
+#include <iostream>
+#include <string.h>
+#include <map>
+#include <vector>
+#include <stack>
+
+using namespace std;
+
+const int MAXN = 100001;
+int N;
+string mark[MAXN];
+
+void solve(){
+	
+}
+
+bool input(){
+	cin >> N;
+	for(int i = 0; i < N; i++) cin >> mark[i];
+	return N;
+}
+
+int main(){
+	int used[MAXN], re[MAXN], num[MAXN];
+	map<string, int> id;
+	while (input())
+	{
+		memset(used, 0, sizeof(used));
+		memset(re, 0, sizeof(re));
+		memset(num, -1, sizeof(num));
+		id.clear();
+		for (int i = 0; i < N; i++)
+			if (mark[i][mark[i].size() - 1] == 'v'){
+				mark[i] = mark[i].substr(0, mark[i].size() - 1);
+				re[i] = 1;
+			}
+		for (int i = 0; i < N; i++)
+			if (mark[i].size() > 1){
+				for (int j = 0; j < mark[i].size(); j++)
+					if (isdigit(mark[i][j])){
+						num[i] = atoi(mark[i].substr(j).c_str());
+						mark[i] = mark[i].substr(0, j);
+						if (!id.count(mark[i])) id[mark[i]] = id.size() - 1;
+						break;
+					}
+			}
+
+		vector<int> jmp[MAXN];
+		stack<int> stk;
+		for (int i = 0; i < N; i++){
+			if (num[i] > 1) {
+				jmp[id[mark[i]]].push_back(i);
+				continue;
+			}
+			if (re[i]) continue;
+			stk.push(i);
+			while (!stk.empty()){
+				int cur = stk.top(); stk.pop();
+				if (used[cur]) continue;
+				cout << cur + 1 << endl;
+				used[cur] = 1;
+				if (num[cur] == 1){
+					int k = id[mark[cur]];
+					for (int j = 0; j < jmp[k].size(); j++) stk.push(jmp[k][j]);
+					jmp[k].clear();
+				}
+				if (cur > 0 && re[cur - 1]) stk.push(cur - 1);
+			}
+		}
+	}
+	return 0;
+}
