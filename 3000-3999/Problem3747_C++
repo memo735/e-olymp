@@ -1,0 +1,93 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+
+using namespace std;
+
+#define M 105
+
+struct point
+{
+	double x, y;
+} po[M], wx[M];
+
+struct line
+{
+	point a, b;
+};
+
+bool cmp(point a, point b)
+{
+	if (a.x == b.x) return a.y < b.y;
+	return a.x < b.x;
+}
+
+
+point intersection(line u, line v)
+{
+	point ret = u.a;
+	double t = ((u.a.x - v.a.x)*(v.a.y - v.b.y) - (u.a.y - v.a.y)*(v.a.x - v.b.x))
+		/ ((u.a.x - u.b.x)*(v.a.y - v.b.y) - (u.a.y - u.b.y)*(v.a.x - v.b.x));
+	ret.x += (u.b.x - u.a.x)*t;
+	ret.y += (u.b.y - u.a.y)*t;
+	return ret;
+}
+
+point circumcenter(point a, point b, point c)
+{
+	line u, v;
+	u.a.x = (a.x + b.x) / 2, u.a.y = (a.y + b.y) / 2;
+	u.b.x = u.a.x - a.y + b.y, u.b.y = u.a.y + a.x - b.x;
+	v.a.x = (a.x + c.x) / 2, v.a.y = (a.y + c.y) / 2;
+	v.b.x = v.a.x - a.y + c.y, v.b.y = v.a.y + a.x - c.x;
+	return intersection(u, v);
+}
+
+bool IsLine(point a, point b, point c)
+{
+	double  x1 = a.x - b.x, y1 = a.y - b.y;
+	double  x2 = a.x - c.x, y2 = a.y - c.y;
+	if (fabs(x1*y2 - y1*x2) <= 0) return true;
+	return false;
+}
+
+bool Equal(point a, point b)
+{
+	if (fabs(a.x - b.x) <= 0 && fabs(a.y - b.y) <= 0) return true;
+	return false;
+}
+
+int main()
+{
+	int n, i, j, k, a, b;
+	while (scanf("%d", &n) && n)
+	{
+		for (i = 0; i < n; i++)
+		{
+			scanf("%d%d", &a, &b);
+			po[i].x = a*1.0; po[i].y = b*1.0;
+		}
+		if (n <= 2)
+		{
+			printf("%d\n", n);
+			continue;
+		}
+		int maxn = 2;
+		for (i = 0; i < n; i++)
+			for (j = i + 1; j < n; j++)
+			{
+				int l = 0;
+				for (k = j + 1; k < n; k++)
+					if (!IsLine(po[i], po[j], po[k])) wx[l++] = circumcenter(po[i], po[j], po[k]);
+				sort(wx, wx + l, cmp);
+				int num = 3;
+				for (k = 1; k < l; k++)
+				{
+					if (Equal(wx[k], wx[k - 1])) num++;
+					else num = 3;
+					if (num > maxn) maxn = num;
+				}
+			}
+		printf("%d\n", maxn);
+	}
+}
