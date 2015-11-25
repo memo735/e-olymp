@@ -1,0 +1,32 @@
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+	int A[3], B[2], C[3];
+	bool OK[60];
+	while (true)
+	{
+		f: scanf("%d %d %d %d %d", &A[0], &A[1], &A[2], &B[0], &B[1]);
+		if (!A[0] && !A[1] && !A[2] && !B[0] && !B[1]) break;
+		fill(OK, OK + 60, true);
+		OK[A[0]] = OK[A[1]] = OK[A[2]] = false;
+		OK[B[0]] = OK[B[1]] = false;
+		for (int i = 1; i <= 52; i++)
+		{
+			if (!OK[i]) continue;
+			C[0] = B[0];
+			C[1] = B[1];
+			C[2] = i;
+			sort(A, A + 3);
+			sort(C, C + 3);
+			if (A[2] <= C[1] || A[1] <= C[0])
+			{
+				printf("%d\n", i);
+				goto f;
+			}
+		}
+		puts("-1");
+	}
+}
