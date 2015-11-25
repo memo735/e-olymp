@@ -1,0 +1,26 @@
+#include <iostream>
+
+void cal(int n, int* num) {
+	int i, fac = 1;
+	while (n / fac) {
+		int low = n - n / fac * fac, now = (n / fac) % 10, high = n / (fac * 10);
+		for (i = 0; i < 10; i++) {
+			if (now < i) num[i] += high * fac;
+			else if (now == i) num[i] += high * fac + low + 1;
+			else if (now > i) num[i] += (high + 1) * fac;
+		}
+		fac *= 10;
+	}
+	while (fac /= 10) num[0] -= fac;
+}
+
+int main() {
+	int start, end;
+	while (scanf("%d%d", &start, &end) && start || end) {
+		int i, ans[10] = {}, sub[10] = {};
+		cal(start - 1, sub);
+		cal(end, ans);
+		for (i = 0; i < 10; i++) printf("%d%c", ans[i] - sub[i], i == 9 ? '\n' : ' ');
+	}
+	return 0;
+}
