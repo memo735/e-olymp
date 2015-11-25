@@ -1,0 +1,35 @@
+#include <iostream>
+
+int main()
+{
+	int c, n, arr[100001], modMap[100001];
+	arr[0] = modMap[0] = 0;
+	while (scanf("%d %d", &c, &n) != EOF && c)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			scanf("%d", arr + i);
+			modMap[i] = -1;
+		}
+		int lastMod = 0, curMod, l = -1, r = -1;
+		for (int i = 1; i <= n; i++)
+		{
+			curMod = (arr[i] + lastMod) % c;
+			if (modMap[curMod] != -1)
+			{
+				l = modMap[curMod] + 1;
+				r = i;
+				break;
+			}
+			modMap[curMod] = i;
+			lastMod = curMod;
+		}
+		if (-1 != l)
+		{
+			while (l <= r) printf("%d ", l++);
+			putchar('\n');
+		}
+		else puts("no sweets");
+	}
+	return 0;
+}
