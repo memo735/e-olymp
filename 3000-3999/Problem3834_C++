@@ -1,0 +1,15 @@
+#include <iostream>
+
+int main()
+{
+	int n, m, color, a;
+	while (scanf("%ld%ld%ld", &n, &m, &color) && n || m || color)
+	{
+		n = n - 7;
+		m = m - 7;
+		a = m*n / 2;
+		if (m % 2 && n % 2) a = a + color;
+		printf("%d\n", a);
+	}
+	return 0;
+}
