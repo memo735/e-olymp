@@ -1,0 +1,63 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class UnionFindTree {
+	vector<int> parent, rank;
+public:
+	explicit UnionFindTree(int n = 0) :
+		parent(n), rank(n)
+	{
+		for (int i = 0; i < n; ++i) parent[i] = i;
+	}
+	int find(int x){
+		if (parent[x] == x) return x;
+		parent[x] = find(parent[x]);
+		return parent[x];
+	}
+	int unite(int x, int y){
+		x = find(x), y = find(y);
+		if (x == y) return x;
+		if (rank[x] < rank[y]){ parent[x] = y; return y; }
+		if (rank[x] > rank[y]){ parent[y] = x; return x; }
+		parent[y] = x;
+		++rank[x];
+		return x;
+	}
+	bool same(int x, int y){ return find(x) == find(y); }
+};
+
+int main(){
+	while (true){
+		int K, W;
+		cin >> K >> W;
+		if (K == 0 && W == 0) break;
+		vector<pair<int, int>> queries(W);
+		vector<int> compress(W * 2);
+		for (int i = 0; i < W; ++i){
+			cin >> queries[i].first >> queries[i].second;
+			if (queries[i].first > queries[i].second) swap(queries[i].first, queries[i].second);
+			compress[i * 2 + 0] = queries[i].first;
+			compress[i * 2 + 1] = queries[i].second;
+		}
+		sort(queries.begin(), queries.end());
+		queries.erase(unique(queries.begin(), queries.end()), queries.end());
+		W = queries.size();
+		sort(compress.begin(), compress.end());
+		compress.erase(unique(compress.begin(), compress.end()), compress.end());
+		int N = compress.size();
+		UnionFindTree uft(N);
+		vector<int> degrees(N);
+		bool answer = true;
+		for (int i = 0; answer && i < W; ++i){
+			const int a = lower_bound(compress.begin(), compress.end(), queries[i].first) - compress.begin();
+			const int b = lower_bound(compress.begin(), compress.end(), queries[i].second) - compress.begin();
+			if (++degrees[a] >= 3 || ++degrees[b] >= 3 || uft.same(a, b) && i < K - 1) answer = false;
+			uft.unite(a, b);
+		}
+		cout << (answer ? "Y" : "N") << endl;
+	}
+	return 0;
+}
