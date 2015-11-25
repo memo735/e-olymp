@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+
+int month[] = { 0, 0, 20, 39, 59, 78, 98, 117, 137, 156, 176, 195, 215, 234 };
+
+int year(int y) {
+	int sum = 0;
+	for (int i = 1; i < y; i++) {
+		if (i % 3 == 0) sum += 200;
+		else sum += 195;
+	}
+	return sum;
+}
+
+int getdate(int y, int m, int d) {
+	return year(y) + (y % 3 == 0 ? (m - 1) * 20 : month[m]) + d;
+}
+
+int main() {
+	int n, y, m, d;
+	int today = getdate(1000, 1, 1);
+	cin >> n;
+	while (n--) {
+		cin >> y >> m >> d;
+		cout << today - getdate(y, m, d) << endl;
+	}
+	return 0;
+}
