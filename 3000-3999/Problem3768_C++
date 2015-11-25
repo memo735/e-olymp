@@ -1,0 +1,82 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+map<pair<int, int>, int> used;
+int rightTable[6][6] = { { 0, 3, 5, 2, 4, 0 }, { 4, 0, 1, 6, 0, 3 }, { 2, 6, 0, 0, 1, 5 },
+						{ 5, 1, 0, 0, 6, 2 }, { 3, 0, 6, 1, 0, 4 }, { 0, 4, 2, 5, 3, 0 } };
+int dx[] = { 0, 1, 0, -1 }, dy[] = { 1, 0, -1, 0 };
+
+typedef struct {
+	int top, front, right, x, y, z;
+} Dice;
+
+Dice play[100];
+
+bool canMove(int idx, int dir){
+	int mx = play[idx].x + dx[dir], my = play[idx].y + dy[dir];
+	for (int i = 0; i < idx; ++i) if (play[i].x == mx && play[i].y == my && play[i].z >= play[idx].z - 1) return false;
+	return true;
+}
+
+void changeEye(int idx, int dir){
+	Dice d = play[idx];
+	if (dir == 0) play[idx].front = d.top, play[idx].top = 7 - d.front;
+	if (dir == 1) play[idx].right = d.top, play[idx].top = 7 - d.right;
+	if (dir == 2) play[idx].front = 7 - d.top, play[idx].top = d.front;
+	if (dir == 3) play[idx].top = d.right, play[idx].right = 7 - d.top;
+}
+
+void move(int idx){
+	Dice d = play[idx];
+	if (d.z == 0) return;
+	int dir = -1;
+	for (int i = 6; i >= 4; --i){
+		if (d.front == i) dir = 0;
+		else if (d.right == i) dir = 1;
+		else if (7 - d.front == i) dir = 2;
+		else if (7 - d.right == i) dir = 3;
+		if (dir == -1) continue;
+		if (canMove(idx, dir)){
+			play[idx].x += dx[dir], play[idx].y += dy[dir];
+			int mz = -1;
+			for (int j = 0; j < idx; ++j) if (play[j].x == play[idx].x && play[j].y == play[idx].y) mz = max(mz, play[j].z);
+			play[idx].z = mz + 1;
+			changeEye(idx, dir);
+			move(idx);
+			return;
+		}
+	}
+}
+
+int main(){
+	int n;
+	while (scanf("%d", &n), n){
+		used.clear();
+		int ans[] = { 0, 0, 0, 0, 0, 0 };
+		for (int i = 0; i < n; ++i){
+			int t, f;
+			scanf("%d%d", &t, &f);
+			Dice d = { t, f, rightTable[t - 1][f - 1], 0, 0, 0 };
+			play[i] = d;
+		}
+		int max_z = 0;
+		for (int i = 1; i < n; ++i){
+			play[i].z = max_z + 1;
+			move(i);
+			max_z = max(max_z, play[i].z);
+		}
+		for (int i = n - 1; i >= 0; --i){
+			Dice d = play[i];
+			if (!used[pair<int, int>(d.x, d.y)]){
+				used[pair<int, int>(d.x, d.y)] = 1;
+				ans[d.top - 1]++;
+			}
+		}
+		for (int i = 0; i < 5; ++i) printf("%d ", ans[i]);
+		printf("%d\n", ans[5]);
+	}
+	return 0;
+}
