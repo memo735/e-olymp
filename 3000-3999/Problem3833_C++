@@ -1,0 +1,30 @@
+#include <iostream>
+
+int main() {
+	int n, m, r, c;
+	char g[101][101];
+	while (scanf("%d %d %d %d", &n, &m, &r, &c) == 4) {
+		if (n + m + r + c == 0) break;
+		int i, j, p, q, ret = 0;
+		for (i = 0; i < n; i++) scanf("%s", g[i]);
+		for (i = 0; i < n; i++) {
+			for (j = 0; j < m; j++) {
+				if (g[i][j] == '0')  continue;
+				if (i + r - 1 >= n || j + c - 1 >= m) {
+					ret = -1;
+					j = m, i = n;
+					continue;
+				}
+				ret++;
+				for (p = 0; p < r; p++) {
+					for (q = 0; q < c; q++) {
+						if (g[i + p][j + q] == '1') g[i + p][j + q] = '0';
+						else g[i + p][j + q] = '1';
+					}
+				}
+			}
+		}
+		printf("%d\n", ret);
+	}
+	return 0;
+}
