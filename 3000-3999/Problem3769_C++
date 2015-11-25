@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	const int INF = 1 << 28;
+	int n, m, c, s, g, x, y, d, id, tmp;
+	int a[100][100], wf[20][100][100], p[20], q[50], r[51], sum[51];
+	while (scanf("%d%d%d%d%d", &n, &m, &c, &s, &g), n){
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++){
+				a[i][j] = INF;
+				for (int k = 0; k < c; k++) wf[k][i][j] = INF;
+			}
+		for (int i = 0; i < m; i++){
+			scanf("%d%d%d%d", &x, &y, &d, &id);
+			x--; y--; id--;
+			wf[id][x][y] = min(wf[id][x][y], d);
+			wf[id][y][x] = min(wf[id][y][x], d);
+		}
+		for (int l = 0; l < c; l++){
+			scanf("%d", &p[l]);
+			for (int k = 0; k < n; k++)
+				for (int i = 0; i < n; i++)
+					for (int j = i; j < n; j++) wf[l][i][j] = wf[l][j][i] = min(wf[l][i][j], wf[l][i][k] + wf[l][k][j]);
+		}
+		for (int k = 0; k < c; k++){
+			q[0] = 0;
+			for (int i = 0; i < p[k] - 1; i++) scanf("%d", &q[i + 1]);
+			q[p[k]] = INF;
+			for (int i = 0; i < p[k]; i++) scanf("%d", &r[i]);
+			sum[0] = 0;
+			for (int i = 0; i < p[k]; i++) sum[i + 1] = sum[i] + r[i] * (q[i + 1] - q[i]);
+			for (int i = 0; i < n; i++)
+				for (int j = i; j < n; j++){
+					if (wf[k][i][j] < INF){
+						tmp = upper_bound(q, q + p[k] + 1, wf[k][i][j]) - q - 1;
+						a[i][j] = a[j][i] = min(a[i][j], sum[tmp] + r[tmp] * (wf[k][i][j] - q[tmp]));
+					}
+				}
+		}
+		for (int k = 0; k < n; k++)
+			for (int i = 0; i < n; i++)
+				for (int j = i; j < n; j++)a[i][j] = a[j][i] = min(a[i][j], a[i][k] + a[k][j]);
+
+		printf("%d\n", (a[s - 1][g - 1] >= INF) ? -1 : a[s - 1][g - 1]);
+	}
+}
