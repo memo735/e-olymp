@@ -1,0 +1,109 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+const int MAX_V = 5001;
+
+vector<int> G[MAX_V];
+int h, w, match[MAX_V], c[128][128];
+bool used[MAX_V];
+
+void add_edge(int u, int v){
+	G[u].push_back(v);
+	G[v].push_back(u);
+}
+
+bool dfs(int v){
+	used[v] = 1;
+	for (int i = 0; i < G[v].size(); i++){
+		int u = G[v][i], w = match[u];
+		if (w < 0 || !used[w] && dfs(w)){
+			match[v] = u, match[u] = v;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int bi_matching(int V){
+	int res = 0;
+	memset(match, -1, sizeof match);
+	for (int v = 0; v < V; v++) if (match[v] < 0){
+		memset(used, 0, sizeof used);
+		if (dfs(v)) res++;
+	}
+	return res;
+}
+
+struct line {
+	int sx, sy, tx, ty;
+};
+
+vector<line> hol, vir;
+
+bool isJ(int i, int j){ return !c[i][j] && c[i + 1][j] && c[i][j + 1] && c[i + 1][j + 1]; }
+bool isL(int i, int j){ return c[i][j] && c[i + 1][j] && !c[i][j + 1] && c[i + 1][j + 1]; }
+bool is7(int i, int j){ return c[i][j] && !c[i + 1][j] && c[i][j + 1] && c[i + 1][j + 1]; }
+bool isF(int i, int j){ return c[i][j] && c[i + 1][j] && c[i][j + 1] && !c[i + 1][j + 1]; }
+bool isl(int i, int j){ return c[i][j] && c[i + 1][j] && !c[i][j + 1] && !c[i + 1][j + 1]; }
+bool ism(int i, int j){ return c[i][j] && !c[i + 1][j] && c[i][j + 1] && !c[i + 1][j + 1]; }
+
+bool intersect(int i, int j){ // hol[i] , vir[j]
+	return hol[i].sx <= vir[j].sx && vir[j].sx <= hol[i].tx && vir[j].sy <= hol[i].sy && hol[i].sy <= vir[j].ty;
+}
+
+int solve(){
+	//build_line();
+	for (int i = 0; i < h - 1; i++){
+		for (int j = 0; j < w - 1; j++){
+			if (isJ(i, j) || is7(i, j))
+				for (int nj = j + 1; nj < w - 1; nj++)
+				{
+					if (isl(i, nj)) break;
+					if (isF(i, nj) || isL(i, nj)) { hol.push_back(line{ j, i, nj, i }); break; }
+				}
+			if (isJ(i, j) || isL(i, j))
+				for (int ni = i + 1; ni < w - 1; ni++)
+				{
+					if (ism(ni, j)) break;
+					if (isF(ni, j) || is7(ni, j)){ vir.push_back(line{ j, i, j, ni }); break; }
+				}
+		}
+	}
+	//build_edge();
+	for (int i = 0; i < hol.size(); i++)
+		for (int j = 0; j < vir.size(); j++)
+			if (intersect(i, j)) add_edge(i, hol.size() + j);
+
+	int sz = hol.size() + vir.size();
+	int ret = 0;
+	for (int i = 0; i < h - 1; i++)
+		for (int j = 0; j < w - 1; j++)
+			if (isJ(i, j) || isL(i, j) || is7(i, j) || isF(i, j)) ret++;
+
+	return ret - sz + bi_matching(sz) + 1;
+}
+
+bool input(){
+	cin >> h >> w;
+	if (!h && !w) return 0;
+	//init();
+	memset(c, 0, sizeof c);
+	hol.clear(), vir.clear();
+	for (int i = 0; i < MAX_V; i++) G[i].clear();
+	for (int i = 0; i < h; i++)
+		for (int j = 0; j < w; j++){
+			char ch; cin >> ch;
+			if (ch == '#') c[i][j] = 1;
+		}
+
+	return 1;
+}
+
+int main()
+{
+	while (input()) cout << solve() << endl;
+	return 0;
+}
