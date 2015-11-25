@@ -1,0 +1,62 @@
+#include <iostream>
+
+#define MAX 100001
+
+/* Agac */
+int pai[MAX], heigth[MAX];
+long len[MAX];
+
+// x ve y arasinda umumi valideynin tapilmasi
+// Возвращает длину пути, соединяющий два узла
+long solve(int x, int y)
+{
+	int i, j;
+	long r = 0;
+	if (heigth[x] > heigth[y]){
+		for (i = x; heigth[i] != heigth[y]; i = pai[i]) r += len[i];
+		x = i;
+	}
+	else if (heigth[y] > heigth[x])
+	{
+		for (i = y; heigth[i] != heigth[x]; i = pai[i]) r += len[i];
+		y = i;
+	}
+	// Перейти на дерево один узел в то время. *Остановить, когда родители равны
+	for (i = x, j = y; i != j; i = pai[i], j = pai[j]) r += len[i] + len[j];
+	return r;
+}
+
+int main()
+{
+	int N, A, Q, i;
+	long L;
+	while (true)
+	{
+		scanf("%d", &N);
+		if (N == 0) break;
+		// 1 hundurluklu bir nece agac yaradaq
+		for (i = 0; i <= N; i++)
+		{
+			pai[i] = i;
+			heigth[i] = 1;
+		}
+		// Vahid agaci yaradaq
+		// Это делается путем объединения деревьев на предыдущем шаге **Профсоюзы, сделанные на основе ввода
+		for (i = 1; i < N; i++)
+		{
+			/* Ant hill i is connected to A */
+			/* The path has length L */
+			scanf("%d %d", &A, &L);
+			pai[i] = A; len[i] = L;
+			// Как объединить два деревьев высота является суммой 2
+			heigth[i] += heigth[A];
+		}
+		scanf("%d", &Q);
+		for (i = 0; i < Q; i++) {
+			scanf("%d %d", &A, &L);
+			printf("%ld ", solve(A, L));
+		}
+		printf("\n");
+	}
+	return 0;
+}
