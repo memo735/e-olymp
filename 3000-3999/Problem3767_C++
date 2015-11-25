@@ -1,0 +1,47 @@
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+int sum(string s) {
+	reverse(s.begin(), s.end());
+	int res = 0, ten = 1;
+	for (int i = 0; i < s.size(); i++) {
+		int tmp = s[s.size() - 1 - i] - 48;
+		if (tmp > 0) res += tmp * ten;
+		ten *= 10;
+	}
+	return res;
+}
+
+int dup(int ns[], int i) {
+	for (int j = 0; j < i; j++) if (ns[i] == ns[j]) return j;
+	return -1;
+}
+
+int main() {
+	int a, l;
+	stringstream ss;
+	while (cin >> a >> l, a || l) {
+		int ns[21];
+		ns[0] = a;
+		for (int i = 0; i < 20; i++) {
+			ss.str("");
+			ss << a;
+			string tmp = ss.str();
+			while (tmp.size() < l) tmp = "0" + tmp;
+			sort(tmp.begin(), tmp.end());
+			int big = sum(tmp);
+			reverse(tmp.begin(), tmp.end());
+			int sml = sum(tmp);
+			ns[i + 1] = a = big - sml;
+			int res = dup(ns, i + 1);
+			if (res >= 0) {
+				printf("%d %d %d\n", res, ns[i + 1], i + 1 - res);
+				break;
+			}
+		}
+	}
+	return 0;
+}
