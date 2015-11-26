@@ -39,7 +39,7 @@ int main() {
 		}
 		int curpos = 0; // position in the permutation hand is currently under
 		int rem = n;
-		long long totans = 0;
+		long totans = 0;
 		bool scanfor = false; // keeps track of whether curpos should be scanned to the next remaining position
 		for (int i = 0; i < n; i++) {
 			int targpos = position[i];
