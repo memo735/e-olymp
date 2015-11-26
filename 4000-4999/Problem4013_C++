@@ -1,0 +1,141 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+const int maxn = 51, inf = 0x3f3f3f3f;
+int w, h;
+char mat[maxn][maxn];
+
+struct Edge{
+	int u, v, cap, flow;
+	Edge(){}
+	Edge(int u, int v, int cap, int flow) : u(u), v(v), cap(cap), flow(flow){}
+};
+
+struct ISAP {
+	int n, s, t, num[maxn*maxn], cur[maxn*maxn], d[maxn*maxn], p[maxn*maxn];
+	vector<int> G[maxn*maxn];
+	vector<Edge> edges;
+	void add(int u, int v, int cap){
+		edges.push_back(Edge(u, v, cap, 0));
+		edges.push_back(Edge(v, u, 0, 0));
+		int m = edges.size();
+		G[u].push_back(m - 2);
+		G[v].push_back(m - 1);
+	}
+	void init(int n){
+		this->n = n;
+		for (int i = 0; i < n; i++) G[i].clear();
+		edges.clear();
+	}
+	void bfs(){
+		for (int i = 0; i < n; i++) d[i] = inf;
+		d[t] = 0;
+		queue<int> Q;
+		Q.push(t);
+		while (!Q.empty()){
+			int x = Q.front(); Q.pop();
+			for (int i = 0; i < G[x].size(); i++){
+				Edge &e = edges[G[x][i]];
+				if (e.cap > 0 || d[e.v] <= d[x] + 1) continue;
+				d[e.v] = d[x] + 1;
+				Q.push(e.v);
+			}
+		}
+	}
+	int augment(){
+		int x = t, a = inf;
+		while (x != s){
+			Edge &e = edges[p[x]];
+			a = min(a, e.cap - e.flow);
+			x = e.u;
+		}
+		x = t;
+		while (x != s){
+			edges[p[x]].flow += a;
+			edges[p[x] ^ 1].flow -= a;
+			x = edges[p[x]].u;
+		}
+		return a;
+	}
+	int maxflow(int s, int t){
+		this->s = s;
+		this->t = t;
+		memset(cur, 0, sizeof cur);
+		memset(num, 0, sizeof num);
+		bfs();
+		for (int i = 0; i < n; i++) if (d[i] != inf) num[d[i]]++;
+		int x = s, flow = 0;
+		while (d[s] < n){
+			if (x == t){ flow += augment(); x = s; }
+			int ok = 0;
+			for (int i = cur[x]; i < G[x].size(); i++){
+				Edge &e = edges[G[x][i]];
+				if (e.cap > e.flow && d[e.v] + 1 == d[x]){
+					ok = 1;
+					cur[x] = i;
+					p[e.v] = G[x][i];
+					x = e.v;
+					break;
+				}
+			}
+			if (!ok){
+				int m = n - 1;
+				for (int i = 0; i < G[x].size(); i++){
+					Edge &e = edges[G[x][i]];
+					if (e.cap > e.flow) m = min(m, d[e.v]);
+				}
+				if (--num[d[x]] == 0) break;
+				++num[d[x] = m + 1];
+				cur[x] = 0;
+				if (x != s) x = edges[p[x]].u;
+			}
+		}
+		return flow;
+	}
+} g;
+
+
+bool in(int x, int y) { return 0 <= x && 0 <= y && x < h && y < w; }
+bool inborder(int x, int y) { return x == 0 || y == 0 || x == h - 1 || y == w - 1; }
+
+int main() {
+	int b, d, f, st, ed, cost, T;
+	scanf("%d", &T);
+	while (T--) {
+		scanf("%d%d%d%d%d", &w, &h, &d, &f, &b);
+		for (int i = 0; i < h; ++i) scanf("%s", mat[i]);
+		cost = 0, st = h*w, ed = h*w + 1;
+		for (int i = 0; i < h; ++i)
+			for (int j = 0; j < w; ++j)
+				if (inborder(i, j) && mat[i][j] == '.') {
+					mat[i][j] = '#';
+					cost += f;
+				}
+		//build();
+		g.init(ed + 1);
+		for (int i = 0; i < h; ++i) {
+			for (int j = 0; j < w; ++j) {
+				if (mat[i][j] == '#') {
+					if (inborder(i, j)) g.add(st, i*w + j, inf);
+					else g.add(st, i*w + j, d);
+				}
+				else g.add(i*w + j, ed, f);
+				if (i) {
+					g.add(i*w + j, (i - 1)*w + j, b);
+					g.add((i - 1)*w + j, i*w + j, b);
+				}
+				if (j) {
+					g.add(i*w + j, i*w + j - 1, b);
+					g.add(i*w + j - 1, i*w + j, b);
+				}
+			}
+		}
+		printf("%d\n", cost + g.maxflow(st, ed));
+	}
+	return 0;
+}
