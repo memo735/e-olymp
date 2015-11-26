@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+long gcd(long a, long b)
+{
+	if (b == 0) return a;
+	return gcd(b, a%b);
+}
+
+int main()
+{
+	int n, k, num[810];
+	bool f[810];
+	while (scanf("%d%d", &n, &k) != EOF)
+	{
+		if (n == 0 && k == 0) break;
+		if (n < k) { puts("1"); continue; }
+		int x, oo = 1;
+		for (int i = 1; i <= k && i <= n; i++)
+			for (int j = (n - i) / k * k + i; j > 0; j -= k) num[oo++] = j;
+		long res = 1;
+		memset(f, false, sizeof f);
+		for (int i = 1; i <= n; i++)
+		{
+			x = i;
+			if (f[i]) continue;
+			int count = 0;
+			while (true)
+			{
+				f[x] = true;
+				x = num[x];
+				count++;
+				if (x == i) break;
+			}
+			res = res / gcd(res, count)*count;
+		}
+		cout << res << endl;
+	}
+	return 0;
+}
