@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int a, b, T;
+	scanf("%d", &T);
+	while (T--) {
+		scanf("%d/%d", &a, &b);
+		while (a - b) {
+			if (a > b) { putchar('R'); a -= b; }
+			else { putchar('L'); b -= a; }
+			swap(a, b);
+		}
+		puts("");
+	}
+	return 0;
+}
