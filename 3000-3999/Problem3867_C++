@@ -1,0 +1,11 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int t1, t2, t3;
+	cin >> t1 >> t2 >> t3;
+	cout << min(t1, min(t2, t3)) << endl;
+	return 0;
+}
