@@ -1,0 +1,94 @@
+#include <iostream>
+
+using namespace std;
+int main()
+{
+	int x, y, a, b;
+	while (~scanf("%d%d", &x, &y))
+	{
+		scanf("%d%d", &a, &b);
+		int sum = 0;
+		sum += (x / a)*(y / b);
+		if (x%a == 0 && y%b == 0) { printf("%d\n", sum); continue; }
+		int ans1 = x%a, ans2 = y%b;
+		if (ans1 == 0)
+		{
+			if (ans2 > b / 2)
+			{
+				sum += x / a;
+				printf("%d\n", sum);
+			}
+			else
+			{
+				int tmp = b / ans2, tmp2 = x / a;
+				sum += tmp / tmp2;
+				if (tmp2%tmp) sum++;
+				printf("%d\n", sum);
+			}
+			continue;
+		}
+		if (ans2 == 0)
+		{
+			if (ans1 > a / 2)
+			{
+				sum += y / b;
+				printf("%d\n", sum);
+			}
+			else
+			{
+				int tmp = a / ans1, tmp2 = y / b;
+				sum += tmp2 / tmp;
+				if (tmp2%tmp) sum++;
+				printf("%d\n", sum);
+			}
+			continue;
+		}
+		if (ans1 > a / 2)
+		{
+			if (ans2 > b / 2)
+			{
+				sum += x / a;
+				sum += y / b + 1;
+				printf("%d\n", sum);
+			}
+			else
+			{
+				sum += y / b;
+				int tmp = b / ans2;
+				sum += x / (a*tmp);
+				if (x % (a*tmp))sum++;
+				printf("%d\n", sum);
+			}
+		}
+		else
+		{
+			if (ans2 > b / 2)
+			{
+				sum += x / a;
+				int tmp = a / ans1;
+				sum += y / (b*tmp) + 1;
+				printf("%d\n", sum);
+			}
+			else
+			{
+				int tmp1, tmp2, sum1, sum2 = 0;
+				tmp1 = y / b, tmp2 = a / ans1;
+				sum1 = tmp1 / tmp2;
+				if (tmp1%tmp2) sum1++;
+				tmp1 = b / ans2;
+				sum1 += x / (tmp1*a);
+				if (x % (tmp1*a)) sum1++;
+				tmp1 = x / a, tmp2 = b / ans2;
+				sum2 += tmp1 / tmp2;
+				if (tmp1%tmp2) sum2++;
+				tmp1 = (a / ans1)*b;
+				sum2 += y / tmp1;
+				if (y%tmp1) sum2++;
+				if (sum1 < sum2) sum += sum1;
+				else sum += sum2;
+				printf("%d\n", sum);
+			}
+		}
+	}
+	return 0;
+}
