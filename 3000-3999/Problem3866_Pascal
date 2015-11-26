@@ -1,0 +1,86 @@
+program eOlymp_3866;
+type rec = record k,p: Longint; end;
+     ask_op = record l,r,k,id,cur: Longint; end;
+var bit:array[1..100000] of Longint;
+    q,q1,q2:array[1..5000] of ask_op;
+    ans:array[1..5000] of Longint;
+    a:array[1..100000] of rec;
+    n,m,i:Longint;
+
+function c(x: Longint): Longint;
+begin exit(x and -x); end;
+
+procedure plus(p,d:Longint);
+begin
+  while p<=n do begin inc(bit[p],d); inc(p,c(p)); end;
+end;
+
+function query(p: Longint): Longint;
+begin
+  query:=0;
+  while p>0 do begin inc(query,bit[p]); dec(p,c(p)); end;
+end;
+
+procedure qsort(l,r: Longint);
+var i,j: Longint; mid,p:rec;
+begin
+  i:=l; j:=r;
+  mid:=a[(l+r)>>1];
+  repeat
+    while a[i].k<mid.k do inc(i);
+    while a[j].k>mid.k do dec(j);
+    if i<=j then
+    begin
+      p:=a[i];
+      a[i]:=a[j];
+      a[j]:=p;
+      inc(i);
+      dec(j);
+    end;
+  until i>j;
+  if i<r then qsort(i,r);
+  if l<j then qsort(l,j);
+end;
+
+procedure solve(hd,tl,l,r: Longint);
+var i,mid,l1,l2,t: Longint;
+begin
+  if hd>tl then exit;
+  if l=r then
+  begin
+    for i:=hd to tl do ans[q[i].id]:=l;
+    exit;
+  end;
+  mid:=(l+r)>>1;
+  l1:=0; l2:=0;
+  for i:=l to mid do plus(a[i].p,1);
+  for i:=hd to tl do
+  begin
+    t:=query(q[i].r)-query(q[i].l-1);
+    if q[i].cur+t>=q[i].k then begin inc(l1); q1[l1]:=q[i]; end
+    else begin inc(q[i].cur,t); inc(l2); q2[l2]:=q[i]; end;
+  end;
+  for i:=l to mid do plus(a[i].p,-1);
+  for i:=1 to l1 do q[hd+i-1]:=q1[i];
+  for i:=1 to l2 do q[hd+l1+i-1]:=q2[i];
+  solve(hd,hd+l1-1,l,mid);
+  solve(hd+l1,tl,mid+1,r);
+end;
+
+begin
+  readln(n,m);
+  for i:=1 to n do
+  begin
+    read(a[i].k);
+    a[i].p:=i;
+  end;
+  qsort(1,n);
+  for i:=1 to m do with q[i] do
+  begin
+    readln(l,r,k);
+    id:=i;
+    cur:=0;
+  end;
+  solve(1,m,1,n);
+  for i:=1 to m do writeln(a[ans[i]].k);
+end.
