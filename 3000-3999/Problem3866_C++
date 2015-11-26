@@ -1,0 +1,72 @@
+#include <algorithm>  
+
+using namespace std;
+
+int sa[100001], seg[20][100001], lnum[20][100001];
+
+void btree(int L, int R, int d)
+{
+	int i, ls, rs, lm, mid;
+	if (L == R) return;
+	mid = L + R >> 1;
+	ls = L, rs = mid + 1;
+	lm = mid - L + 1;
+	for (i = L; i <= R; i++) if (seg[d][i] < sa[mid]) lm--;
+	for (i = L; i <= R; i++)
+	{
+		lnum[d][i] = i == L ? 0 : lnum[d][i - 1];
+		if (seg[d][i] == sa[mid])
+		{
+			if (lm > 0)
+			{
+				lm--;
+				lnum[d][i]++;
+				seg[d + 1][ls++] = seg[d][i];
+			}
+			else seg[d + 1][rs++] = seg[d][i];
+		}
+		else
+			if (seg[d][i] < sa[mid])
+			{
+				lnum[d][i]++;
+				seg[d + 1][ls++] = seg[d][i];
+			}
+			else seg[d + 1][rs++] = seg[d][i];
+	}
+	btree(L, mid, d + 1);
+	btree(mid + 1, R, d + 1);
+}
+
+int qu(int L, int R, int l, int r, int d, int k)
+{
+	int ss, s, bb, b, mid;
+	if (L == R) return seg[d][L];
+	ss = l == L ? 0 : lnum[d][l - 1];
+	s = lnum[d][r] - ss;
+	mid = L + R >> 1;
+	if (s >= k) return qu(L, mid, L + ss, L + ss + s - 1, d + 1, k);
+	bb = l - L - ss;
+	b = r - l + 1 - s;
+	return qu(mid + 1, R, mid + bb + 1, mid + bb + b, d + 1, k - s);
+}
+
+int main()
+{
+	int i, j, k, n, m;
+	while (~scanf("%d%d", &n, &m))
+	{
+		for (i = 1; i <= n; i++)
+		{
+			scanf("%d", &seg[0][i]);
+			sa[i] = seg[0][i];
+		}
+		sort(sa + 1, sa + n + 1);
+		btree(1, n, 0); // mid +1 + bb + b - 1  
+		while (m--)
+		{
+			scanf("%d%d%d", &i, &j, &k);
+			printf("%d\n", qu(1, n, i, j, 0, k));
+		}
+	}
+	return 0;
+}
