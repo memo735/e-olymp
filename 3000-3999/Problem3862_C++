@@ -1,0 +1,24 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+long sqr(long x) { return x * x; }
+
+int main() {
+	long N;
+	scanf("%ld", &N);
+	vector< pair<int, int> > ans; //(length, begin)
+	for (long l = 1, r = 1, sum = 0; sqr(l) <= N; sum -= sqr(l++)) {
+		for (; sum < N;) sum += sqr(r++);
+		if (sum == N) ans.push_back(make_pair(r - l, l));
+	}
+	sort(ans.rbegin(), ans.rend());
+	printf("%d\n", ans.size());
+	for (int i = 0; i < ans.size(); ++i) {
+		printf("%d ", ans[i].first);
+		for (int j = 0; j < ans[i].first; ++j) printf("%d%c", ans[i].second + j, j == ans[i].first - 1 ? '\n' : ' ');
+	}
+	return 0;
+}
