@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+const int MAXN = 100002;
+
+int perm[MAXN]; // input permutation
+int position[MAXN]; // keeps track of positions within the permutation
+// perm[position[i]] = i
+// implementation of a BIT
+// keeps track of removed positions of the sequence
+// BIT keeps track of prefix sums
+// bitquery(i) = number of elements in [0, i] that have been removed
+int bitdata[MAXN];
+// increments i prior to operations to avoid cases where i < 1
+int bitquery(int i) {
+	int res = 0;
+	for (i += 2; i > 0; i -= i & -i) res += bitdata[i];
+	return res;
+}
+
+void bitadd(int i) {
+	for (i += 2; i < MAXN; i += i & -i) bitdata[i]++;
+}
+
+// query(i) = number of elements in [0, i] that have not been removed
+int query(int i) { return i + 1 - bitquery(i); }
+
+int main() {
+	int n;
+	while (cin >> n && n) {
+		memset(bitdata, 0, sizeof bitdata);
+		for (int i = 0; i < n; i++) {
+			cin >> perm[i];
+			perm[i]--;
+			position[perm[i]] = i;
+		}
+		int curpos = 0; // position in the permutation hand is currently under
+		int rem = n;
+		long long totans = 0;
+		bool scanfor = false; // keeps track of whether curpos should be scanned to the next remaining position
+		for (int i = 0; i < n; i++) {
+			int targpos = position[i];
+			// add the minimum of either going forward (clockwise), or backward (counter-clockwise)
+			int distfor = query(targpos) - query(curpos);
+			if (scanfor) distfor--;
+			distfor = (distfor + rem) % rem; // the distance is cyclic
+			int distback = rem-- - distfor;
+			totans += min(distfor, distback) + 1;
+			bitadd(targpos);
+			curpos = targpos;
+			// curpos has now been removed, so it must be scanned forward, since the 
+			// next remaining ball, in the clockwise direction, then falls into your hand
+			scanfor = true;
+		}
+		cout << totans << '\n';
+	}
+}
