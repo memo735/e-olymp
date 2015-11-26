@@ -1,0 +1,130 @@
+#include <string.h>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <math.h>
+#include <queue>
+#include <set>
+
+using namespace std;
+
+#define N 101
+#define M 1001
+
+#define INF 0x3f3f3f3f
+vector<int> vec[N];
+set<int> Tuopu;
+int n, tot, head[N];
+
+int in[N];
+
+struct Node{
+	string s;
+	int x, y;
+} node[N];
+
+struct Edge{
+	int u, v, next;
+	double c;
+} E[M];
+
+
+void AddEdge(int u, int v, double c) {
+	E[tot].u = u; E[tot].v = v; E[tot].c = c;
+	E[tot].next = head[u]; head[u] = tot++;
+}
+
+double distance(int i, int j) {
+	int x = node[i].x - node[j].x, y = node[i].y - node[j].y;
+	return sqrt(1.0 * x * x + 1.0 * y * y);
+}
+
+bool spfa(int s) {
+	double d[N];
+	bool vis[N];
+	int cnt[N];
+	memset(cnt, 0, sizeof cnt);
+	memset(vis, 0, sizeof vis);
+	for (int i = 1; i <= n; i++) d[i] = INF;
+	queue<int> Q;
+	d[s] = 0;
+	Q.push(s);
+	while (!Q.empty()) {
+		int u = Q.front(); Q.pop();
+		for (int i = head[u]; ~i; i = E[i].next) {
+			int v = E[i].v;
+			if (d[v] > d[u] + E[i].c) {
+				d[v] = d[u] + E[i].c;
+				if (!vis[v]) {
+					vis[v] = true;
+					Q.push(v);
+					if (++cnt[v] >= n) return false;
+				}
+			}
+		}
+		vis[u] = false;
+	}
+	for (int i = 1; i <= n; i++)
+		if (d[i] < 0) {
+			vec[i].push_back(s);
+			in[s]++;
+			Tuopu.erase(s);
+		}
+	return true;
+}
+
+void solve() {
+	memset(in, 0, sizeof in);
+	for (int i = 1; i <= n; i++) if (!spfa(i)) { printf("IMPOSSIBLE\n"); return; }
+	queue<int> ans;
+	while (Tuopu.size()) {
+		if (Tuopu.size() > 1) { printf("UNKNOWN\n"); return; }
+		int t = *Tuopu.begin();
+		ans.push(t);
+		Tuopu.erase(t);
+		for (int i = 0; i < vec[t].size(); i++) {
+			--in[vec[t][i]];
+			if (in[vec[t][i]] == 0) Tuopu.insert(vec[t][i]);
+		}
+	}
+	cout << node[ans.front()].s;
+	ans.pop();
+	while (!ans.empty())  {
+		cout << " " << node[ans.front()].s;
+		ans.pop();
+	}
+	printf("\n");
+}
+
+int main() {
+	int m, test;
+	char str1[N], str2[N], str3[N];
+	map<string, int> name;
+	scanf("%d", &test);
+	while (test--) {
+		scanf("%d%d", &n, &m);
+		name.clear();
+		Tuopu.clear();
+		string s1, s2, s3;
+		for (int i = 1; i <= n; i++) {
+			cin >> node[i].s >> node[i].x >> node[i].y;
+			name[node[i].s] = i;
+			vec[i].clear();
+		}
+		memset(head, -1, sizeof head);
+		tot = 0;
+		// u + dist1 <= v + dist2
+		for (int i = 0; i < m; i++) {
+			scanf("%s heard %s firing before %s", str1, str2, str3);
+			s1 = str1; s2 = str2; s3 = str3;
+			double dist1 = distance(name[s2], name[s1]);
+			double dist2 = distance(name[s3], name[s1]);
+			int u = name[s2], v = name[s3];
+			Tuopu.insert(u);
+			Tuopu.insert(v);
+			AddEdge(v, u, dist2 - dist1);
+		}
+		solve();
+	}
+	return 0;
+}
