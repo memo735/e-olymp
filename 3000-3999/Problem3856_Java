@@ -1,0 +1,53 @@
+import java.math.BigInteger;
+import java.util.Scanner;
+
+public class Main {
+
+	public static int cal(String str, int m) {
+		int len = Math.min(str.length(), m);
+		int ans = 0, tmp;
+		for (int i = 0; i < len; i++) {
+			tmp = str.charAt(i) - '0';
+			ans += tmp * tmp;
+		}
+		return ans;
+	}
+
+	public static void main(String[] args) {
+		Scanner cin = new Scanner(System.in);
+		int n = cin.nextInt();
+		BigInteger l = cin.nextBigInteger();
+		int k = cin.nextInt(), m = cin.nextInt();
+		BigInteger mod = BigInteger.TEN.pow(m);
+		BigInteger[] a = new BigInteger[15];
+		for (int i = 0; i <= n; i++) a[i] = cin.nextBigInteger();
+		BigInteger h[][] = new BigInteger[15][15];
+		for (int i = 0; i < Math.min(n + 1, k); i++) {
+			BigInteger res = a[0];
+			for (int j = 1; j <= n; j++) {
+				res = res.multiply(l);
+				res = res.add(a[j]);
+			}
+			res = res.mod(mod);
+			l = l.add(BigInteger.ONE);
+			h[0][i] = res;
+			System.out.println(cal(res.toString(), m));
+		}
+		if (k > n + 1) {
+			for (int i = 1; i <= n; i++) {
+				for (int j = 0; j <= n - i; j++) h[i][j] = h[i - 1][j + 1].subtract(h[i - 1][j]);
+			}
+		}
+		BigInteger pre[] = new BigInteger[15];
+		for (int i = 0; i <= n; i++) pre[i] = h[i][n - i];
+		for (int i = n + 1; i < k; i++) {
+			BigInteger res = h[n][0];
+			for (int j = n - 1; j >= 0; j--) {
+				res = pre[j].add(res);
+				res = res.mod(mod);
+				pre[j] = res;
+			}
+			System.out.println(cal(res.toString(), m));
+		}
+	}
+}
