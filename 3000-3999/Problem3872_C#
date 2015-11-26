@@ -1,0 +1,26 @@
+using System;
+
+namespace Problem3872
+{
+    internal static class Program
+    {
+        public static void Main(string[] args)
+        {
+            int say = 0;
+            string setir = Console.ReadLine();
+            while (setir != "//end")
+            {
+                int len = setir.Length;
+                while (setir.Contains("\\n") || setir.Contains("\\t") || setir.Contains("\\r"))
+                {
+                    setir = setir.Replace("\\n", "");
+                    setir = setir.Replace("\\t", "");
+                    setir = setir.Replace("\\r", "");
+                }
+                say = say + (len - setir.Length) / 2;
+                setir = Console.ReadLine();
+            }
+            Console.WriteLine(say);
+        }
+    }
+}
