@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define MAXN 100001
+
+int totedge = 0, cnt[MAXN], deep[MAXN], dir_u[MAXN], dir_v[MAXN], head[MAXN], dp[MAXN][20];
+bool vis[MAXN];
+
+struct node {
+	int to, next, flag;
+} edge[MAXN << 1];
+
+void add(int from, int to, int flag) {
+	edge[totedge].to = to;
+	edge[totedge].next = head[from];
+	edge[totedge].flag = flag;
+	head[from] = totedge++;
+}
+
+void DFS(int u, int step) {
+	if (vis[u]) return;
+	vis[u] = true;
+	if (step == 0) dp[u][0] = u;
+	deep[u] = step;
+	for (int i = 1; i < 20; i++) dp[u][i] = dp[dp[u][i - 1]][i - 1];
+	for (int i = head[u]; i != -1; i = edge[i].next) {
+		int v = edge[i].to;
+		if (vis[v]) continue;
+		dp[v][0] = u;
+		DFS(v, step + 1);
+	}
+}
+
+int LCA(int u, int v) {
+	if (deep[u] > deep[v]) swap(u, v);
+	int deep_len = deep[v] - deep[u], tu = u, tv = v;
+	for (int j = deep_len, i = 0; j; j >>= 1, i++) if (j & 1) tv = dp[tv][i];
+	if (tu == tv) return tu;
+	for (int i = 20 - 1; i >= 0; i--) {
+		if (dp[tu][i] == dp[tv][i]) continue;
+		tu = dp[tu][i], tv = dp[tv][i];
+	}
+	return dp[tu][0];
+}
+
+void DFS2(int u, int pre) {
+	for (int i = head[u]; i != -1; i = edge[i].next) {
+		int v = edge[i].to;
+		if (v == pre) continue;
+		cnt[v] = cnt[u] + 1;
+		if (edge[i].flag == 0) {
+			dir_v[v] = dir_v[u] + 1;
+			dir_u[v] = 0;
+		}
+		else {
+			dir_u[v] = dir_u[u] + 1;
+			dir_v[v] = 0;
+		}
+		DFS2(v, u);
+	}
+}
+
+int main() {
+	int n, Q;
+	while (~scanf("%d", &n)) {
+		totedge = 0;
+		memset(vis, false, sizeof vis);
+		memset(head, -1, sizeof head);
+		memset(dp, 0, sizeof dp);
+		memset(deep, 0, sizeof deep);
+		memset(dir_u, 0, sizeof dir_u);
+		memset(dir_v, 0, sizeof dir_v);
+		memset(cnt, 0, sizeof cnt);
+		int a, b;
+		for (int i = 0; i < n - 1; i++) {
+			scanf("%d%d", &a, &b);
+			add(a, b, 0);
+			add(b, a, 1);
+		}
+		DFS(1, 0);
+		scanf("%d", &Q);
+		DFS2(1, -1);
+		while (Q--) {
+			scanf("%d%d", &a, &b);
+			int lca = LCA(a, b);
+			int cnt1 = cnt[a] - cnt[lca];
+			int cnt2 = cnt[b] - cnt[lca];
+			if (cnt1 > dir_u[a] || cnt2 > dir_v[b]) puts("No");
+			else puts("Yes");
+		}
+	}
+	return 0;
+}
