@@ -1,0 +1,90 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+const int BMAX = 250000;
+const int UMAX = 125000;
+const int AMAX = 500;
+
+int num, now, head[UMAX], link[UMAX], vis[UMAX];
+
+struct bian
+{
+	int v, next;
+} e[BMAX];
+
+void add(int u, int v)
+{
+	e[num].v = v;
+	e[num].next = head[u];
+	head[u] = num++;
+}
+
+bool dfs(int k)
+{
+	for (int h = head[k]; h != -1; h = e[h].next)
+	{
+		int v = e[h].v;
+		if (vis[v] == now) continue;
+		vis[v] = now;
+		if (link[v] == -1 || dfs(link[v]))
+		{
+			link[v] = k;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+	int b, n, m, w, T, B[AMAX][AMAX], W[AMAX][AMAX];
+	vector<pair<int, int>> BLK;
+	char s[AMAX][AMAX];
+	scanf("%d", &T);
+	while (T--)
+	{
+		BLK.clear();
+		num = 0;
+		memset(head, -1, sizeof(head));
+		scanf("%d%d", &n, &m);
+		memset(s, 0, sizeof s);
+		for (int i = 0; i < n; i++) scanf("%s", s[i]);
+		b = w = 0;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+			{
+				if (s[i][j] == 'B') B[i][j] = ++b, BLK.push_back(make_pair(i, j));
+				if (s[i][j] == 'W') W[i][j] = ++w;
+			}
+
+		if (b * 2 != w) puts("NO");
+		else
+		{
+			for (int k = 0; k < BLK.size(); k++)
+			{
+				int i = BLK[k].first, j = BLK[k].second;
+				if (s[i][j] == 'B')
+				{
+					if (s[i - 1][j] == 'W') add(B[i][j], W[i - 1][j]);
+					if (s[i + 1][j] == 'W') add(B[i][j], W[i + 1][j]);
+					if (s[i][j - 1] == 'W') add(B[i][j] + b, W[i][j - 1]);
+					if (s[i][j + 1] == 'W') add(B[i][j] + b, W[i][j + 1]);
+				}
+			}
+			memset(link, -1, sizeof link);
+			memset(vis, 0, sizeof vis);
+			int i;
+			for (i = 1; i <= b * 2; i++)
+			{
+				now = i;
+				if (!dfs(i)) break;
+			}
+			if (i > b * 2) puts("YES");
+			else puts("NO");
+		}
+	}
+	return 0;
+}
