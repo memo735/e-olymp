@@ -1,0 +1,21 @@
+using System;
+using System.Numerics;
+
+namespace Problem3873
+{
+    internal static class Program
+    {
+        private static BigInteger Fakt(int n)
+        {
+            BigInteger cavab = 1;
+            for (int i = 2; i <= n; i++) cavab = cavab*i;
+            return cavab;
+        }
+
+        public static void Main()
+        {
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine(Fakt(9 + n)/Fakt(9)/Fakt(n));
+        }
+    }
+}
