@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int pos[3];
+
+int get(char c)
+{
+	switch (c)
+	{
+		case 'A': return 1;
+		case 'B': return 2;
+		case 'C': return 3;
+	}
+	return 0;
+}
+
+long hanio(int b, int m){
+	if (m == 0) return b != pos[m];;
+	if (pos[m] == b) return hanio(b, m - 1);
+	return hanio(6 - b - pos[m], m - 1) + (1L << m);
+}
+int main()
+{
+	char str[57];
+	int m;
+	while (scanf("%s", str))
+	{
+		if (str[0] == 'X') break;
+		m = strlen(str);
+		for (int i = 0; i < m; i++) pos[i] = get(str[i]);
+		cout << hanio(2, m - 1) << endl;
+	}
+	return 0;
+}
