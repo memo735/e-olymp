@@ -1,0 +1,59 @@
+#include <iostream>
+
+using namespace std;
+
+int c[200001];
+
+int lowbit(int x) { return x & -x; }
+
+void update(int x, int k, int add)
+{
+	while (x <= k)
+	{
+		c[x] += add;
+		x += lowbit(x);
+	}
+}
+
+int query(int x)
+{
+	int ans = 0;
+	while (x > 0)
+	{
+		ans += c[x];
+		x -= lowbit(x);
+	}
+	return ans;
+}
+
+int main()
+{
+	int t, n, m, pos[200001 >> 1];
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d%d", &n, &m);
+		for (int i = 1; i <= n + m; i++) c[i] = 0;
+		for (int i = m + 1; i <= n + m; i++)
+		{
+			pos[i - m] = i;
+			update(i + 1, n + m, 1);
+		}
+		int cnt = m;
+		for (int i = 1; i <= m; i++)
+		{
+			int k;	scanf("%d", &k);
+			int ans = query(pos[k]);
+			printf("%d", ans);
+			if (ans != 0)
+			{
+				update(pos[k] + 1, n + m, -1);
+				update(cnt + 1, n + m, 1);
+				pos[k] = cnt--;
+			}
+			if (i == m)printf("\n");
+			else printf(" ");
+		}
+	}
+	return 0;
+}
