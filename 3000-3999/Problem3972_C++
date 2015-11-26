@@ -1,0 +1,70 @@
+#include <iostream>
+
+using namespace std;
+
+#define INFL 0x7fffffffffffffffLL
+#define MAXN 1000001
+
+struct Vec
+{
+	long x, y;
+	Vec(long _x = 0, long _y = 0) : x(_x), y(_y) {};
+	friend Vec operator - (Vec p, Vec q) { return Vec(p.x - q.x, p.y - q.y); }
+	friend long operator % (Vec p, Vec q) { return p.x * q.y - p.y * q.x; }
+} _Vec;
+
+struct CMQ
+{
+	Vec Q[MAXN];
+	int hd, tl;
+	void ini() { hd = tl = 0; }
+	static long fun(long k, long x, long y) { return y - k * x; }
+	void ins(Vec v)
+	{
+		while (hd + 1 < tl)
+		{
+			if ((Q[tl - 2] - v) % (Q[tl - 1] - v) > 0) break;
+			tl--;
+		}
+		Q[tl++] = v;
+	}
+	long pop(long k)
+	{
+		long res = INFL;
+		while (hd < tl)
+		{
+			long cb = fun(k, Q[hd].x, Q[hd].y);
+			if (cb > res) break;
+			hd++;
+			res = cb;
+		}
+		hd--;
+		return res;
+	}
+	void tra() const
+	{
+		printf("CMQ:");
+		for (int i = hd; i < tl; i++) printf("(%5ld, %5ld)", Q[i].x, Q[i].y);
+		puts("");
+	}
+} zkl;
+
+int main()
+{
+	int n, c;
+	long dp[MAXN];
+	while (scanf("%d%d", &n, &c), n || c)
+	{
+		zkl.ini();
+		for (int i = 0; i < n; i++)
+		{
+			int k;
+			scanf("%d", &k);
+			long kk = 1L * k * k;
+			zkl.ins(Vec(k, bool(i) * dp[i - 1] + kk));
+			dp[i] = kk + zkl.pop(k << 1) + c;
+		}
+		printf("%ld\n", dp[n - 1]);
+	}
+	return 0;
+}
