@@ -1,0 +1,105 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <math.h>
+
+using namespace std;
+
+const int maxn = 250001;
+int S, R, W, P;
+
+struct Point
+{
+	int x, y;
+	void in(){ scanf("%d%d", &x, &y); }
+	Point(){}
+	Point(int _x, int _y) :x(_x), y(_y){}
+	Point operator +(const Point &t) const{ return Point(x + t.x, y + t.y); }
+	Point operator -(const Point &t) const{ return Point(x - t.x, y - t.y); }
+	bool operator < (const Point &a) const{ return a.x == x ? y < a.y : x < a.x; }
+};
+
+struct Line
+{
+	Point a, b;
+	void in(){ a.in(); b.in(); }
+};
+
+int dbcmp(double n){ return n < 0 ? -1 : n > 0; }
+
+double getCross(Point o, Point a, Point b){
+	double x1 = a.x - o.x, x2 = b.x - o.x;
+	double y1 = a.y - o.y, y2 = b.y - o.y;
+	return x1*y2 - x2*y1;
+}
+double getDot(Point o, Point a, Point b){
+	double x1 = a.x - o.x, x2 = b.x - o.x;
+	double y1 = a.y - o.y, y2 = b.y - o.y;
+	return x1*x2 + y1*y2;
+}
+
+int lineXline(Point a, Point b, Point c, Point d){
+	double d1 = getCross(a, b, c), d2 = getCross(a, b, d);
+	double d3 = getCross(c, d, a), d4 = getCross(c, d, b);
+	if (dbcmp(d1*d2) < 0 && dbcmp(d3*d4) < 0) return 1;
+	int cnt = 0;
+	if (dbcmp(d1) == 0 && dbcmp(getDot(c, a, b)) <= 0) cnt++;
+	if (dbcmp(d2) == 0 && dbcmp(getDot(d, a, b)) <= 0) cnt++;
+	if (dbcmp(d3) == 0 && dbcmp(getDot(a, c, d)) <= 0) cnt++;
+	if (dbcmp(d4) == 0 && dbcmp(getDot(b, c, d)) <= 0) cnt++;
+	return cnt;
+}
+
+double getDis(Point a, Point b){
+	double dx = a.x - b.x, dy = a.y - b.y;
+	return sqrt(dx*dx + dy*dy);
+}
+
+Point pt[maxn];
+Line Ln[maxn];
+vector<Point> ans;
+
+void solve(int x, int y){
+	Point p = Point(x, y);
+	Point left = Point(x - R - 1, y);
+	Point right = Point(x + R + 1, y);
+	int l_id = lower_bound(pt, pt + S, left) - pt;
+	int r_id = lower_bound(pt, pt + S, right) - pt;
+	if (l_id == S) { puts("0"); return; }
+	ans.clear();
+	for (int i = l_id; i < r_id; i++)
+	{
+		double ds = getDis(p, pt[i]);
+		if (dbcmp(ds - R) > 0) continue;
+		for (int j = 0; j < W; j++)
+		{
+			if (lineXline(pt[i], p, Ln[j].a, Ln[j].b)) ds++;
+		}
+		if (dbcmp(ds - R) > 0) continue;
+		ans.push_back(pt[i]);
+	}
+	sort(ans.begin(), ans.end());
+	printf("%d", ans.size());
+	for (int i = 0; i < ans.size(); i++) printf(" (%d,%d)", ans[i].x, ans[i].y);
+	puts("");
+}
+
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d%d%d%d", &S, &R, &W, &P);
+		for (int i = 0; i < S; i++) pt[i].in();
+		sort(pt, pt + S);
+		for (int i = 0; i < W; i++) Ln[i].in();
+		while (P--)
+		{
+			int x, y;
+			scanf("%d%d", &x, &y);
+			solve(x, y);
+		}
+	}
+	return 0;
+}
