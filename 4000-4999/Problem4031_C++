@@ -1,0 +1,31 @@
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	int X, n, l, r, flag, i, L[1000001];
+	while (~scanf("%d", &X)){
+		X *= 10000000;
+		scanf("%d", &n);
+		flag = 0;
+		for (i = 0; i < n; i++) scanf("%d", &L[i]);
+		if (n == 1 || !n){
+			printf("danger\n");
+			continue;
+		}
+		sort(L, L + n);
+		l = 0, r = n - 1;
+		while (l < r)
+		{
+			if (L[l] + L[r] == X){
+				flag = 1;
+				printf("yes %d %d\n", L[l], L[r]);
+				break;
+			}
+			if (L[l] + L[r] < X) l++;
+			else r--;
+		}
+		if (!flag) printf("danger\n");
+	}
+	return 0;
+}
