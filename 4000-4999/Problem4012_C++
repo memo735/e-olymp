@@ -1,0 +1,32 @@
+#include <algorithm>
+#include <assert.h>
+#include <map>
+
+using namespace std;
+
+int n;
+char q[25001];
+map<char, int> last;
+
+bool pass(char a, char b) { return last[a] < last[b]; }
+
+int score() {
+	last.clear();
+	for (int i = 0; i < n; ++i) last[q[i]] = i;
+	int ans = 0;
+	for (int i = 0; i < n; ++i) ans += 1LL * i + (last[q[i]] - i);
+	return ans;
+}
+
+int main(){
+	int T; scanf("%d", &T);
+	while (T--) {
+		if (scanf("%d %s", &n, q) != 2) break;
+		int a = score();
+		sort(q, q + n, pass);
+		int b = score();
+		assert(a - b >= 0);
+		printf("%d\n", 5 * (a - b));
+	}
+	return 0;
+}
