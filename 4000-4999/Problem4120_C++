@@ -1,0 +1,125 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+#define MAXN 1001
+#define MAX_INT 0x7FFFFFFF
+
+const int walk[][2] = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+
+int M, N;
+char plantmap[MAXN][MAXN];
+
+struct node
+{
+	int times;
+	int dis;
+} s[MAXN][MAXN][4];
+
+struct coor
+{
+	int x, y, dir;
+};
+
+coor st, ed;
+
+bool check(coor to_check)
+{
+	if (to_check.x == st.x && to_check.y == st.y) return true;
+	if (to_check.x == ed.x && to_check.y == ed.y) return true;
+	if (to_check.x >= 0 && to_check.x < M && to_check.y >= 0 && to_check.y < N && plantmap[to_check.x][to_check.y] != '*') return true;
+	return false;
+}
+
+int main()
+{
+	int m, ct = 0;
+	while (scanf("%d %d %d", &M, &N, &m) == 3)
+	{
+		if (m == 0) break;
+		ct++;
+		printf("Case %d: %d ", ct, m);
+		for (int i = 0; i < M; i++)
+		{
+			getchar();
+			for (int j = 0; j < N; j++) scanf("%c", &plantmap[i][j]);
+		}
+		char d;
+		scanf("%d %d %d %d %c", &st.x, &st.y, &ed.x, &ed.y, &d);
+		switch (d)
+		{
+		case 'N': st.dir = 0; break;
+		case 'E': st.dir = 1; break;
+		case 'S': st.dir = 2; break;
+		case 'W': st.dir = 3; break;
+		}
+		for (int i = 0; i < M; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				for (int z = 0; z < 4; z++)
+				{
+					s[i][j][z].dis = MAX_INT;
+					s[i][j][z].times = 0;
+				}
+			}
+		}
+		s[st.x][st.y][st.dir].dis = 0;
+		s[st.x][st.y][st.dir].times = 1 % m;
+		//bfs();
+		queue<coor> qu;
+		while (!qu.empty()) qu.pop();
+		coor now, next;
+		qu.push(st);
+		while (!qu.empty())
+		{
+			now = qu.front();
+			qu.pop();
+			if (now.x == ed.x && now.y == ed.y) break;
+			next.x = now.x;
+			next.y = now.y;
+			int dis = s[now.x][now.y][now.dir].dis + 1;
+			for (int i = 1; i < 4; i += 2)
+			{
+				next.dir = (now.dir + i) % 4;
+				if (check(next) == true)
+				{
+					if (dis < s[next.x][next.y][next.dir].dis)
+					{
+						s[next.x][next.y][next.dir].dis = dis;
+						s[next.x][next.y][next.dir].times = s[now.x][now.y][now.dir].times;
+						qu.push(next);
+					}
+					else if (dis == s[next.x][next.y][next.dir].dis) s[next.x][next.y][next.dir].times = (s[next.x][next.y][next.dir].times + s[now.x][now.y][now.dir].times) % m;
+				}
+			}
+			next.x = now.x + walk[now.dir][0];
+			next.y = now.y + walk[now.dir][1];
+			next.dir = now.dir;
+			if (check(next) == true)
+			{
+				if (dis < s[next.x][next.y][next.dir].dis)
+				{
+					s[next.x][next.y][next.dir].dis = dis;
+					s[next.x][next.y][next.dir].times = s[now.x][now.y][now.dir].times;
+					qu.push(next);
+				}
+				else if (dis == s[next.x][next.y][next.dir].dis) s[next.x][next.y][next.dir].times = (s[next.x][next.y][next.dir].times + s[now.x][now.y][now.dir].times) % m;
+			}
+		}
+		int min = 0, sum = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			if (s[ed.x][ed.y][i].dis < s[ed.x][ed.y][min].dis)
+			{
+				min = i;
+				sum = s[ed.x][ed.y][i].times;
+			}
+			else if (s[ed.x][ed.y][i].dis == s[ed.x][ed.y][min].dis) sum = (sum + s[ed.x][ed.y][i].times) % m;
+		}
+		if (s[ed.x][ed.y][min].dis != MAX_INT) printf("%ld\n", sum);
+		else printf("%d\n", -1);
+	}
+	return 0;
+}
