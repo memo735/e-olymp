@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define MAXN 1010
+
+int main()
+{
+	int len = 0;
+	char str[MAXN], ans[MAXN];
+	while (scanf("%s", str))
+	{
+		if (strcmp(str, "E-N-D") == 0)  break;
+		for (int i = 0; str[i]; ++i)
+			if (str[i] >= 'A' && str[i] <= 'Z') str[i] += 32;
+		for (int i = 0, j; str[i];)
+		{
+			for (j = i; str[j]; ++j) if (str[j] != '-' && (str[j] < 'a' || str[j] > 'z')) break;
+			if (len < j - i) strncpy(ans, &str[i], j - i), len = j - i;
+			i = j + 1;
+			if (!str[j]) break;
+		}
+	}
+	printf("%s\n", ans);
+	return 0;
+}
