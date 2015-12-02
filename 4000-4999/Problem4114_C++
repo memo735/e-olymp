@@ -1,0 +1,90 @@
+#include <iostream>
+#include <map>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 101, maxm = 5001, inf = 1e9;
+map<string, int> cityno;
+int t, ans, p[maxn];
+
+int find(int x)
+{
+	if (x == p[x]) return x;
+	return p[x] = find(p[x]);
+}
+
+struct Edge
+{
+	Edge(int uu, int vv, int ww) : u(uu), v(vv), w(ww) { }
+	Edge() { }
+	int u, v, w;
+} edge[maxm];
+
+bool operator < (const Edge&e1, const Edge&e2) { return e1.w > e2.w; }
+
+vector<Edge> G[maxn];
+
+bool dfs(int u, int fa)
+{
+	if (u == t) return true;
+	for (int i = 0; i < G[u].size(); ++i)
+	{
+		int v = G[u][i].v, w = G[u][i].w;
+		if (v == fa) continue;
+		if (dfs(v, u))
+		{
+			ans = min(w, ans);
+			return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	int k = 0, n, m, s, size;
+	while (scanf("%d%d", &n, &m) == 2, n + m)
+	{
+		cityno.clear();
+		string str;
+		char buffer[50];
+		int u, v, w;
+		size = 0;
+		for (int i = 0; i < m; ++i)
+		{
+			scanf("%s", buffer); str = buffer;
+			if (cityno.count(str)) u = cityno[str];
+			else u = cityno[str] = ++size;
+			scanf("%s", buffer); str = buffer;
+			if (cityno.count(str)) v = cityno[str];
+			else v = cityno[str] = ++size;
+			scanf("%d", &w);
+			edge[i] = Edge(u, v, w);
+		}
+		scanf("%s", buffer); str = buffer;
+		if (cityno.count(str)) s = cityno[str];
+		else s = cityno[str] = ++size;
+		scanf("%s", buffer); str = buffer;
+		if (cityno.count(str)) t = cityno[str];
+		else t = cityno[str] = ++size;
+		++k;
+		printf("Scenario #%d\n", k);
+		//solve();
+		for (int i = 1; i <= n; ++i) G[i].clear(), p[i] = i;
+		sort(edge, edge + m);
+		for (int i = 0; i < m; ++i)
+		{
+			u = find(edge[i].u);
+			v = find(edge[i].v);
+			if (u == v) continue;
+			p[u] = v;
+			G[u].push_back(Edge(u, v, edge[i].w));
+			G[v].push_back(Edge(v, u, edge[i].w));
+		}
+		ans = inf;
+		dfs(s, -1);
+		printf("%d tons\n\n", ans);
+	}
+}
