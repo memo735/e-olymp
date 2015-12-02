@@ -1,0 +1,33 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAXM 100001
+
+int main()
+{
+	bool vi[MAXM] = { 0 };
+	char str[300];
+	vi[1] = 0;
+	for (int i = 2; i < MAXM; ++i)
+		if (!vi[i]) for (int j = i + i; j < MAXM; j += i) vi[j] = 1;
+
+	while (scanf("%s", str))
+	{
+		int ans = 0;
+		if (str[0] == '0' && str[1] == '\0') break;
+		for (int i = 0; str[i]; ++i)
+		{
+			int tmp = 0;
+			for (int j = i; str[j]; ++j)
+			{
+				tmp = tmp * 10 + str[j] - '0';
+				if (tmp >= MAXM) break;
+				if (!vi[tmp]) ans = max(tmp, ans);
+			}
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
