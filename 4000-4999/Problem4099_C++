@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#define MAXN 1010
+#define MAXN 1001
 
 int main()
 {
