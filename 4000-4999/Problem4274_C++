@@ -1,0 +1,139 @@
+#include <set>
+#include <string.h>
+#include <iostream>
+#include <algorithm>
+
+#define inf 0x3fffffff
+
+using namespace std;
+
+#define N 55
+int n, Map[N][N], lx[N], ly[N], visx[N], visy[N], linkx[N], linky[N];
+
+void RD(int &ret) {
+	char c;
+	int flag = 1;
+	do {
+		c = getchar();
+		if (c == '-') flag = -1;
+	} while (c < '0' || c > '9');
+	ret = c - '0';
+	while ((c = getchar()) >= '0' && c <= '9') ret = ret * 10 + (c - '0');
+	ret *= flag;
+}
+
+void OT(int a) {
+	if (a >= 10) OT(a / 10);
+	putchar(a % 10 + '0');
+}
+
+void RD(double &ret) {
+	char c;
+	int flag = 1;
+	do {
+		c = getchar();
+		if (c == '-') flag = -1;
+	} while (c < '0' || c > '9');
+	int n1 = c - '0';
+	while ((c = getchar()) >= '0' && c <= '9') n1 = n1 * 10 + c - '0';
+	int n2 = 1;
+	while ((c = getchar()) >= '0' && c <= '9') {
+		n1 = n1 * 10 + c - '0';
+		n2 *= 10;
+	}
+	ret = 1.0 * flag * n1 / n2;
+}
+
+int find(int now){
+	visx[now] = 1;
+	for (int i = 1; i <= n; i++){
+		if (!visy[i]){
+			int fk = Map[now][i] - lx[now] - ly[i];
+			if (!fk){
+				visy[i] = 1;
+				if (linky[i] == -1 || find(linky[i])){
+					linky[i] = now;
+					linkx[now] = i;
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+int KM(){
+	memset(linky, -1, sizeof linky);
+	memset(linkx, -1, sizeof linkx);
+	memset(ly, 0, sizeof ly);
+	for (int i = 1; i <= n; i++){
+		while (true){
+			memset(visx, 0, sizeof visx);
+			memset(visy, 0, sizeof visy);
+			if (find(i)) break;
+			int d = inf;
+			for (int j = 1; j <= n; j++)
+				if (visx[j])
+					for (int k = 1; k <= n; k++)
+						if (!visy[k]) d = min(d, Map[j][k] - lx[j] - ly[k]);
+
+			for (int j = 1; j <= n; j++){
+				if (visx[j])lx[j] += d;
+				if (visy[j])ly[j] -= d;
+			}
+		}
+	}
+	int ans = 0;
+	for (int i = 1; i <= n; i++) if (linky[i] != -1) ans += Map[linky[i]][i];
+	return ans;
+}
+
+int main() {
+	int ca = 0, slx[N], sly[N], slinkx[N], slinky[N], firstsolve[N], a[N][N], b[N][N], gap[N][N];
+	while (cin >> n, n){
+		for (int i = 1; i <= n; i++){
+			for (int j = 1; j <= n; j++) cin >> a[i][j];
+		}
+		for (int i = 1; i <= n; i++){
+			for (int j = 1; j <= n; j++) cin >> b[i][j];
+		}
+		for (int i = 1; i <= n; i++){
+			lx[i] = inf;
+			for (int j = 1; j <= n; j++){
+				Map[i][j] = a[i][j];
+				lx[i] = min(lx[i], a[i][j]);
+			}
+		}
+		KM();
+		for (int i = 1; i <= n; i++) firstsolve[i] = lx[i] + ly[linkx[i]];
+		for (int i = 1; i <= n; i++)
+		{
+			slx[i] = lx[i];
+			sly[i] = ly[i];
+			slinky[i] = linky[i];
+			slinkx[i] = linkx[i];
+		}
+		memset(gap, 0, sizeof gap);
+		for (int i = 1; i <= n; i++){
+			lx[i] = inf;
+			for (int j = 1; j <= n; j++){
+				int tx = slx[i] + sly[linkx[i]];
+				int ty = a[slinky[j]][j];
+				int tt = max(tx, ty);
+				if (ty > tx) gap[i][j] = ty - tx;
+				Map[i][j] = tt + b[i][j];
+				lx[i] = min(lx[i], Map[i][j]);
+			}
+		}
+		KM();
+		int sum = 0;
+		printf("Case %d:\n", ++ca);
+		for (int i = 1; i <= n; i++){
+			printf("Worker %d: ", i);
+			cout << slinkx[i] << " " << linkx[i] << " " << Map[i][linkx[i]] << endl;
+			sum += gap[i][linkx[i]];
+		}
+		printf("Total idle time: %d\n", sum);
+	}
+	return 0;
+}
