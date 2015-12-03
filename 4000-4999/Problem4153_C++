@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int maxn = 200001;
+
+char out[maxn];
+int len, a_len, b_len, state[maxn], stage[1000][26];
+
+void add(char ch)
+{
+	int pos;
+	pos = state[len];
+	if (ch < 'A' || ch > 'Z')
+	{
+		out[len++] = ch;
+		state[len] = 0;
+		return;
+	}
+	pos = stage[pos][ch - 'A'];
+	if (pos == a_len)
+	{
+		len = len - (a_len - 1);
+		return;
+	}
+	out[len++] = ch;
+	state[len] = pos;
+}
+
+int main()
+{
+	int i, n, j;
+	char a[101], b[maxn];
+	while (scanf("%d", &n) != EOF)
+	{
+		getchar();
+		gets(a);
+		int back = 0;
+		memset(stage, 0, sizeof stage);
+		stage[0][a[0] - 'A'] = 1;
+		a_len = strlen(a);
+		for (i = 1; i < a_len; i++)
+		{
+			stage[i][a[i] - 'A'] = i + 1;
+			for (j = 'A'; j <= 'Z'; j++)
+			{
+				if (a[i] != j) stage[i][j - 'A'] = stage[back][j - 'A'];
+			}
+			back = stage[back][a[i] - 'A'];
+		}
+		for (i = 0; i < n; i++)
+		{
+			gets(b);
+			b_len = strlen(b);
+			len = 0;
+			state[0] = 0;
+			for (j = 0; j < b_len; j++) add(b[j]);
+			out[len] = 0;
+			puts(out);
+		}
+	}
+	return 0;
+}
