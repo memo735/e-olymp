@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+long b[101], c[101];
+int n;
+
+int chk(long L, long R){
+	if (L < 1 || L > 1000000000000000000L || R < 1 || R > 1000000000000000001L) return 0;
+	if (L >= R) return 0;
+	for (int i = 0; i < n; i++){
+		long val = R / (1L << (i + 1))*(1LL << i) + max(0L, R % (1L << (i + 1)) - (1L << i));
+		val -= L / (1L << (i + 1))*(1LL << i) + max(0L, L % (1L << (i + 1)) - (1L << i));
+		if (val != b[i]) return 0;
+	}
+	return 1;
+}
+
+int main(){
+	int a;
+	while (scanf("%d", &a), a){
+		for (int i = 0; i < a; i++) scanf("%lld", b + i);
+		n = 0;
+		for (int i = 0; i < a; i++) if (b[i]) n = i + 1;
+		bool dame = false;
+		for (int i = 0; i < n; i++) if (b[i]>1000000000000000000L) dame = true;
+		if (n > 60 || dame){ printf("None\n"); continue; }
+		for (int i = 0; i < n; i++) c[i] = b[i];
+		pair<long, long> L = make_pair(-1, -1);
+		pair<long, long> R = make_pair(-1, -1);
+		long tl = 1, tr = (1L << (n - 1)) + c[n - 1];
+		for (int i = 0; i < n - 1; i++) c[i] -= c[n - 1] / (1L << (i + 1))*(1L << i) + max(0L, c[n - 1] % (1L << (i + 1)) - (1L << i));
+		for (int i = n - 2; i >= 0; i--){
+			if (c[i] < 1L << i){
+				tl = (1L << (i + 1)) - c[i];
+				break;
+			}
+			for (int j = 0; j < i; j++) c[j] -= (1LL << i) / 2;
+		}
+		if (chk(tl, tr)) L = make_pair(tl, tr);
+		for (int i = 0; i < n; i++) c[i] = b[i];
+		long sz = c[n - 1];
+		tl = 1L << (n - 1);
+		tr = (1L << n) - sz;
+		for (int i = n - 2; i >= 0; i--){
+			if (c[i] && c[i] < sz) { tl += (1L << i) + c[i] - sz; break; }
+			if (c[i] == 0) tr = tl + (1L << i) - sz;
+			else tl += 1LL << i;
+		}
+		if (chk(tl, tl + sz)) R = make_pair(tl, tl + sz);
+		if (L.first == -1L && R.first == -1L) printf("None\n");
+		else if (L.first != -1LL && R.first != -1LL && (L.first != R.first || L.second != R.second)) printf("Many\n");
+		else if (L.first != -1LL) printf("%ld %ld\n", L.first, L.second - 1);
+		else printf("%ld %ld\n", R.first, R.second - 1);
+	}
+}
