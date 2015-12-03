@@ -1,0 +1,38 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+int d(int a, int b)
+{
+	if (pow(a, 2) + pow(b, 2) > 40000) return 0;
+	if (pow(a, 2) + pow(b, 2) > 32400) return 1;
+	if (pow(a, 2) + pow(b, 2) > 25600) return 2;
+	if (pow(a, 2) + pow(b, 2) > 19600) return 3;
+	if (pow(a, 2) + pow(b, 2) > 14400) return 4;
+	if (pow(a, 2) + pow(b, 2) > 10000) return 5;
+	if (pow(a, 2) + pow(b, 2) > 6400) return 6;
+	if (pow(a, 2) + pow(b, 2) > 3600) return 7;
+	if (pow(a, 2) + pow(b, 2) > 1600) return 8;
+	if (pow(a, 2) + pow(b, 2) > 400) return 9;
+	return 10;
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+	while (n--)
+	{
+		int m, ans = 0;
+		cin >> m;
+		while (m--)
+		{
+			int a, b;
+			scanf("%d%d", &a, &b);
+			ans += d(a, b);
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
