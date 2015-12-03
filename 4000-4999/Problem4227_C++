@@ -1,0 +1,93 @@
+#include <iostream>
+
+#define maxn 100001
+int n, th, dis[maxn], g[maxn], visit[maxn], path[maxn];
+
+struct T
+{
+	int v, w, next;
+} fn[maxn * 2];
+
+void add(int u, int v, int w)
+{
+	fn[th].v = v, fn[th].w = w, fn[th].next = g[u], g[u] = th++;
+	fn[th].v = u, fn[th].w = w, fn[th].next = g[v], g[v] = th++;
+}
+
+void dfs(int u)
+{
+	int i;
+	visit[u] = 1;
+	for (i = g[u]; i != -1; i = fn[i].next)
+	{
+		if (!visit[fn[i].v])
+		{
+			path[fn[i].v] = u;
+			dis[fn[i].v] = dis[u] + fn[i].w;
+			dfs(fn[i].v);
+		}
+	}
+}
+
+void find(int u, int f)
+{
+	visit[u] = 1;
+	int i, v;
+	for (i = g[u]; i != -1; i = fn[i].next)
+	{
+		v = fn[i].v;
+		if (v != f && visit[v] == 0)
+		{
+			dis[v] = dis[u] + fn[i].w;
+			dfs(v);
+		}
+	}
+}
+
+int main()
+{
+	int i, u, v, w, min, j = 0;
+	while (scanf("%d", &n), n)
+	{
+		//setGraph();
+		th = 0;
+		for (i = 0; i <= 2 * n; i++) g[i] = -1;
+		for (i = 1; i < n; i++)
+		{
+			scanf("%d%d%d", &u, &v, &w);
+			add(u, v, w);
+		}
+		for (i = 1; i <= n; i++) visit[i] = 0;
+		dis[1] = 0;
+		dfs(1);
+		for (i = 1, min = -1; i <= n; i++)
+		{
+			if (min < dis[i])
+			{
+				min = dis[i];
+				j = i;
+			}
+		}
+		for (i = 1; i <= n; i++) visit[i] = 0;
+		dis[j] = 0;
+		path[j] = -1;
+		dfs(j);
+		for (i = 1, min = -1; i <= n; i++)
+		{
+			if (min < dis[i])
+			{
+				min = dis[i];
+				j = i;
+			}
+		}
+		for (i = 1; i <= n; i++) visit[i] = 0;
+		for (i = j; i != -1; i = path[i])
+		{
+			dis[i] = 0;
+			find(i, path[i]);
+		}
+		for (i = 1, min = -1; i <= n; i++) if (min < dis[i]) min = dis[i];
+		printf("%d\n", min);
+	}
+	return 0;
+}
