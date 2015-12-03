@@ -1,0 +1,93 @@
+#include <iostream>
+#include <string>
+#include <map>
+
+using namespace std;
+
+const int maxn = 601;
+int t, n, m, l, f[maxn][2], len[maxn], ans[maxn][maxn];
+bool v[maxn];
+string s, a[maxn];
+map<string, int> h;
+
+int find()
+{
+	if (h.count(s)) return h[s];
+	h[s] = ++t;
+	f[t][0] = f[t][1] = 0;
+	a[t] = s;
+	len[t] = s.length() - 1;
+	return t;
+}
+
+void init()
+{
+	int k = 1, x, y, z;
+	scanf("%d", &n);
+	t = 0;
+	h.clear();
+	for (int i = 1; i <= n; ++i) {
+		if (k) cin >> s, x = find();
+		z = 0;
+		k = 1;
+		cin >> s;
+		cin >> s;
+		y = find();
+		cin >> s;
+		if (s == "+") {
+			cin >> s;
+			z = find();
+			f[x][0] = y;
+			f[x][1] = z;
+		}
+		else {
+			f[x][0] = y;
+			x = find();
+			k = 0;
+		}
+	}
+	if (k) cin >> s;
+	m = find();
+	cin >> s;
+	l = s.length() - 1;
+	for (int i = 1; i <= t; ++i) v[i] = 1;
+	for (int i = 1; i <= t; ++i)
+		for (int j = 0; j <= l + 1; ++j) ans[i][j] = 0;
+}
+
+void dfs(int t)
+{
+	if (!v[t]) return;
+	v[t] = 0;
+	if (!f[t][0]) {
+		for (int j = 0; j <= l; ++j) {
+			int sum = 0;
+			for (int i = 0; i <= len[t]; ++i) if (sum + j <= l && a[t][i] == s[sum + j]) sum++;
+			ans[t][j] = sum;
+		}
+		return;
+	}
+	dfs(f[t][0]);
+	for (int j = 0; j <= l; ++j) ans[t][j] = ans[f[t][0]][j];
+	if (f[t][1]) {
+		dfs(f[t][1]);
+		for (int j = 0; j <= l; ++j) ans[t][j] += ans[f[t][1]][j + ans[t][j]];
+	}
+}
+
+void work()
+{
+	dfs(m);
+	if (ans[m][0] > l) puts("YES"); else puts("NO");
+}
+
+int main()
+{
+	int t;
+	cin >> t;
+	while (t--) {
+		init();
+		work();
+	}
+	return 0;
+}
