@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+	long e, r, s, n, adult[1001], pupa[1001], larva[1001];
+	while (scanf("%ld %ld %ld %ld %ld %ld %ld", &adult[0], &pupa[0], &larva[0], &e, &r, &s, &n) == 7)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			larva[i] = adult[i - 1] * e;
+			pupa[i] = larva[i - 1] / r;
+			adult[i] = pupa[i - 1] / s;
+		}
+		printf("%ld\n", adult[n]);
+	}
+	return 0;
+}
