@@ -1,0 +1,115 @@
+#include <complex>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+typedef complex<double> point;
+typedef point Vec;
+const double eps = 1.0e-9;
+point cueball, current, previous, nextpos, midpoint, board[4], ball[15][2][2];
+struct line : vector<point> {
+	line() {}
+	line(const point& a, const point& b) { push_back(a); push_back(b); }
+};
+
+struct Circle{
+	point center;
+	double radius;
+	Circle(const point& c, const double& r) :center(c), radius(r) {}
+};
+
+point unit(const point& v) { return v / abs(v); }
+double dot(const point& a, const point& b) { return (a*conj(b)).real(); }
+double cross(const point& a, const point& b) { return (conj(a)*b).imag(); }
+point vec(const line& l) { return l[1] - l[0]; }
+
+bool intersectSP(const line& s, const point& p) {
+	return abs(s[0] - p) + abs(s[1] - p) < abs(s[1] - s[0]) + eps;
+}
+
+point crosspoint(const line& l, const line& m) { ///use Intersection Judging first
+	double A = cross(vec(l), vec(m)), B = cross(vec(l), l[1] - m[0]);
+	if (abs(A) < eps) return m[0]; // sameline
+	return m[0] + B / A*vec(m);
+}
+
+point intersection_point(const line& A, const Circle& C){
+	double dx = real(A[1] - A[0]), dy = imag(A[1] - A[0]);
+	double rx = real(A[0] - C.center), ry = imag(A[0] - C.center);
+	double a = dx*dx + dy*dy, b = 2 * dx*rx + 2 * dy*ry, c = rx*rx + ry*ry - C.radius*C.radius;
+	double delta = b*b - 4 * a*c;
+	if (delta < -eps) return point(-100000, -100000);
+	delta = max(0.0, delta);
+	double ans = (-b - sqrt(delta)) / (2.0*a);
+	if (ans >= 0) return point(A[0].real() + ans*dx, A[0].imag() + ans*dy);
+	ans = (-b + sqrt(delta)) / (2.0*a);
+	if (ans >= 0) return point(A[0].real() + ans*dx, A[0].imag() + ans*dy);
+	return point(-100000, -100000);
+}
+
+int main(){
+	int n, w, h, r, v_x, v_y;
+	Vec direction;
+	while (cin >> n&&n){
+		cin >> w >> h >> r >> v_x >> v_y;
+		w -= r * 2, h -= r * 2;
+		direction = point(v_x, v_y);
+		direction = unit(direction);
+		for (int i = 0, x, y; i < n; i++){
+			scanf("%d%d", &x, &y);
+			x -= r; y -= r;
+			if (i == 0) cueball = point(x, y);
+			else ball[i - 1][0][0] = point(x, y);
+		}
+		n--;
+		point tmp;
+		for (int i = 0; i < n; i++){
+			tmp = ball[i][0][0];
+			double x = tmp.real(), y = tmp.imag();
+			ball[i][0][1] = point(x, h - y);
+			ball[i][1][0] = point(w - x, y);
+			ball[i][1][1] = point(w - x, h - y);
+		}
+		double dist = 0;
+		int ans = -1, nowx, nowy, nextx = 0, nexty = 0;
+		current = cueball;
+		while (dist <= 10000){
+			previous = current;
+			nowx = nextx; nowy = nexty;
+			board[0] = point(nowx*w, nowy*h);
+			board[1] = point((nowx + 1)*w, nowy*h);
+			board[2] = point((nowx + 1)*w, (nowy + 1)*h);
+			board[3] = point(nowx*w, (nowy + 1)*h);
+			double ret = 0;
+			for (int i = 0; i < 4; i++){
+				tmp = crosspoint(line(board[i], board[(i + 1) % 4]), line(previous, previous + direction));
+				if (intersectSP(line(board[i], board[(i + 1) % 4]), tmp) &&
+					dot(previous - tmp, previous + 100000.0*direction - tmp) < 0 && abs(tmp - previous) > ret)
+				{
+					ret = abs(tmp - previous);
+					current = tmp;
+				}
+			}
+			midpoint = current + direction;
+			nextx = floor(midpoint.real() / w), nexty = floor(midpoint.imag() / h);
+			double ansdist = 1.0e20;
+			for (int i = 0; i < n; i++){
+				tmp = ball[i][nowx & 1][nowy & 1] + point(nowx*w, nowy*h);
+				point intersect = intersection_point(line(previous, current), Circle(tmp, 2 * r));
+				if (intersect != point(-100000, -100000)){
+					double ndist = abs(intersect - previous);
+					if (ndist < ansdist&&dist + ndist <= 10000){
+						ansdist = ndist;
+						ans = i + 2;
+					}
+				}
+			}
+			if (ans != -1) break;
+			dist += ret;
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
