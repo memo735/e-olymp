@@ -1,0 +1,27 @@
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+
+using namespace std;
+
+const int MAXN = 2001;
+
+int main()
+{
+	int n, ca = 0, X[MAXN], Y[MAXN];
+	while (scanf("%d", &n) != EOF)
+	{
+		if (n == 0) break;
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d", &X[i]);
+			scanf("%d", &Y[i]);
+		}
+		sort(X, X + n);
+		sort(Y, Y + n);
+		int ans = 0;
+		for (int i = 0; i < n; i++) ans += abs(X[i] - X[(n - 1) / 2]) + abs(Y[i] - Y[(n - 1) / 2]);
+		printf("Case %d: (%d,%d) %d\n", ++ca, X[(n - 1) / 2], Y[(n - 1) / 2], ans);
+	}
+	return 0;
+}
