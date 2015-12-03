@@ -1,0 +1,61 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 100000;
+
+struct haha
+{
+	int s;
+	char flag;
+} ant[maxn];
+
+int cmp(struct haha a, struct haha b)
+{
+	return a.s > b.s;
+}
+
+int main()
+{
+	int i, len, n, time, left, right, cnt, n1 = 0, n2 = 0, aa[maxn];
+	while (scanf("%d %d", &len, &n) != EOF)
+	{
+		right = len;
+		left = 0;
+		for (i = 0; i < n; i++) scanf("%d %c", &ant[i].s, &ant[i].flag);
+		sort(ant, ant + n, cmp);
+		for (i = n - 1; i >= 0; i--)
+			if (ant[i].flag == 'R')
+			{
+				right = ant[i].s;
+				break;
+			}
+
+		for (i = 0; i < n; i++)
+			if (ant[i].flag == 'L')
+			{
+				left = ant[i].s;
+				break;
+			}
+
+		time = len - right > left ? len - right : left;
+		for (i = 0; i < n; i++)
+			if (ant[i].flag == 'R') aa[i] = ant[i].s + time;
+			else aa[i] = ant[i].s - time;
+			sort(aa, aa + n);
+			cnt = 0;
+			for (i = 0; i < n; i++)
+			{
+				if (aa[i] == 0 || aa[i] == len)
+				{
+					cnt++;
+					if (cnt == 1) n1 = ant[n - 1 - i].s;
+					if (cnt == 2) n2 = ant[n - 1 - i].s;
+				}
+			}
+			if (cnt == 1) printf("The last ant will fall down in %d seconds - started at %d.\n", time, n1);
+			else printf("The last ant will fall down in %d seconds - started at %d and %d.\n", time, n1, n2);
+	}
+	return 0;
+}
