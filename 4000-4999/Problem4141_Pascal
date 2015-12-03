@@ -1,0 +1,53 @@
+const nmax = 10011; inf = 2147483648 shr 1;
+var n, i, j, k, t: LongInt; strong, weak: Array[1..nmax] of LongInt;
+    s_strong, s_weak : Array[1..nmax] of String;
+
+begin
+  read(n, k);
+  for i:=1 to k do
+  begin
+    str(i, s_strong[i]);
+    strong[i]:=length(s_strong[i]);
+    weak[i]:=strong[i];
+    s_weak[i]:=s_strong[i];
+  end;
+  for i:=k + 1 to n do
+  begin
+    strong[i]:=inf;
+    weak[i]:=inf;
+    for j:=1 to i shr 1 do
+    begin
+      if weak[i] > weak[i - j] + 1 + weak[j] then
+      begin
+        weak[i]:=weak[i - j] + 1 + weak[j];
+        s_weak[i]:=s_weak[i - j] + '+' + s_weak[j];
+      end;
+    end;
+    for j:=1 to i do
+      if sqr(j) > i then break
+      else
+      begin
+        t:=i div j;
+        if (j > 1) and (i = t * j) then
+        begin
+          if strong[i] > strong[t] + 1 + strong[j] then
+          begin
+            strong[i]:=strong[t] + 1 + strong[j];
+            s_strong[i]:=s_strong[t] + '*' + s_strong[j];
+          end;
+        end;
+      end;
+      if strong[i] < weak[i] then
+        begin
+          weak[i]:=strong[i];
+          s_weak[i]:=s_strong[i];
+        end
+      else
+        if weak[i] + 2 < strong[i] then
+        begin
+          strong[i]:=weak[i] + 2;
+          s_strong[i]:='(' + s_weak[i] + ')';
+        end;
+  end;
+  write(s_weak[n]);
+end.
