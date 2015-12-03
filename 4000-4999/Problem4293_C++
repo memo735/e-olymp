@@ -1,0 +1,76 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int n, m;
+
+struct edge
+{
+	int from, to, cst;
+	edge(){}
+	edge(int from, int to, int cst) :from(from), to(to), cst(cst){}
+	bool operator<(const edge &e) const{ return cst < e.cst; }
+};
+
+struct union_find
+{
+	vector<int> rnk, par;
+	union_find(int n){
+		rnk.assign(n, 1);
+		par.assign(n, 0);
+		for (int i = 0; i < n; i++) par[i] = i;
+	}
+	int find(int x)
+	{
+		if (x == par[x]) return x;
+		return par[x] = find(par[x]);
+	}
+	void unite(int x, int y) {
+		x = find(x); y = find(y);
+		if (x == y) return;
+		if (rnk[x] > rnk[y]) par[y] = x;
+		else {
+			par[x] = y;
+			if (rnk[x] == rnk[y]) rnk[y]++;
+		}
+	}
+	bool same(int x, int y) {
+		x = find(x);
+		y = find(y);
+		return x == y;
+	}
+};
+
+vector<edge> es;
+
+int solve()
+{
+	sort(begin(es), end(es));
+	union_find uf(n);
+	vector<int> vs;
+	for (auto &e : es) {
+		if (uf.same(e.from, e.to)) continue;
+		uf.unite(e.from, e.to);
+		vs.push_back(e.cst);
+	}
+	return vs[(n - 1) / 2];
+}
+
+bool input()
+{
+	scanf("%d%d", &n, &m);
+	es.clear();
+	for (int i = 0; i < m; i++) {
+		int a, b, c; scanf("%d%d%d", &a, &b, &c);
+		a--; b--;
+		es.push_back(edge(a, b, c));
+	}
+	return n || m;
+}
+
+int main()
+{
+	while (input()) printf("%d\n", solve());
+	return 0;
+}
