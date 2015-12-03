@@ -1,0 +1,29 @@
+program eOlymp4144;
+const maxn=10001;
+var i,head,tail,n,s: Longint; opt,dp,f,t: Array[-1..maxn] of Int64;
+
+function g(x,y: Longint): Extended;
+begin
+    exit((dp[x]-dp[y])/(t[x]-t[y]));
+end;
+
+begin
+  readln(n); readln(s);
+  for i:=1 to n do readln(t[i],f[i]);
+  for i:=n-1 downto 1 do
+  begin
+    inc(t[i],t[i+1]);
+    inc(f[i],f[i+1]);
+  end;
+  t[n+1]:=0; f[n+1]:=0;
+  head:=1; tail:=1;
+  opt[1]:=n+1; dp[n+1]:=0;
+  for i:=n downto 1 do
+  begin
+    while (head < tail) and (g(opt[head+1],opt[head]) < f[i]) do inc(head);
+    dp[i]:=dp[opt[head]]+(s+t[i]-t[opt[head]])*f[i];
+    while (head < tail) and (g(opt[tail],opt[tail-1]) > g(i,opt[tail])) do dec(tail);
+    inc(tail);opt[tail]:=i;
+  end;
+  writeln(dp[1]);
+end.
