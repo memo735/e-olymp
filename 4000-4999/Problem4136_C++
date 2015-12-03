@@ -1,0 +1,51 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+struct Line
+{
+	int A, B, C;
+} line[101];
+
+bool UPLine(Line ka, long x, long y)
+{
+	return ka.A*x + ka.B*y + ka.C > 0;
+}
+
+bool intersection(Line ka, Line kb)
+{
+	if (ka.A*kb.B == ka.B*kb.A) return false;
+	return true;
+}
+
+int main()
+{
+	int t, n, m, i, j, x, y;
+	string ss[50001];
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d%d", &n, &m);
+		for (i = 0; i < n; i++) scanf("%d%d%d", &line[i].A, &line[i].B, &line[i].C);
+		string tmp = "";
+		for (i = 0; i < n; i++) tmp += "0";
+		for (i = 0; i < m; i++)
+		{
+			scanf("%d%d", &x, &y);
+			ss[i] = tmp;
+			for (j = 0; j < n; j++) if (UPLine(line[j], x, y)) ss[i][j] = '1';
+		}
+		int c = n + 1;
+		for (i = 0; i < n; i++)
+		{
+			for (j = i + 1; j < n; j++) if (intersection(line[i], line[j])) c++;
+		}
+		sort(ss, ss + m);
+		int cnt = 1;
+		for (i = 1; i < m; i++) if (ss[i] != ss[i - 1]) cnt++;
+		if (cnt >= c) puts("PROTECTED");
+		else puts("VULNERABLE");
+	}
+	return 0;
+}
