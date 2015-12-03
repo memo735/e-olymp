@@ -1,0 +1,57 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int cc = 0, list[15504][6];
+	for (int a = 0; a <= 15; a++)
+	{
+		for (int b = 0; b <= 15 - a; b++)
+		{
+			for (int c = 0; c <= 15 - a - b; c++)
+			{
+				for (int d = 0; d <= 15 - a - b - c; d++)
+				{
+					for (int e = 0; e <= 15 - a - b - c - d; e++)
+					{
+						list[cc][0] = a, list[cc][1] = b, list[cc][2] = c;
+						list[cc][3] = d, list[cc][4] = e;
+						list[cc++][5] = 15 - a - b - c - d - e;
+					}
+				}
+			}
+		}
+	}
+	char ch;
+	cin >> ch;
+	int num = 1;
+	while (ch != 'e')
+	{
+		if (ch == 'm')
+		{
+			int p[6];
+			for (int i = 0; i < 6; i++) cin >> p[i];
+			int index = 0;
+			while (index <= 15503)
+			{
+				if (list[index][0] == p[0] && list[index][1] == p[1] &&
+					list[index][2] == p[2] && list[index][3] == p[3] &&
+					list[index][4] == p[4] && list[index][5] == p[5])
+				{
+					printf("Case %d: %d\n", num++, index);
+					break;
+				}
+				index++;
+			}
+		}
+		else
+		{
+			int mm;
+			scanf("%d", &mm);
+			printf("Case %d: %d %d %d %d %d %d\n", num++, list[mm][0], list[mm][1], list[mm][2], list[mm][3], list[mm][4], list[mm][5]);
+		}
+		cin >> ch;
+	}
+	return 0;
+}
