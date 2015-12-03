@@ -1,0 +1,40 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+int pre[200001], nex[200001];
+
+bool dfs(int l, int r)
+{
+	if (l > r) return 1;
+	int x = l, y = r;
+	while (x <= y) {
+		if (pre[x] < l && nex[x] > r) return dfs(l, x - 1) && dfs(x + 1, r);
+		if (pre[y] < l && nex[y] > r) return dfs(l, y - 1) && dfs(y + 1, r);
+		x++; y--;
+	}
+	return 0;
+}
+
+int main()
+{
+	int n, t, a[200001], f[200001];
+	cin >> t;
+	while (t--) {
+		int t1 = 0;
+		map < int, int > h;
+		scanf("%d", &n);
+		for (int i = 1; i <= n; ++i)
+		{
+			scanf("%d", &a[i]);
+			a[i] = h.count(a[i]) ? h[a[i]] : h[a[i]] = ++t1;
+		}
+		for (int i = 1; i <= t1; ++i) f[i] = 0;
+		for (int i = 1; i <= n; ++i) pre[i] = f[a[i]], f[a[i]] = i;
+		for (int i = 1; i <= t1; ++i) f[i] = n + 1;
+		for (int i = n; i >= 1; --i) nex[i] = f[a[i]], f[a[i]] = i;
+		if (dfs(1, n)) puts("non-boring"); else puts("boring");
+	}
+	return 0;
+}
