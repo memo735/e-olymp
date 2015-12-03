@@ -1,0 +1,134 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int MAXN = 100001;
+int n, m, T, tot, front1, rear1, front2, rear2, head[MAXN], que1[MAXN], que2[MAXN], du[MAXN], du1[MAXN], type[MAXN];
+
+struct Edge {
+	int to, next;
+	Edge(){}
+	Edge(int _to, int _next) :to(_to), next(_next){}
+} e[10 * MAXN];
+
+void AddEdge(int u, int v){
+	e[tot] = Edge(v, head[u]);
+	head[u] = tot++;
+}
+
+void Read(int &x){
+	char ch;
+	while ((ch = getchar()) && !isdigit(ch));
+	x = 0;
+	do x = (x << 1) + (x << 3) + (ch ^ 48);
+	while ((ch = getchar()) && isdigit(ch));
+}
+
+int countt(){
+	front1 = rear1 = front2 = rear2 = 0;
+	for (int i = 1; i <= n; i++){
+		du1[i] = du[i];
+		if (du[i] == 0){
+			if (type[i] == 1) que1[rear1++] = i;
+			if (type[i] == 2) que2[rear2++] = i;
+			--du[i];
+		}
+	}
+	int cnt = 0, pre = 1;
+	while (front1 != rear1 || front2 != rear2){
+		int tf = 0;
+		while (front1 != rear1){
+			tf = 1;
+			int u = que1[front1++];
+			for (int i = head[u]; i != -1; i = e[i].next){
+				int v = e[i].to;
+				du[v]--;
+				if (du[v] == 0){
+					if (type[v] == 1)que1[rear1++] = v;//q1.push(v);
+					if (type[v] == 2)que2[rear2++] = v;//q2.push(v);
+					du[v]--;
+				}
+			}
+		}
+		if (tf && pre != 1){ pre = 1; ++cnt; }
+		tf = 0;
+		while (front2 != rear2){
+			tf = 1;
+			int u = que2[front2++];
+			for (int i = head[u]; i != -1; i = e[i].next){
+				int v = e[i].to;
+				du[v]--;
+				if (du[v] == 0){
+					if (type[v] == 1)que1[rear1++] = v;//q1.push(v);
+					if (type[v] == 2)que2[rear2++] = v;//q2.push(v);
+					du[v]--;
+				}
+			}
+		}
+		if (tf && pre != 2){ pre = 2; ++cnt; }
+	}
+	front1 = rear1 = front2 = rear2 = 0;
+	for (int i = 1; i <= n; i++){
+		du[i] = du1[i];
+		if (du[i] == 0){
+			if (type[i] == 1)que1[rear1++] = i;//q1.push(i);
+			if (type[i] == 2)que2[rear2++] = i;//q2.push(i);
+			--du[i];
+		}
+	}
+	int cnt1 = 0;
+	pre = 2;
+	while (front1 != rear1 || front2 != rear2){
+		int tf = 0;
+		while (front2 != rear2){
+			tf = 1;
+			int u = que2[front2++];
+			for (int i = head[u]; i != -1; i = e[i].next){
+				int v = e[i].to;
+				du[v]--;
+				if (du[v] == 0){
+					if (type[v] == 1)que1[rear1++] = v;//q1.push(v);
+					if (type[v] == 2)que2[rear2++] = v;//q2.push(v);
+					du[v]--;
+				}
+			}
+		}
+		if (tf && pre != 2){ pre = 2; ++cnt1; }
+		tf = 0;
+		while (front1 != rear1){
+			tf = 1;
+			int u = que1[front1++];
+			for (int i = head[u]; i != -1; i = e[i].next){
+				int v = e[i].to;
+				du[v]--;
+				if (du[v] == 0){
+					if (type[v] == 1)que1[rear1++] = v;//q1.push(v);
+					if (type[v] == 2)que2[rear2++] = v;//q2.push(v);
+					du[v]--;
+				}
+			}
+		}
+		if (tf && pre != 1){ pre = 1; ++cnt1; }
+	}
+	return cnt < cnt1 ? cnt : cnt1;
+}
+
+int main()
+{
+	scanf("%d", &T);
+	while (T--){
+		scanf("%d%d", &n, &m);
+		for (int i = 1; i <= n; i++)head[i] = -1;
+		tot = 0;
+		memset(du, 0, sizeof du);
+		for (int i = 1; i <= n; i++) Read(type[i]);
+		for (int i = 0, x, y; i < m; i++){
+			Read(x), Read(y);
+			AddEdge(x, y);
+			++du[y];
+		}
+		printf("%d\n", countt());
+	}
+	return 0;
+}
