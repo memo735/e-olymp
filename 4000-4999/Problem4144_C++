@@ -1,0 +1,25 @@
+#include <iostream>
+
+using namespace std;
+
+const int maxn = 10001;
+
+int main()
+{
+	int m, n, t[maxn], s[maxn], q[maxn], f[maxn];
+	while (cin >> n >> m) {
+		for (int i = 1; i <= n; ++i) scanf("%d%d", &t[i], &s[i]);
+		f[n + 1] = s[n + 1] = t[n + 1] = 0;
+		for (int i = n; i >= 1; --i) s[i] += s[i + 1], t[i] += t[i + 1];
+		int l = 1, r = 1;
+		q[l] = n + 1;
+		for (int i = n; i >= 1; --i) {
+			while (l < r && f[q[l + 1]] - f[q[l]] <= (t[q[l + 1]] - t[q[l]]) * s[i]) l++;
+			f[i] = f[q[l]] + (t[i] - t[q[l]] + m) * s[i];
+			while (l < r && (f[i] - f[q[r]]) * (t[q[r]] - t[q[r - 1]]) <= (f[q[r]] - f[q[r - 1]]) * (t[i] - t[q[r]])) r--;
+			q[++r] = i;
+		}
+		cout << f[1] << endl;
+	}
+	return 0;
+}
