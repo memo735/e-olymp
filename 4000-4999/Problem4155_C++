@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+const int maxn = 101, dir[8][2] = { 1, 2, 2, 1, 2, -1, 1, -2, -1, -2, -2, -1, -2, 1, -1, 2 };
+int flag, step, r, c, gr, gc, lr, lc, vis[maxn][maxn];
+
+struct Node
+{
+	int step, x, y;
+};
+
+void bfs()
+{
+	memset(vis, 0, sizeof vis);
+	vis[gr][gc] = 1;
+	queue<Node> q;
+	while (!q.empty()) q.pop();
+	Node now, next;
+	now.x = gr; now.y = gc; now.step = 0;
+	q.push(now);
+	while (!q.empty())
+	{
+		now = q.front(); q.pop();
+		for (int i = 0; i < 8; i++)
+		{
+			next.x = now.x + dir[i][0], next.y = now.y + dir[i][1];
+			if (next.x >= 1 && next.x <= r && next.y >= 1 && next.y <= c && !vis[next.x][next.y])
+			{
+				vis[next.x][next.y] = 1;
+				next.step = now.step + 1;
+				q.push(next);
+				if (next.x == lr && next.y == lc)
+				{
+					flag = 1;
+					step = next.step;
+					return;
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	while (scanf("%d%d%d%d%d%d", &r, &c, &gr, &gc, &lr, &lc) != EOF)
+	{
+		flag = step = 0;
+		if (gr == lr && gc == lc)
+		{
+			printf("0\n"); continue;
+		}
+		bfs();
+		if (flag) printf("%d\n", step);
+		else printf("impossible\n");
+	}
+	return 0;
+}
