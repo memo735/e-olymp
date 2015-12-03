@@ -1,0 +1,61 @@
+#include <vector>
+#include <algorithm>
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int MAXN = 52, INF = 1e9;
+bool reachable[MAXN][MAXN][MAXN][MAXN];
+int n, m, dp[MAXN][MAXN][MAXN][MAXN];
+char s[MAXN][MAXN];
+vector<pair<int, int> > holes[MAXN][MAXN];
+
+bool in(int x, int y){
+	if (x < 1 || x > n || y < 1 || y > m || s[x][y] == '#') return false;
+	return true;
+}
+
+int solve(int lx, int ly, int rx, int ry){
+	int &ret = dp[lx][ly][rx][ry];
+	if (~ret) return ret;
+	if (lx > rx || ly > ry) return ret = 0;
+	if (!in(lx, ly) || !in(rx, ry) || !reachable[lx][ly][rx][ry]) return ret = -INF;
+	ret = 0;
+	for (auto p : holes[lx][ly]){
+		int x = p.first, y = p.second;
+		if (x < lx || x > rx || y < ly || y > ry) continue;
+		ret = max(ret, solve(lx + 1, ly, x - 1, y) + 1 + solve(x, y, rx, ry));
+		ret = max(ret, solve(lx, ly + 1, x - 1, y) + 1 + solve(x, y, rx, ry));
+		ret = max(ret, solve(lx + 1, ly, x, y - 1) + 1 + solve(x, y, rx, ry));
+		ret = max(ret, solve(lx, ly + 1, x, y - 1) + 1 + solve(x, y, rx, ry));
+	}
+	ret = max(ret, solve(lx + 1, ly, rx, ry));
+	ret = max(ret, solve(lx, ly + 1, rx, ry));
+	return ret;
+}
+
+int main(){
+	while (cin >> n >> m && (n || m)){
+		memset(reachable, 0, sizeof reachable);
+		memset(holes, 0, sizeof holes);
+		memset(dp, -1, sizeof dp);
+		for (int i = 1; i <= n; i++){
+			scanf("%s", s[i] + 1);
+			for (int j = 1; j <= m; j++) if (s[i][j] != '#'){
+				reachable[i][j][i][j] = true;
+				for (int k = 1; k <= i; k++){
+					for (int l = 1; l <= j; l++){
+						if (reachable[k][l][i - 1][j] || reachable[k][l][i][j - 1]){
+							reachable[k][l][i][j] = true;
+							if (isupper(s[i][j]) && islower(s[k][l]) && s[i][j] == toupper(s[k][l])) holes[k][l].push_back(make_pair(i, j));
+						}
+					}
+				}
+			}
+		}
+		int ans = solve(1, 1, n, m);
+		printf("%d\n", ans == -INF ? -1 : ans);
+	}
+	return 0;
+}
