@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+int n, visit[15];
+
+struct node
+{
+	int x, y, z;
+} w[15];
+
+int DFS(int a, int b, int num)
+{
+	int x1 = num, x2 = num, x3 = num;
+	for (int i = 0; i < n; i++)
+	{
+		if (visit[i] == 0)
+		{
+			if (w[i].x <= a && w[i].y <= b || w[i].x <= b && w[i].y <= a)
+			{
+				visit[i] = 1;
+				x1 = max(x1, DFS(w[i].x, w[i].y, num + 1));
+			}
+			visit[i] = 0;
+			if (w[i].x <= a && w[i].z <= b || w[i].x <= b && w[i].z <= a)
+			{
+				visit[i] = 1;
+				x2 = max(x2, DFS(w[i].x, w[i].z, num + 1));
+			}
+			visit[i] = 0;
+			if (w[i].y <= a && w[i].z <= b || w[i].y <= b && w[i].z <= a)
+			{
+				visit[i] = 1;
+				x3 = max(x3, DFS(w[i].y, w[i].z, num + 1));
+			}
+			visit[i] = 0;
+		}
+	}
+	return max(max(x1, x2), x3);
+}
+
+int main()
+{
+	int fig = 0;
+	while (scanf("%d", &n))
+	{
+		if (n == 0) break;
+		fig++;
+		memset(visit, 0, sizeof visit);
+		for (int i = 0; i < n; i++)
+		{
+			int aa, bb, cc;
+			scanf("%d%d%d", &aa, &bb, &cc);
+			w[i].x = aa, w[i].y = bb, w[i].z = cc;
+		}
+		printf("Case %d: %d\n", fig, DFS(25, 25, 0));
+	}
+	return 0;
+}
