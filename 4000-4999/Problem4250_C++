@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main(){
+	char a[55][55];
+	int turn, i, n, m, p = 0, q = 0, sx, sy, tem;
+	string str;
+	cin >> turn;
+	while (turn--){
+		memset(a, '*', sizeof a);
+		cin >> n;
+		for (i = 1; i <= n; i++)
+			for (int j = 1; j <= n; j++){
+				cin >> a[i][j];
+				if (a[i][j] == 'S'){ sx = i; p = i; sy = j; q = j; }
+			}
+		cin >> m;
+		while (m--){
+			cin >> str;
+			tem = str.length();
+			sx = p; sy = q;
+			for (i = 0; i < tem; i++){
+				if (str[i] == 'R'){
+					sy++;
+					if (a[sx][sy] == '.');
+					if (a[sx][sy] == '#'){ printf("I am dizzy!\n"); break; }
+					if (a[sx][sy] == '*'){ printf("I am out!\n"); break; }
+					if (a[sx][sy] == 'T'){ printf("I get there!\n"); break; }
+				}
+				if (str[i] == 'L'){
+					sy--;
+					if (a[sx][sy] == '.');
+					if (a[sx][sy] == '#'){ printf("I am dizzy!\n"); break; }
+					if (a[sx][sy] == '*'){ printf("I am out!\n"); break; }
+					if (a[sx][sy] == 'T'){ printf("I get there!\n"); break; }
+				}
+				if (str[i] == 'D'){
+					sx++;
+					if (a[sx][sy] == '.');
+					if (a[sx][sy] == '#'){ printf("I am dizzy!\n"); break; }
+					if (a[sx][sy] == '*'){ printf("I am out!\n"); break; }
+					if (a[sx][sy] == 'T'){ printf("I get there!\n"); break; }
+				}
+				if (str[i] == 'U'){
+					sx--;
+					if (a[sx][sy] == '.');
+					if (a[sx][sy] == '#'){ printf("I am dizzy!\n"); break; }
+					if (a[sx][sy] == '*'){ printf("I am out!\n"); break; }
+					if (a[sx][sy] == 'T'){ printf("I get there!\n"); break; }
+				}
+			}
+			if (i == tem && (a[sx][sy] == '.' || a[sx][sy] == 'S')) printf("I have no idea!\n");
+		}
+	}
+	return 0;
+}
