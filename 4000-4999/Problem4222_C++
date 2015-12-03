@@ -1,0 +1,13 @@
+#include <iostream>
+#include <math.h>
+
+int main()
+{
+	long a, b, r, sum;
+	while (scanf("%ld%ld%ld", &a, &b, &r) != EOF){
+		if (a == 0 && b == 0 && r == 0) continue;
+		sum = 0;
+		for (long i = 0; i < r; i++) sum += ceil(sqrt(r*r - i*i));
+		printf("%ld\n", 4 * sum);
+	}
+}
