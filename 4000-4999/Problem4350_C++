@@ -1,0 +1,124 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define MAXN 100001
+const int dir[4][2] = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+
+char **ma;
+int **ind, stop, fa[MAXN], he[MAXN], to[MAXN], nex[MAXN], co[MAXN], nee[MAXN];
+int nowd[MAXN] = { 0 }, ans[MAXN] = { 0 }, pdir[MAXN] = { 0 };
+bool vi[MAXN] = { 0 };
+
+bool check(int a, int b)
+{
+	if ((a + 1) % 4 == b || (a + 3) % 4 == b) return false;
+	return true;
+}
+
+void dfs(int x, int y, int f, int num, int pre)
+{
+	nee[ind[x][y]] = num;
+	pdir[ind[x][y]] = pre;
+	for (int i = 0; i < 4; ++i)
+	{
+		int nx = x + dir[i][0], ny = y + dir[i][1], nnum = num;
+		if (ma[nx][ny] == '#' && ind[nx][ny] != f)
+		{
+			if (pre != 5 && !check(pre, i)) ++nnum;
+			dfs(nx, ny, ind[x][y], nnum, i);
+		}
+	}
+}
+
+void add(int a, int b, int c)
+{
+	to[stop] = b;
+	nex[stop] = he[a];
+	co[stop] = c;
+	he[a] = stop++;
+}
+
+pair<int, int> mfind(int n)
+{
+	if (fa[n] != n)
+	{
+		pair<int, int> pa = mfind(fa[n]);
+		if (pa.second == 1) fa[n] = pa.first;
+		else pa.first = n, pa.second = 1;
+		return pa;
+	}
+	return make_pair(n, 0);
+}
+
+void tarjan(int x, int y, int f, int pre)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		int nx = x + dir[i][0], ny = y + dir[i][1];
+		nowd[ind[x][y]] = i;
+		if (ma[nx][ny] == '#'&&ind[nx][ny] != f)
+		{
+			tarjan(nx, ny, ind[x][y], i);
+			fa[ind[nx][ny]] = ind[x][y];
+		}
+	}
+	for (int i = he[ind[x][y]]; i != -1; i = nex[i])
+		if (vi[to[i]])
+		{
+			pair<int, int> tpa = mfind(to[i]);
+			int ff = fa[tpa.first];
+			ans[co[i]] = nee[ind[x][y]] + nee[to[i]] - 2 * nee[ff];
+			if (ff != ind[x][y])
+			{
+				if (check(pdir[tpa.first], nowd[ff])) ans[co[i]] -= 2;
+				else if (ff == 1) ++ans[co[i]];
+			}
+			else if (pre != 5 && !check(pre, pdir[tpa.first])) ans[co[i]] -= 1;
+		}
+	vi[ind[x][y]] = 1;
+}
+
+int main()
+{
+	int w, h;
+	scanf("%d%d", &w, &h);
+	ma = new char*[w + 3];
+	ind = new int *[w + 2];
+	int top = 1, q;
+	stop = 1;
+	memset(he, -1, sizeof he);
+	for (int i = 0; i < MAXN; ++i) fa[i] = i;
+	for (int i = 0; i <= w + 1; ++i)
+	{
+		ma[i] = new char[h + 3];
+		ind[i] = new int[h + 3];
+		memset(ma[i], '\0', sizeof(char)*(h + 3));
+		memset(ind[i], 0, sizeof(int)*(h + 3));
+	}
+	for (int i = 1; i <= w; ++i)
+	{
+		scanf("%s", &ma[i][1]);
+		for (int j = 1; j <= h; ++j) if (ma[i][j] == '#') ind[i][j] = top++;
+	}
+	scanf("%d", &q);
+	for (int i = 0; i < q; ++i)
+	{
+		int a, b, xx1, xx2, yy1, yy2;
+		scanf("%d%d%d%d", &xx1, &yy1, &xx2, &yy2);
+		a = ind[xx1][yy1], b = ind[xx2][yy2];
+		add(a, b, i + 1);
+		add(b, a, i + 1);
+	}
+	for (int i = 1; i <= w; ++i)
+		for (int j = 1; j <= h; ++j)
+		{
+			if (ma[i][j] != '#' || vi[ind[i][j]]) continue;
+			dfs(i, j, -1, 0, 5);
+			tarjan(i, j, -1, 5);
+		}
+
+	for (int i = 1; i <= q; ++i) printf("%d\n", ans[i]);
+	return 0;
+}
