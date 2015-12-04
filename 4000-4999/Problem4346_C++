@@ -1,0 +1,57 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+map <long, long> sum, G;
+
+long dfs(long state)
+{
+	if (state == 0L) return 1L;
+	long val = sum[state];
+	if (val) return val;
+	int res = 0;
+	long bak1 = state, bak2 = state, tmp1, tmp2;
+	val = tmp1 = 1L;
+	for (; bak1; tmp1 <<= 1, bak1 >>= 1)
+		if (bak1 & 1L)
+		{
+			tmp2 = G[tmp1] & state;
+			if (tmp2 == (state ^ tmp1)) bak2 ^= tmp1, val <<= 1;
+			else if (tmp2 == 0L) bak2 ^= tmp1, ++res;
+		}
+	if (bak2 == 0L)
+	{
+		val += res;
+		sum[state] = val;
+		return val;
+	}
+	long now = (bak2 - 1L ^ bak2) & bak2;
+	val = val * (dfs(bak2 & G[now]) + dfs(bak2 ^ now)) + res;
+	sum[state] = val;
+	return val;
+}
+
+int main()
+{
+	int n, i, j, o[50];
+	long tmp;
+	char ch;
+	cin >> n;
+	for (i = 0; i < n; ++i)
+	{
+		o[i] = i;
+		swap(o[i], o[(rand() & 0x7fff) % (i + 1)]);
+	}
+	for (i = 0; i < n; ++i)
+	{
+		for (tmp = 0L, j = 0; j < n; ++j)
+		{
+			cin >> ch;
+			tmp |= (long)(ch - '0') << o[j];
+		}
+		G[1L << o[i]] = tmp;
+	}
+	cout << dfs((1L << n) - 1L) << endl;
+	return 0;
+}
