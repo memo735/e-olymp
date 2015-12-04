@@ -1,0 +1,167 @@
+#include <algorithm>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+int tot, mag, num, head[1001];
+long dis[1001][101];
+bool vis[1001][101];
+double val[5001];
+
+struct Edge
+{
+	long to, next, w;
+} e[3001];
+
+template<class T>
+
+bool read(T &n)
+{
+	T x = 0, tmp = 1;
+	char c = getchar();
+	while ((c < '0' || c > '9') && c != '-' && c != EOF) c = getchar();
+	if (c == EOF) return false;
+	if (c == '-') c = getchar(), tmp = -1;
+	while (c >= '0' && c <= '9') x *= 10, x += (c - '0'), c = getchar();
+	n = x*tmp;
+	return true;
+}
+
+template <class T>
+
+void write(T n)
+{
+	if (n < 0)
+	{
+		putchar('-');
+		n = -n;
+	}
+	int len = 0, data[20];
+	while (n)
+	{
+		data[len++] = n % 10;
+		n /= 10;
+	}
+	if (!len) data[len++] = 0;
+	while (len--) putchar(data[len] + 48);
+}
+
+void addedge(long u, long v, long w)
+{
+	e[tot].to = v, e[tot].w = w, e[tot].next = head[u];
+	head[u] = tot++;
+}
+
+void spfa(long s)
+{
+	queue<pair<long, long>> q;
+	memset(dis, -1, sizeof dis);
+	memset(vis, 0, sizeof vis);
+	while (!q.empty()) q.pop();
+	dis[s][0] = 0; vis[s][0] = 1;
+	q.push(make_pair(s, 0));
+	while (!q.empty())
+	{
+		pair<long, long> tmp = q.front();
+		q.pop();
+		long u = tmp.first, tim = tmp.second, v;
+		vis[u][tim] = false;
+		for (int i = head[u]; ~i; i = e[i].next)
+		{
+			v = e[i].to;
+			long k, w;
+			if (e[i].w == -1) w = 0, k = 1;
+			else w = e[i].w, k = 0;
+			if (tim + k <= mag && (dis[v][tim + k] == -1 || dis[v][tim + k]>dis[u][tim] + w))
+			{
+				dis[v][tim + k] = dis[u][tim] + w;
+				if (!vis[v][tim + k])
+				{
+					vis[v][tim + k] = true;
+					q.push(make_pair(v, tim + k));
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	long n, m, t, u, v, w, mi[3], s[3];
+	char str[22];
+	while (read(n) && read(m) && read(s[1]) && read(s[2]) && read(t) && n + m)
+	{
+		memset(head, -1, sizeof head);
+		tot = mag = num = 0;
+		for (int i = 0; i < m; i++)
+		{
+			scanf("%ld %ld %s", &u, &v, str);
+			if (str[0] == 'x')
+			{
+				addedge(u, v, -1);
+				addedge(v, u, -1);
+				mag++;
+			}
+			else
+			{
+				sscanf(str, "%ld", &w);
+				addedge(u, v, w);
+				addedge(v, u, w);
+			}
+		}
+		spfa(t);
+		val[num++] = 0;
+		for (int i = 1; i <= 2; i++)
+		{
+			for (int j = 0; j < mag; j++)
+			{
+				long minn = dis[s[i]][j];
+				if (minn == -1) continue;
+				for (int k = j + 1; k <= mag; k++)
+				{
+					long maxx = dis[s[i]][k];
+					if (maxx == -1) continue;
+					double w1 = 1.0*(maxx - minn) / (j - k);
+					if (w1 > 0) val[num++] = w1;
+				}
+			}
+		}
+		for (int j = 0; j <= mag; j++)
+		{
+			long minn = dis[s[1]][j];
+			if (minn == -1) continue;
+			for (int k = 0; k <= mag; k++)
+			{
+				if (j == k) continue;
+				long maxx = dis[s[2]][k];
+				if (maxx == -1) continue;
+				double w1 = 1.0*(maxx - minn) / (j - k);
+				if (w1 > 0) val[num++] = w1;
+			}
+		}
+		long ans = 1e18;
+		for (int i = 0; i < num; i++)
+		{
+			for (int j = 1; j <= 2; j++)
+			{
+				mi[j] = 1e18;
+				for (int k = 0; k <= mag; k++)
+					if (~dis[s[j]][k]) mi[j] = min(mi[j], dis[s[j]][k] + k*(long)val[i]);
+			}
+			ans = min(ans, abs(mi[1] - mi[2]));
+		}
+		for (int i = 0; i < num; i++)
+		{
+			for (int j = 1; j <= 2; j++)
+			{
+				mi[j] = 1e18;
+				for (int k = 0; k <= mag; k++)
+					if (~dis[s[j]][k]) mi[j] = min(mi[j], dis[s[j]][k] + k*(long)(val[i] + 1));
+			}
+			ans = min(ans, abs(mi[1] - mi[2]));
+		}
+		printf("%ld\n", ans);
+	}
+	return 0;
+}
