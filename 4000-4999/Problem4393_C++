@@ -1,0 +1,120 @@
+#include <iostream>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+const int MAXN = 250;
+
+deque<int> Q;
+bool inque[MAXN], inblossom[MAXN], G[MAXN][MAXN], mp[MAXN][MAXN];
+int match[MAXN], pre[MAXN], base[MAXN];
+
+int findancestor(int u, int v)
+{
+	bool inpath[MAXN] = { false };
+	while (true)
+	{
+		u = base[u];
+		inpath[u] = true;
+		if (match[u] == -1) break;
+		u = pre[match[u]];
+	}
+	while (true)
+	{
+		v = base[v];
+		if (inpath[v]) return v;
+		v = pre[match[v]];
+	}
+}
+
+void reset(int u, int anc){
+	while (u != anc)
+	{
+		int v = match[u];
+		inblossom[base[u]] = 1;
+		inblossom[base[v]] = 1;
+		v = pre[v];
+		if (base[v] != anc) pre[v] = match[u];
+		u = v;
+	}
+}
+
+void contract(int u, int v, int n){
+	int anc = findancestor(u, v);
+	memset(inblossom, 0, sizeof inblossom);
+	reset(u, anc); reset(v, anc);
+	if (base[u] != anc) pre[u] = v;
+	if (base[v] != anc) pre[v] = u;
+	for (int i = 1; i <= n; i++)
+		if (inblossom[base[i]])
+		{
+			base[i] = anc;
+			if (!inque[i])
+			{
+				Q.push_back(i);
+				inque[i] = 1;
+			}
+		}
+}
+
+bool dfs(int S, int n){
+	for (int i = 0; i <= n; i++) pre[i] = -1, inque[i] = 0, base[i] = i;
+	Q.clear(); Q.push_back(S);
+	inque[S] = 1;
+	while (!Q.empty())
+	{
+		int u = Q.front(); Q.pop_front();
+		for (int v = 1; v <= n; v++)
+		{
+			if (mp[u][v] && base[v] != base[u] && match[u] != v)
+			{
+				if (v == S || match[v] != -1 && pre[match[v]] != -1) contract(u, v, n);
+				else if (pre[v] == -1)
+				{
+					pre[v] = u;
+					if (match[v] != -1) Q.push_back(match[v]), inque[match[v]] = 1;
+					else
+					{
+						u = v;
+						while (u != -1)
+						{
+							v = pre[u];
+							int w = match[v];
+							match[u] = v;
+							match[v] = u;
+							u = w;
+						}
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+int solve(int n)
+{
+	memset(match, -1, sizeof match);
+	int sum = 0;
+	for (int i = 1; i <= n; i++) if (match[i] == -1 && dfs(i, n)) sum++;
+	return sum;
+}
+
+int main()
+{
+	int n, x, y;
+	while (~scanf("%d", &n))
+	{
+		memset(mp, 0, sizeof mp);
+		while (~scanf("%d%d", &x, &y)) mp[x][y] = mp[y][x] = 1;
+		int s = solve(n);
+		printf("%d\n", s * 2);
+		for (int i = 1; i <= n; ++i)
+		{
+			for (int j = i + 1; j <= n; j++) if (match[j] == i) printf("%d %d\n", i, j);
+		}
+	}
+	return 0;
+}
