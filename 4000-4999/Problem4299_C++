@@ -1,0 +1,247 @@
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+int N, K, L[30], con[30][31];
+vector<int> G[30];
+long way[30][2][2][2][2][9][9][9][9];
+bool now = 0;
+
+void addMod(long &x, long y){
+	x = (x + y) % 1000000007;
+}
+
+void dfs(int v, int p){
+	for (int u : G[v]) if (u != p) dfs(u, v);
+	long dp[2][2][9][9] = {}, ndp[2][2][9][9] = {};
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++) dp[i][j][1][1] = 1;
+
+	for (int i = 0; i < L[v] + 1; i++)
+	{
+		int u = con[v][i];
+		if (u >= 0 && u != p)
+		{
+			for (int x = 0; x < 2; x++)
+				for (int y = 0; y < 2; y++)
+					for (int X = 1; X <= K; X++)
+						for (int Y = 1; Y <= K; Y++)
+						{
+							if (dp[x][y][X][Y] == 0) continue;
+							for (int a = 0; a < 2; a++)
+								for (int b = 0; b < 2; b++)
+									for (int c = 0; c < 2; c++)
+										for (int d = 0; d < 2; d++)
+											for (int A = 1; A <= K; A++)
+												for (int B = 1; B <= K; B++)
+													for (int C = 1; C <= K; C++)
+														for (int D = 1; D <= K; D++)
+														{
+															if (way[u][a][b][c][d][A][B][C][D] == 0) continue;
+															int nA = A + (x == a ? X : 0), nC = C + (y == c ? Y : 0);
+															if (a == c && (i == 0 || x != y)){
+																if (y == a) nA += Y;
+																if (x == c) nC += X;
+															}
+															if (nA > K || nC > K) continue;
+															int nB, nD;
+															if (a == b) nB = nA;
+															else if (b == d&&d == c) nB = nC;
+															else nB = B;
+															if (c == d) nD = nC;
+															else if (d == b&&b == a) nD = nA;
+															else nD = D;
+															if (nB > K || nD > K) continue;
+															addMod(ndp[b][d][nB][nD], dp[x][y][X][Y] * way[u][a][b][c][d][A][B][C][D]);
+														}
+						}
+			i++;
+		}
+		else
+		{
+			for (int x = 0; x < 2; x++)
+				for (int y = 0; y < 2; y++)
+					for (int X = 1; X <= K; X++)
+						for (int Y = 1; Y <= K; Y++)
+						{
+							if (dp[x][y][X][Y] == 0) continue;
+							for (int a = 0; a < 2; a++)
+								for (int c = 0; c < 2; c++)
+								{
+									int nA = 1 + (x == a ? X : 0), nC = 1 + (y == c ? Y : 0);
+									if (a == c) nA++, nC++;
+									if (a == c && (i == 0 || x != y)){
+										if (y == a) nA += Y;
+										if (x == c) nC += X;
+									}
+									if (nA > K || nC > K) continue;
+									addMod(ndp[a][c][nA][nC], dp[x][y][X][Y]);
+								}
+						}
+		}
+		for (int x = 0; x < 2; x++)
+			for (int y = 0; y < 2; y++)
+				for (int X = 1; X <= K; X++)
+					for (int Y = 1; Y <= K; Y++) dp[x][y][X][Y] = ndp[x][y][X][Y], ndp[x][y][X][Y] = 0;
+
+		if (u == p) break;
+	}
+	if (v == 0){
+		long ans = 0;
+		for (int a = 0; a < 2; a++)
+			for (int c = 0; c < 2; c++)
+				for (int A = 1; A <= K; A++)
+					for (int C = 1; C <= K; C++)
+						for (int b = 0; b < 2; b++)
+							for (int d = 0; d < 2; d++)
+							{
+								if (dp[a][c][A][C] == 0) continue;
+								int nA = A + (a == b ? 1 : 0), nC = C + (c == d ? 1 : 0);
+								if (a == c){
+									if (a == d) nA++;
+									if (c == b) nC++;
+								}
+								if (nA > K || nC > K) continue;
+								addMod(ans, dp[a][c][A][C]);
+							}
+		cout << ans << endl;
+		return;
+	}
+	long dq[2][2][9][9] = {}, ndq[2][2][9][9] = {};
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 2; j++) dq[i][j][1][1] = 1;
+
+	for (int i = 0; i < L[v]; i++)
+	{
+		int u = con[v][L[v] - 1 - i];
+		if (u >= 0 && u != p)
+		{
+			for (int x = 0; x < 2; x++)
+				for (int y = 0; y < 2; y++)
+					for (int X = 1; X <= K; X++)
+						for (int Y = 1; Y <= K; Y++)
+						{
+							if (dq[x][y][X][Y] == 0) continue;
+							for (int a = 0; a < 2; a++)
+								for (int b = 0; b < 2; b++)
+									for (int c = 0; c < 2; c++)
+										for (int d = 0; d < 2; d++)
+											for (int A = 0; A < K + 1; A++)
+												for (int B = 0; B < K + 1; B++)
+													for (int C = 0; C < K + 1; C++)
+														for (int D = 0; D < K + 1; D++)
+														{
+															if (way[u][b][a][d][c][B][A][D][C] == 0) continue;
+															int nA = A + (x == a ? X : 0), nC = C + (y == c ? Y : 0);
+															if (a == c && (i == 0 || x != y)){
+																if (y == a) nA += Y;
+																if (x == c) nC += X;
+															}
+															if (nA > K || nC > K) continue;
+															int nB, nD;
+															if (a == b) nB = nA;
+															else if (b == d&&d == c) nB = nC;
+															else nB = B;
+															if (c == d) nD = nC;
+															else if (d == b&&b == a) nD = nA;
+															else nD = D;
+															if (nB > K || nD > K) continue;
+															addMod(ndq[b][d][nB][nD], dq[x][y][X][Y] * way[u][b][a][d][c][B][A][D][C]);
+														}
+						}
+			i++;
+		}
+		else
+		{
+			for (int x = 0; x < 2; x++)
+				for (int y = 0; y < 2; y++)
+					for (int X = 1; X <= K; X++)
+						for (int Y = 1; Y <= K; Y++)
+						{
+							if (dq[x][y][X][Y] == 0) continue;
+							for (int a = 0; a < 2; a++)
+								for (int c = 0; c < 2; c++)
+								{
+									int nA = 1 + (x == a ? X : 0), nC = 1 + (y == c ? Y : 0);
+									if (a == c) nA++, nC++;
+									if (a == c && (i == 0 || x != y)){
+										if (y == a) nA += Y;
+										if (x == c) nC += X;
+									}
+									if (nA > K || nC > K) continue;
+									addMod(ndq[a][c][nA][nC], dq[x][y][X][Y]);
+								}
+						}
+		}
+		for (int x = 0; x < 2; x++)
+			for (int y = 0; y < 2; y++)
+				for (int X = 1; X <= K; X++)
+					for (int Y = 1; Y <= K; Y++) dq[x][y][X][Y] = ndq[x][y][X][Y], ndq[x][y][X][Y] = 0;
+
+		if (u == p) break;
+	}
+	for (int a = 0; a < 2; a++)
+		for (int c = 0; c < 2; c++)
+			for (int A = 1; A <= K; A++)
+				for (int C = 1; C <= K; C++)
+					for (int b = 0; b < 2; b++)
+						for (int d = 0; d < 2; d++)
+							for (int B = 1; B <= K; B++)
+								for (int D = 1; D <= K; D++)
+								{
+									if (dp[a][c][A][C] == 0) continue;
+									if (dq[b][d][B][D] == 0) continue;
+									int nA, nB, nC, nD;
+									if (a == b) nA = A + B;
+									else if (a == c&&c == d) nA = A + D;
+									else nA = A;
+									if (c == d) nC = C + D;
+									else if (c == a&&a == b) nC = C + B;
+									else nC = C;
+									if (b == a) nB = B + A;
+									else if (b == d&&d == c) nB = B + C;
+									else nB = B;
+									if (d == c) nD = D + C;
+									else if (d == b&&b == a) nD = D + A;
+									else nD = D;
+									if (nA > K || nB > K || nC > K || nD > K) continue;
+									addMod(way[v][a][c][b][d][nA][nC][nB][nD], dp[a][c][A][C] * dq[b][d][B][D]);
+								}
+}
+
+int main(){
+	while (true){
+		cin >> N >> K;
+		if (N == 0) break;
+		for (int i = 0; i < N; i++) cin >> L[i];
+		if (now){
+			for (int i = 0; i < N; i++) cout << L[i] << " ";
+			exit(0);
+		}
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < L[i]; j++) con[i][j] = -1;
+
+		for (int i = 0; i < N; i++) G[i].clear();
+		for (int i = 0; i < N; i++)
+			for (int a = 0; a < 2; a++)
+				for (int b = 0; b < 2; b++)
+					for (int c = 0; c < 2; c++)
+						for (int d = 0; d < 2; d++)
+							for (int A = 0; A < K + 1; A++)
+								for (int B = 0; B < K + 1; B++)
+									for (int C = 0; C < K + 1; C++)
+										for (int D = 0; D < K + 1; D++) way[i][a][b][c][d][A][B][C][D] = 0;
+
+		for (int i = 0; i < N - 1; i++){
+			int a, b, c, d;
+			cin >> a >> b >> c >> d;
+			G[a].push_back(c);
+			G[c].push_back(a);
+			con[a][b] = c;
+			con[c][d] = a;
+		}
+		con[0][L[0]] = 841;
+		dfs(0, 841);
+	}
+}
