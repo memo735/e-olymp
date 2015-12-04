@@ -1,0 +1,31 @@
+#include <iostream>
+int n, ans, a[2001], b[2001];
+
+bool check(int k)
+{
+	b[k] = 0;
+	for (int i = 0; i <= k; ++i) b[k] += a[i] * a[k - i];
+	if (k) b[k] += b[k - 1] / 10;
+	return b[k] % 10 == a[k];
+}
+
+void dfs(int k)
+{
+	if (k >= n) return;
+	for (int i = 9; i >= 0; --i)
+	{
+		a[k] = i;
+		if (check(k))
+		{
+			if (a[k]) ans++;
+			dfs(k + 1);
+		}
+	}
+}
+
+int main()
+{
+	scanf("%d", &n);
+	dfs(0);
+	printf("%d\n", ans);
+}
