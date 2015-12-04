@@ -1,0 +1,63 @@
+#include <algorithm>
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int MAXN = 100001;
+char ans[MAXN], A[3][MAXN], v[MAXN][4];
+int n, d, tp[5], dp[4], num[MAXN];
+
+bool check(){
+	for (int i = 0; i < 3; i++) if (dp[i] < 0) return false;
+	int cnt = 0, r[3] = { dp[0] - tp[3], dp[1] - tp[2], dp[2] - tp[1] };
+	for (int i = 0; i < 3; i++) if (r[i] < 0) cnt++;
+	if (cnt >= 2) return false;
+	for (int i = 0; i < 3; i++) if (r[i] < 0){
+		for (int j = 0; j < 3; j++) if (i != j) r[j] += r[i];
+		r[i] = 0;
+	}
+	cnt = 0;
+	for (int i = 0; i < 3; i++) if (r[i] < 0) cnt++;
+	if (cnt) return false;
+	sort(r, r + 3);
+	return min((r[0] + r[1] + r[2]) / 2, r[0] + r[1]) >= tp[0];
+}
+
+int main(){
+failed: while (cin >> n >> d && n){
+		for (int i = 0; i < 3; i++){
+			scanf("%s", A[i]);
+			dp[i] = d;
+		}
+		memset(tp, 0, sizeof tp);
+		for (int i = 0; i < n; i++){
+			int s = 0;
+			for (int j = 0; j < 3; j++){
+				for (int k = j + 1; k < 3; k++) if (A[j][i] == A[k][i]) s += j + k;
+			}
+			s = min(s, 4);
+			num[i] = s; tp[s]++;
+			v[i][0] = 'A';
+			for (int j = 0; j < 3; j++) v[i][j + 1] = A[j][i];
+			sort(v[i], v[i] + 4);
+		}
+		for (int i = 0; i < n; i++){
+			tp[num[i]]--;
+			for (int j = 0; j < 4; j++){
+				for (int k = 0; k < 3; k++) if (A[k][i] != v[i][j]) dp[k]--;
+				if (check()){
+					ans[i] = v[i][j];
+					goto ok;
+				}
+				for (int k = 0; k < 3; k++) if (A[k][i] != v[i][j]) dp[k]++;
+			}
+			puts("-1");
+			goto failed;
+		ok:;
+		}
+		ans[n] = 0;
+		puts(ans);
+	}
+	return 0;
+}
