@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+	int n, k, p, a[201][201], b[201][201], ans[2][201][201];
+	while (cin >> n >> k >> p)
+	{
+		memset(ans, 0, sizeof ans);
+		for (int i = 1; i <= k; ++i) ans[1][i][1] = 1;
+		for (int l = 2; l <= n; ++l)
+		{
+			for (int i = 1; i <= k; ++i)
+				for (int j = 1; j <= k; ++j)
+				{
+					ans[l % 2][i][j] = 0;
+					a[i][j] = (ans[(l - 1) % 2][i][j] + a[i - 1][j]) % p;
+					b[i][j] = (ans[(l - 1) % 2][i][j] + b[i][j - 1]) % p;
+				}
+			for (int i = 1; i <= k; ++i)
+				for (int j = 1; j <= k; ++j)
+				{
+					if (i == j&&j == 1)
+					{
+						ans[l % 2][i][j] = 1;
+						continue;
+					}
+					if (j >= i)
+					{
+						ans[l % 2][i][j] = 0;
+						continue;
+					}
+					ans[l % 2][i][j] = (ans[l % 2][i][j] + a[i][j] + b[i][j]) % p;
+				}
+		}
+		int sum = 0;
+		for (int i = 1; i <= k; ++i)
+			for (int j = 1; j <= k; ++j) sum = (sum + ans[n % 2][i][j]) % p;
+
+		cout << sum + 1 << endl;
+	}
+	return 0;
+}
