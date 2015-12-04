@@ -1,0 +1,139 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+char in[2], str[101][1001], gly[26][20][20];
+int mod = 1000000007, Hash[26], revHash[26], gh[26], gw[26];
+
+pair<int, int> shrink(int top, int bottom, int left, int right){
+	while (top < bottom){
+		bool has = false;
+		for (int i = left; i < right; i++) if (str[top][i] != '.'){ has = true; break; }
+		if (has) break;
+		top++;
+	}
+	while (top < bottom){
+		bool has = false;
+		for (int i = left; i < right; i++) if (str[bottom - 1][i] != '.'){ has = true; break; }
+		if (has) break;
+		bottom--;
+	}
+	return make_pair(top, bottom);
+}
+
+pair<int, int> check(int top, int bottom, int left, int right){
+	int H = bottom - top, W = right - left, key = 0;
+	if (H > 15 || W>15) return make_pair(-1, -1);
+	for (int i = 0; i < H; i++)
+		for (int j = 0; j < W; j++){
+			key *= mod;
+			if (str[top + i][left + j] == '*') key++;
+		}
+
+	pair<int, int>ret = make_pair(-1, -1);
+	for (int i = 0; i < 26; i++){
+		if (gh[i] != H || gw[i] != W) continue;
+		if (Hash[i] == key){
+			bool ok = true;
+			for (int j = 0; j < H; j++)
+				for (int k = 0; k < W; k++)
+					if (str[top + j][left + k] != gly[i][j][k]) ok = false;
+
+			if (ok) ret.first = i;
+		}
+		if (revHash[i] == key){
+			bool ok = true;
+			for (int j = 0; j < H; j++)
+				for (int k = 0; k < W; k++)
+					if (str[top + j][left + k] != gly[i][j][W - 1 - k]) ok = false;
+
+			if (ok) ret.second = i;
+		}
+	}
+	return ret;
+}
+
+string solve(int top, int bottom, int left, int right){
+	while (top < bottom){
+		bool has = false;
+		for (int i = left; i < right; i++) if (str[top][i] != '.'){ has = true; break; }
+		if (has) break;
+		top++;
+	}
+	while (top < bottom){
+		bool has = false;
+		for (int i = left; i < right; i++) if (str[bottom - 1][i] != '.'){ has = true; break; }
+		if (has) break;
+		bottom--;
+	}
+	if (top == bottom)return "";
+	int st = -1;
+	string ltr = "", rtl = "";
+	bool LTR = true;
+	for (int i = left; i <= right; i++){
+		bool has = false;
+		if (i < right){
+			for (int j = top; j < bottom; j++) if (str[j][i] != '.') has = true;
+		}
+		if (has){
+			if (st == -1) st = i;
+		}
+		else
+		{
+			if (st != -1){
+				pair<int, int> hor = shrink(top, bottom, st, i);
+				pair<int, int> val = check(hor.first, hor.second, st, i);
+				if (val.first == -1 && val.second == -1){
+					string tmp = solve(hor.first + 1, hor.second - 1, st + 1, i - 1);
+					ltr = ltr + "[" + tmp + "]";
+					reverse(tmp.begin(), tmp.end());
+					rtl = rtl + "]" + tmp + "[";
+				}
+				else
+				{
+					if (~val.first) ltr += 'a' + val.first;
+					else LTR = false;
+					if (~val.second) rtl += 'a' + val.second;
+				}
+				st = -1;
+			}
+		}
+	}
+	if (LTR) return ltr;
+	reverse(rtl.begin(), rtl.end());
+	return rtl;
+}
+
+int main(){
+	int a, b;
+	while (scanf("%d%d", &a, &b), a){
+		for (int i = 0; i < 26; i++) gh[i] = gw[i] = -1;
+		for (int i = 0; i < a; i++){
+			int h, w;
+			scanf("%s%d%d", in, &h, &w);
+			int t = in[0] - 'a';
+			gh[t] = h; gw[t] = w;
+			for (int j = 0; j < h; j++) scanf("%s", gly[t][j]);
+			Hash[t] = revHash[t] = 0;
+			for (int j = 0; j < h; j++){
+				for (int k = 0; k < w; k++){
+					Hash[t] *= mod;
+					if (gly[t][j][k] == '*') Hash[t]++;
+				}
+				for (int k = w - 1; k >= 0; k--){
+					revHash[t] *= mod;
+					if (gly[t][j][k] == '*') revHash[t]++;
+				}
+			}
+		}
+		for (int i = 0; i < b; i++){
+			int h, w;
+			scanf("%d%d", &h, &w);
+			for (int j = 0; j < h; j++) scanf("%s", str[j]);
+			string ret = solve(0, h, 0, w);
+			printf("%s\n", ret.c_str());
+		}
+		printf("#\n");
+	}
+}
