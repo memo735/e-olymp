@@ -1,0 +1,20 @@
+using System;
+
+namespace Problem4318
+{
+    internal static class Program
+    {
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            long a = long.Parse(massiv[0]);
+            long b = long.Parse(massiv[1]);
+            long n = long.Parse(massiv[2]);
+            b = b%n;
+            long x = (long) Math.Log(b, a);
+            if (Math.Pow(a, x) == b) Console.WriteLine(x);
+            else Console.WriteLine(-1);
+        }
+    }
+}
