@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+	char s[100001], rs[100001];
+	int n, f[100001];
+	while (~scanf("%s", s))
+	{
+		n = strlen(s);
+		for (int i = 0; i < n; i++) rs[i] = s[n - i - 1];
+		rs[n] = '\0';
+		//getfail();
+		f[0] = f[1] = 0;
+		for (int i = 1; i < n; i++)
+		{
+			int j = f[i];
+			while (j&&rs[i] != rs[j]) j = f[j];
+			f[i + 1] = rs[i] == rs[j] ? j + 1 : 0;
+		}
+		int j = 0;
+		for (int i = 0; i < n; i++)
+		{
+			while (j&&rs[j] != s[i]) j = f[j];
+			if (rs[j] == s[i]) j++;
+		}
+		if (j == n) j = f[j];
+		cout << s << rs + j << endl;
+	}
+	return 0;
+}
