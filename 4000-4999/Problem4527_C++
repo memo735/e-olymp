@@ -1,0 +1,27 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+	int min_len, count = 0, i, j = 0, n;
+	char a[255], b[255];
+	scanf("%d", &n);
+	scanf("%s", a);
+	int a_len = strlen(a);
+	count += a_len;
+	for (j = 0; j < n - 1; j++) {
+		scanf("%s", b);
+		int b_len = strlen(b);
+		min_len = min(a_len, b_len);
+		count += b_len;
+		for (i = 0; i < min_len; i++) if (a[i] != b[i]) break;
+		count = count - i + 1;
+		memcpy(a, b, b_len);
+		a_len = b_len;
+	}
+	printf("%d\n", count);
+	return 0;
+}
