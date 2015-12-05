@@ -1,0 +1,24 @@
+using System;
+
+namespace Problem4436
+{
+    internal static class Program
+    {
+        private static void nextMoterize(int n, int acilan, int baglanan, string ans)
+        {
+            if (acilan + baglanan == 2*n)
+            {
+                Console.WriteLine(ans);
+                return;
+            }
+            if (acilan < n) nextMoterize(n, acilan + 1, baglanan, ans + '(');
+            if (acilan > baglanan) nextMoterize(n, acilan, baglanan + 1, ans + ')');
+        }
+
+        public static void Main(string[] args)
+        {
+            int n = int.Parse(Console.ReadLine());
+            nextMoterize(n, 0, 0, "");
+        }
+    }
+}
