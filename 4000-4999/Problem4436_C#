@@ -11,8 +11,8 @@ namespace Problem4436
                 Console.WriteLine(ans);
                 return;
             }
-            if (acilan < n) nextMoterize(n, acilan + 1, baglanan, ans + '(');
-            if (acilan > baglanan) nextMoterize(n, acilan, baglanan + 1, ans + ')');
+            if (acilan < n) nextMoterize(n, acilan + 1, baglanan, ans + "(");
+            if (acilan > baglanan) nextMoterize(n, acilan, baglanan + 1, ans + ")");
         }
 
         public static void Main(string[] args)
