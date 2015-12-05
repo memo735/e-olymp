@@ -1,0 +1,20 @@
+#include <iostream>
+
+int main()
+{
+	int k = 0, min = 0, mincount = 0;
+	while (true)
+	{
+		char c = getc(stdin);
+		if (c != ')' && c != '(') break;
+		k += c == '(' ? 1 : -1;
+		if (k < min)
+		{
+			mincount = 1;
+			min = k;
+		}
+		else if (k == min) mincount++;
+	}
+	printf("%d\n", k == 0 ? mincount : 0);
+	return 0;
+}
