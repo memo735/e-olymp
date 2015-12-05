@@ -1,15 +1,12 @@
-#include<stdio.h>
-#include<iostream>
-#include<string.h>
+#include <iostream>   
+#include <string.h>   
 
 using namespace std;
 
-char str[1050], pass[10050];
-int sum[10050], record[27], dp[1005][10050];
-
 int main()
 {
-	int i, j, cur, n, m;
+	char str[1001], pass[10001];
+	int i, j, cur, n, m, sum[10001], record[27], dp[1001][10001];
 	bool flag;
 	while (scanf("%s%s", str + 1, pass + 1) != EOF)
 	{
