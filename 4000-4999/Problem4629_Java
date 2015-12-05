@@ -1,0 +1,93 @@
+import java.util.*;
+import java.math.*;
+
+class point
+{
+	int x, y;
+	public point(int x, int y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+}
+
+class Main
+{
+	public static void main(String[] args)
+	{
+		Scanner in = new Scanner(System.in);
+		int a, b, len;
+		BigInteger ans;
+		point pa, pb;
+		while (in.hasNext())
+		{
+			a = in.nextInt();
+			b = in.nextInt();
+			if (a == 0 && b == 0) break;
+			pa = GetCoordinate(a);
+			pb = GetCoordinate(b);
+			pa.x = pb.x - pa.x;
+			pa.y = pb.y - pa.y;
+			pa.x = pa.x < 0 ? -pa.x : pa.x;
+			pa.y = pa.y < 0 ? -pa.y : pa.y;
+			if (pa.x >= pa.y)
+			{
+				len = (pa.x + pa.y) / 2;
+				ans = C(len, pa.y);
+			}
+			else
+			{
+				len = pa.y;
+				ans = C(len, (pa.y - pa.x) / 2);
+			}
+			System.out.print("There ");
+			if (ans.compareTo(BigInteger.ONE) == 0) System.out.print("is 1 route");
+			else System.out.print("are " + ans + " routes");
+			System.out.println(" of the shortest length " + len + ".");
+		}
+	}
+
+	static BigInteger C(int n, int k)
+	{
+		BigInteger ret = BigInteger.ONE;
+		if (k > n - k) k = n - k;
+		for (int i = 1; i <= k; i++)
+		{
+			ret = ret.multiply(new BigInteger(new String(n - i + 1 + "")));
+			ret = ret.divide(new BigInteger(new String(i + "")));
+		}
+		return ret;
+	}
+
+	static point GetCoordinate(int n)
+	{
+		int[][] dir = new int[][]{{1, -1}, { 2, 0 }, { 1, 1 }, { -1, 1 }, { -2, 0 }, { -1, -1 }};
+		int i = 0, j = 0, k = 0, tx, ty, cnt = 0, delta;
+		point p = new point(0, 0);
+		if (n == 1) return p;
+		for (i = 2; i <= 1000; i++) if (3*i*i - 3*i + 1 >= n) break;
+		delta = 3*i*i - 3*i + 1 - n;
+		i--;
+		tx = -2*i;
+		ty = 0;
+		boolean flag = false;
+		for (j = 0; j < 6; j++)
+		{
+			for (k = 0; k < i; k++)
+			{
+				if (cnt == delta)
+				{
+					flag = true;
+					break;
+				}
+				cnt++;
+				tx += dir[j][0];
+				ty += dir[j][1];
+			}
+			if (flag) break;
+		}
+		p.x = tx;
+		p.y = ty;
+		return p;
+	}
+}
