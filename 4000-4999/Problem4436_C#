@@ -4,15 +4,15 @@ namespace Problem4436
 {
     internal static class Program
     {
-        private static void nextMoterize(int n, int acilan, int baglanan, string ans)
+        private static void nextMoterize(int n, int acilib, int baglanib, string ans)
         {
-            if (acilan + baglanan == 2*n)
+            if (acilib + baglanib == 2*n)
             {
                 Console.WriteLine(ans);
                 return;
             }
-            if (acilan < n) nextMoterize(n, acilan + 1, baglanan, ans + "(");
-            if (acilan > baglanan) nextMoterize(n, acilan, baglanan + 1, ans + ")");
+            if (acilib < n) nextMoterize(n, acilib + 1, baglanib, ans + "(");
+            if (acilib > baglanib) nextMoterize(n, acilib, baglanib + 1, ans + ")");
         }
 
         public static void Main(string[] args)
