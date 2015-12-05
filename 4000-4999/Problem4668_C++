@@ -1,0 +1,44 @@
+#include <string.h>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+long a[5001], c[2501][2501];
+
+long cc(int x, int y, int r)
+{
+	if (x == y || y == 0 || x == 0)
+	{
+		c[x][y] = 1;
+		return 1;
+	}
+	if (x&&y)
+	{
+		c[x][y] = c[x - 1][y - 1] + c[x - 1][y];
+		c[x][y] %= r;
+		return c[x][y];
+	}
+	return 0;
+}
+
+int main()
+{
+	int l, r;
+	while (~scanf("%d%d", &l, &r))
+	{
+		memset(a, 0, sizeof a);
+		a[1] = 1;
+		for (int i = 1; i <= l / 2; i++)
+		{
+			for (int j = 0; j <= i&&j + 2 * i <= l; j++)
+			{
+				long tmp = cc(i, j, r);
+				if (2 * i + j > l) break;
+				a[i * 2 + j] = (a[i * 2 + j] + a[i] * tmp % r) % r;
+			}
+		}
+		cout << a[l] % r << endl;
+	}
+	return 0;
+}
