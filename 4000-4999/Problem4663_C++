@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	string s;
+	int move1 = 0, last, len;
+	cin >> len;
+	cin >> s;
+	int tmp1, tmp2, ans = 0, l = 0, r = s.size() - 1;
+	while (s[l] == '0' && l <= r) l++, move1++;
+	tmp1 = move1;
+	if (l > r)
+	{
+		if (tmp1 & 1) cout << "FIRST" << endl;
+		else cout << "SECOND" << endl;
+		return 0;
+	}
+	while (s[r] == '0' && r >= l) r--, move1++;
+	tmp2 = move1 - tmp1;
+	ans ^= tmp1;
+	ans ^= tmp2;
+	if (r - l + 1 > 0)
+	{
+		last = l;
+		for (int i=l + 1;i<=r;++i)
+		{
+			if (s[i] != '0')
+			{
+				if (s[i] == s[last]) ans ^= 1;
+				last = i;
+			}
+		}
+	}
+	if (ans) cout << "FIRST" << endl;
+	else cout << "SECOND" << endl;
+	return 0;
+}
