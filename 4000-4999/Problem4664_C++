@@ -1,0 +1,70 @@
+#include <string.h>
+#include <iostream>
+
+using namespace std;
+
+const int maxn = 32769;
+int num[maxn];
+long k, r[maxn];
+bool vis[maxn];
+
+void calc(int t)
+{
+	int tt = t;
+	num[tt] = 0;
+	while (t > 0)
+	{
+		num[tt] += t % 2;
+		t /= 2;
+	}
+}
+
+void dfs(int x, int len)
+{
+	if (len == k)
+	{
+		if (vis[x]) r[x] = 1;
+	}
+	else
+	{
+		dfs(x << 1, len + 1);
+		dfs((x << 1) + 1, len + 1);
+	}
+}
+
+int main()
+{
+	int sum;
+	long a, n, ans, l[maxn];
+	memset(vis, false, sizeof vis);
+	cin >> n >> k >> a;
+	sum = 1 << k;
+	for (int i = 0; i <= sum; ++i) {
+		calc(i);
+		if (num[i] >= a) vis[i] = true;
+		r[i] = 0;
+	}
+	dfs(0, 0);
+	int sss = 1 << (k - 1);
+	for (int i = k + 1; i <= n; ++i)
+	{
+		for (int j = 0; j <= sum; ++j)
+		{
+			l[j] = r[j];
+			r[j] = 0;
+		}
+		for (int j = 0; j <= sum; ++j)
+		{
+			if (vis[j])
+			{
+				int now = j >> 1;
+				if (vis[now + sss]) r[j] += l[now + sss];
+				if (vis[now]) r[j] += l[now];
+			}
+		}
+	}
+	ans = 0;
+	for (int i = 0; i <= sum - 1; ++i) if (vis[i]) ans += r[i];
+	cout << ans << endl;
+	return 0;
+}
