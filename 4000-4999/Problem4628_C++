@@ -1,0 +1,117 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+int i, j, n, ori_size, cut_size[11], hexagon[110][110];
+
+bool can_cut(int x, int y, int size)
+{
+	if (y + 2 * size - 2 > ori_size * 4 || x + size - 1 > ori_size * 2) return false;
+	if (y % 2 == 1)
+	{
+		for (i = 0; i < size; i++)
+			for (j = 0; j < 2 * i + 1; j++)
+				if (hexagon[x + i][y + j] == false) return false;
+	}
+	else
+	{
+		for (i = 0; i < size; i++)
+			for (j = 2 * i; j < 2 * size - 1; j++)
+				if (hexagon[x + i][y + j] == false) return false;
+	}
+	return true;
+}
+
+void cut(int x, int y, int size)
+{
+	if (y % 2 == 1)
+		for (i = 0; i < size; i++)
+			for (j = 0; j < 2 * i + 1; j++) hexagon[x + i][y + j] = false;
+	else
+		for (i = 0; i < size; i++)
+			for (j = 2 * i; j < 2 * size - 1; j++) hexagon[x + i][y + j] = false;
+}
+
+void decut(int x, int y, int size)
+{
+	if (y % 2 == 1)
+		for (i = 0; i < size; i++)
+			for (j = 0; j < 2 * i + 1; j++) hexagon[x + i][y + j] = true;
+	else
+		for (i = 0; i < size; i++)
+			for (j = 2 * i; j < 2 * size - 1; j++) hexagon[x + i][y + j] = true;
+}
+
+bool dfs(int x, int y)
+{
+	int i, j;
+	if (x > ori_size * 2) return true;
+	if (y > 4 * ori_size) return dfs(x + 1, 1);
+	if (hexagon[x][y] == false)
+	{
+		for (j = y + 1; j <= 4 * ori_size; j++) if (hexagon[x][j]) break;
+		return dfs(x, j);
+	}
+	for (i = 0; i < n; i++)
+	{
+		if (can_cut(x, y, cut_size[i]))
+		{
+			cut(x, y, cut_size[i]);
+			if (dfs(x, y + 1)) return true;
+			decut(x, y, cut_size[i]);
+		}
+		else break;
+	}
+	return false;
+}
+
+int main()
+{
+	int test_cases, k;
+	bool flag;
+	scanf("%d", &test_cases);
+	while (test_cases--)
+	{
+		scanf("%d%d", &ori_size, &n);
+		for (i = 0, flag = false; i < n; i++)
+		{
+			scanf("%d", &cut_size[i]);
+			if (ori_size%cut_size[i] == 0) flag = true;
+		}
+		if (flag)
+		{
+			printf("YES\n");
+			continue;
+		}
+		memset(hexagon, false, sizeof hexagon);
+		for (i = 1; i <= ori_size; i++)
+			for (j = 1; j <= ori_size * 2 - 1 + 2 * i; j++) hexagon[i][j] = true;
+
+		for (i = ori_size + 1; i <= ori_size * 2; i++)
+			for (j = (i - ori_size) * 2; j <= ori_size * 4; j++) hexagon[i][j] = true;
+
+		sort(cut_size, cut_size + n);
+		for (i = 0; i<n; i++)
+			if (cut_size[i]>ori_size)
+			{
+				n = i - 1;
+				break;
+			}
+
+		for (i = 0; i < n; i++)
+			for (j = 0; j < i; j++)
+				if (cut_size[i] % cut_size[j] == 0)
+				{
+					for (k = i; k < n - 1; k++) cut_size[k] = cut_size[k + 1];
+					i--;
+					n--;
+					break;
+				}
+
+		if (dfs(1, 1)) printf("YES\n");
+		else printf("NO\n");
+	}
+	return 0;
+}
