@@ -1,0 +1,152 @@
+#include <iostream>
+#include <vector>
+#include <set>
+#include <map>
+
+using namespace std;
+
+#define CENTER 32
+#define BIT_W 6
+#define PAD  (1<<BIT_W)
+#define MAX_TURN 20
+#define MAX_SNAKE_LEN 8
+#define WAYS 6
+
+typedef vector<int> snake_t;
+
+vector<int> rocks;
+
+int way[] = { PAD, PAD - 1, 1, -1, -PAD, -PAD + 1 };
+
+bool connect(int p1, int p2){
+	int diff = p1 - p2;
+	for (int i = 0; i < WAYS; i++) if (diff == way[i]) return true;
+	return false;
+}
+
+bool kabenonakaniiru(int p){
+	for (int i = 0; i < rocks.size(); i++) if (rocks[i] == p) return true;
+	return false;
+}
+
+bool lost_simasita(const snake_t &snake, int p, int idx){
+	for (int i = 0; i <= idx - 2; i++)
+		if (snake[i] == p || connect(p, snake[i])) return true;
+	return false;
+}
+
+void next(snake_t &snake, int idx, int n, set<snake_t> &found_set, set<snake_t> &next_set){
+	if (idx >= n){
+		if (found_set.find(snake) == found_set.end()){
+			found_set.insert(snake);
+			next_set.insert(snake);
+		}
+		return;
+	}
+	for (int i = 0; i < WAYS; i++){
+		int np = snake[idx] + way[i];
+		if (idx != 0 && !connect(np, snake[idx - 1])) continue;
+		if (idx != n - 1 && !connect(np, snake[idx + 1])) continue;
+		if (kabenonakaniiru(np)) continue;
+		if (lost_simasita(snake, np, idx)) continue;
+		int backup = snake[idx];
+		snake[idx] = np;
+		next(snake, idx + 2, n, found_set, next_set);
+		snake[idx] = backup;
+	}
+	// dont move;
+	int np = snake[idx];
+	if (!lost_simasita(snake, np, idx)) next(snake, idx + 1, n, found_set, next_set);
+}
+
+int dist(map<pair<int, int>, int> &dists, snake_t &snake){
+	map<pair<int, int>, int>::iterator p;
+	p = dists.find(make_pair(snake[0], snake[1]));
+	if (p == dists.end()) return MAX_TURN * 2;
+	return p->second;
+}
+
+int main(){
+	while (true){
+		int n; cin >> n;
+		if (n == 0) break;
+		// read snake
+		vector<pair<int, int>> p_snake;
+		p_snake.resize(n);
+		for (int i = 0; i < n; i++) cin >> p_snake[i].first >> p_snake[i].second;
+		// read rock
+		int rock_size; cin >> rock_size;
+		vector<pair<int, int> > p_rocks;
+		p_rocks.resize(rock_size);
+		for (int i = 0; i<rock_size; i++) cin >> p_rocks[i].first >> p_rocks[i].second;
+		// read goal
+		pair<int, int> p_goal;
+		cin >> p_goal.first >> p_goal.second;
+		// remove no-meaning rocks
+		vector<pair<int, int> > rocks_tmp = p_rocks;
+		rocks.clear();
+		for (int i = 0; i<rocks_tmp.size(); i++){
+			if (abs(p_goal.first - rocks_tmp[i].first)> MAX_TURN + MAX_SNAKE_LEN || abs(p_goal.second - rocks_tmp[i].second)> MAX_TURN + MAX_SNAKE_LEN) continue;
+			p_rocks.push_back(rocks_tmp[i]);
+		}
+		// shift_goal to (CENTER,CENTER)
+		for (int i = 0; i < p_snake.size(); i++){
+			p_snake[i].first = p_snake[i].first - p_goal.first + CENTER;
+			p_snake[i].second = p_snake[i].second - p_goal.second + CENTER;
+		}
+		for (int i = 0; i < p_rocks.size(); i++){
+			p_rocks[i].first = p_rocks[i].first - p_goal.first + CENTER;
+			p_rocks[i].second = p_rocks[i].second - p_goal.second + CENTER;
+		}
+		// make snake, rocks
+		int goal = CENTER*PAD + CENTER;
+		snake_t snake;
+		for (int i = 0; i < p_snake.size(); i++) snake.push_back(p_snake[i].first * PAD + p_snake[i].second);
+		rocks.clear();
+		for (int i = 0; i < p_rocks.size(); i++) rocks.push_back(p_rocks[i].first * PAD + p_rocks[i].second);
+		// ready dist_map of snake
+		map<pair<int, int>, int> dists;
+		set<snake_t> found_set, next_set, current_set;
+		snake_t snake2;
+		snake2.resize(2);
+		snake2[0] = goal;
+		for (int i = 0; i < WAYS; i++){
+			snake2[1] = goal + way[i];
+			next_set.insert(snake2);
+			found_set.insert(snake2);
+			dists.insert(make_pair(make_pair(snake2[0], snake2[1]), 0));
+		}
+		for (int i = 1; i < MAX_TURN; i++){
+			current_set.clear();
+			current_set.swap(next_set);
+			for (set<snake_t>::iterator p = current_set.begin(); p != current_set.end(); ++p) next(snake2 = *p, 0, 2, found_set, next_set);
+			for (set<snake_t>::iterator p = next_set.begin(); p != next_set.end(); ++p) dists.insert(make_pair(make_pair((*p)[0], (*p)[1]), i));
+		}
+		found_set.clear();
+		found_set.insert(snake);
+		next_set.clear();
+		next_set.insert(snake);
+		int ans = 0;
+		while (true){
+			ans++;
+			if (ans == MAX_TURN) break;
+			current_set.swap(next_set);
+			next_set.clear();
+			for (set<snake_t>::iterator p = current_set.begin(); p != current_set.end(); ++p){
+				snake_t snk = *p;
+				if (ans + dist(dists, snk) > MAX_TURN) continue;
+				next(snk, 0, n, found_set, next_set);
+			}
+			bool found = false;
+			for (set<snake_t>::iterator p = next_set.begin(); p != next_set.end(); ++p){
+				if ((*p)[0] == goal){
+					found = true;
+					break;
+				}
+			}
+			if (found) break;
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}
