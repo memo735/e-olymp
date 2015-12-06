@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define INF 0xffff
+
+bool visit[101];
+int N, dis[101], map[101][101];
+
+void dijkstra(int num)
+{
+	for (int i = 1; i <= N; i++) dis[i] = map[num][i];
+	visit[num] = 1;
+	for (int i = 1; i <= N; i++) {
+		int mins = INF, next = -1;
+		for (int j = 1; j <= N; j++) {
+			if (visit[j] == 0 && mins > dis[j]) {
+				mins = dis[j];
+				next = j;
+			}
+		}
+		if (next == -1) break;
+		visit[next] = 1;
+		for (int j = 1; j <= N; j++) {
+			if (visit[j] == 0 && dis[j] > dis[next] + map[next][j]) dis[j] = dis[next] + map[next][j];
+		}
+	}
+}
+
+int main() {
+	int A, B, s, p;
+	cin >> N >> A >> B;
+	memset(visit, 0, sizeof visit);
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) map[i][j] = INF;
+		map[i][i] = 0;
+	}
+	for (int i = 1; i <= N; i++) {
+		cin >> s;
+		for (int j = 0; j < s; j++) {
+			cin >> p;
+			if (j == 0) map[i][p] = 0;
+			else map[i][p] = map[i][p] > 1 ? 1 : map[i][p];
+		}
+	}
+	dijkstra(A);
+	if (dis[B] != INF) cout << dis[B] << endl;
+	else cout << "-1" << endl;
+	return 0;
+}
