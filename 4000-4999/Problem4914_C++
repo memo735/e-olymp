@@ -1,0 +1,71 @@
+#include <iostream>
+
+using namespace std;
+
+int n, c[129][129][129];
+
+void update(int px, int py, int pz, int val)
+{
+	int x = px, y = py, z = pz;
+	while (x <= n)
+	{
+		y = py;
+		while (y <= n)
+		{
+			z = pz;
+			while (z <= n)
+			{
+				c[x][y][z] += val;
+				z += z & -z;
+			}
+			y += y & -y;
+		}
+		x += x & -x;
+	}
+}
+
+int quary(int px, int py, int pz)
+{
+	int ret = 0, x = px, y = py, z = pz;
+	while (x > 0)
+	{
+		y = py;
+		while (y > 0)
+		{
+			z = pz;
+			while (z > 0)
+			{
+				ret += c[x][y][z];
+				z -= z & -z;
+			}
+			y -= y & -y;
+		}
+		x -= x & -x;
+	}
+	return ret;
+}
+
+int main()
+{
+	while (scanf("%d", &n) != EOF)
+	{
+		int tag;
+		while (scanf("%d", &tag) && tag != 3)
+		{
+			if (tag == 1)
+			{
+				int x1, y1, z1, v;
+				scanf("%d%d%d%d", &x1, &y1, &z1, &v);
+				update(x1 + 1, y1 + 1, z1 + 1, v);
+			}
+			else if (tag == 2)
+			{
+				int x1, y1, z1, x2, y2, z2, v;
+				scanf("%d%d%d%d%d%d", &x1, &y1, &z1, &x2, &y2, &z2);
+				v = quary(x2 + 1, y2 + 1, z2 + 1) - quary(x2 + 1, y2 + 1, z1) - quary(x2 + 1, y1, z2 + 1) - quary(x1, y2 + 1, z2 + 1)
+					+ quary(x1, y1, z2 + 1) + quary(x1, y2 + 1, z1) + quary(x2 + 1, y1, z1) - quary(x1, y1, z1);
+				printf("%d\n", v);
+			}
+		}
+	}
+}
