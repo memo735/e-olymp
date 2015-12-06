@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+bool g[101][101];
+int n, m;
+
+void Floyd() {
+	for (int k = 1; k <= n; ++k) {
+		for (int i = 1; i <= n; ++i) {
+			if (g[i][k]) {
+				for (int j = 1; j <= n; ++j) {
+					if (!g[i][j]) g[i][j] = g[i][k] && g[k][j];
+				}
+			}
+		}
+	}
+}
+
+int main() {
+	int u, v, x, y, T;
+	scanf("%d", &T);
+	while (T--){
+		scanf("%d %d", &n, &m);
+		memset(g, false, sizeof g);
+		for (int i = 0; i < m; ++i){
+			scanf("%d %d", &u, &v);
+			g[u][v] = true;
+		}
+		Floyd();
+		int ans = 0;
+		for (int i = 1; i <= n; ++i){
+			x = y = 0;
+			for (int j = 1; j <= n; ++j){
+				if (g[i][j]) x++;
+				if (g[j][i]) y++;
+			}
+			if (x > (n - 1) >> 1 || y > (n - 1) >> 1) ans++;
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}
