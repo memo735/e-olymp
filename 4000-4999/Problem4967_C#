@@ -1,0 +1,34 @@
+using System;
+using System.Numerics;
+
+namespace Problem4967
+{
+    internal static class Program
+    {
+        public static void Main()
+        {
+            BigInteger[] a = new BigInteger[51];
+            a[0] = 0;
+            a[1] = 1;
+            a[2] = 1;
+            a[3] = 2;
+            int n = int.Parse(Console.ReadLine());
+            for (int i = 3; i <= n; i++)
+            {
+                BigInteger tmp1 = 0;
+                for (int j = 1; j <= i - 1; j++)
+                {
+                    BigInteger tmp2 = 0;
+                    for (int k = 1; k <= (i - 1)/j; k++)
+                    {
+                        tmp2 = tmp2 + a[i - k*j];
+                    }
+                    tmp2 = tmp2*j*a[j];
+                    tmp1 = tmp1 + tmp2;
+                }
+                a[i] = tmp1/(i - 1);
+            }
+            Console.WriteLine(a[n]);
+        }
+    }
+}
