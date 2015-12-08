@@ -1,0 +1,22 @@
+using System;
+
+namespace Problem4957
+{
+    internal static class Program
+    {
+        public static void Main()
+        {
+            string setir = Console.ReadLine();
+            while (setir != "0 0")
+            {
+                var massiv = setir.Split(' ');
+                int n = int.Parse(massiv[0]);
+                int p = int.Parse(massiv[1]);
+                long cavab = 1;
+                for (int i = 2; i <= n; i++) cavab = cavab*i%p;
+                Console.WriteLine(cavab);
+                setir = Console.ReadLine();
+            }
+        }
+    }
+}
