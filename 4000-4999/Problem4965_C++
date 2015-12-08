@@ -1,0 +1,18 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int n;
+	while (cin >> n){
+		if (n == 1) cout << 14 << endl;
+		else if (n == 2) cout << 155 << endl; //10*4 + 5*3 + 25*2 + 50
+		else {
+			cout << 1575; //25*5 + 75*4 + 50*3 + 250*2 + 500
+			for (int i = 3; i < n; i++) cout << 0;
+			cout << endl;
+		}
+	}
+	return 0;
+}
