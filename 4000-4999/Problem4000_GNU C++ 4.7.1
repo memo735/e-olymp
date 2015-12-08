@@ -1,12 +1,15 @@
 #include <iostream>
 #include <stack>
+
 using namespace std;
 
 int main()
 {
-	int n, s; cin >> n >> s; s--;
-	int matrix[n][n]; stack<int> st;
-	int counter = 1;
+	int n, s, counter = 1;
+	cin >> n >> s;
+	s--;
+	int matrix[n][n];
+	stack<int> st;
 	for (int i = 0; i < n; i++)
 	{
 		for (int j = 0; j < n; j++) cin >> matrix[i][j];
@@ -19,8 +22,10 @@ int main()
 		if (matrix[a][a] != 1)
 		{
 			for (int j = 0; j < n; j++) if (matrix[a][j] == 1) st.push(j);
-			counter++; matrix[a][a] = 1;
+			counter++;
+			matrix[a][a] = 1;
 		}
 	}
 	cout << counter << endl;
+	return 0;
 }
