@@ -1,0 +1,58 @@
+#include <iostream>
+
+const int maxn = 100001, maxm = maxn << 1;
+int tot = 0, node[maxm], next[maxm], h[maxn] = { 0 }, f[maxn][2] = { 0 }, p[maxn][2] = { 0 };
+
+void addedge(int a, int b)
+{
+	node[++tot] = b;
+	next[tot] = h[a];
+	h[a] = tot;
+}
+
+void dfs(int x, int fa)
+{
+	for (int i = h[x]; i; i = next[i])
+		if (node[i] != fa)
+		{
+			dfs(node[i], x);
+			f[x][0] += f[node[i]][1];
+		}
+
+	for (int i = h[x]; i; i = next[i])
+		if (node[i] != fa)
+			if (f[x][0] - f[node[i]][1] + f[node[i]][0] + 1 > f[x][1])
+			{
+				f[x][1] = f[x][0] - f[node[i]][1] + f[node[i]][0] + 1;
+				p[x][1] = node[i] << 1 | 0;
+			}
+}
+
+void print(int s, int fa)
+{
+	if (!(s >> 1))  return;
+	int t = p[(s >> 1)][(s & 1)] >> 1;
+	for (int i = h[(s >> 1)]; i; i = next[i])
+		if (node[i] != t && node[i] != fa) print(node[i] << 1 | 1, s >> 1);
+	if (t)
+	{
+		printf("%d %d\n", t, s >> 1);
+		print(p[(s >> 1)][(s & 1)], s >> 1);
+	}
+}
+
+int main()
+{
+	int a, b, n, m;
+	scanf("%d%d", &n, &m);
+	for (int i = 1; i <= m; ++i)
+	{
+		scanf("%d%d", &a, &b);
+		addedge(a, b);
+		addedge(b, a);
+	}
+	dfs(1, 0);
+	printf("%d\n", f[1][1]);
+	print(1 << 1 | 1, 0 << 1 | 0);
+	return 0;
+}
