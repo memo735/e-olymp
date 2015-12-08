@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+pair<int, int> bod[4][101][101];
+bool vis[2][101][101];
+
+int main()
+{
+	int n, m; scanf("%d%d", &n, &m);
+	for (int i = 0; i <= 3; i++)
+		for (int j = 0; j <= n - 1; j++)
+			for (int k = 0; k <= m - 1; k++)
+			{
+				scanf("%d%d", &bod[i][j][k].first, &bod[i][j][k].second);
+				--bod[i][j][k].first;
+				--bod[i][j][k].second;
+			}
+	memset(vis, 0, sizeof vis);
+	int now = 0, nxt = 1;
+	for (int i = 0; i <= n - 1; i++)
+		for (int j = 0; j <= m - 1; j++) vis[0][i][j] = 1;
+
+	int Q, q; scanf("%d", &Q);
+	while (Q--){
+		scanf("%d", &q); --q;
+		memset(vis[nxt], 0, sizeof vis[nxt]);
+		for (int i = 0; i <= n - 1; i++)
+			for (int j = 0; j <= m - 1; j++)
+				if (vis[now][i][j]) vis[nxt][bod[q][i][j].first][bod[q][i][j].second] = 1;
+
+		swap(nxt, now);
+	}
+	int cnt = 0;
+	for (int i = 0; i <= n - 1; i++)
+		for (int j = 0; j <= m - 1; j++)
+			if (vis[now][i][j]) ++cnt;
+
+	printf("%d\n", cnt);
+	for (int i = 0; i <= n - 1; i++)
+		for (int j = 0; j <= m - 1; j++)
+			if (vis[now][i][j]) printf("%d %d\n", i + 1, j + 1);
+	return 0;
+}
