@@ -1,0 +1,37 @@
+//Author: kadeyrov
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <limits.h>
+
+using namespace std;
+
+int main(){
+	int n, k, p = 2, i, mn = INT_MAX;
+	vector<int> v;
+	map<int, int> mp, mp1;
+	cin >> n >> k;
+	while (p <= k)
+	{
+		if (k % p == 0)
+		{
+			int h = 0;
+			while (k % p == 0) k /= p, h++;
+			mp1[p] = h; v.push_back(p);
+		}
+		p++;
+	}
+	for (i = 0; i < v.size(); i++)
+	{
+		int num = n;
+		while (num != 0)
+		{
+			mp[v[i]] += num / v[i];
+			num /= v[i];
+		}
+	}
+	for (i = 0; i < v.size(); i++) mn = min(mn, mp[v[i]] / mp1[v[i]]);
+	cout << mn << endl;
+	return 0;
+}
