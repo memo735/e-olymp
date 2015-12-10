@@ -1,0 +1,65 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+	int k, i, t, l, v[26], val, b, c, flag;
+	char s[1000];
+	cin >> t;
+	getchar();
+	while (t--)
+	{
+		bool occur[26];
+		memset(occur, false, sizeof occur);
+		for (i = 0; i < 26; ++i) v[i] = i + 1;
+		val = 0;
+		b = 1;
+		gets(s);
+		l = strlen(s);
+		cout << "Expression: " << s << endl;
+		for (i = 0; i < l; ++i)
+		{
+			if (s[i] == ' ')
+			{
+				k = i;
+				for (; s[k] != '\0'; ++k) s[k] = s[k + 1];
+				--i;
+			}
+		}
+		for (k = 0; k < l; ++k)
+		{
+			if (s[k] == '+' || s[k] == '-')
+			{
+				if ((s[k] == '+'&&s[k + 1] == '+' || s[k] == '-'&&s[k + 1] == '-') && (s[k + 2] <= 'z'&&s[k + 2] >= 'a'))
+				{
+					v[int(s[k + 2] - 'a')] += s[k] == '+' ? 1 : -1;
+					++k;
+					c = int(s[k + 1] - 'a');
+					occur[c] = true;
+				}
+				else b = s[k] == '+' ? 1 : -1;
+			}
+			else if (s[k] >= 'a'&&s[k] <= 'z')
+			{
+				flag = 0;
+				c = int(s[k] - 'a');
+				val += b*v[c];
+				if (!occur[c])
+				{
+					flag = 1;
+					occur[c] = true;
+				}
+				if (flag == 1 && (s[k + 1] == '+'&&s[k + 2] == '+' || s[k + 1] == '-'&&s[k + 2] == '-'))
+				{
+					v[c] += s[k + 1] == '+' ? 1 : -1;
+					k += 2;
+				}
+			}
+		}
+		cout << "value = " << val << endl;
+		for (i = 0; i < 26; ++i) if (occur[i]) cout << char('a' + i) << " = " << v[i] << endl;
+	}
+	return 0;
+}
