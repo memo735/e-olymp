@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int ans = 0;
+
+struct Tag {
+	int normal, trick, next;
+	Tag() {}
+	Tag(int n, int t, int ne) : normal(n), trick(t), next(ne) {}
+};
+
+void dfs(const vector<Tag> &chambers, int pos, vector<int> &used, int acc) {
+	if (pos == chambers.size()) {
+		ans = max(ans, acc);
+		return;
+	}
+	if (!used[pos]) {
+		used[pos] = 1;
+		dfs(chambers, chambers[pos].next, used, acc + chambers[pos].trick);
+		used[pos] = 0;
+		if (chambers[pos].next <= pos) return;
+	}
+	dfs(chambers, pos + 1, used, acc + chambers[pos].normal);
+}
+
+int main() {
+	int T, N, a, b, c;
+	cin >> T;
+	while (T--) {
+		cin >> N;
+		vector<Tag> chambers;
+		for (int i = 0; i < N; ++i) {
+			cin >> a >> b >> c;
+			--c;
+			chambers.push_back(Tag(a, b, c));
+		}
+		vector<int> used(N, 0);
+		ans = 0;
+		for (int i = 0; i < N; ++i) {
+			if (chambers[i].next > i) {
+				int cost = 0;
+				for (int j = i; j < chambers[i].next; ++j) cost += chambers[j].normal;
+				if (cost >= chambers[i].trick) used[i] = 1;
+			}
+		}
+		dfs(chambers, 0, used, 0);
+		cout << ans << endl;
+	}
+	return 0;
+}
