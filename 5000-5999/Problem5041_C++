@@ -1,0 +1,27 @@
+#include <iostream>
+
+using namespace std;
+
+bool ok(char* x){
+	if (*x == '+' || *x == '-' && !isdigit(*++x)) return false;
+	if (!isdigit(*x)) return false;
+	for (; isdigit(*x); ++x);
+	if (*x == 0) return true;
+	if (*x == '.') {
+		if (!isdigit(*++x)) return false;
+		for (; isdigit(*x); ++x);
+	}
+	if (*x == 'e' || *x == 'E') {
+		++x;
+		if (*x == '+' || *x == '-') ++x;
+		if (!isdigit(*x)) return false;
+		for (; isdigit(*x); ++x);
+	}
+	return *x == 0;
+}
+
+int main() {
+	int n; char x[1024];
+	for (cin >> n; n--; cout << (ok(x) ? "LEGAL" : "ILLEGAL") << endl) cin >> x;
+	return 0;
+}
