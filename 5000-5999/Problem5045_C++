@@ -1,0 +1,125 @@
+#include <iostream>
+#include <set>
+#include <math.h>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define MAXN 101
+const double eps = 1e-6;
+int n, m;
+
+int dcmp(const double x)
+{
+	if (fabs(x) < eps) return 0;
+	return x > 0 ? 1 : -1;
+}
+
+struct Djset
+{
+	vector<int> pa;
+	void init(int size) {
+		pa.clear();
+		pa.resize(size);
+		for (int i = 0; i < size; ++i) pa[i] = i;
+	}
+	int root(int x) {
+		if (pa[x] == x) return x;
+		return pa[x] = root(pa[x]);
+	}
+	void joint(int a, int b) { pa[root(a)] = root(b); }
+};
+
+struct Point
+{
+	double x, y;
+	Point(double x = 0, double y = 0) :x(x), y(y){}
+	void getpoint() { scanf("%lf%lf", &x, &y); }
+};
+
+Point operator +(Point a, Point b) { return Point(a.x + b.x, a.y + b.y); }
+Point operator -(Point a, Point b) { return Point(a.x - b.x, a.y - b.y); }
+Point operator *(Point a, double p) { return Point(a.x*p, a.y*p); }
+bool operator <(Point a, Point b) { return dcmp(a.x - b.x)<0 || dcmp(a.x - b.x) == 0 && dcmp(a.y - b.y)<0; }
+double dot(Point a, Point b) { return a.x*b.x + a.y*b.y; }
+double cross(Point a, Point b) { return a.x*b.y - a.y*b.x; }
+
+struct Seg
+{
+	Point o, e;
+	Seg(Point o = Point(), Point e = Point()) :o(o), e(e){}
+	void getseg() { o.getpoint(); e.getpoint(); }
+};
+
+bool onseg(Seg s, Point p)
+{
+	return dcmp(cross(p - s.o, s.e - s.o)) == 0 && dcmp(dot(p - s.o, s.e - s.o)) >= 0 && dcmp(dot(p - s.e, s.o - s.e)) >= 0;
+}
+
+bool intersec(Seg s1, Seg s2)
+{
+	if (dcmp(cross(s1.o - s1.e, s2.o - s2.e)) == 0) return false;
+	return
+		dcmp(cross(s1.o - s1.e, s2.o - s1.e)) * dcmp(cross(s1.o - s1.e, s2.e - s1.e)) <= 0 &&
+		dcmp(cross(s2.o - s2.e, s1.o - s2.e)) * dcmp(cross(s2.o - s2.e, s1.e - s2.e)) <= 0;
+}
+
+Point intersection(Seg s1, Seg s2)
+{
+	double t = cross(s2.o - s1.o, s2.e - s1.o) / cross(s2.o - s2.e, s1.e - s1.o);
+	return s1.o + (s1.e - s1.o) * t;
+}
+
+set<Point> police;
+Point s, t;
+Seg seg[MAXN];
+vector<Point> ap;
+
+int main()
+{
+	int T;
+	scanf("%d", &T);
+	while (T--) {
+		police.clear();
+		ap.clear();
+		Point temp;
+		scanf("%d%d", &n, &m);
+		s.getpoint(); t.getpoint();
+		for (int i = 0; i < n; ++i) seg[i].getseg();
+		for (int i = 0; i < m; ++i) {
+			temp.getpoint();
+			police.insert(temp);
+		}
+		set<Point> tmp;
+		tmp.insert(s); tmp.insert(t);
+		for (int i = 0; i < n; ++i)
+			for (int j = 0; j < i; ++j)
+				if (intersec(seg[i], seg[j])) tmp.insert(intersection(seg[i], seg[j]));
+
+		for (set<Point>::iterator it = police.begin(); it != police.end(); ++it) {
+			if (tmp.count(*it) != 0) tmp.erase(*it);
+			else tmp.insert(*it);
+		}
+		ap.assign(tmp.begin(), tmp.end());
+		sort(ap.begin(), ap.end());
+		int len = ap.size();
+		Djset ds; ds.init(len);
+		for (int i = 0; i < n; ++i) {
+			Seg now = seg[i];
+			vector<int> tmp2;
+			for (int j = 0; j < len; ++j) if (onseg(now, ap[j])) tmp2.push_back(j);
+			int lent = tmp2.size();
+			for (int j = 0; j < lent; ++j) {
+				if (police.count(ap[tmp2[j]]) != 0) continue;
+				if (j > 0 && police.count(ap[tmp2[j - 1]]) == 0) ds.joint(tmp2[j], tmp2[j - 1]);
+				if (j < lent - 1 && police.count(ap[tmp2[j + 1]]) == 0) ds.joint(tmp2[j], tmp2[j + 1]);
+			}
+		}
+		int snum = lower_bound(ap.begin(), ap.end(), s) - ap.begin();
+		int tnum = lower_bound(ap.begin(), ap.end(), t) - ap.begin();
+		if (ds.root(snum) == ds.root(tnum)) puts("YES");
+		else puts("NO");
+	}
+	return 0;
+}
