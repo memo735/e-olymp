@@ -1,0 +1,66 @@
+#include <iostream>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+const int maxn = 101;
+
+int step[maxn][maxn];
+
+struct Pair{
+	int A, B;
+	bool operator < (const Pair& e) const { return step[A][B] > step[e.A][e.B]; }
+} fa[maxn][maxn];
+
+Pair ret[maxn];
+
+int main()
+{
+	int u, v, n, m, a1, b1, a2, b2, temp;
+	int d[maxn][maxn], G[maxn][maxn];
+	bool vis[maxn][maxn];
+	while (scanf("%d%d%d%d%d%d", &n, &m, &a1, &b1, &a2, &b2) == 6){
+		memset(G, 0, sizeof G);
+		for (int i = 1; i <= n; i++) G[i][i] = 1;
+		for (int i = 1; i <= m; i++){
+			scanf("%d%d", &u, &v);
+			G[u][v] = G[v][u] = 1;
+		}
+		//bfs
+		memset(vis, 0, sizeof vis);
+		d[a1][b1] = 1;
+		step[a1][b1] = 0;
+		priority_queue<Pair> qu;
+		qu.push(Pair{ a1, b1 });
+		vis[a1][b1] = 1;
+		while (!qu.empty()){
+			Pair p = qu.top(); qu.pop();
+			for (int i = 1; i <= n; i++) if (G[p.A][i]){
+				for (int j = 1; j <= n; j++) if (G[p.B][j] && G[i][j] && i != j){
+					if (i == p.B && j == p.A) continue;
+					if (i != p.A && j != p.B) temp = step[p.A][p.B] + 2;
+					else temp = step[p.A][p.B] + 1;
+					if (vis[i][j] && temp >= step[i][j]) continue;
+					qu.push(Pair{ i, j });
+					d[i][j] = d[p.A][p.B] + 1;
+					step[i][j] = temp;
+					fa[i][j] = Pair{ p.A, p.B };
+					vis[i][j] = 1;
+				}
+			}
+		}
+		printf("%d %d\n", step[a2][b2], d[a2][b2]);
+		int cnt = 0, x = a2, y = b2;
+		while (x != a1 || y != b1){
+			ret[cnt++] = Pair{ x, y };
+			int tx = fa[x][y].A;
+			int ty = fa[x][y].B;
+			x = tx;
+			y = ty;
+		}
+		ret[cnt++] = Pair{ a1, b1 };
+		for (int i = cnt - 1; i >= 0; i--) printf("%d %d\n", ret[i].A, ret[i].B);
+	}
+	return 0;
+}
