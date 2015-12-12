@@ -1,0 +1,17 @@
+#include <iostream>
+
+int main(){
+
+	int i, top = 0, numOfBalls, ballToPocket = 1, ballTakenOut, stack[100001];
+	scanf("%d", &numOfBalls);
+	for (i = 1; i <= numOfBalls; i++){
+		scanf("%d", &ballTakenOut);
+		while (stack[top] != ballTakenOut && ballToPocket <= numOfBalls){
+			stack[++top] = ballToPocket;
+			ballToPocket++;
+		}
+		if (top && stack[top] == ballTakenOut) top--;
+	}
+	printf("%s\n", top ? "Cheater" : "Not a proof");
+	return 0;
+}
