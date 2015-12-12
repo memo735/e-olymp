@@ -1,0 +1,23 @@
+using System;
+using System.Numerics;
+
+namespace Problem5101
+{
+    internal static class Program
+    {
+        private static BigInteger Fakt(int x)
+        {
+            BigInteger cavab = 1;
+            for (int i = 2; i <= x; i++) cavab = cavab*i;
+            return cavab;
+        }
+
+        public static void Main()
+        {
+            int n = int.Parse(Console.ReadLine());
+            BigInteger cavab = Fakt(2*n - 1)/Fakt(n - 1)/Fakt(n - 1);
+            cavab = BigInteger.ModPow(cavab, 1, 9929);
+            Console.WriteLine(cavab);
+        }
+    }
+}
