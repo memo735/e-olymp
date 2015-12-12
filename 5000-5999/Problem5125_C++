@@ -1,0 +1,24 @@
+#include <algorithm>
+
+using namespace std;
+
+int main()
+{
+	int T, cas, n;
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d %d", &cas, &n);
+		int ans = 0;
+		for (int x = 1; x <= n / 3; ++x)
+		{
+			int ymin = max(x, n / 2 - x + 1);
+			int ymax = (n - x) / 2;
+			if (x == ymin) --ans;
+			if (x != ymax && ymax == n - x - ymax) --ans;
+			ans += (ymax - ymin + 1) * 2;
+		}
+		printf("%d %d\n", cas, ans);
+	}
+	return 0;
+}
