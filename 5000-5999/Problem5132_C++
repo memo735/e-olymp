@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string.h>
+
+int main()
+{
+	int n, t;
+	scanf("%d", &n);
+	while (n--)
+	{
+		scanf("%d%*c", &t);
+		printf("%d ", t);
+		char str[10000];
+		gets(str);
+		int a, i, k, tem = 0, len = strlen(str);
+		scanf("%d", &k);
+		for (i = 0; i < k; i++)
+		{
+			scanf("%d", &a);
+			tem = (tem + len + a) % len;
+			printf("%c", str[tem]);
+		}
+		puts("");
+	}
+	return 0;
+}
