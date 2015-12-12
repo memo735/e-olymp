@@ -1,0 +1,82 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+#define PI acos(-1.0)
+
+struct Point
+{
+	double x, y;
+} pp[22], p1, p2, p3;
+
+Point oa, ob;
+
+double dis(Point a) { return sqrt(a.x*a.x + a.y*a.y); }
+double dmult(Point a, Point b) { return a.x*b.x + a.y*b.y; }
+double xmult(Point a, Point b) { return a.x*b.y - a.y*b.x; }
+
+int main()
+{
+	int t, d, m, s, be, aa, flag = 0, find = 0;
+	double an, Max;
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d%d%d%d%lf", &d, &m, &s, &be, &an);
+		an = an * PI / 180.0;
+		for (int i = 1; i <= m; i++) scanf("%d%lf%lf", &aa, &pp[i].x, &pp[i].y);
+		int la = be;
+		oa.x = cos(an), oa.y = sin(an);
+		ob.x = -oa.x, ob.y = -oa.y;
+		printf("%d ", d);
+		while (s--)
+		{
+			Max = -120;
+			for (int i = 1; i <= m; i++)
+			{
+				if (i == be || i == la) continue;
+				Point tmp;
+				tmp.x = pp[i].x - pp[be].x;
+				tmp.y = pp[i].y - pp[be].y;
+				double tt = xmult(oa, tmp);
+				if (tt > 0)
+				{
+					double dm = dmult(oa, tmp) / dis(oa) / dis(tmp);
+					if (dm > Max)
+					{
+						Max = dm;
+						flag = 1;
+						find = i;
+					}
+				}
+				else if (tt < 0)
+				{
+					double dm = dmult(ob, tmp) / dis(ob) / dis(tmp);
+					if (dm > Max)
+					{
+						Max = dm; flag = 2; find = i;
+					}
+				}
+			}
+			printf("%d", find);
+			la = be;
+			be = find;
+			if (s) putchar(' ');
+			else putchar('\n');
+			if (flag == 1)
+			{
+				ob.x = pp[la].x - pp[be].x;
+				ob.y = pp[la].y - pp[be].y;
+				oa.x = -ob.x, oa.y = -ob.y;
+			}
+			else
+			{
+				oa.x = pp[la].x - pp[be].x;
+				oa.y = pp[la].y - pp[be].y;
+				ob.x = -oa.x, ob.y = -oa.y;
+			}
+		}
+	}
+	return 0;
+}
