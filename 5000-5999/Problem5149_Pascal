@@ -1,0 +1,53 @@
+var i, n, c, j, count, cur, l, r, m, ans: LongInt;
+    a: Array [1..10001] of LongInt;
+
+procedure swap(var w1, w2: LongInt);
+var temp : longint;
+begin
+  temp := w1; w1 := w2; w2 := temp;
+end;
+
+procedure qsort(left, right: LongInt);
+var i, j, key: LongInt;
+begin
+  i := left; j := right;
+  key := a[(i + j) shr 1];
+  repeat
+    while (a[i] < key) do inc(i);
+    while (a[j] > key) do dec(j);
+    if (i <= j) then
+    begin
+      swap(a[i],a[j]);
+      inc(i); dec(j);
+    end;
+  until i>j;
+  if (i < right) then qsort(i,right);
+  if (j > left) then qsort(left,j);
+end;
+
+begin
+  readln(n, c);
+  for i := 1 to n do
+  begin
+    read(a[i]);
+    if a[i] > r then r := a[i];
+  end;
+  qsort(1, n);
+  while l < r do
+  begin
+    m := (l + r + 1) shr 1;
+    count := 1;
+    cur := a[1];
+    for i := 2 to n do
+      if a[i] - cur < m then continue
+      else begin cur := a[i]; inc(count); end;
+      
+    if count >= c then
+    begin
+      l := m;
+      if count >= c then ans := m;
+    end
+    else r := m-1;
+  end;
+  writeln(ans);
+end.
