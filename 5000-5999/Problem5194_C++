@@ -1,0 +1,69 @@
+#include <math.h>
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+#define POINT struct point
+#define LINESEG struct line
+
+struct point
+{
+	double x, y;
+} a, b, c, q, c1;
+
+struct line
+{
+	point s, e;
+} l1;
+
+double dotmultiply(POINT p1, POINT p2, POINT p0) { return (p1.x - p0.x)*(p2.x - p0.x) + (p1.y - p0.y)*(p2.y - p0.y); }
+double dist(POINT p1, POINT p2) { return sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.y - p2.y)*(p1.y - p2.y)); }
+
+double relation(POINT p, LINESEG l)
+{
+	LINESEG tl;
+	tl.s = l.s, tl.e = p;
+	return dotmultiply(tl.e, l.e, l.s) / (dist(l.s, l.e)*dist(l.s, l.e));
+}
+
+POINT perpendicular(POINT p, LINESEG l)
+{
+	double r = relation(p, l);
+	POINT tp;
+	tp.x = l.s.x + r*(l.e.x - l.s.x);
+	tp.y = l.s.y + r*(l.e.y - l.s.y);
+	return tp;
+}
+
+int main()
+{
+	int ax, ay, bx, by, cx, cy;
+	while (cin >> ax >> ay)
+	{
+		cin >> bx >> by;
+		cin >> cx >> cy;
+		int lab = (ax - bx)*(ax - bx) + (ay - by)*(ay - by);
+		int lbc = (bx - cx)*(bx - cx) + (by - cy)*(by - cy);
+		int lac = (ax - cx)*(ax - cx) + (ay - cy)*(ay - cy);
+		if (lab == lbc + lac)
+		{
+			cout << "YES" << endl;
+			continue;
+		}
+		a.x = ax, a.y = ay;
+		b.x = bx, b.y = by;
+		c.x = cx, c.y = cy;
+		if (lab > lbc)
+		{
+			l1.e = a, l1.s = c;
+			q = perpendicular(b, l1);
+			c1.x = q.x * 2 - c.x;
+			c1.y = q.y * 2 - c.y;
+			cout << "NO" << endl;
+			cout << setprecision(15) << a.x << ' ' << a.y << endl << b.x << ' ' << b.y << endl << c1.x << ' ' << c1.y;
+		}
+		else cout << "YES" << endl;
+	}
+	return 0;
+}
