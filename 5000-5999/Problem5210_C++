@@ -1,0 +1,54 @@
+#include <iostream>
+#include <string.h>
+
+int const N = 2001;
+int wa[N], wb[N], ws[N], wv[N], rank[N], height[N];
+
+int cmp(int* r, int a, int b, int L)
+{
+	return r[a] == r[b] && r[a + L] == r[b + L];
+}
+
+void da(int* r, int* sa, int n, int m)
+{
+	int i, j, p, *x = wa, *y = wb, *t;
+	for (i = 0; i < m; ++i) ws[i] = 0;
+	for (i = 0; i < n; ++i) ws[x[i] = r[i]]++;
+	for (i = 1; i < m; ++i) ws[i] += ws[i - 1];
+	for (i = n - 1; i >= 0; i--) sa[--ws[x[i]]] = i;
+	for (j = 1, p = 1; p < n; j *= 2, m = p)
+	{
+		for (p = 0, i = n - j; i < n; ++i) y[p++] = i;
+		for (i = 0; i < n; ++i) if (sa[i] >= j) y[p++] = sa[i] - j;
+		for (i = 0; i < n; ++i) wv[i] = x[y[i]];
+		for (i = 0; i < m; ++i) ws[i] = 0;
+		for (i = 0; i < n; ++i) ws[wv[i]]++;
+		for (i = 1; i < m; ++i) ws[i] += ws[i - 1];
+		for (i = n - 1; i >= 0; i--) sa[--ws[wv[i]]] = y[i];
+		t = x, x = y, y = t, p = 1; x[sa[0]] = 0;
+		for (i = 1; i < n; ++i) x[sa[i]] = cmp(y, sa[i - 1], sa[i], j) ? p - 1 : p++;
+	}
+}
+
+void callheight(int* r, int*sa, int n)
+{
+	int i, j, k = 0;
+	for (i = 1; i <= n; ++i) rank[sa[i]] = i;
+	for (i = 0; i < n; height[rank[i++]] = k)
+		for (k ? k-- : 0, j = sa[rank[i] - 1]; r[i + k] == r[j + k]; k++);
+}
+
+int main()
+{
+	int i, n, ans, r[N], sa[N];
+	char s[N];
+	scanf("%s", s);
+	n = strlen(s);
+	for (i = 0; i < n; i++) r[i] = (int)s[i];
+	da(r, sa, n + 1, 265);
+	callheight(r, sa, n);
+	ans = n*(n + 1) / 2;
+	for (i = 1; i <= n; i++) ans -= height[i];
+	printf("%d\n", ans);
+	return 0;
+}
