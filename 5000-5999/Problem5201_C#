@@ -1,0 +1,24 @@
+using System;
+using System.Numerics;
+
+namespace Problem5201
+{
+    internal static class Program
+    {
+        public static void Main()
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            int n = int.Parse(massiv[0]);
+            int k = int.Parse(massiv[1]);
+            BigInteger[] a = new BigInteger[n];
+            for (int i = 0; i < n; i++)
+            {
+                BigInteger x = i + 1;
+                a[i] = (132*x*x*x + 77*x*x + 1345*x + 1577)%1743;
+            }
+            Array.Sort(a);
+            Console.WriteLine(a[k - 1]);
+        }
+    }
+}
