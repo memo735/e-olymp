@@ -1,0 +1,63 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define N 101
+#define M 20001
+bool vis[N];
+int n, b[N][N], f[N][N];
+
+struct Que{
+	int s, l, r;
+} Q[M];
+
+void dfs(int u){
+	int i, k;
+	vis[u] = 1;
+	for (i = 1; i <= n; i++)
+		if (b[u][i]){
+			if (!vis[i]) dfs(i);
+			for (k = 1; k <= n; k++) if (f[i][k]) f[u][k] = f[k][u] = 1;
+		}
+}
+
+bool check(int u){
+	int i, j, k;
+	memset(f, 0, sizeof f);
+	memset(b, 0, sizeof b);
+	for (i = 1; i <= n; i++) b[i][i] = 1;
+	for (i = 1; i <= u; i++){
+		int l = Q[i].l, r = Q[i].r;
+		if (Q[i].s == 1) b[l][r] = 1;
+		if (Q[i].s == 2) b[l][r] = b[r][l] = 1;
+		if (Q[i].s == 4) f[Q[i].l][Q[i].r] = f[Q[i].r][Q[i].l] = 1;
+	}
+	for (k = 1; k <= n; k++)
+		for (i = 1; i <= n; i++)
+			for (j = 1; j <= n; j++) b[i][j] |= b[i][k] && b[k][j];
+
+	memset(vis, 0, sizeof vis);
+	for (i = 1; i <= n; i++) if (!vis[i]) dfs(i);
+	for (i = 1; i <= u; i++){
+		int l = Q[i].l, r = Q[i].r;
+		if (Q[i].s == 3 && (f[l][l] && f[r][r] || b[l][r] && b[r][l])) return false;
+		if (Q[i].s == 5 && (f[l][r] || f[l][l] || f[r][r])) return false;
+	}
+	return true;
+}
+
+int main(){
+	int m, i;
+	while (scanf("%d%d", &n, &m) && n + m){
+		for (i = 1; i <= m; i++) scanf("%d%d%d", &Q[i].s, &Q[i].l, &Q[i].r);
+		int l = 0, r = m;
+		while (l <= r){
+			int mid = (l + r) >> 1;
+			if (check(mid)) l = mid + 1;
+			else r = mid - 1;
+		}
+		printf("%d\n", r);
+	}
+	return 0;
+}
