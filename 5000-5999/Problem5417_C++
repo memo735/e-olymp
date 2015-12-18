@@ -1,0 +1,47 @@
+#include <iostream>
+
+using namespace std;
+
+#define maxn 100001
+int a[maxn], f[maxn];
+
+int father(int x)
+{
+	int ff = f[x];
+	if (f[x] == x) return x;
+	f[x] = father(f[x]);
+	a[x] += a[ff];
+	return f[x];
+}
+
+int main()
+{
+	int A, B, C, f1, f2, n, m;
+	char ch[5];
+	while (scanf("%d%d", &n, &m) && n + m)
+	{
+		for (int i = 1; i <= n; i++) f[i] = i, a[i] = 0;
+		while (m--)
+		{
+			scanf("%s", ch);
+			if (ch[0] == '!')
+			{
+				scanf("%d%d%d", &B, &A, &C);
+				f1 = father(A);
+				f2 = father(B);
+				if (f1 == f2) continue;
+				f[f1] = f2;
+				a[f1] = C + a[B] - a[A];
+			}
+			else if (ch[0] == '?')
+			{
+				scanf("%d%d", &A, &B);
+				f1 = father(A);
+				f2 = father(B);
+				if (f1 != f2) puts("UNKNOWN");
+				else printf("%d\n", a[B] - a[A]);
+			}
+		}
+	}
+	return 0;
+}
