@@ -1,0 +1,46 @@
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+
+using namespace std;
+
+struct typ{
+	int v, w, i;
+	double x;
+	bool operator < (const typ& q) const { return x > q.x; }
+} a[100001];
+
+int n, k;
+
+double aa(){
+	int k1 = 0, k2 = 0;
+	for (int i = 0; i < k; ++i){
+		k1 += a[i].v;
+		k2 += a[i].w;
+	}
+	return 1.0*k1 / k2;
+}
+
+int main(){
+	double s1, s2;
+	scanf("%d%d", &n, &k);
+	for (int i = 0; i < n; ++i){
+		scanf("%d%d", &a[i].v, &a[i].w);
+		a[i].i = i + 1;
+	}
+	int k1 = 0, k2 = 0;
+	for (int i = 0; i < k; ++i){
+		k1 += a[i].v;
+		k2 += a[i].w;
+	}
+	s2 = aa();
+	do{
+		s1 = s2;
+		for (int i = 0; i < n; ++i) a[i].x = a[i].v - s1*a[i].w;
+		sort(a, a + n);
+		s2 = aa();
+	} while (fabs(s1 - s2) > 0);
+	for (int i = 0; i < k - 1; ++i) printf("%d ", a[i].i);
+	printf("%d / n", a[k - 1].i);
+	return 0;
+}
