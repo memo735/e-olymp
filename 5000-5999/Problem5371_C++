@@ -1,0 +1,28 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int n, m, k;
+	char a[10001];
+	while (scanf("%d%d%d", &n, &k, &m) != EOF) {
+		scanf("%s", a + 1);
+		m += n;
+		int sum = 0, x = 1;
+		while (m > n) {
+			if (x == 1) sum++;
+			int s = min(m - n, (m - x) / (k + 1) + 1);
+			x += s*(k + 1);
+			if (x > m) x -= m;
+			else x -= s;
+			m -= s;
+			x %= m;
+			if (!x) x = m;
+		}
+		sum %= 26;
+		a[x] = (a[x] - 'A' + sum) % 26 + 'A';
+		cout << a[x] << endl;
+	}
+	return 0;
+}
