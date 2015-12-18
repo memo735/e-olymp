@@ -1,0 +1,139 @@
+#include <string.h>
+#include <queue>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+#define MAXN 7001
+bool vis[MAXN];
+int e, first[MAXN], second[MAXN], v[MAXN];
+
+struct LCT {
+	int bef[MAXN], pre[MAXN], key[MAXN], val[MAXN], next[MAXN][2];
+	void Init() {
+		memset(next, 0, sizeof next);
+		memset(pre, 0, sizeof pre);
+		memset(key, 0, sizeof key);
+	}
+	void PushUp(int x) { val[x] = max(key[x], max(val[next[x][0]], val[next[x][1]])); }
+	void Rotate(int x, int kind) {
+		int y, z;
+		y = pre[x];
+		z = pre[y];
+		next[y][!kind] = next[x][kind];
+		pre[next[x][kind]] = y;
+		next[z][next[z][1] == y] = x;
+		pre[x] = z;
+		next[x][kind] = y;
+		pre[y] = x;
+		PushUp(y);
+	}
+	void Splay(int x) {
+		int rt;
+		for (rt = x; pre[rt]; rt = pre[rt]);
+		if (rt != x) {
+			bef[x] = bef[rt];
+			bef[rt] = 0;
+			while (pre[x]) {
+				if (next[pre[x]][0] == x) Rotate(x, 1);
+				else Rotate(x, 0);
+			}
+			PushUp(x);
+		}
+	}
+	void Access(int x) {
+		int father;
+		for (father = 0; x; x = bef[x]) {
+			Splay(x);
+			bef[next[x][1]] = x;
+			pre[next[x][1]] = 0;
+			next[x][1] = father;
+			pre[father] = x;
+			bef[father] = 0;
+			father = x;
+			PushUp(x);
+		}
+	}
+	void Change(int x, int val) {
+		key[x] += val;
+		Splay(x);
+	}
+	int Query(int x, int y) {
+		Access(y);
+		for (y = 0; x; x = bef[x]) {
+			Splay(x);
+			if (!bef[x]) return max(key[x], max(val[next[x][1]], val[y]));
+			bef[next[x][1]] = x;
+			pre[next[x][1]] = 0;
+			next[x][1] = y;
+			pre[y] = x;
+			bef[y] = 0;
+			y = x;
+			PushUp(x);
+		}
+		return 0;
+	}
+} lct;
+
+int INT() {
+	int res;
+	char ch;
+	while (ch = getchar(), !isdigit(ch));
+	for (res = ch - '0'; ch = getchar(), isdigit(ch);) res = res * 10 + ch - '0';
+	return res;
+}
+
+char CHAR() {
+	char res;
+	while (res = getchar(), !isalpha(res));
+	return res;
+}
+
+void AddEdge(int x, int y) {
+	v[e] = y;
+	second[e] = first[x];
+	first[x] = e++;
+}
+
+void BFS(int x) {
+	int i, y;
+	queue<int> q;
+	memset(vis, false, sizeof(vis));
+	vis[x] = true;
+	q.push(x);
+	while (!q.empty()) {
+		x = q.front();
+		q.pop();
+		for (i = first[x]; i != -1; i = second[i]) {
+			y = v[i];
+			if (!vis[y]) {
+				lct.bef[y] = x;
+				vis[y] = true;
+				q.push(y);
+			}
+		}
+	}
+}
+
+int main() {
+	char ch;
+	int n, i, q, x, y;
+	while (~scanf("%d", &n)) {
+		lct.Init();
+		memset(first, -1, sizeof first);
+		for (e = 0, i = 1; i < n; i++) {
+			x = INT(), y = INT();
+			AddEdge(x, y);
+			AddEdge(y, x);
+		}
+		BFS(1);
+		q = INT();
+		while (q--) {
+			ch = CHAR(), x = INT(), y = INT();
+			if (ch == 'I') lct.Change(x, y);
+			else printf("%d\n", lct.Query(x, y));
+		}
+	}
+	return 0;
+}
