@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+#define maxn 50001
+int n, w, sum[maxn];
+bool dp[maxn];
+
+bool isok(int mid)
+{
+	int i, j, last = 0;
+	memset(dp, 0, sizeof dp);
+	dp[0] = 1;
+	if (sum[n] + n - 1 <= w) return true;
+	for (i = 0; i < n - 1; i++)
+	{
+		if (!dp[i]) continue;
+		for (j = max(i + 2, last + 1); j <= n; j++)
+		{
+			if (w < sum[j] - sum[i] + j - i - 1) break;
+			if (w > sum[j] - sum[i] + long(j - i - 1)*mid) continue;
+			last = j;
+			dp[j] = 1;
+			if (sum[n] - sum[j] + n - j - 1 <= w) return true;
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	int i, len[maxn];
+	while (~scanf("%d%d", &w, &n))
+	{
+		if (w == 0 && n == 0) break;
+		sum[0] = 0;
+		for (i = 1; i <= n; i++)
+		{
+			scanf("%d", &len[i]);
+			sum[i] = sum[i - 1] + len[i];
+		}
+		int le = 1, ri = w, mid, ans = 0;
+		while (le <= ri)
+		{
+			mid = (le + ri) >> 1;
+			if (isok(mid))
+			{
+				ans = mid;
+				ri = mid - 1;
+			}
+			else le = mid + 1;
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
