@@ -1,0 +1,169 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+#include <array>
+
+using namespace std;
+
+enum CellType {
+	CELL_EMPTY, CELL_PAWN, CELL_BLOCK, CELL_KING
+};
+
+typedef pair<int, int> Point;
+typedef unsigned int State;
+typedef long long LL;
+
+int H, W;
+const int MOVED[] = { 2, 3, 0, 1 };
+const LL INF = 50LL * 50 * 2 * 50 * 50 * 100;
+const Point DELTA[] = { Point(0, 1), Point(-1, 0), Point(0, -1), Point(1, 0) };
+const Point SPACE_POS[4][2] = { { Point(0, 2), Point(1, 2) }, { Point(-1, 1), Point(-1, 0) },
+								{ Point(0, -1), Point(1, -1) }, { Point(2, 0), Point(2, 1) } };
+
+array<array<CellType, 55>, 55> field;
+
+ostream& operator <<(ostream &os, const Point &p) { return os << "(" << p.first << "," << p.second << ")"; }
+Point operator +(const Point &a, const Point &b) { return Point(a.first + b.first, a.second + b.second); }
+State encode(const Point &king, int dir) { return (king.first * 55 + king.second) * 55 + dir; }
+
+// Return: (king position, dir)
+pair<Point, int> decode(State s) {
+	unsigned int dir = s % 55;
+	s /= 55;
+	Point king(s / 55, s % 55);
+	for (int i = 0; i <= H + 1; ++i) {
+		for (int j = 0; j <= W + 1; ++j) {
+			if (field[i][j] != CELL_BLOCK) field[i][j] = CELL_PAWN;
+		}
+	}
+	field[king.first][king.second] = CELL_KING;
+	field[king.first + 1][king.second] = CELL_KING;
+	field[king.first][king.second + 1] = CELL_KING;
+	field[king.first + 1][king.second + 1] = CELL_KING;
+	return make_pair(king, dir);
+}
+
+array<array<bool, 55>, 55> bfs_visited;
+
+LL bfs(Point start, Point goal) {
+	for (int i = 0; i < 55; ++i) {
+		for (int j = 0; j < 55; ++j) bfs_visited[i][j] = false;
+	}
+	static vector<Point> q[2];
+	q[0].clear();
+	q[0].push_back(start);
+	bfs_visited[start.first][start.second] = true;
+	for (int turn = 0; q[0].size() > 0; ++turn) {
+		q[1].clear();
+		for (const Point &p : q[0]) {
+			if (p == goal) return turn;
+			for (int i = 0; i < 4; ++i) {
+				const Point np = p + DELTA[i];
+				if (field[np.first][np.second] != CELL_PAWN) continue;
+				if (bfs_visited[np.first][np.second]) continue;
+				bfs_visited[np.first][np.second] = true;
+				q[1].push_back(np);
+			}
+		}
+		q[0].swap(q[1]);
+	}
+	return INF;
+}
+
+vector<pair<LL, State>> load() {
+	Point king;
+	bool king_found = false;
+	for (int i = 0; i < 55; ++i) {
+		for (int j = 0; j < 55; ++j) field[i][j] = CELL_BLOCK;
+	}
+	vector<Point> empty_cells;
+	for (int i = 1; i <= H; ++i) {
+		string str;
+		cin >> str;
+		for (int j = 1; j <= W; ++j) {
+			if (str[j - 1] == 'o') field[i][j] = CELL_PAWN;
+			else if (str[j - 1] == '.') {
+				field[i][j] = CELL_PAWN;
+				empty_cells.push_back(Point(i, j));
+			}
+			else if (str[j - 1] == '*') field[i][j] = CELL_BLOCK;
+			else if (str[j - 1] == 'X' && !king_found) {
+				king_found = true;
+				king = Point(i, j);
+				field[i][j] = CELL_KING;
+				field[i + 1][j] = CELL_KING;
+				field[i][j + 1] = CELL_KING;
+				field[i + 1][j + 1] = CELL_KING;
+			}
+		}
+	}
+	vector<pair<LL, State>> res;
+	if (king == Point(1, 1)) {
+		res.push_back(make_pair(1, 0));
+		return res;
+	}
+	for (int dir = 0; dir < 4; ++dir) {
+		const Point p1 = king + SPACE_POS[dir][0];
+		const Point p2 = king + SPACE_POS[dir][1];
+		if (field[p1.first][p1.second] == CELL_BLOCK) continue;
+		if (field[p2.first][p2.second] == CELL_BLOCK) continue;
+		LL fastest = min(bfs(p1, empty_cells[0]) + bfs(p2, empty_cells[1]), bfs(p1, empty_cells[1]) + bfs(p2, empty_cells[0]));
+		if (fastest >= INF) continue;
+		res.push_back(make_pair(-fastest, encode(king, dir)));
+	}
+	return res;
+}
+
+array<LL, (55 * 55 + 55) * 55 + 4 > memo;
+
+bool solve() {
+	cin >> H >> W;
+	if (!H && !W) return false;
+	vector<pair<LL, State>> initial = load();
+	fill(memo.begin(), memo.end(), INF);
+	priority_queue<pair<LL, State>> q;
+	for (const auto &s : initial) {
+		if (s.first > 0) {
+			cout << 0 << endl;
+			return true;
+		}
+		q.push(s);
+		memo[s.second] = -s.first;
+	}
+	while (!q.empty()) {
+		LL cost = -q.top().first;
+		State cur = q.top().second;
+		q.pop();
+		if (cost > memo[cur]) continue;
+		const pair<Point, int> state = decode(cur);
+		const int dir = state.second;
+		const Point p1 = state.first + SPACE_POS[dir][0];
+		const Point p2 = state.first + SPACE_POS[dir][1];
+		if (state.first == Point(1, 1)) {
+			cout << cost << endl;
+			return true;
+		}
+		// to-dir
+		for (int i = 0; i < 4; ++i) {
+			const Point np1 = state.first + SPACE_POS[i][0];
+			const Point np2 = state.first + SPACE_POS[i][1];
+			if (field[np1.first][np1.second] == CELL_BLOCK) continue;
+			if (field[np2.first][np2.second] == CELL_BLOCK) continue;
+			LL fastest = min(bfs(np1, p1) + bfs(np2, p2), bfs(np1, p2) + bfs(np2, p1));
+			if (fastest >= INF) continue;
+			const LL nc = cost + fastest + 1;
+			const State ns = encode(state.first + DELTA[i], MOVED[i]);
+			if (memo[ns] <= nc) continue;
+			memo[ns] = nc;
+			q.push(make_pair(-nc, ns));
+		}
+	}
+	cout << -1 << endl;
+	return true;
+}
+
+int main() {
+	while (solve());
+	return 0;
+}
