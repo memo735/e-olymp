@@ -1,0 +1,31 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+bool isPrime[20001];
+
+bool isGaussianPrime(int a, int b) {
+	if (a < 0) a = -a;
+	if (b < 0) b = -b;
+	if (a == 0) return b % 4 == 3 && isPrime[b];
+	if (b == 0) return a % 4 == 3 && isPrime[a];
+	return isPrime[a * a + b * b];
+}
+
+int main() {
+	memset(isPrime, true, sizeof isPrime);
+	isPrime[0] = isPrime[1] = false;
+	for (int i = 2; i * i < 20001; i++) {
+		if (!isPrime[i]) continue;
+		for (int j = i * i; j < 20001; j += i) isPrime[j] = false;
+	}
+	int T;
+	cin >> T;
+	while (T--) {
+		int m, n;
+		cin >> m >> n;
+		cout << (isGaussianPrime(m, n) ? "P" : "C") << endl;
+	}
+	return 0;
+}
