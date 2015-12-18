@@ -1,0 +1,56 @@
+#include <valarray>
+
+using namespace std;
+
+int N, M;
+typedef valarray<int> V;
+V s, x;
+
+V mul(const V &a, const V &b){
+	V c(N*N);
+	int i = 0, j;
+	for (; i < N; i++)
+		for (j = 0; j < N; j++) c[i*N + j] = (a[slice(i*N, N, 1)] * b[slice(j, N, N)]).sum() % M;
+	return c;
+}
+
+V exp(const V &a, const int n){
+	if (n == 1) return a;
+	if (n & 1) return mul(exp(a, n - 1), a);
+	V b = exp(a, n >> 1);
+	return mul(b, b);
+}
+
+void output(const V &r){
+	int i = 0;
+	for (; i < N - 1; i++) printf("%d ", (r[slice(i*N, N, 1)] * s).sum() % M);
+	printf("%d\n", (r[slice(i*N, N, 1)] * s).sum() % M);
+}
+
+int main(){
+	int i, A, B, C, T;
+	for (; scanf("%d%d%d%d%d%d", &N, &M, &A, &B, &C, &T), N;){
+		s.resize(N);
+		for (i = 0; i < N; i++) scanf("%d", &s[i]);
+		x.resize(0);
+		x.resize(N*N);
+		if (T){
+			x[0] = B;
+			x[1] = C;
+			for (i = 1; i < N - 1; i++){
+				x[i*N + i - 1] = A;
+				x[i*N + i] = B;
+				x[i*N + i + 1] = C;
+			}
+			x[i*N + i - 1] = A;
+			x[i*N + i] = B;
+			output(exp(x, T));
+		}
+		else
+		{
+			for (i = 0; i < N; i++) x[i*N + i] = 1;
+			output(x);
+		}
+	}
+	return 0;
+}
