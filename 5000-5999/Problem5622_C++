@@ -1,0 +1,33 @@
+#include <iostream>
+
+using namespace std;
+
+#define MAX 35
+int size, numOfWalls, M[MAX][MAX], visited[MAX][MAX];
+int dir[4][2] = { -1, 0, 1, 0, 0, -1, 0, 1 };
+
+void DFS(int x, int y){
+	if (M[x][y] == 1 || visited[x][y] || x < 1 || x > size || y < 1 || y > size) return;
+	visited[x][y] = 1;
+	numOfWalls += M[x - 1][y] + M[x + 1][y] + M[x][y - 1] + M[x][y + 1];
+	for (int indexOfDir = 0; indexOfDir < 4; indexOfDir++) DFS(x + dir[indexOfDir][0], y + dir[indexOfDir][1]);
+}
+
+int main(){
+	scanf("%d", &size);
+	int row, column;
+	for (row = 0; row <= size + 1; row++)
+		for (column = 0; column <= size + 1; column++) M[row][column] = 1;
+
+	for (row = 1; row <= size; row++){
+		for (column = 1; column <= size; column++){
+			char c;
+			scanf(" %c", &c);
+			if (c == '.') M[row][column] = 0;
+		}
+	}
+	DFS(1, 1);
+	DFS(size, size);
+	printf("%d", (numOfWalls - 4) * 9);
+	return 0;
+}
