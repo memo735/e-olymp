@@ -1,0 +1,37 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int a, b, c, i, max, min, ser = 0, q, p;
+	cin >> q;
+	p = abs(q);
+	a = p / 100;
+	b = p % 100 / 10;
+	c = p % 10;
+	if (a >= b && a >= c) max = a; else if (b >= c && b >= a) max = b; else max = c;
+	if (a <= b && a <= c) min = a; else if (b <= c && b <= a) min = b; else min = c;
+	if (a == max && b == min || a == min && b == max) ser = c;
+	if (c == max && b == min || c == min && b == max) ser = a;
+	if (a == max && c == min || a == min && c == max) ser = b;
+	if (c == a && c > b || c == b && c > a || a == b && a > c) ser = max;
+	if (c == a && c < b || c == b && c < a || a == b && a < c) ser = min;
+	if (q >= 0){
+		i = min * 100 + ser * 10 + max;
+		if (i < 10) cout << i * 100 << endl;
+		else
+			if (10 < i && i < 100) cout << ser << min << max << endl;
+			else cout << i << endl;
+	}
+	else
+	{
+		if (q < 0)
+		{
+			i = -1 * (max * 100 + ser * 10 + min);
+			if (10 < i && i < 100) cout << max << min << ser << endl;
+			else cout << i << endl;
+		}
+	}
+	return 0;
+}
