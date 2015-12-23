@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+	bool graph[52][52], flag;
+	int n;
+	string s;
+	cin >> n; memset(graph, false, sizeof graph);
+	// Build the graph.
+	for (int k = 0; k < n; k++) {
+		cin >> s;
+		// Get the valid nodes represented by the molecule s.
+		vector<int> list;
+		// For each side, parse out its value. A- to Z- = 0 to 25, A+ to Z+ = 26 to 51.
+		for (int i = 0; i < s.length(); i += 2) {
+			if (s[i] - 'A' < 0) continue;
+			list.push_back(s[i] - 'A' + (s[i + 1] == '+' ? 26 : 0));
+		}
+		// Now add in these edges.
+		for (int i = 0; i < list.size(); i++) {
+			for (int j = 0; j < list.size(); j++) {
+				if (i == j) continue;
+				// We connect this vertex to the other vertex's "opposite" sign.
+				graph[list[i]][(list[j] + 26) % 52] = true;
+			}
+		}
+	}
+	// If we never found one, there's no cycle!
+	flag = false;
+	// true iff graph contains a cycle.
+	// Run Floyd's.
+	for (int k = 0; k < 52; k++)
+		for (int i = 0; i < 52; i++)
+			for (int j = 0; j < 52; j++)
+				if (graph[i][k] && graph[k][j]) graph[i][j] = true;
+
+	// A cycle is just a path from i to itself.
+	for (int i = 0; i < 52; i++) if (graph[i][i]) flag = true;
+	// All we care is whether or not this graph has a cycle.
+	cout << (flag ? "unbounded" : "bounded") << endl;
+	return 0;
+}
