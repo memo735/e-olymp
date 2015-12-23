@@ -1,0 +1,31 @@
+#include <iostream>
+
+using namespace std;
+
+char ANS[5] = { 'm', 'm', 'o', 'o' };
+long f[33];
+
+char Solve(int K){
+	int sn = 0;
+	if (K <= 3) return ANS[K];
+	for (int i = 0; i <= 32; i++){
+		if (K < f[i]){
+			sn = i - 1;
+			break;
+		}
+	}
+	if (K - f[sn] <= sn + 4)
+	{
+		if (K - f[sn] == 1) return 'm';
+		return 'o';
+	}
+	return Solve(K - f[sn] - sn - 4);
+}
+
+int main(){
+	int n;
+	f[0] = 3;
+	for (int i = 1; i <= 32; i++) f[i] = f[i - 1] * 2 + i + 3;
+	scanf("%d", &n); cout << Solve(n) << endl;
+	return 0;
+}
