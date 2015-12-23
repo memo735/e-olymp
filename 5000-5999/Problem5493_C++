@@ -1,0 +1,34 @@
+#include <iostream>
+
+using namespace std;
+
+#define MOD 10000007;
+
+long f(long b, long e)
+{
+	long result = 1;
+	b = b % MOD;
+	while (e > 0)
+	{
+		if (e % 2 == 1) result = result * b % MOD;
+		e = e >> 1;
+		b = b*b % MOD;
+	}
+	return result;
+}
+
+int main()
+{
+	long n, k;
+	cin >> n >> k;
+	while (n != 0 && k != 0)
+	{
+		long ans = f(n, k);
+		ans = (ans + 2 * f(n - 1, k)) % MOD;
+		ans = (ans + f(n, n)) % MOD;
+		ans = (ans + 2 * f(n - 1, n - 1)) % MOD;
+		cout << ans << endl;
+		cin >> n >> k;
+	}
+	return 0;
+}
