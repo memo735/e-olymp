@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int Maxn = 100001;
+char S[Maxn];
+int st, ans[Maxn], len[Maxn], fail[Maxn], son[Maxn][26];
+
+int newnode(int x){
+	len[st] = x;
+	return st++;
+}
+
+int get_fail(int x, int n){
+	while (S[n - len[x] - 1] != S[n]) x = fail[x];
+	return x;
+}
+
+int main(){
+	int c, i, n, p, t, last = 0;
+	scanf("%s", S + 1);
+	n = strlen(S + 1);
+	S[0] = '#';
+	newnode(0);
+	newnode(-1);
+	fail[0] = 1;
+	for (i = 1; i <= n; i++){
+		c = S[i] - 'a';
+		t = get_fail(last, i);
+		if (son[t][c] == 0){
+			p = newnode(len[t] + 2);
+			fail[p] = son[get_fail(fail[t], i)][c];
+			son[t][c] = p;
+			ans[i] = 1;
+		}
+		last = son[t][c];
+	}
+	for (i = 1; i <= n; i++) ans[i] += ans[i - 1];
+	for (i = 1; i < n; i++) printf("%d ", ans[i]);
+	printf("%d\n", ans[n]);
+	return 0;
+}
