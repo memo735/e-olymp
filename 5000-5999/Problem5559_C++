@@ -1,0 +1,83 @@
+#include <algorithm>
+#include <iostream>
+#include <assert.h>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+vector<long> fib;
+bool visited[100][2][2];
+pair<long, long> memo[100][2][2];
+
+// cuantos dígitos en total he escrito si he escrito los números [1, k]
+long digits(long k) {
+	long ans = 0;
+	for (int i = 1; fib[i] <= k; ++i) {
+		long to = min(fib[i + 1], k + 1);
+		ans += (to - fib[i]) * i;
+	}
+	return ans;
+}
+
+vector<int> to_fib(long k) {
+	assert(k > 0);
+	vector<int> ans;
+	for (int i = fib.size() - 1; i >= 0; --i) {
+		if (k >= fib[i]) {
+			k -= fib[i];
+			ans.push_back(1);
+		}
+		else ans.push_back(0);
+	}
+	while (ans[0] == 0) ans.erase(ans.begin());
+	ans.pop_back(); // fib[0]
+	return ans;
+}
+
+pair<long, long> ones(int i, bool smaller, bool last_one, const vector<int> &b) {
+	int size = b.size();
+	if (i == size) return make_pair(0, 1);
+	if (visited[i][smaller][last_one]) return memo[i][smaller][last_one];
+	visited[i][smaller][last_one] = true;
+	long o = 0, m = 0;
+	o += ones(i + 1, smaller || b[i] == 1, false, b).first;
+	m += ones(i + 1, smaller || b[i] == 1, false, b).second;
+	if (!last_one && (smaller || b[i] == 1)) {
+		o += ones(i + 1, smaller, true, b).second;
+		o += ones(i + 1, smaller, true, b).first;
+		m += ones(i + 1, smaller, true, b).second;
+	}
+	return memo[i][smaller][last_one] = make_pair(o, m);
+}
+
+void solve(long n) {
+	if (n == 0) {
+		puts("0");
+		return;
+	}
+
+	long low = 1, high = n;
+	while (low < high) {
+		long mid = (low + high + 1) / 2;
+		if (digits(mid) <= n) low = mid;
+		else high = mid - 1;
+	}
+	long last = low;
+	assert(digits(last) <= n);
+	long extra = 0;
+	vector<int> next = to_fib(last + 1);
+	for (long i = 0, bound = n - digits(last); i < bound; ++i) extra += next[i];
+	vector<int> b = to_fib(last);
+	memset(visited, false, sizeof visited);
+	pair<long, long> ans = ones(0, 0, 0, b);
+	cout << ans.first + extra << endl;
+}
+
+int main(){
+	fib.assign(2, 1);
+	while (fib.back() < 1000000000000005L) fib.push_back(fib.back() + fib[fib.size() - 2]);
+	long n;
+	while (cin >> n) solve(n);
+	return 0;
+}
