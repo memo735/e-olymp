@@ -1,0 +1,64 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+#define maxn 1009
+int p[] = { 1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47 };
+typedef unsigned long ul;
+ul mod = 1000000007;
+const ul INFul = (ul) -1L;
+map<ul, ul> ans;
+ul n[maxn];
+
+bool safemul(ul &c, int x)
+{
+	if (c*x % mod != c%mod*x % mod) return false;
+	c *= x;
+	return true;
+}
+
+ul qpow(ul a, ul n, ul mod)
+{
+	ul b = 1;
+	a %= mod;
+	while (n)
+	{
+		if (n & 1) b *= a, b %= mod;
+		a *= a, a %= mod;
+		n >>= 1;
+	}
+	return b;
+}
+
+void dfs(int t, int s, int sum, ul a, ul b, ul c)
+{
+	ul tmp = b*qpow(a, mod - 2, mod) % mod;
+	if (ans.find(tmp) != ans.end()){
+		ul &x = ans[tmp];
+		if (x > c) x = c;
+	}
+	if (t > 15) return;
+	for (int i = 1; i <= s; i++){
+		b *= i + sum, b %= mod;
+		a *= i, a %= mod;
+		if (!safemul(c, p[t])) return;
+		dfs(t + 1, i, sum + i, a, b, c);
+	}
+}
+
+int main()
+{
+	int p = 0;
+	while (cin >> n[++p]) ans[n[p] % mod] = INFul;
+	p--;
+	dfs(1, 64, 0, 1, 1, 1);
+	for (int i = 1; i <= p; i++){
+		if (n[i] == 1){
+			cout << "1 2" << endl;
+			continue;
+		}
+		cout << n[i] << " " << ans[n[i] % mod] << endl;
+	}
+	return 0;
+}
