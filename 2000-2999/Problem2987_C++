@@ -1,0 +1,57 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int n, mas[10003][30], mas2[10003][3];
+	cin >> n;
+	for (int i = 0; i < n; i++){
+		cin >> mas[i][0];
+		for (int j = 1; j <= mas[i][0] * 2; j++) cin >> mas[i][j];
+	}
+	// Пункт №2
+	for (int i = 0; i <= n; i++){
+		mas2[i][0] = mas[i][1];
+		for (int j = 1; j <= mas[i][0] * 2; j += 2)
+			if (mas2[i][0] < mas[i][j]) mas2[i][0] = mas[i][j];
+	}
+	// Пункт №3
+	for (int i = 0; i < n; i++) mas2[i][1] = i + 1;
+	// Пункт №4 
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n - 1; j++){
+			if (mas2[j][0] < mas2[j + 1][0]){
+				int temp = mas2[j][0];
+				mas2[j][0] = mas2[j + 1][0];
+				mas2[j + 1][0] = temp;
+				temp = mas2[j][1];
+				mas2[j][1] = mas2[j + 1][1];
+				mas2[j + 1][1] = temp;
+				temp = mas2[j][2];
+				mas2[j][2] = mas2[j + 1][2];
+				mas2[j + 1][2] = temp;
+			}
+		}
+	// Пункт №5
+	for (int i = 0; i <= n; i++) mas2[i][2] = i;
+	// Пункт №6
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j<n - 1; j++){
+			if (mas2[j][1]>mas2[j + 1][1]){
+				int temp = mas2[j][0];
+				mas2[j][0] = mas2[j + 1][0];
+				mas2[j + 1][0] = temp;
+				temp = mas2[j][1];
+				mas2[j][1] = mas2[j + 1][1];
+				mas2[j + 1][1] = temp;
+				temp = mas2[j][2];
+				mas2[j][2] = mas2[j + 1][2];
+				mas2[j + 1][2] = temp;
+			}
+		}
+	// Пункт №7 
+	for (int i = 0; i < n - 1; i++) cout << mas2[i][2] << " ";
+	cout << mas2[n - 1][2] << endl;
+	return 0;
+}
