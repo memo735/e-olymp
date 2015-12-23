@@ -1,0 +1,43 @@
+#include <iostream>
+
+using namespace std;
+
+int NumberOfDigits(int n)
+{
+	int i = 1;
+	while ((n /= 10) > 0) i++;
+	return i;
+}
+
+int sc(int a)
+{
+	int sum = 0;
+	while (a > 0)
+	{
+		sum += a % 10;
+		a /= 10;
+	}
+	return sum;
+}
+
+long pow10(int x)
+{
+	long a = 1;
+	for (int i = 0; i < x; i++) a = a * 10;
+	return a;
+}
+
+int main()
+{
+	int n, v, t, x;
+	cin >> n;
+	t = NumberOfDigits(n);
+	x = n;
+	for (int i = 1; i < t; i++)
+	{
+		v = n / pow10(i + 1)*pow10(i + 1) + (n%pow10(i + 1) / pow10(i) - 1)*pow10(i) + pow10(i) - 1;
+		if (sc(v) > sc(x)) x = v;
+	}
+	cout << x << endl;
+	return 0;
+}
