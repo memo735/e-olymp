@@ -1,0 +1,51 @@
+#include <math.h> // auto fix CE
+#include <iostream>
+
+long f[] = { 1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600 };
+long p[] = { 2, 3, 5, 7, 11, 13 };
+
+long gcd(long a, long b) {
+	return b == 0 ? a : gcd(b, a % b);
+}
+
+long phi(long n) {
+	long m = 1;
+	for (int i = 0; n > 1; ++i) {
+		if (n % p[i] == 0) {
+			m *= p[i] - 1;
+			n /= p[i];
+			while (n % p[i] == 0) {
+				m *= p[i];
+				n /= p[i];
+			}
+		}
+	}
+	return m;
+}
+
+long powMod(long a, long b, long m) {
+	long c = 1 % m;
+	while (b > 0) {
+		if ((b & 1) != 0) c = c * a % m;
+		a = a * a % m;
+		b >>= 1;
+	}
+	return c;
+}
+
+long gao(long a, long b) {
+	if (b == 1) return 0;
+	long d = phi(b);
+	return powMod(a, d + gao(a, d), b);
+}
+
+int main() {
+	bool blank = false;
+	long a, b;
+	while (scanf("%ld%ld", &a, &b) != EOF) {
+		if (blank) puts("");
+		else blank = true;
+		printf("%ld\n", gao(a, f[b]));
+	}
+	return 0;
+}
