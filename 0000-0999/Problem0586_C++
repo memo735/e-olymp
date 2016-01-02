@@ -1,0 +1,124 @@
+//solved by dragon_kgkg
+#include <iostream>
+#include <vector>
+#include <math.h>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+const int NMAX = 100;
+short dx[4] = { 1, -1, 0, 0 }, dy[4] = { 0, 0, 1, -1 };
+int n, m, k, ans, f[NMAX][NMAX];
+char a[NMAX][NMAX];
+short d[NMAX*NMAX], qs[NMAX*NMAX];
+vector <vector <short>> e;
+
+struct rec
+{
+	int x, y, d;
+	rec(int X = 0, int Y = 0, int D = 0)
+	{
+		x = X;
+		y = Y;
+		d = D;
+	}
+};
+
+rec q[NMAX*NMAX];
+
+bool less1(const rec &p1, const rec &p2) { return p1.d < p2.d; }
+
+void paint(int x, int y, int md)
+{
+	int h = 0, t = 0;
+	q[0] = rec(x, y, 0);
+	f[x][y] = k;
+	while (h <= t)
+	{
+		rec v = q[h++];
+		for(int i = 0; i < 4; i++)
+		{
+			rec w = v;
+			w.x += dx[i];
+			w.y += dy[i];
+			if (w.x < 0 || w.x >= n || w.y < 0 || w.y >= m) continue;
+			if (a[w.x][w.y] != a[v.x][v.y]) w.d++;
+			if (w.d <= md && f[w.x][w.y] == -1)
+			{
+				f[w.x][w.y] = k;
+				q[++t] = w;
+			}
+		}
+	}
+	k++;
+}
+
+int calc(short v)
+{
+	short h = 0, t = 0;
+	qs[0] = v;
+	memset(d, 255, k * 2);
+	d[v] = 0;
+	short res;
+	while (h <= t)
+	{
+		v = qs[h++];
+		for (short i = 0; i < e[v].size(); i++)
+		{
+			int w = e[v][i];
+			if (d[w] == -1)
+			{
+				d[w] = d[v] + 1;
+				qs[++t] = w;
+				if (d[w] >= ans) return ans;
+				res = d[w];
+				if (t == k - 1) return res;
+			}
+		}
+	}
+	return 0;
+}
+
+int main()
+{
+	bool u[NMAX*NMAX];
+	vector <rec> A;
+	scanf("%d%d", &n, &m);
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++) scanf(" %c", &a[i][j]);
+	k = 0;
+	memset(f, 255, sizeof f);
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++) if (f[i][j] == -1) paint(i, j, 0);
+
+	e.resize(k);
+	for (int i = 0; i < k; i++) e[i].clear();
+	A.resize(n*m);
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++) A[i*m + j] = rec(i, j, abs(i - n / 2) + abs(j - m / 2));
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+			for (int w = 0; w < 4; w++)
+				if (i + dx[w] >= 0 && i + dx[w] < n && j + dy[w] >= 0 && j + dy[w] < m && f[i + dx[w]][j + dy[w]] != f[i][j]) e[f[i][j]].push_back(f[i + dx[w]][j + dy[w]]);
+
+	for (int i = 0; i < k; i++)
+	{
+		sort(e[i].begin(), e[i].end());
+		e[i].resize(unique(e[i].begin(), e[i].end()) - e[i].begin());
+	}
+	sort(A.begin(), A.end(), less1);
+	memset(u, 0, sizeof u);
+	ans = n + m;
+	for (int i = 0; i < A.size(); i++)
+	{
+		int v = f[A[i].x][A[i].y];
+		if (u[v]) continue;
+		u[v] = 1;
+		int w = calc(v);
+		if (w < ans) ans = w;
+	}
+	cout << ans << endl;
+	return 0;
+}
