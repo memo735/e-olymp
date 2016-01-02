@@ -1,0 +1,27 @@
+using System;
+using System.Numerics;
+
+namespace Problem5669
+{
+    internal static class Program
+    {
+        private static BigInteger EBOB(BigInteger x, BigInteger y)
+        {
+            while (x*y != 0)
+            {
+                if (x < y) y = y%x;
+                else x = x%y;
+            }
+            return x + y;
+        }
+
+        public static void Main(string[] args)
+        {
+            string setir = Console.ReadLine();
+            var massiv = setir.Split(' ');
+            BigInteger a = BigInteger.Parse(massiv[0]);
+            BigInteger b = BigInteger.Parse(massiv[1]);
+            Console.WriteLine(EBOB(a, b));
+        }
+    }
+}
