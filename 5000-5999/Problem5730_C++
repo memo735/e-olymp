@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+int mark[1 << 17];
+#define GET(x) (mark[x >> 5] >> (x & 31) & 1)
+#define SET(x) (mark[x >> 5] |= 1 << (x & 31))
+
+// if 3k+7 is not a prime, 3k+7 = a*b, then a, b <= 3k+6, 
+// we get (3k+7) | (3k+6)!, so item = 0
+// if 3k+7 is prime, (3k+7) | (3k+6)!+1 by Wilson's theorem
+// so item = 1
+
+int main() {
+	int i, j, k, i22 = 1 << 22;
+	SET(1);
+	for (i = 2; i <= i22; i++) {
+		if (!GET(i)) for (k = i22 / i, j = i*k; k >= i; k--, j -= i) SET(j);
+	}
+	const int m = 1 << 20;
+	int S[m];
+	for (i = 1; i < 1 << 20; i++) S[i] = S[i - 1] + (GET(3 * i + 7) == 0);
+	int testcase, n;
+	scanf("%d", &testcase);
+	while (testcase--) {
+		scanf("%d", &n);
+		printf("%d\n", S[n]);
+	}
+	return 0;
+}
