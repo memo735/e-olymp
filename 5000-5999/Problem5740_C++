@@ -1,0 +1,34 @@
+#include <iostream>
+
+using namespace std;
+
+#define sz 100001
+
+typedef struct
+{
+	int left, right;
+} data;
+
+data node[sz];
+
+int main(){
+	int s, b, i, l, r;
+	while (scanf("%d %d", &s, &b) && !(!s && !b)){
+		for (i = 1; i <= s; i++){
+			node[i].left = i - 1;
+			node[i].right = i + 1;
+		}
+		node[s].right = 0;
+		for (i = 0; i < b; i++){
+			scanf("%d %d", &l, &r);
+			if (node[l].left) printf("%d ", node[l].left);
+			else printf("* ");
+			if (node[r].right) printf("%d\n", node[r].right);
+			else printf("*\n");
+			node[node[l].left].right = node[r].right;
+			node[node[r].right].left = node[l].left;
+		}
+		printf("-\n");
+	}
+	return 0;
+}
