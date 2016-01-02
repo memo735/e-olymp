@@ -1,0 +1,53 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+#define maxn 100001
+
+int num[2][26], trie[2][maxn][26];
+char st[maxn];
+
+void insert(int k, int &cnt)
+{
+	int node = 0;
+	for (int i = 0; st[i]; i++)
+	{
+		int tmp = st[i] - 'a';
+		if (!trie[k][node][tmp])
+		{
+			trie[k][node][tmp] = ++cnt, num[k][tmp]++;
+			for (int j = 0; j < 26; j++) trie[k][cnt][j] = 0;
+			if (!node) num[k][tmp]--;
+		}
+		node = trie[k][node][tmp];
+	}
+}
+
+int main()
+{
+	int p, s, cnt1, cnt2;
+	while (scanf("%d%d", &p, &s))
+	{
+		if (!p && !s) break;
+		memset(num, 0, sizeof num);
+		cnt1 = cnt2 = 0;
+		for (int i = 0; i < 26; i++) trie[0][0][i] = trie[1][0][i] = 0;
+		for (int i = 1; i <= p; i++)
+		{
+			scanf("%s", st);
+			insert(0, cnt1);
+		}
+		for (int i = 1; i <= s; i++)
+		{
+			scanf("%s", st);
+			reverse(st, st + strlen(st));
+			insert(1, cnt2);
+		}
+		long ans = 1L * cnt1*cnt2;
+		for (int i = 0; i < 26; i++) ans -= num[0][i] * num[1][i];
+		printf("%ld\n", ans);
+	}
+	return 0;
+}
