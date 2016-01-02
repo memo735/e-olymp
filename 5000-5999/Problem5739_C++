@@ -1,0 +1,71 @@
+#include <algorithm>
+
+using namespace std;
+
+#define MAX 100001
+#define INF (1L << 57)
+long res;
+
+struct Point
+{
+	int x, y;
+} p[MAX], p2[MAX];
+
+bool dv[MAX];
+bool cmpx(const Point& p1, const Point& p2) { return p1.x < p2.x; }
+bool cmpy(const Point& p1, const Point& p2) { return p1.y < p2.y; }
+
+long getDis(Point p1, Point p2)
+{
+	return (long)(p1.x - p2.x)*(p1.x - p2.x) + (long)(p1.y - p2.y)*(p1.y - p2.y);
+}
+
+void build(int l, int r)
+{
+	if (l == r) return;
+	int mid = l + r >> 1;
+	int minx = min_element(p + l, p + r, cmpx)->x;
+	int miny = min_element(p + l, p + r, cmpy)->y;
+	int maxx = max_element(p + l, p + r, cmpx)->x;
+	int maxy = max_element(p + l, p + r, cmpy)->y;
+	dv[mid] = maxx - minx >= maxy - miny;
+	nth_element(p + l, p + mid, p + r, dv[mid] ? cmpx : cmpy);
+	build(l, mid);
+	build(mid + 1, r);
+}
+
+void find(int l, int r, Point a)
+{
+	if (l == r) return;
+	int mid = l + r >> 1;
+	long dis = getDis(a, p[mid]);
+	if (dis > 0) res = min(res, dis);
+	long d = dv[mid] ? (a.x - p[mid].x) : (a.y - p[mid].y);
+	int l1 = l, l2 = mid + 1, r1 = mid, r2 = r;
+	if (d > 0) swap(l1, l2), swap(r1, r2);
+	find(l1, r1, a);
+	if (d*d < res) find(l2, r2, a);
+}
+
+int main()
+{
+	int t, n;
+	scanf("%d", &t);
+	while (t--)
+	{
+		scanf("%d", &n);
+		for (int i = 0; i < n; i++)
+		{
+			scanf("%d%d", &p[i].x, &p[i].y);
+			p2[i] = p[i];
+		}
+		build(0, n);
+		for (int i = 0; i < n; i++)
+		{
+			res = INF;
+			find(0, n, p2[i]);
+			printf("%ld\n", res);
+		}
+	}
+	return 0;
+}
