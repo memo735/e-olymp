@@ -1,0 +1,16 @@
+using System;
+using System.Numerics;
+
+namespace Problem7429
+{
+    internal static class Program
+    {
+        public static void Main(string[] args)
+        {
+            BigInteger a = BigInteger.Parse(Console.ReadLine());
+            string isare = Console.ReadLine();
+            BigInteger b = BigInteger.Parse(Console.ReadLine());
+            Console.WriteLine(isare == "+" ? a + b : a - b);
+        }
+    }
+}
