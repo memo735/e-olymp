@@ -1,16 +1,15 @@
-#include <stdio.h>
+//solved by Mansur Mansurov
+
+#include <iostream>
 #include <math.h>
 
 int main() {
 	double r, r1, r2, r3;
 	int cases = 0;
 	while (scanf("%lf %lf %lf %lf", &r, &r1, &r2, &r3)) {
-		if (r < 0)   break;
-		double p1, p2, p3;
-		p1 = 2 * r*sqrt(r*r1) / (r - r1);
-		p2 = 2 * r*sqrt(r*r2) / (r - r2);
-		p3 = 2 * r*sqrt(r*r3) / (r - r3);
-		printf("Case %d: %.2lf", ++cases, sqrt(p1*p2*p3*(p1 + p2 + p3)));
+		if (r < 0) break;
+		double s = 2*r*r*(sqrt(r*r1)/(r-r1) + sqrt(r*r2)/(r-r2) + sqrt(r*r3)/(r-r3));
+		printf("Case %d: %.2lf", ++cases, s);
 		puts("");
 	}
 	return 0;
