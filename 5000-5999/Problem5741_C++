@@ -1,0 +1,24 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int i, j, n, res, dp[1001][1001];
+	while (scanf("%d", &n) == 1 && n) {
+		for (i = 1; i <= n; i++) {
+			for (j = 1; j <= i; j++) {
+				scanf("%d", &dp[i][j]);
+				dp[i][j] += dp[i - 1][j];
+			}
+		}
+		for (j = 1; j <= n; j++)
+		{
+			for (i = j; i <= n; i++) dp[i][j] += dp[i - 1][j - 1];
+			for (i = n - 1; i >= j; i--) dp[i][j] = max(dp[i][j], dp[i + 1][j]);
+		}
+		for (i = 1, res = 0; i <= n; i++) res = max(res, dp[i][i]);
+		printf("%d\n", res);
+	}
+	return 0;
+}
