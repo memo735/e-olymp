@@ -1,0 +1,15 @@
+#include <stdio.h> 
+
+int main()
+{
+	int M;
+	scanf("%d", &M);
+	while (M--){
+		int n, k;
+		scanf("%d", &n);
+		if (n % 2 == 0) k = (n / 2 - 1)*(n / 2);
+		else k = ((n - 1) / 2)*((n - 1) / 2 - 1) / 2 + ((n + 1) / 2)*((n + 1) / 2 - 1) / 2;
+		printf("%d\n", k);
+	}
+	return 0;
+}
