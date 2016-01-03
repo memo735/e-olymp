@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 11111;
+int fath[maxn];
+
+struct prod {
+	int p, d;
+} buf[maxn];
+
+int Find(int u)
+{
+	if (fath[u] == -1) return u;
+	return fath[u] = Find(fath[u]);
+}
+
+void Union(int u, int v) { fath[Find(v)] = Find(u); }
+bool cmp(prod a, prod b) { return a.p > b.p; }
+
+int main() {
+	int n;
+	while (scanf("%d", &n) == 1) {
+		memset(fath, -1, sizeof fath);
+		for (int i = 0; i < n; ++i) scanf("%d %d", &buf[i].p, &buf[i].d);
+		sort(buf, buf + n, cmp);
+		int ans(0);
+		for (int i = 0; i < n; ++i) {
+			int f = Find(buf[i].d);
+			if (f) {
+				Union(f - 1, f);
+				ans += buf[i].p;
+			}
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
