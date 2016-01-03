@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+const int MAXN = 105;
+int bottleneck[MAXN], pre[MAXN], cap[MAXN][MAXN], flow[MAXN][MAXN];
+
+int bfs(int N, int S, int T)
+{
+	int result = 0;
+	while (true) {
+		memset(bottleneck, 0, sizeof bottleneck);
+		queue<int> Q;
+		Q.push(S);
+		bottleneck[S] = 9999999999;
+		while (!Q.empty()) {
+			int cur = Q.front(); Q.pop();
+			for (int nxt = 0; nxt < N; ++nxt) {
+				if (bottleneck[nxt] == 0 && cap[cur][nxt] > flow[cur][nxt]) {
+					Q.push(nxt);
+					pre[nxt] = cur;
+					bottleneck[nxt] = min(bottleneck[cur], cap[cur][nxt] - flow[cur][nxt]);
+				}
+			}
+		}
+		if (bottleneck[T] == 0) break;
+		for (int cur = T; cur != S; cur = pre[cur]) {
+			flow[pre[cur]][cur] += bottleneck[T];
+			flow[cur][pre[cur]] -= bottleneck[T];
+		}
+		result += bottleneck[T];
+	}
+	return result;
+}
+
+int main()
+{
+	int n, np, nc, M;
+	while (scanf("%d %d %d %d", &n, &np, &nc, &M) == 4) {
+		memset(cap, 0, sizeof cap);
+		memset(flow, 0, sizeof flow);
+		int S = n, // super source
+			T = n + 1;  // super sink
+		int u, v, z;
+		for (int i = 0; i < M; ++i) {
+			scanf(" (%d,%d)%d", &u, &v, &z);
+			cap[u][v] += z;
+		}
+		for (int i = 0; i < np; ++i) {
+			scanf(" (%d)%d", &u, &z);
+			cap[S][u] += z;
+		}
+		for (int i = 0; i < nc; ++i) {
+			scanf(" (%d)%d", &u, &z);
+			cap[u][T] += z;
+		}
+		printf("%d\n", bfs(n + 2, S, T));
+	}
+}
