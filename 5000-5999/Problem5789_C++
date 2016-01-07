@@ -1,0 +1,138 @@
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <assert.h>
+
+#define EPS (1e-8)
+#define COUNTER_CLOCKWISE 1
+#define CLOCKWISE -1 
+#define ONLINE_BACK 2
+#define ONLINE_FRONT -2
+#define ON_SEGMENT 0
+
+using namespace std;
+
+class Point{
+public:
+	double x, y;
+	Point(double x = 0, double y = 0) : x(x), y(y){}
+	Point operator - (Point p) const { return Point(x - p.x, y - p.y); }
+	bool operator == (const Point& p)const{ return fabs(x - p.x) < EPS && fabs(y - p.y) < EPS; }
+};
+
+struct Segment{
+	Point p1, p2;
+};
+
+typedef Segment Line;
+double dot(Point a, Point b){ return a.x*b.x + a.y*b.y; }
+double cross(Point a, Point b){ return a.x*b.y - a.y*b.x; }
+double norm(Point a){ return a.x*a.x + a.y*a.y; }
+
+int ccw(Point p0, Point p1, Point p2){
+	Point a = p1 - p0, b = p2 - p0;
+	if (cross(a, b) > EPS) return COUNTER_CLOCKWISE;
+	if (cross(a, b) < -EPS) return CLOCKWISE;
+	if (dot(a, b) < -EPS) return ONLINE_BACK;
+	if (norm(a) < norm(b)) return ONLINE_FRONT;
+	return ON_SEGMENT;
+}
+
+bool intersectSS(Line s, Line t) {
+	return ccw(s.p1, s.p2, t.p1)*ccw(s.p1, s.p2, t.p2) <= 0 && ccw(t.p1, t.p2, s.p1)*ccw(t.p1, t.p2, s.p2) <= 0;
+}
+
+int par[1100];
+
+int find(int x){
+	if (x == par[x]) return x;
+	return par[x] = find(par[x]);
+}
+
+void unit(int x, int y){
+	x = find(x), y = find(y);
+	if (x != y) par[x] = y;
+}
+
+vector<vector<int> > connect_counter;
+int connect[10][6] = { { 2, 2, 2, 2, -1, -1 }, { 0, -1, -1, -1, -1, -1 }, { 1, 1, 2, 2, 2, -1 }, { 1, 1, 1, 3, -1, -1 }, { 1, 1, 2, -1, -1, -1 },
+						{ 1, 1, 2, 2, 2, -1 }, { 1, 2, 2, 2, 3, -1 }, { 1, 1, 2, 3, -1, -1 }, { 2, 2, 2, 3, 3, -1 }, { 2, 2, 2, 2, -1, -1 } };
+
+int WhatIsThis(vector<Segment> &segs){
+	if (segs.size() == 1) return 1;
+	vector<int> tmp;
+	Segment cur, next;
+	for (int i = 0; i < segs.size(); i++) {
+		int cnt = 0;
+		Segment touch;
+		for (int j = 0; j < segs.size(); j++) if (i != j) if (intersectSS(segs[i], segs[j])) {
+			++cnt;
+			touch = segs[j];
+		}
+		if (cnt == 1) { cur = segs[i], next = touch; }
+		assert(cnt);
+		tmp.push_back(cnt);
+	}
+	sort(tmp.begin(), tmp.end());
+	if (tmp == connect_counter[3]) return 3;
+	if (tmp == connect_counter[6]) return 6;
+	if (tmp == connect_counter[8]) return 8;
+	if (tmp == connect_counter[2]) {
+		Point p0, p1, p2;
+		if (cur.p1 == next.p1) p0 = cur.p2, p1 = cur.p1, p2 = next.p2;
+		if (cur.p1 == next.p2) p0 = cur.p2, p1 = cur.p1, p2 = next.p1;
+		if (cur.p2 == next.p1) p0 = cur.p1, p1 = cur.p2, p2 = next.p2;
+		if (cur.p2 == next.p2) p0 = cur.p1, p1 = cur.p2, p2 = next.p1;
+		if (ccw(p0, p1, p2) == CLOCKWISE) return 2;
+		else return 5;
+	}
+	bool hasMiddle = false;
+	for (int i = 0; i < segs.size(); i++)
+		for (int j = 0; j < segs.size(); j++)
+			if (i != j && intersectSS(segs[i], segs[j])) {
+				if (segs[i].p1 == segs[j].p1 || segs[i].p1 == segs[j].p2 || segs[i].p2 == segs[j].p1 || segs[i].p2 == segs[j].p2) continue;
+				hasMiddle = true;
+				goto Skip;
+			}
+Skip:;
+	if (tmp == connect_counter[4]) return hasMiddle ? 4 : 7;
+	if (tmp == connect_counter[0]) return hasMiddle ? 9 : 0;
+	return -1;
+}
+
+void compute(int n, vector<Segment> &segs){
+	vector<int> counter(10, 0);
+	for (int i = 0; i < n; i++) par[i] = i;
+	for (int i = 0; i < n; i++)
+		for (int j = i + 1; j < n; j++) if (intersectSS(segs[i], segs[j])) unit(i, j);
+	int dex = 0;
+	map<int, int> S;
+	for (int i = 0; i < n; i++) if (!S.count(find(i))) S[find(i)] = dex++;
+	int V = S.size();
+	vector<vector<Segment> > buf(V, vector<Segment>());
+	for (int i = 0; i < n; i++) buf[S[find(i)]].push_back(segs[i]);
+	for (int i = 0; i < V; i++) {
+		int result = WhatIsThis(buf[i]);
+		++counter[result];
+	}
+	for (int i = 0; i < 10; i++) {
+		if (i) printf(" ");
+		printf("%d", counter[i]);
+	}
+	puts("");
+}
+
+int main(){
+	connect_counter.clear();
+	connect_counter.resize(10, vector<int>());
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 6; j++) if (connect[i][j] != -1) connect_counter[i].push_back(connect[i][j]);
+	int n;
+	while (cin >> n, n){
+		vector<Segment> segs(n);
+		for (int i = 0; i < n; i++) cin >> segs[i].p1.x >> segs[i].p1.y >> segs[i].p2.x >> segs[i].p2.y;
+		compute(n, segs);
+	}
+	return 0;
+}
