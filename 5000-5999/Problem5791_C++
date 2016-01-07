@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+bool vis[35][35][200][7];
+
+struct node
+{
+	int x, y, z, w, step;
+};
+
+int x, y, ans;
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
+char s[] = "rmybgc", res[10], map[35][35];
+
+int tomy(int x)
+{
+	return x % 6 + 6 * (5 - x % 6) + 36 * (5 - x / 6 % 6) + 216 * (x / 6 % 6) + 1296 * (x / 36 % 6) + 7776 * (5 - x / 36 % 6);
+}
+
+int down(int x)
+{
+	return x / 36 % 6 + 6 * (x % 6) + 36 * (x / 1296 % 6);
+}
+
+int up(int x)
+{
+	return x / 216 % 6 + 6 * (x / 6 % 6) + 36 * (x / 1296 % 6);
+}
+
+int right(int x)
+{
+	return x / 1296 % 6 + 6 * (x / 216 % 6) + 36 * (x / 6 % 6);
+}
+
+int left(int x)
+{
+	return x / 7776 % 6 + 6 * (x / 216 % 6) + 36 * (x % 6);
+}
+
+bool bfs()
+{
+	node n1;
+	n1.x = x, n1.y = y, n1.z = 0, n1.w = 78, n1.step = 0;
+	vis[x][y][78][0] = 1;
+	queue<node> q;
+	q.push(n1);
+	while (!q.empty())
+	{
+		node n2 = q.front();
+		if (n2.z == 6)
+		{
+			ans = n2.step;
+			return true;
+		}
+		q.pop();
+		int t = tomy(n2.w);
+		for (int i = 0; i < 4; i++)
+		{
+			int tmpx = dx[i] + n2.x, tmpy = dy[i] + n2.y;
+			if (map[tmpx][tmpy] == 'w')
+			{
+				int temp;
+				if (i == 0) temp = right(t);
+				else if (i == 1) temp = down(t);
+				else if (i == 2) temp = left(t);
+				else temp = up(t);
+				if (vis[tmpx][tmpy][temp][n2.z] == 0)
+				{
+					vis[tmpx][tmpy][temp][n2.z] = 1;
+					n1.x = tmpx, n1.y = tmpy;
+					n1.w = temp, n1.z = n2.z;
+					n1.step = n2.step + 1;
+					q.push(n1);
+				}
+			}
+			else if (map[tmpx][tmpy] == res[n2.z])
+			{
+				int temp;
+				if (i == 0) temp = right(t);
+				else if (i == 1) temp = down(t);
+				else if (i == 2) temp = left(t);
+				else temp = up(t);
+				int top = temp % 6;
+				if (vis[tmpx][tmpy][temp][n2.z + 1] == 0 && s[top] == res[n2.z])
+				{
+					n1.x = tmpx, n1.y = tmpy;
+					n1.w = temp, n1.z = n2.z + 1;
+					n1.step = n2.step + 1;
+					vis[tmpx][tmpy][temp][n2.z + 1] = 1;
+					q.push(n1);
+				}
+			}
+		}
+
+	}
+	return false;
+}
+
+int main()
+{
+	int n, d;
+	while (scanf("%d%d", &n, &d) != EOF && n + d)
+	{
+		memset(map, 0, sizeof map);
+		memset(vis, 0, sizeof vis);
+		for (int i = 1; i <= d; i++){
+			for (int j = 1; j <= n; j++)
+			{
+				scanf(" %c", &map[j][i]);
+				if (map[j][i] == '#')
+				{
+					x = j, y = i;
+					map[j][i] = 'w';
+				}
+			}
+		}
+		scanf(" %s", res);
+		if (bfs()) printf("%d\n", ans);
+		else printf("unreachable\n");
+	}
+	return 0;
+}
