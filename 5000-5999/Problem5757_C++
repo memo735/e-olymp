@@ -1,0 +1,84 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+char in[10001], op[] = "+-*/";
+vector<int> question;
+int idx, num, expr();
+bool ok;
+
+int getnum(){
+	int ret = 0;
+	while (in[idx] && isdigit(in[idx]))ret = ret * 10 + in[idx++] - '0';
+	return ret;
+}
+
+int fact(){
+	int ret;
+	if (in[idx] == '('){
+		++idx;
+		ret = expr();
+	}
+	else ret = getnum();
+	while (in[idx] && (in[idx] == '*' || in[idx] == '/')){
+		int b;
+		if (in[idx++] == '*'){
+			if (in[idx] == '('){
+				++idx;
+				ret *= expr();
+			}
+			else ret *= getnum();
+		}
+		else{
+			if (in[idx] == '('){
+				++idx;
+				b = expr();
+			}
+			else b = getnum();
+			if (b == 0){
+				ok = 0;
+				return ret;
+			}
+			ret /= b;
+		}
+	}
+	return ret;
+}
+
+int expr(){
+	int ret = fact();
+	while (in[idx] && in[idx] != ')'){
+		if (in[idx++] == '+')ret += fact();
+		else ret -= fact();
+	}
+	++idx;
+	return ret;
+}
+
+bool dfs(int ne){
+	if (ne == question.size()){
+		idx = 0;
+		ok = true;
+		int ex = expr();
+		return num == ex && ok;
+	}
+	for (int i = 0; i < 4; i++){
+		in[question[ne]] = op[i];
+		if (dfs(ne + 1)) return true;
+	}
+	return false;
+}
+
+int main(){
+	int t;
+	cin >> t;
+	while (t--){
+		question.clear();
+		scanf(" %s %d", in, &num);
+		for (int i = 0; in[i]; ++i)
+			if (in[i] == '?') question.push_back(i);
+		if (dfs(0)) cout << "yes" << endl;
+		else cout << "no" << endl;
+	}
+}
