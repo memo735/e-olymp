@@ -1,0 +1,85 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+typedef pair<int, int> P;
+typedef pair<P, P> P2;
+
+string g[50], ms[10][50];
+bool f[1 << 10][50][50];
+int w, h, s, sx, sy, d[1 << 10][2][50][50];
+int dx[] = { 0, 1, 0, -1 }, dy[] = { -1, 0, 1, 0 };
+
+int main(){
+	cin >> w >> h;
+	for (int i = 0; i < h; i++){
+		cin >> g[i];
+		for (int j = 0; j < w; j++) if (g[i][j] == '%') sy = i, sx = j;
+	}
+	cin >> s;
+	for (int i = 0; i < s; i++)
+		for (int j = 0; j < h; j++) cin >> ms[i][j];
+
+	for (int i = 0; i < 1 << s; i++){
+		for (int j = 0; j < h; j++){
+			for (int k = 0; k < w; k++){
+				d[i][0][j][k] = d[i][1][j][k] = -1;
+				bool t = false;
+				for (int l = 0; l < s; l++) if ((i >> l) & 1 && ms[l][j][k] == '*') t = !t;
+				f[i][j][k] = t;
+			}
+		}
+	}
+	queue<P2> q;
+	q.push(P2(P(0, 0), P(sy, sx)));
+	d[0][0][sy][sx] = 0;
+	while (q.size()){
+		P2 p = q.front(); q.pop();
+		int s = p.first.first, fl = p.first.second, y = p.second.first, x = p.second.second;
+		for (int i = 0; i < 4; i++){
+			int ty = y + dy[i], tx = x + dx[i];
+			if (g[ty][tx] == '#') continue;
+			bool now = f[s][ty][tx];
+			if (now == fl && g[ty][tx] == '&'){
+				cout << d[s][fl][y][x] + 1 << endl;
+				return 0;
+			}
+			if (now == fl && g[ty][tx] == '^') continue;
+			if (now == fl && 'A' <= g[ty][tx] && g[ty][tx] <= 'J') continue;
+			if (now != fl && g[ty][tx] == '_') continue;
+			if (now != fl && 'a' <= g[ty][tx] && g[ty][tx] <= 'j') continue;
+			if (now != fl && (g[ty][tx] == '&' || g[ty][tx] == '%')) continue;
+			if (d[s][fl][ty][tx] < 0){
+				d[s][fl][ty][tx] = d[s][fl][y][x] + 1;
+				q.push(P2(P(s, fl), P(ty, tx)));
+			}
+		}
+		if (g[y][x] == '|' && d[s][1 - fl][y][x] < 0){
+			d[s][1 - fl][y][x] = d[s][fl][y][x] + 1;
+			q.push(P2(P(s, 1 - fl), P(y, x)));
+		}
+		bool now = f[s][y][x];
+		if (now == fl && 'a' <= g[y][x] && g[y][x] <= 'j'){
+			int tfl = fl;
+			int tmp = g[y][x] - 'a';
+			int st = s ^ (1 << tmp);
+			if (ms[tmp][y][x] == '*') tfl = 1 - fl;
+			if (d[st][tfl][y][x] < 0){
+				d[st][tfl][y][x] = d[s][fl][y][x] + 1;
+				q.push(P2(P(st, tfl), P(y, x)));
+			}
+		}
+		if (now != fl && 'A' <= g[y][x] && g[y][x] <= 'J'){
+			int tfl = fl;
+			int tmp = g[y][x] - 'A';
+			int st = s ^ (1 << tmp);
+			if (ms[tmp][y][x] == '*') tfl = 1 - fl;
+			if (d[st][tfl][y][x] < 0){
+				d[st][tfl][y][x] = d[s][fl][y][x] + 1;
+				q.push(P2(P(st, tfl), P(y, x)));
+			}
+		}
+	}
+	cout << -1 << endl;
+}
