@@ -1,0 +1,181 @@
+#include <iostream>
+#include <algorithm>
+#include <cassert>
+
+using namespace std;
+
+struct LCNode {
+	typedef LCNode* NP;
+	typedef int D;
+	static const int INF = 10000;
+	static LCNode last_d;
+	static NP last;
+	NP p, l, r;
+	int sz, v, sm, lz, lsm, rsm, ma, mv;
+	bool rev, lzf;
+	LCNode(D v) :p(NULL), l(last), r(last), sz(1),
+		v(v), sm(v), rev(false),
+		lsm(max(v, 0)), rsm(max(v, 0)), ma(max(v, 0)), mv(v) {}
+	LCNode() : l(NULL), r(NULL), sz(0), v(-INF), mv(-INF) {}
+	int pos() {
+		if (p) {
+			if (p->l == this) return -1;
+			if (p->r == this) return 1;
+		}
+		return 0;
+	}
+	void rot() {
+		NP qq = p->p;
+		int pps = p->pos();
+		if (p->l == this) {
+			p->l = r; r->p = p;
+			r = p; p->p = this;
+		}
+		else {
+			p->r = l; l->p = p;
+			l = p; p->p = this;
+		}
+		p->update(); update();
+		p = qq;
+		if (!pps) return;
+		if (pps == -1) qq->l = this;
+		else qq->r = this;
+		qq->update();
+	}
+	void splay() {
+		assert(this != last);
+		int ps;
+		while ((ps = pos())) {
+			int pps = p->pos();
+			if (!pps) rot();
+			else if (ps == pps) { p->rot(); rot(); }
+			else { rot(); rot(); }
+		}
+	}
+	void expose() {
+		assert(this != last);
+		supush();
+		NP u = this;
+		do u->splay();
+		while ((u = u->p));
+		u = last;
+		u->p = this;
+		do {
+			u->p->r = u;
+			u->p->update();
+			u = u->p;
+		} while (u->p);
+		splay();
+	}
+	void push() {
+		int lsz = l->sz, rsz = r->sz;
+		if (rev) {
+			if (lsz) l->revdata();
+			if (rsz) r->revdata();
+			rev = false;
+		}
+		if (lzf) {
+			if (lsz) l->lzdata(lz);
+			if (rsz) r->lzdata(lz);
+			lzf = false;
+		}
+	}
+	void supush() {
+		if (p) p->supush();
+		push();
+	}
+	void revdata() {
+		assert(this != last);
+		swap(l, r);
+		swap(lsm, rsm);
+		rev ^= true;
+	}
+
+	void lzdata(D d) {
+		assert(this != last);
+		v = mv = d;
+		sm = sz*d;
+		lsm = rsm = ma = max(0, sm);
+		lz = d;
+		lzf = true;
+	}
+	NP update() {
+		assert(this != last);
+		sz = 1 + l->sz + r->sz;
+		sm = v + l->sm + r->sm;
+		lsm = max(l->lsm, l->sm + v + r->lsm);
+		rsm = max(r->rsm, r->sm + v + l->rsm);
+		ma = l->rsm + v + r->lsm;
+		ma = max(ma, l->ma);
+		ma = max(ma, r->ma);
+		mv = v;
+		mv = max(mv, l->mv);
+		mv = max(mv, r->mv);
+		return this;
+	}
+	void evert() {
+		expose();
+		revdata();
+	}
+};
+LCNode LCNode::last_d = LCNode();
+LCNode::NP LCNode::last = &last_d;
+
+int getint() {
+	char c;
+	int res = 0;
+	bool neg = false;
+	while (true) {
+		c = getchar();
+		if (c == '-') { neg = true; break; }
+		if ('0' <= c && c <= '9') { res = c - '0'; break; }
+	}
+	while (c = getchar(), '0' <= c && c <= '9') res = res * 10 + c - '0';
+	if (neg) res *= -1;
+	return res;
+}
+
+void putint(int d) {
+	static char buf[10];
+	int c = 0;
+	if (d < 0) { putchar('-'); d *= -1; }
+	if (!d) { putchar('0'); return; }
+	while (d) {
+		buf[c++] = d % 10;
+		d = d / 10;
+	}
+	while (c--) putchar(buf[c] + '0');
+}
+
+int main() {
+	LCNode tr[200001];
+	int n = getint(), q = getint();
+	for (int i = 0; i < n; i++) {
+		int w = getint();
+		tr[i] = LCNode(w);
+	}
+	for (int i = 0; i < n - 1; i++) {
+		int s = getint(), e = getint(); s--; e--;
+		tr[s].evert();
+		tr[e].expose();
+		tr[s].p = &tr[e];
+	}
+	for (int i = 0; i < q; i++) {
+		int t = getint(), a = getint(), b = getint(), c = getint();
+		a--; b--;
+		if (t == 1) {
+			tr[a].evert();
+			tr[b].expose();
+			tr[b].lzdata(c);
+		}
+		else {
+			tr[a].evert();
+			tr[b].expose();
+			int d;
+			if (tr[b].mv < 0) d = tr[b].mv;
+			else d = tr[b].ma;
+			putint(d);
+			putchar('\n');
+		}
+	}
+}
