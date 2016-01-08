@@ -1,0 +1,188 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <set>
+
+using namespace std;
+
+const int maxn = 3456;
+const int DR[] = { 0, 0, 1, -1, 0, 0 };
+const int DC[] = { 1, -1, 0, 0, 0, 0 };
+int op[6][6] = { { 4, 1, 0, 3, 5, 2 }, { 2, 1, 5, 3, 0, 4 }, { 3, 0, 2, 5, 4, 1 },
+				{ 1, 5, 2, 0, 4, 3 }, { 0, 4, 1, 2, 3, 5 }, { 0, 2, 3, 4, 1, 5 } };
+
+vector<int> nodes, dice[24];
+bool visited[maxn];
+int limit, prev1[maxn];
+string faces[6], best[maxn];
+set<int> neg_loop;
+
+struct Tag {
+	int r, c, state;
+	Tag(int r, int c, int s) : r(r), c(c), state(s) {}
+};
+
+struct Edge {
+	int to, idx;
+	Edge(int t, int i) : to(t), idx(i) {}
+};
+
+vector<Edge> edge[maxn];
+
+struct NegloopException{};
+
+enum { migi, hidari, mae, ushiro, ccw, cw, NUM_MOVING };
+
+int moving[8][5] = {
+	{ migi, hidari, mae, ushiro, NUM_MOVING },
+	{ mae, ushiro, NUM_MOVING, 0, 0 },
+	{ migi, hidari, NUM_MOVING, 0, 0 },
+	{ hidari, NUM_MOVING, 0, 0, 0 },
+	{ migi, NUM_MOVING, 0, 0, 0 },
+	{ ushiro, NUM_MOVING, 0, 0, 0 },
+	{ mae, NUM_MOVING, 0, 0, 0 },
+	{ NUM_MOVING, 0, 0, 0, 0 }
+};
+
+void roll(vector<int> &v, int dir) {
+	vector<int> temp = v;
+	for (int i = 0; i < 6; ++i) temp[i] = v[op[dir][i]];
+	v = temp;
+}
+
+int state_of(const vector<int> &d) {
+	for (int i = 0; i < 24; ++i) if (d == dice[i]) return i;
+	throw "Invalid dice";
+}
+
+bool in_range(int a, int x, int b) { return a <= x && x < b; }
+
+int to_idx(char c) {
+	switch (c) {
+	case '+': return 0;
+	case '|': return 1;
+	case '-': return 2;
+	case '<': return 3;
+	case '>': return 4;
+	case '^': return 5;
+	case 'v': return 6;
+	case '.': return 7;
+	}
+	throw "Invalid";
+}
+
+int hash1(int r, int c, int state) {
+	return state * 144 + r * 12 + c;
+}
+
+bool relax(bool with_neg_loop = false) {
+	bool updated = false;
+	for (vector<int>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
+		const int from = *it;
+		const string &cur = best[from];
+		if (cur.size() == 0) continue;
+		const vector<Edge> &edges = edge[from];
+		for (vector<Edge>::const_iterator iter = edges.begin(); iter != edges.end(); ++iter) {
+			const int to = iter->to;
+			string next = faces[iter->idx] + cur;
+			if (best[to].size() == 0 || best[to] > next) {
+				best[to].swap(next);
+				prev1[to] = from;
+				updated = true;
+				if (with_neg_loop) neg_loop.insert(to);
+				else if (next.size() > limit) throw NegloopException();
+			}
+		}
+	}
+	return updated;
+}
+
+int main() {
+	int H, W;
+	cin >> H >> W;
+	vector<string> field(H);
+	for (int r = 0; r < H; ++r) cin >> field[r];
+	for (int i = 0; i < 6; ++i) {
+		cin >> faces[i];
+		limit += faces[i].size();
+	}
+	limit *= 12 * 12 * 5;
+	pair<int, int> start, goal;
+	cin >> start.first >> start.second;
+	cin >> goal.first >> goal.second;
+	--start.first; --start.second;
+	--goal.first; --goal.second;
+	const int start_hash1 = hash1(start.first, start.second, 0);
+	for (int i = 0; i < maxn; ++i) prev1[i] = -1;
+	dice[0].resize(6);
+	dice[0][0] = 0;
+	dice[0][1] = 3;
+	dice[0][2] = 4;
+	dice[0][3] = 1;
+	dice[0][4] = 2;
+	dice[0][5] = 5;
+	//init_dice();
+	for (int i = 1; i < 24; ++i) {
+		dice[i] = dice[i - 1];
+		roll(dice[i], ccw);
+		if (i % 8 == 0) roll(dice[i], hidari);
+		else if (i % 4 == 0) roll(dice[i], mae);
+	}
+	queue<Tag> q;
+	q.push(Tag(start.first, start.second, 0));
+	visited[start_hash1] = true;
+	while (!q.empty()) {
+		Tag t = q.front();
+		q.pop();
+		const int cur_hash1 = hash1(t.r, t.c, t.state);
+		nodes.push_back(cur_hash1);
+		vector<int> cur = dice[t.state];
+		int mov_idx = to_idx(field[t.r][t.c]);
+		for (int i = 0; moving[mov_idx][i] != NUM_MOVING; ++i) {
+			int nr = t.r + DR[moving[mov_idx][i]];
+			int nc = t.c + DC[moving[mov_idx][i]];
+			if (in_range(0, nr, H) && in_range(0, nc, W)) {
+				vector<int> new_dice = cur;
+				roll(new_dice, moving[mov_idx][i]);
+				int dice_idx = state_of(new_dice);
+				const int new_hash1 = hash1(nr, nc, dice_idx);
+				edge[new_hash1].push_back(Edge(cur_hash1, cur[0]));
+				if (!visited[new_hash1]) {
+					q.push(Tag(nr, nc, dice_idx));
+					visited[new_hash1] = true;
+				}
+			}
+		}
+	}
+	for (int i = 0; i < 24; ++i) if (edge[hash1(goal.first, goal.second, i)].size() != 0) goto bellman;
+	{
+		cout << "no" << endl;
+		return 0;
+	}
+
+bellman:
+	// Bellman-ford
+	for (int i = 0; i < 24; ++i) best[hash1(goal.first, goal.second, i)] = faces[dice[i][0]];
+	const int NODE_SIZE = nodes.size();
+	bool negloop = true;
+	bool inf = false;
+	try {
+		for (int i = 0; i < NODE_SIZE + 1; i++) {
+			if (!relax()) { negloop = false; break; }
+		}
+	}
+	catch (const NegloopException) { negloop = true; }
+	if (negloop) {
+		int node = start_hash1;
+		set<int> seen;
+		while (node != -1) {
+			if (seen.count(node)) { inf = true; break; }
+			seen.insert(node);
+			node = prev1[node];
+		}
+	}
+	if (inf) cout << "infinite" << endl;
+	else cout << best[start_hash1] << endl;
+	return 0;
+}
