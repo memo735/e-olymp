@@ -1,0 +1,143 @@
+#include <string.h>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int n, m, amount[12], state[20], say[20], reflect[20];
+long answer;
+
+
+struct HashMap {
+	static const int MAGIC = 100001, SIZE = 1000001;
+	int first[MAGIC], size, next[SIZE];
+	long key1[SIZE], key2[SIZE];
+	int value[SIZE];
+	void clear() {
+		size = 0;
+		memset(first, 0, sizeof first);
+	}
+	int get_key(long k1, long k2) {
+		return (k1 + k2) % MAGIC;
+	}
+	void add(long k1, long k2, long v) {
+		int key = get_key(k1, k2);
+		for (int iter = first[key]; iter; iter = next[iter]) {
+			if (key1[iter] == k1 && key2[iter] == k2) {
+				value[iter] += v;
+				return;
+			}
+		}
+		size++;
+		key1[size] = k1;
+		key2[size] = k2;
+		value[size] = v;
+		next[size] = first[key];
+		first[key] = size;
+	}
+};
+
+HashMap dp[2];
+
+void set_value(long& contain, int pivot, long value, int total) {
+	long full = (1L << (total << 2)) - 1;
+	long buffer = (15L << (pivot << 2)) ^ full;
+	contain &= buffer;
+	contain |= value << (pivot << 2);
+}
+
+bool has_down(int token) {
+	return token == 1 || token == 4 || token == 5 || token == 7 || token == 8 || token == 9 || token == 11;
+}
+
+bool has_right(int token) {
+	return token == 2 || token == 3 || token == 4 || token == 7 || token == 8 || token == 10 || token == 11;
+}
+
+bool has_up(int token) {
+	return token == 1 || token == 3 || token == 6 || token == 7 || token == 9 || token == 10 || token == 11;
+}
+
+bool has_left(int token) {
+	return token == 2 || token == 5 || token == 6 || token == 8 || token == 9 || token == 10 || token == 11;
+}
+
+void decode(long mask, int* amount, int* say) {
+	fill(say, say + m + 1, 0);
+	for (int i = 0; i < m + 1; ++i) {
+		amount[i] = mask & 15;
+		say[amount[i]] ++;
+		mask >>= 4;
+	}
+}
+
+long encode_contain(int* amount) {
+	long result = 0;
+	for (int i = 11; i >= 0; --i) result = (result << 4) + amount[i];
+	return result;
+}
+
+long encode_connect(int* state) {
+	fill(reflect, reflect + m + 2, 0);
+	int now = 2;
+	long result = 0;
+	for (int i = m; i >= 0; --i) {
+		if (state[i] > 1) {
+			if (reflect[state[i]] == 0) reflect[state[i]] = now++;
+			state[i] = reflect[state[i]];
+		}
+		result = (result << 4) + state[i];
+	}
+	return result;
+}
+
+void update(int x, int y, int now) {
+	int next = now ^ 1;
+	dp[next].clear();
+	for (int iter = 1; iter <= dp[now].size; ++iter) {
+		long connect = dp[now].key1[iter];
+		long contain = dp[now].key2[iter];
+		long value = dp[now].value[iter];
+		decode(connect, state, say);
+		if (say[1] == 0 && x + y) continue;
+		int up = connect >> (y << 2) & 15;
+		int left = connect >> (m << 2) & 15;
+		for (int i = 0; i < 12; ++i) {
+			int number = contain >> (i << 2) & 15;
+			if (number == 0) continue;
+			long new_contain = contain;
+			set_value(new_contain, i, number - 1, 12);
+			decode(connect, state, say);
+			int pivot = x + y == 0 ? 1 : m + 1;
+			if (x && state[y] && has_up(i)) pivot = up;
+			if (y && state[m] && has_left(i) && state[m] != pivot) {
+				int z = min(state[m], pivot);
+				for (int j = 0; j <= m; ++j) {
+					if (state[j] == pivot || state[j] == state[m]) state[j] = z;
+				}
+				pivot = z;
+			}
+			state[y] = has_down(i) ? pivot : 0;
+			state[m] = has_right(i) ? pivot : 0;
+			dp[next].add(encode_connect(state), new_contain, value);
+			if (x == n - 1 && y == m - 1 && pivot == 1) answer += value;
+		}
+	}
+}
+
+int main() {
+	scanf("%d%d", &n, &m);
+	for (int i = 0; i < 12; ++i) scanf("%d", amount + i);
+	answer = 0;
+	int now = 0;
+	dp[now].clear();
+	dp[now].add(0, encode_contain(amount), 1);
+	for (int i = 0; i < n; ++i) {
+		for (int j = 0; j < m; ++j) {
+			update(i, j, now);
+			now ^= 1;
+		}
+	}
+	cout << answer << endl;
+	return 0;
+}
