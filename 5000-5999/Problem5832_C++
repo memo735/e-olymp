@@ -1,0 +1,99 @@
+#include <string.h>
+#include <stdio.h>
+#include <vector>
+
+using namespace std;
+
+const int maxw = 15, maxn = 111;
+const int dx[] = { -1, 1, 0, 0, 0 };
+const int dy[] = { 0, 0, -1, 1, 0 };
+
+int s[3], t[3], x[maxn], y[maxn], deg[maxn], G[maxn][5], id[maxw][maxw];
+int vis1[maxn][maxn][maxn], vis2[maxn][maxn][maxn];
+char maze[maxw][maxw + 1];
+vector<int> v1, v2, v3;
+
+bool conflict(int a1, int b1, int a2, int b2) { return a1 == a2 || a1 == b2 && a2 == b1; }
+int Hash(int a, int b, int c) { return a << 16 | b << 8 | c; }
+
+typedef vector<int> *PV;
+
+int dBfs()
+{
+	v1.clear(); v2.clear(); v3.clear();
+	memset(vis1, -1, sizeof vis1);
+	memset(vis2, -1, sizeof vis2);
+	PV q1 = &v1, q2 = &v2, nxt = &v3;
+	int(*d1)[maxn][maxn] = vis1, (*d2)[maxn][maxn] = vis2;
+	d1[s[0]][s[1]][s[2]] = 0;
+	d2[t[0]][t[1]][t[2]] = 0;
+	q1->push_back(Hash(s[0], s[1], s[2]));
+	q2->push_back(Hash(t[0], t[1], t[2]));
+	while (q1->size() && q2->size()){
+		if (q1->size() > q2->size()) swap(q1, q2), swap(d1, d2);
+		for (int ii = 0, sz = q1->size(); ii < sz; ii++){
+			int u = (*q1)[ii];
+			int a = u >> 16, b = (u >> 8) & 0xff, c = u & 0xff;
+			for (int i = 0; i < deg[a]; i++){
+				int a1 = G[a][i];
+				for (int j = 0; j < deg[b]; j++){
+					int b1 = G[b][j];
+					if (conflict(a1, a, b1, b)) continue;
+					for (int k = 0; k < deg[c]; k++){
+						int c1 = G[c][k];
+						if (conflict(c1, c, a1, a) || conflict(c1, c, b1, b) || ~d1[a1][b1][c1]) continue;
+						d1[a1][b1][c1] = d1[a][b][c] + 1;
+						if (~d2[a1][b1][c1]) return d1[a1][b1][c1] + d2[a1][b1][c1];
+						nxt->push_back(Hash(a1, b1, c1));
+					}
+				}
+			}
+		}
+		q1->clear();
+		swap(nxt, q1);
+	}
+	return -1;
+}
+
+int main()
+{
+	int w, h, n;
+	while (~scanf("%d", &w) && w) {
+		scanf("%d%d\n", &h, &n);
+		for (int i = 0; i < h; i++) gets(maze[i]);
+		int cnt = 0;
+		for (int i = 0; i < h; i++){
+			for (int j = 0; j < w; j++) {
+				char ch = maze[i][j];
+				if (ch != '#'){
+					x[cnt] = i, y[cnt] = j;
+					id[i][j] = cnt;
+					if ('A' <= ch && ch <= 'C') t[ch - 'A'] = cnt;
+					else if ('a' <= ch && ch <= 'c') s[ch - 'a'] = cnt;
+					cnt++;
+				}
+			}
+		}
+		for (int i = 0; i < cnt; i++){
+			deg[i] = 0;
+			for (int k = 0; k < 5; k++) {
+				int nx = x[i] + dx[k], ny = y[i] + dy[k];
+				if (maze[nx][ny] != '#') G[i][deg[i]++] = id[nx][ny];
+			}
+		}
+		if (n <= 2)
+		{
+			deg[cnt] = 1;
+			G[cnt][0] = cnt;
+			s[2] = t[2] = cnt++;
+		}
+		if (n <= 1)
+		{
+			deg[cnt] = 1;
+			G[cnt][0] = s[1] = t[1] = cnt;
+		}
+		int ans = dBfs();
+		printf("%d\n", ans);
+	}
+	return 0;
+}
