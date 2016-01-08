@@ -1,0 +1,51 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+template<class T> bool up_max(T& a, const T& b){ return b > a ? a = b, 1 : 0; }
+template<class T> bool up_min(T& a, const T& b){ return b < a ? a = b, 1 : 0; }
+
+const int inf = 200000001;
+int fa[101];
+
+struct Edge
+{
+	int u, v, w;
+	void read(){ scanf("%d%d%d", &u, &v, &w); }
+	bool operator<(Edge b) const { return w < b.w; }
+} edge[10001];
+
+int find(int x)
+{
+	if (x == fa[x]) return x;
+	return fa[x] = find(fa[x]);
+}
+
+int main()
+{
+	int n, m;
+	while (cin >> n >> m, n + m){
+		for (int i = 1; i <= m; ++i) edge[i].read();
+		sort(edge + 1, edge + 1 + m);
+		int ans = inf;
+		for (int k = 1; k <= m; ++k){
+			for (int i = 1; i <= n; ++i) fa[i] = i;
+			int mmin = inf, mmax = -inf, cnt = 0;
+			for (int i = k; i <= m; ++i){
+				int x = edge[i].u, y = edge[i].v;
+				int fx = find(x), fy = find(y);
+				if (fx != fy){
+					fa[fy] = fx;
+					up_min(mmin, edge[i].w);
+					up_max(mmax, edge[i].w);
+					if (++cnt == n - 1) break;
+					if (mmax - mmin >= ans) break;
+				}
+			}
+			if (cnt == n - 1) up_min(ans, mmax - mmin);
+		}
+		if (ans != inf) cout << ans << endl;
+		else puts("-1");
+	}
+}
