@@ -1,0 +1,144 @@
+#include <stdio.h>
+#include <algorithm>
+#include <queue>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 201;
+int x[maxn], y[maxn];
+
+int dcalc(int a, int b, int c, int d){
+	return (x[b] - x[a])*(x[d] - x[c]) + (y[b] - y[a])*(y[d] - y[c]);
+}
+
+double dist(int a, int b){
+	return sqrt((x[a] - x[b])*(x[a] - x[b]) + (y[a] - y[b])*(y[a] - y[b]));
+}
+
+int ccw(int a, int b, int c, int d, int e, int f){
+	int X1 = c - a, X2 = e - a;
+	int Y1 = d - b, Y2 = f - b;
+	if (X1*X2 < 0 || Y1*Y2 < 0) return 0;
+	if (X1*Y2 != Y1*X2) return 0;
+	if (abs(X1) < abs(X2)) return 0;
+	if (abs(Y1) < abs(Y2)) return 0;
+	return 1;
+}
+
+int main(){
+	int a, p[maxn], q[maxn], r[maxn], s[maxn], v[maxn], ans[maxn];
+	int cnt[maxn], rev[maxn], tc[maxn], G[maxn][maxn], L[maxn][maxn];
+	double ijk[maxn];
+	vector<int> g[maxn];
+	while (scanf("%d", &a), a){
+		int sx, sy, gx, gy;
+		scanf("%d%d%d%d", &sx, &sy, &gx, &gy);
+		int sz = 0;
+		map<pair<int, int>, int> m;
+		for (int i = 0; i < maxn; i++)
+		{
+			g[i].clear();
+			tc[i] = 0;
+			cnt[i] = 0;
+			for (int j = 0; j < maxn; j++){
+				G[i][j] = 0;
+				L[i][j] = -1;
+			}
+		}
+		for (int i = 0; i < a; i++){
+			scanf("%d%d%d%d", p + i, q + i, r + i, s + i);
+			if (m.count(make_pair(p[i], q[i]))) m[make_pair(p[i], q[i])];
+			else
+			{
+				m[make_pair(p[i], q[i])] = sz;
+				x[sz] = p[i]; y[sz++] = q[i];
+			}
+			if (m.count(make_pair(r[i], s[i]))) m[make_pair(r[i], s[i])];
+			else
+			{
+				m[make_pair(r[i], s[i])] = sz;
+				x[sz] = r[i]; y[sz++] = s[i];
+			}
+		}
+		for (int i = 0; i < a; i++){
+			vector<pair<double, int> > o;
+			int ss = m[make_pair(p[i], q[i])];
+			for (int j = 0; j < sz; j++){
+				if (ccw(p[i], q[i], r[i], s[i], x[j], y[j])) o.push_back(make_pair(dist(ss, j), j));
+			}
+			sort(o.begin(), o.end());
+			for (int j = 0; j < o.size() - 1; j++){
+				int E = o[j].second, F = o[j + 1].second;
+				G[E][F] = G[F][E] = 1;
+				cnt[E]++;
+				cnt[F]++;
+			}
+		}
+		for (int i = 0; i < sz; i++){
+			if (cnt[i] == 1){
+				for (int j = 0; j < sz; j++)if (G[i][j]){
+					vector<int> t, u;
+					for (int k = 0; k < sz; k++){
+						if (G[j][k] && cnt[k] != 1) t.push_back(k);
+						else if (G[j][k]) u.push_back(k);
+					}
+					G[j][t[0]] = G[t[0]][j] = 0;
+					G[j][t[1]] = G[t[1]][j] = 0;
+					G[t[0]][t[1]] = G[t[1]][t[0]] = 1;
+					L[t[0]][t[1]] = L[t[0]][j];
+					if (~L[t[0]][t[1]] && ~L[j][t[1]]) L[t[0]][t[1]] &= L[j][t[1]];
+					else if (!~L[t[0]][t[1]]) L[t[0]][t[1]] = L[j][t[1]];
+					L[t[1]][t[0]] = L[j][t[0]];
+					if (~L[t[1]][t[0]] && ~L[t[1]][j]) L[t[1]][t[0]] &= L[t[1]][j];
+					else if (!~L[t[1]][t[0]]) L[t[1]][t[0]] = L[t[1]][j];
+					for (int k = 0; k < u.size(); k++){
+						G[j][u[k]] = G[u[k]][j] = 0;
+						int dot = dcalc(t[0], t[1], j, u[k]);
+						if (dot > 0) L[t[0]][t[1]] = 0;
+						else if (dot == 0) L[t[0]][t[1]] = L[t[1]][t[0]] = 0;
+						else L[t[1]][t[0]] = 0;
+					}
+				}
+			}
+		}
+		for (int i = 0; i < sz; i++){
+			for (int j = 0; j < sz; j++) if (G[i][j] && L[i][j] != 0) g[i].push_back(j);
+		}
+		int S = m[make_pair(sx, sy)];
+		int T = m[make_pair(gx, gy)];
+		for (int i = 0; i < sz; i++){
+			ijk[i] = 99999999;
+			v[i] = 0;
+			rev[i] = -1;
+		}
+		priority_queue<pair<double, int> >Q;
+		ijk[S] = 0;
+		Q.push(make_pair(0.0, S));
+		while (Q.size()){
+			double cost = -Q.top().first;
+			int at = Q.top().second;
+			Q.pop();
+			if (v[at]) continue;
+			v[at] = 1;
+			for (int i = 0; i<g[at].size(); i++){
+				if (!v[g[at][i]] && ijk[g[at][i]]>cost + dist(at, g[at][i])){
+					ijk[g[at][i]] = cost + dist(at, g[at][i]);
+					rev[g[at][i]] = at;
+					Q.push(make_pair(-ijk[g[at][i]], g[at][i]));
+				}
+			}
+		}
+		if (ijk[T] > 9999999){ printf("-1\n"); continue; }
+		int ind = 0, now = T;
+		while (now != S){
+			ans[ind++] = now;
+			now = rev[now];
+		}
+		ans[ind++] = S;
+		for (int i = ind - 1; i >= 0; i--) printf("%d %d\n", x[ans[i]], y[ans[i]]);
+		printf("0\n");
+	}
+	return 0;
+}
