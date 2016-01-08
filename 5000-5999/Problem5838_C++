@@ -1,0 +1,49 @@
+#include <iostream>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+int h, w, pos[1 << 16], dp[2][1 << 16];
+string s[128];
+
+void chmax(int &x, int y) { x = max(x, y); }
+
+int solve()
+{
+	memset(dp, -1, sizeof dp);
+	dp[0][0] = 0;
+	int ci = 0, ni = 1;
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w; j++) {
+			memset(dp[ni], -1, sizeof dp[ni]);
+			for (int k = 0; k < 1 << w; k++) {
+				if (dp[ci][k] < 0) continue;
+				const int &p = pos[((1 << j) - 1) & k];
+				if (p < s[i].size()) {
+					// put
+					int pt = 0;
+					if (j && (k >> (j - 1) & 1) && s[i][p - 1] == s[i][p]) pt += 2;
+					if (i && (k >> j & 1)) {
+						const int &q = s[i - 1].size() - pos[~((1 << j) - 1)&k];
+						if (q >= 0 && s[i - 1][q] == s[i][p]) pt += 2;
+					}
+					chmax(dp[ni][1 << j | k], dp[ci][k] + pt);
+				}
+				// not put
+				if (p + w - j > s[i].size()) chmax(dp[ni][~(1 << j)&k], dp[ci][k]);
+			}
+			swap(ci, ni);
+		}
+	}
+	return *max_element(dp[h*w % 2], dp[h*w % 2] + (1 << w));
+}
+
+int main()
+{
+	cin >> h >> w;
+	for (int i = 0; i < h; i++) cin >> s[i];
+	for (int i = 0; i < 1 << w; i++) pos[i] = __builtin_popcount(i);
+	cout << solve() << endl;
+	return 0;
+}
