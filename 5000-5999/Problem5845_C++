@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <algorithm>
+#include <queue>
+#include <string.h>
+
+using namespace std;
+
+const int N = 160001;
+int n, e, w[N], fa[N], in[N], sta[N], head[N];
+long ans;
+
+struct Edge {
+	int v, nex;
+} edge[N];
+
+void add_edge(int u, int v) {
+	edge[e].v = v;  edge[e].nex = head[u];
+	head[u] = e++;
+}
+
+void BFS() {
+	queue<int> Q;
+	for (int i = 0; i < n; ++i) if (!in[i]) Q.push(i);
+	while (!Q.empty()) {
+		int u = Q.front(); Q.pop();
+		int tot = 0;
+		for (int i = head[u]; ~i; i = edge[i].nex)  {
+			int v = edge[i].v;
+			sta[tot++] = w[v];
+		}
+		sort(sta, sta + tot);
+		for (int i = 0; i < tot; ++i) ans += 1ll * sta[i] * (tot - i - 1);
+		if (fa[u] == -1) continue;
+		w[fa[u]] += w[u];
+		if (!(--in[fa[u]])) Q.push(fa[u]);
+	}
+}
+
+int main() {
+	while (scanf("%d", &n) == 1)   {
+		memset(head, -1, sizeof head);
+		memset(in, 0, sizeof in);
+		e = 0;
+		for (int i = 0; i < n; ++i) {
+			scanf("%d%d", &w[i], &fa[i]);
+			if (fa[i] != -1)    {
+				in[fa[i]]++;
+				add_edge(fa[i], i);
+			}
+		}
+		ans = 0;
+		BFS();
+		printf("%ld\n", ans);
+	}
+	return 0;
+}
