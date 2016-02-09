@@ -1,0 +1,82 @@
+#include <iostream>
+#include <string>
+#include <queue>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+#define N 400000
+
+int main(){
+	int h[N], t[N], c[N][2], d[N];
+	memset(c, -1, sizeof c);
+	string s;
+	cin >> s;
+	int n = s.size(), m = (n - 2) / 4;
+	int L = 1, R = n - 1, mx = 0;
+	for (int i = L; i <= R; i++){
+		h[i] = h[i - 1] + (s[i] == '(' ? 1 : -1);
+		if (s[i] == '('){
+			c[t[h[i] - 1]][s[i - 1] != '('] = i;
+			t[h[i]] = i;
+			mx = max(mx, h[i]);
+		}
+	}
+	int p2 = t[mx], p1 = p2 - 3, p3 = p2 + 1;
+	d[1] = 1;
+	while (p1 > 1){
+		int ht = h[p3];
+		p1--; p3++;
+		if (h[p1 - 1] > h[p1]){
+			p1--;
+			while (h[p1] >= ht) p1--;
+		}
+		else {
+			p3++;
+			while (h[p3] >= ht) p3++;
+		}
+		int sz = (p3 - p1) / 4;
+		if (m%sz == 0){
+			queue<int> q1, q2, q3;
+			q3.push(0);
+			bool ok = true;
+			while (!q3.empty() && ok){
+				q1.push(q3.front()); q3.pop();
+				q2.push(p1);
+				while (!q1.empty()){
+					int r1 = q1.front(); q1.pop();
+					int r2 = q2.front(); q2.pop();
+					int c10 = c[r1][0], c11 = c[r1][1];
+					int c20 = c[r2][0], c21 = c[r2][1];
+					if (c10 < 0 && c20 >= 0 || c11 < 0 && c21 >= 0){
+						ok = false;
+						break;
+					}
+					if (c10 >= 0 && c20 < 0 && c11 >= 0 && c21 < 0) q3.push(r1);
+					if (c20 >= 0){
+						q1.push(c10);
+						q2.push(c20);
+					}
+					if (c21 >= 0){
+						q1.push(c11);
+						q2.push(c21);
+					}
+				}
+			}
+			if (ok){
+				d[sz] = m;
+				for (int i = 1; i <= sz; i++){
+					if (sz%i || !d[i]) continue;
+					d[sz] = min(d[sz], d[i] + sz / i - 1);
+				}
+			}
+		}
+	}
+	int res = N;
+	for (int i = 1; i <= m; i++){
+		if (m%i || !d[i]) continue;
+		res = min(res, d[i] + m / i - 1);
+	}
+	cout << res - 1 << endl;
+	return 0;
+}
