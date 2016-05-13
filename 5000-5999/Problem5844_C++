@@ -1,0 +1,90 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <map>
+
+using namespace std;
+
+int N;
+map<long, long> f, f_;
+const int T = 1;
+long mod = 1145141919;
+bool prime[1001];
+vector<long> ds, pr;
+map<long, int> fac;
+
+long ex(long x, long p){
+	long a = 1;
+	if (p < 0) return 0;
+	while (p){
+		if (p % 2) a = a*x%mod;
+		x = x*x%mod;
+		p /= 2;
+	}
+	return a;
+}
+
+void add(long &x, long y){
+	x += y;
+	x %= mod;
+}
+
+void makeprime(){
+	long i, j;
+	for (i = 2; i <= 1001; i++) prime[i] = true;
+	for (i = 2; i*i <= 1001; i++) if (prime[i]) for (j = 2; j*i <= 1001; j++) prime[j*i] = false;
+	for (i = 2; i <= 1001; i++) if (prime[i]) pr.push_back(i);
+}
+
+void dfs(map<long, int>::iterator it, long d){
+	if (it == fac.end()){
+		ds.push_back(d);
+		return;
+	}
+	long p = it->first, q = it->second, t = 1;
+	auto it2 = it;
+	++it2;
+	for (int i = 0; i < q / 2 + 1; i++){
+		dfs(it2, d*t);
+		t *= p;
+	}
+}
+
+int main(){
+	makeprime();
+	cin >> N;
+	for (int i = 0; i < N; i++){
+		long a, b;
+		cin >> a >> b;
+		f_[a] += b;
+	}
+	for (auto p : f_) if (p.second != 0) f[p.first] = p.second;
+	if (f.empty()){
+		puts("Yes 1");
+		return 0;
+	}
+	long tmp = abs(f.begin()->second);
+	for (long p : pr){
+		while (tmp%p == 0) tmp /= p, fac[p]++;
+	}
+	if (tmp > 1){
+		long a = round(sqrt(tmp));
+		if (a*a == tmp) fac[a] = 2;
+	}
+	dfs(fac.begin(), 1);
+	sort(ds.begin(), ds.end());
+	for (long a : ds){
+		bool ok = 1;
+		long x = 0;
+		for (auto p : f) add(x, p.second%mod*ex(a, p.first));
+		if (x != 0) ok = 0;
+		x = 0;
+		for (auto p : f) add(x, -p.second%mod*p.first%mod*ex(a, p.first - 1));
+		if (x != 0) ok = 0;
+		if (ok){
+			cout << "Yes " << a << endl;
+			return 0;
+		}
+	}
+	puts("No");
+}
