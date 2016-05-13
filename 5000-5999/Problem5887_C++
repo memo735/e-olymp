@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string.h>
+
+const int maxl = 30001, mod = 1000000;
+
+int main()
+{
+	int i, j, l, n, ta, tb;
+	int a[maxl], b[maxl], p[maxl];
+	bool t[maxl];
+	char s[maxl];
+	scanf("%d%s", &n, &s[1]);
+	l = strlen(&s[1]), p[1] = 0;
+	for (j = 0, i = 2; i <= l; ++i)
+	{
+		while (j && s[j + 1] != s[i]) j = p[j];
+		if (s[j + 1] == s[i]) ++j;
+		p[i] = j;
+	}
+	for (i = 1; i <= l; ++i) t[i] = false;
+	for (i = l; i > 0; i = p[i]) t[i] = true;
+	for (i = 1; i < maxl; ++i) a[i] = 0, b[i] = 0;
+	ta = tb = b[1] = 1;
+	for (i = 1; i <= l; ++i)
+	{
+		int k;
+		for (k = 1; k <= tb; ++k) b[k] *= n;
+		for (k = 1; k <= tb; ++k)
+		{
+			b[k + 1] += b[k] / mod;
+			b[k] %= mod;
+		}
+		for (tb += 2; !b[tb]; --tb);
+		if (t[i])
+		{
+			if (tb > ta) ta = tb;
+			for (k = 1; k <= tb; ++k) a[k] += b[k];
+			for (k = 1; k <= ta; ++k)
+				if (a[k] >= mod)
+				{
+					++a[k + 1];
+					a[k] -= mod;
+				}
+			if (a[ta + 1]) ++ta;
+		}
+	}
+	printf("%d", a[ta]);
+	for (--ta; ta; --ta) printf("%06d", a[ta]);
+	printf("\n");
+	return 0;
+}
