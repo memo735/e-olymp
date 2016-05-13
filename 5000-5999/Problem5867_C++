@@ -1,0 +1,25 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 1000009;
+
+int main()
+{
+	int n, f[maxn];
+	vector<int> p;
+	f[1] = 1; f[2] = 2; f[3] = 3;
+	for (int i = 1; i <= 100; ++i) p.push_back(i*i*i);
+	cin >> n;
+	for (int i = 4; i <= n; ++i)
+	{
+		f[i] = 1000000009;
+		for (int j = 0; j<p.size(); ++j)
+		{
+			if (i >= p[j] && f[i] > f[i - p[j]] + 1) f[i] = f[i - p[j]] + 1;
+		}
+	}
+	cout << f[n];
+	return 0;
+}
