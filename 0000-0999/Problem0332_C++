@@ -1,0 +1,30 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	string word; cin >> word;
+	char minSymbol = word[0];
+	vector <int> indicesOfMinSymbol; // Вектор для хранения индексов вхождения "минимального" символа
+	for (int i = 1; i < word.size(); i++) {
+		if (word[i] < minSymbol) minSymbol = word[i];
+	} // Поиск "минимального" символа в данном слове
+	for (int i = 0; i < word.size(); i++) {
+		if (word[i] == minSymbol && word[i - 1] != minSymbol) indicesOfMinSymbol.push_back(i);
+		// Добавляем индекс, если текущий является "минимальным", а предыдущий таковым не был
+	} // Заполняем вектор индексами вхождения "минимального" символа
+	int indexOfMinLexicSubstr = indicesOfMinSymbol[0]; // Индекс начала текущего минимального лексикографического подслова
+	for (int i = 1; i < indicesOfMinSymbol.size(); i++) {
+		if (word.compare(indexOfMinLexicSubstr, word.size() - indicesOfMinSymbol[i], word, indicesOfMinSymbol[i], string::npos) > 0
+			|| word.compare(indexOfMinLexicSubstr, word.size() - indicesOfMinSymbol[i], word, indicesOfMinSymbol[i], string::npos) == 0
+			&& word.compare(0, indicesOfMinSymbol[i] - indexOfMinLexicSubstr, word, indexOfMinLexicSubstr + word.size() - indicesOfMinSymbol[i], string::npos) < 0) {
+			indexOfMinLexicSubstr = indicesOfMinSymbol[i];
+		} // Сравниваем текущее минимальное подслово и подслово начинающееся со следующего вхождения "минимального" символа, если они равны, то следует проверить, что выйдет, благодаря задействованию символов из начала строки
+	} // Поиск наименьшего лексикографического подслова
+	rotate(word.begin(), word.begin() + indexOfMinLexicSubstr, word.end()); // Cдвигаем наименьшее лексикографическое подслово в начало
+	cout << word;
+	return 0;
+}
