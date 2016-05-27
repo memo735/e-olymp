@@ -1,0 +1,57 @@
+#include <queue>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+#define RED -1	// First set of vertices
+#define BLUE 1	// Second set of vertices
+#define WHITE 0	// Not processed vertices
+
+bool isBipartite(vector<int> *listOfVertices, int *colorOfVertices, int sourceVertex, int quantityOfVertex) {
+	bool isBipartite = true;
+	colorOfVertices[sourceVertex] = RED;	//	Color vertex which we started
+	queue <int> orderOfBypassing;	//	Stores order of bypassing with queue
+	orderOfBypassing.push(sourceVertex);	//  Remember the initial vertex
+	while (!orderOfBypassing.empty()) {	//	Process until we bypass all connected vertices
+		int currentVertex = orderOfBypassing.front();	//	Remember vertex that came first in queue
+		orderOfBypassing.pop();	//	Remove it
+		for (auto adjacentVertex : listOfVertices[currentVertex]) {	//	Process all adjacent with current and not processed earlier vertices
+			if (colorOfVertices[adjacentVertex] == WHITE) {
+				colorOfVertices[adjacentVertex] = -colorOfVertices[currentVertex];	//	Color adjacent vertex with inverse color
+				orderOfBypassing.push(adjacentVertex);	//	Add this vertex to the order of bypass
+			}
+			else if (colorOfVertices[adjacentVertex] == colorOfVertices[currentVertex]) {	//	If two adjacent vertices in one set are the same color
+				isBipartite = false;	//	Graph isn't bipartite
+				break;	//	We can stop processing
+			}
+		}
+	}
+	return isBipartite;
+}
+
+int main() {
+	bool answer = true;
+	int quantityOfVertex, quantityOfConnections;
+	cin >> quantityOfVertex >> quantityOfConnections;
+	vector<int> *listOfVertices = new vector<int>[quantityOfVertex];	//	Stores for the each vertex adjacent vertices
+	while (quantityOfConnections--) {	//	Read all given connections
+		int firstVertex, secondVertex;
+		cin >> firstVertex >> secondVertex;
+		firstVertex--;	//	We store it numbering from zero, so decrement index of vertices
+		secondVertex--;
+		listOfVertices[firstVertex].push_back(secondVertex);	//	Add vertex to the vector of adjacent vertex
+		listOfVertices[secondVertex].push_back(firstVertex);	//	Do it symmetrically
+	}
+	int *colorOfVertices = new int[quantityOfVertex];	//	For each vertex stores it's color
+	for (int indexOfVertex = 0; indexOfVertex < quantityOfVertex; indexOfVertex++) {
+		colorOfVertices[indexOfVertex] = WHITE;	//	Intially, all vertices are white (not processed)
+	}
+	for (int indexOfVertex = 0; indexOfVertex < quantityOfVertex && answer; indexOfVertex++) {	//	Process to the end or until we recognize, that graph isn't bipartite
+		if (colorOfVertices[indexOfVertex] == WHITE) {	//	Process only WHITE vertices
+			answer &= isBipartite(listOfVertices, colorOfVertices, indexOfVertex, quantityOfVertex);	//	Logical conjunction of answers for all graph component 
+		}
+	}
+	cout << (answer ? "YES" : "NO");
+	return 0;
+}
