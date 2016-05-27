@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define WHITE 0 //вершина не посещена
+#define GREY 1 //вершина обрабатывается
+#define BLACK 2 //вершина обработана
+
+//возвращает true или false в зависимости от того, был ли найден цикл
+bool dfs(int v, vector<int>* vertex, int* state, vector<int> &result, int size)
+{
+	state[v] = GREY; //отмечаем, что вершина в процессе обработки
+	for (int i = 0; i < vertex[v].size(); i++) //для каждой вершины, в которую можно попасть из данной
+	{
+		int dest = vertex[v].at(i);
+		if (state[dest] == WHITE) //если еще не посетили - запускаем поиск в глубину, возвращаем true, если далее был найден цикл
+		{
+			if (dfs(dest, vertex, state, result, size)) return true;
+		}
+		else if (state[dest] == GREY) return true; //если из вершины можно попасть туда, где мы уже были при данном порядке обхода - найден цикл
+	}
+	//если цикл не найден:
+	state[v] = BLACK; //помечаем вершину как обработанную
+	result.push_back(v + 1); //помещаем ее номер (со сдвигом на 1, из-за разницы в нумерациях) в вектор-результат сортировки
+	return false;
+}
+
+void topologicalSort(vector<int>* vertex, int* state, vector<int> &result, int size)
+{
+	for (int i = 0; i < size; i++) //для каждой вершины графа
+	{
+		if (state[i] == WHITE) //если она еще не посещена
+		{
+			bool cyclic = dfs(i, vertex, state, result, size); //вызываем для нее поиск в глубину
+			if (cyclic) //если нашли цикл, возвращаем единственное значение -1 (по условию)
+			{
+				result.clear();
+				result.push_back(-1);
+				return;
+			}
+		}
+	}
+	reverse(result.begin(), result.end());
+	//вершины добавляются в вектор в порядке, противоположном топологической сортировке, так что нужно вызвать для вектора reverse()
+}
+
+int main()
+{
+	int n, m; cin >> n >> m;
+	vector<int> vertex[n]; //сам граф
+	int state[n]; //массив состояний вершин
+	vector<int> result;
+	fill(state, state + n, WHITE); //изначально ни одна вершина не посещена
+	for (int i = 0; i < n; i++)
+	{
+		int begin, end;
+		cin >> begin >> end;
+		vertex[begin - 1].push_back(end - 1);
+	}
+	topologicalSort(vertex, state, result, n); //сортируем граф
+	for (int i = 0; i < result.size(); i++) cout << result.at(i) << " ";
+	return 0;
+}
