@@ -1,0 +1,22 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main(){
+	int zf[1000000];
+	char s[1000000];
+	scanf("%[^\n]%*c", s);
+	int n = strlen(s);
+	int right = 0, left = 0;
+	for (int i = 1; i < n; ++i){
+		if (i <= right) zf[i] = min(right - i + 1, zf[i - left]);
+		while (s[zf[i]] == s[zf[i] + i]) zf[i]++;
+		if (i + zf[i] - 1>right){
+			left = i;
+			right = i + zf[i] - 1;
+		}
+	}
+	for (int i = 0; i < n; ++i) cout << zf[i] << " ";
+	return 0;
+}
