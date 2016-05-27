@@ -1,0 +1,17 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int k1, k2, n, m;
+	int b, g; // b-boys; g-girls
+	cin >> k1 >> k2 >> n >> m;
+	for (g = n; true; g++)
+	{
+		b = g * m / n;
+		if (g * m % n == 0 && b + g >= k1) break;
+		// перебираем варианты пока количество мальчиков не станет целым а сумма всех учеников будет больше k1
+	}
+	cout << b + g << " " << b << " " << g << endl;
+	return 0;
+}
