@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct queue{
+	int storage[100000], start, finish;
+	queue(){
+		start = 0;
+		finish = 0;
+	}
+	void push(int n){
+		storage[start] = n;
+		start++;
+	}
+	int pop(){
+		int a = storage[finish];
+		finish++;
+		return a;
+	}
+	int front() { return storage[finish]; }
+	int size(){ return start - finish; }
+	string clear(){
+		finish = start;
+		return "ok";
+	}
+	string exit(){ return "bye"; }
+};
+
+int main() {
+	string a;
+	queue x;
+	while (cin >> a){
+		if (a == "push"){
+			int n; cin >> n;
+			x.push(n);
+			cout << "ok" << endl;
+		}
+		if (a == "pop") cout << x.pop() << endl;
+		if (a == "front") cout << x.front() << endl;
+		if (a == "size") cout << x.size() << endl;
+		if (a == "clear") cout << x.clear() << endl;
+		if (a == "exit"){
+			cout << x.exit() << endl;
+			return 0;
+		}
+	}
+	return 0;
+}
