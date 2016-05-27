@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <string.h>
+#include <set>
+
+using namespace std;
+
+set<int> dp[300];
+char str[100];
+int num[100];
+
+int main()
+{
+	int last, n, s, st;
+	while (1)
+	{
+		scanf("%s", str);
+		n = 0;
+		if (strcmp(str, "0") == 0) break;
+		for (int i = 0; str[i] != NULL; i++) num[n++] = str[i] - '0';
+		int ALL = (1 << n) - 1;
+		for (int i = 0; i < 300; i++) dp[i].clear();
+		for (int i = 0; i < n; i++) dp[(1 << i)].insert(num[i]);
+		for (st = 0; st <= ALL; st++)
+			for (s = 1; s < st; s++)
+			{
+				if ((s&st) != s) continue;
+				int t = s^st;
+				if (t == 0 || s == 0) continue;
+				for (set<int>::iterator i = dp[t].begin(); i != dp[t].end(); ++i)
+					for (set<int>::iterator j = dp[s].begin(); j != dp[s].end(); ++j)
+					{
+						int a = *i, b = *j, c = a + b;
+						dp[st].insert(c);
+						c = a - b;
+						if (c >= 0) dp[st].insert(c);
+						c = a*b;
+						dp[st].insert(c);
+						if (b)
+						{
+							c = a / b;
+							dp[st].insert(c);
+						}
+					}
+			}
+		last = 0;
+		for (set<int>::iterator i = dp[ALL].begin(); i != dp[ALL].end(); ++i)
+		{
+			if (*i - last > 1) break;
+			last = *i;
+		}
+		printf("%d\n", last + 1);
+	}
+}
