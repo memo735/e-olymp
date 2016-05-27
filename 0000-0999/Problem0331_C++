@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+	char s[256];
+	int maxPalNum = 0, champion = 0, currentSentence = 1, palCount = 0;
+	while (cin >> s)
+	{
+		if (s[0] == '-' && strlen(s) == 1) continue; //если тире, то просто считываем следующее слово
+		bool endOfSentence = false;
+		if (s[strlen(s) - 1] == '.' || s[strlen(s) - 1] == '!' || s[strlen(s) - 1] == '?') endOfSentence = true; //слово - последнее в предложении
+		for (int i = strlen(s) - 1; i >= 0; i--)
+		{
+			if (!(s[i] >= 'a' && s[i] <= 'z' || s[i] >= 'A' && s[i] <= 'Z' || s[i] >= '1' && s[i] <= '9' || s[i] == '-')) s[i] = '\0';
+			else break;
+		}
+		for (int i = 0; i < strlen(s); i++) //перевод в нижний регистр
+		{
+			if (s[i] >= 'A' && s[i] <= 'Z') s[i] += 32;
+		}
+		bool pal = true;
+		for (int i = 0; i < strlen(s) / 2; i++)
+		{
+			if (s[i] != s[strlen(s) - i - 1])
+			{
+				pal = false;
+				break;
+			}
+		}
+		if (pal) palCount++;
+		if (endOfSentence) //если слово было последним - сравниваем предложения
+		{
+			if (palCount > maxPalNum)
+			{
+				maxPalNum = palCount;
+				champion = currentSentence;
+			}
+			currentSentence++;
+			palCount = 0;
+		}
+	}
+	cout << champion;
+	return 0;
+}
