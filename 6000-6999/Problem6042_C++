@@ -1,0 +1,119 @@
+#include <stdio.h>
+#include <string.h>
+#include <queue>
+#include <map>
+
+using namespace std;
+
+const int maxn = 6, maxm = 50;
+const int dx[5] = { 0, 0, -1, 1 }, dy[5] = { 1, -1, 0, 0 };
+char end1[5] = "end";
+
+struct node
+{
+	int x[6], y[6], c;
+} s, cur, next1;
+
+int n, m, id[maxn][maxm];
+map<long long, int> hash1;
+queue<node> Q;
+char str[110][110];
+
+int isre(node v)
+{
+	int i, mark[256];
+	memset(mark, 0, sizeof mark);
+	for (i = 0; i < n; i++)
+	{
+		if (mark[str[v.x[i]][v.y[i]] - '1']) return false;
+		mark[str[v.x[i]][v.y[i]] - '1'] = 1;
+	}
+	return true;
+}
+
+int isfinish(node v)
+{
+	for (int i = 0; i < n; i++) if (v.y[i] != m - 1) return false;
+	return true;
+}
+
+int main()
+{
+	int i, j, ans, tot = 0;
+	long long st;
+	for (i = 0; i < 6; i++)
+		for (j = 0; j < 50; j++) id[i][j] = tot++;
+
+	while (1)
+	{
+		n = 0;
+		ans = -1;
+		gets(str[0]);
+		if (strcmp(str[0], end1) == 0) break;
+		m = strlen(str[0]);
+		while (strlen(str[n])) gets(str[++n]);
+		while (!Q.empty()) Q.pop();
+		hash1.clear();
+		for (i = 0; i < n; i++)
+		{
+			s.x[i] = i;
+			s.y[i] = 0;
+		}
+		s.c = 0;
+		Q.push(s);
+		while (!Q.empty())
+		{
+			cur = Q.front();
+			Q.pop();
+			if (isfinish(cur))
+			{
+				ans = cur.c;
+				break;
+			}
+			for (i = 0; i < 4; i++)
+			{
+				next1 = cur;
+				int tx = next1.x[0] + dx[i], ty = next1.y[0] + dy[i];
+				if (tx < 0 || tx >= n || ty < 0 || ty >= m || (tx == next1.x[1] && ty == next1.y[1])) continue;
+				for (j = n - 1; j > 0; j--)
+				{
+					next1.x[j] = next1.x[j - 1];
+					next1.y[j] = next1.y[j - 1];
+				}
+				next1.x[0] = tx;
+				next1.y[0] = ty;
+				next1.c = cur.c + 1;
+				st = 0;
+				for (j = 0; j < n; j++) st = st * 300 + id[next1.x[j]][next1.y[j]];
+				if (hash1[st] == 0)
+				{
+					hash1[st] = 1;
+					if (isre(next1)) Q.push(next1);
+				}
+			}
+			for (i = 0; i < 4; i++)
+			{
+				next1 = cur;
+				int tx = next1.x[n - 1] + dx[i];
+				int ty = next1.y[n - 1] + dy[i];
+				if (tx < 0 || tx >= n || ty < 0 || ty >= m || tx == next1.x[n - 2] && ty == next1.y[n - 2]) continue;
+				for (j = 0; j < n - 1; j++)
+				{
+					next1.x[j] = next1.x[j + 1];
+					next1.y[j] = next1.y[j + 1];
+				}
+				next1.x[n - 1] = tx;
+				next1.y[n - 1] = ty;
+				next1.c = cur.c + 1;
+				st = 0;
+				for (j = 0; j < n; j++) st = st * 300 + id[next1.x[j]][next1.y[j]];
+				if (hash1[st] == 0)
+				{
+					hash1[st] = 1;
+					if (isre(next1)) Q.push(next1);
+				}
+			}
+		}
+		printf("%d\n", ans);
+	}
+}
