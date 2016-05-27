@@ -1,0 +1,29 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+int SumOfDigit(int n) {
+	int f = 0;
+	while (n >= 1) {
+		f += n % 10;
+		n /= 10;
+	}
+	return f;
+}
+
+int main()
+{
+	int N; cin >> N;
+	for (int i = 1; i <= N; i++) {
+		int A; cin >> A;
+		int sum = 0;
+		double f = sqrt(A);
+		for (int j = 1; j*1.0 <= f; j++) {
+			if (A%j == 0) sum += SumOfDigit(j) + SumOfDigit(A / j);
+		}
+		if ((int)f == f) sum -= f;
+		cout << sum << endl;
+	}
+	return 0;
+}
