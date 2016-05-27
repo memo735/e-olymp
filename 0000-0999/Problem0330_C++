@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int registerShift = 'A' - 'a'; // Сдвиг от верхнего регистра к нижнему по таблице ASCII
+
+// Функция, для определения, является ли текущий символ "буквой" в контексте данной задачи
+bool IsAllowedSymbol(char symbol) {
+	return symbol >= '1' && symbol <= '9' || symbol >= 'a' && symbol <= 'z' || symbol >= 'A' && symbol <= 'Z' ? true : false;
+}
+
+// Функция, для определения, является ли текущее слово палиндромом
+bool IsPalindrom(char *word, int begin, int end) {
+	return end <= begin ? true : word[begin] != word[end] ? false : IsPalindrom(word, ++begin, --end);
+}
+
+// Функция, которая переводит все слово в нижний регистр
+void ToLowerCase(char *word) {
+	for (int i = 0; i < strlen(word); i++) {
+		if (word[i] >= 'A' && word[i] <= 'Z') word[i] -= registerShift;
+	}
+}
+
+int main() {
+	char word[1001];
+	int wordSize, maxSize = 0, indexOfPalindrom = 0;
+	for (int i = 1; cin >> word; i++) {
+		ToLowerCase(word); // Перевод слова в нижний регистр 
+		if (!IsAllowedSymbol(word[strlen(word) - 1])) word[strlen(word) - 1] = '\0';
+		// Не учитывать последний символ слова, если это не "буква" (т. е. знак препинания)
+		wordSize = strlen(word);
+		if (wordSize > maxSize) {
+			if (IsPalindrom(word, 0, wordSize - 1)) {
+				maxSize = wordSize;
+				indexOfPalindrom = i;
+			} // Храним новый максимум и индекс текущего наибольшего палиндрома, если он был найден
+		}
+	} // Чтение по словам до конца предложения
+	cout << indexOfPalindrom;
+	return 0;
+}
