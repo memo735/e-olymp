@@ -1,0 +1,104 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <limits.h>
+
+using namespace std;
+
+int sq(int a) { return a*a; }
+
+struct Planet {
+	int id, x, y, z;
+	Planet() {}
+	Planet(int id, int x, int y, int z) : id(id), x(x), y(y), z(z) {}
+	int dist2(const Planet &other) const { return sq(x - other.x) + sq(y - other.y) + sq(z - other.z); }
+};
+
+struct Tag {
+	int pos, cost;
+	Tag() {}
+	Tag(int p, int c) : pos(p), cost(c) {}
+};
+
+int main() {
+	while (true) {
+		int N;
+		cin >> N;
+		if (!N) break;
+		vector<vector<int> > g(N + 1);
+		vector<Planet> v(N);
+		for (int i = 0; i < N; ++i) {
+			cin >> v[i].id >> v[i].x >> v[i].y >> v[i].z;
+			int mindist = INT_MAX, minj = 0;
+			for (int j = 0; j < i; ++j) {
+				int d = v[i].dist2(v[j]);
+				if (d < mindist) {
+					mindist = d;
+					minj = j;
+				}
+			}
+			g[i].push_back(minj);
+			g[minj].push_back(i);
+		}
+		int maxcost = 0, maxpos = 0;
+		{
+			vector<int> cost(N, -1);
+			queue<Tag> q;
+			q.push(Tag(0, 0));
+			cost[0] = 0;
+			while (!q.empty()) {
+				Tag t = q.front();
+				if (cost[t.pos] > maxcost) {
+					maxcost = cost[t.pos];
+					maxpos = t.pos;
+				}
+				q.pop();
+				for (vector<int>::iterator it = g[t.pos].begin(); it != g[t.pos].end(); ++it) {
+					if (cost[*it] != -1) continue;
+					cost[*it] = t.cost + 1;
+					q.push(Tag(*it, t.cost + 1));
+				}
+			}
+		}
+		{
+			maxcost = 0;
+			vector<int> prev(N, -2);
+			vector<int> cost(N, -1);
+			queue<Tag> q;
+			q.push(Tag(maxpos, 0));
+			prev[maxpos] = -1;
+			cost[maxpos] = 0;
+			while (!q.empty()) {
+				Tag t = q.front();
+				if (cost[t.pos] > maxcost) {
+					maxcost = cost[t.pos];
+					maxpos = t.pos;
+				}
+				q.pop();
+				for (vector<int>::iterator it = g[t.pos].begin(); it != g[t.pos].end(); ++it) {
+					if (cost[*it] != -1) continue;
+					prev[*it] = t.pos;
+					cost[*it] = t.cost + 1;
+					q.push(Tag(*it, t.cost + 1));
+				}
+			}
+			int cur = maxpos;
+			vector<int> ans;
+			for (int i = 0; i < maxcost; ++i) {
+				if (i == maxcost / 2) ans.push_back(v[cur].id);
+				if (maxcost % 2 == 1 && i == maxcost / 2 + 1) ans.push_back(v[cur].id);
+				cur = prev[cur];
+			}
+			sort(ans.begin(), ans.end());
+			bool first = true;
+			for (vector<int>::iterator it = ans.begin(); it != ans.end(); ++it) {
+				if (!first) cout << ' ';
+				cout << *it;
+				first = false;
+			}
+			cout << endl;
+		}
+	}
+	return 0;
+}
