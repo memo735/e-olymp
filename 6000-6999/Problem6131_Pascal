@@ -1,0 +1,36 @@
+var N, i, Current: LongInt;
+ManyTests, Test, j, ManyNumbers: Integer;
+Numbers, NumCounter: Array[1..2] of LongInt;
+StillRight, Exist: boolean;
+
+begin
+  ReadLn(ManyTests);
+  for Test:=1 to ManyTests do
+  begin
+    ReadLn(N);
+    StillRight:=true; ManyNumbers:=0;
+    for i:=1 to N do
+    begin
+      Read(Current);
+      if StillRight then
+      begin
+        Exist:=false;
+        for j:=1 to ManyNumbers do
+          if Numbers[j]=Current then
+          begin
+            Exist:=true;
+            inc(NumCounter[j]);
+          end;
+          if not Exist then
+            if ManyNumbers<2 then
+            begin
+              Inc(ManyNumbers);
+              NumCounter[ManyNumbers]:=1;
+              Numbers[ManyNumbers]:=Current;
+            end
+            else StillRight:=false;
+      end;
+    end;
+    if (StillRight) and ((ManyNumbers < 2) or (NumCounter[1]=NumCounter[2])) then WriteLn(1) else WriteLn(0);
+  end;
+end.
