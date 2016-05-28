@@ -1,0 +1,121 @@
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 60;
+const int maxm = maxn / 2;
+
+int dp[2][maxm][maxm][maxm];
+vector<int> r[maxn];
+int n, m, s, p[maxm], q[maxm], to[maxn];
+
+int calc(int a, int b, int c, int d){
+	if (~dp[a][b][c][d]) return dp[a][b][c][d];
+	if (b == c)
+	{
+		if (a == 0)
+		{
+			if (d == p[b]) return dp[a][b][c][d] = 1;
+			return dp[a][b][c][d] = 0;
+		}
+		if (d == q[b]) return dp[a][b][c][d] = 1;
+		return dp[a][b][c][d] = 0;
+	}
+	int len = c - b + 1;
+	if (len <= 0){
+		if (!a) len += n;
+		else len += m;
+	}
+	for (int v = 0; v < s; v++){
+		if (to[v] != d) continue;
+		int dp3[maxm][maxm];
+		for (int i = 0; i < maxm; i++)
+			for (int j = 0; j < maxm; j++) dp3[i][j] = 0;
+
+		dp3[0][0] = 1;
+		for (int i = 0; i < r[v].size(); i++)
+			for (int j = 0; j < len; j++){
+				if (!dp3[i][j]) continue;
+				for (int k = j; k < len; k++){
+					if (j == 0 && k == len - 1) continue;
+					int L = b + j;
+					if (!a) L %= n;
+					else L %= m;
+					int R = b + k;
+					if (!a) R %= n;
+					else R %= m;
+					if (calc(a, L, R, r[v][i])) dp3[i + 1][k + 1] = 1;
+				}
+			}
+		if (dp3[r[v].size()][len]) return dp[a][b][c][d] = 1;
+	}
+	return dp[a][b][c][d] = 0;
+}
+
+int main(){
+	int a, b, c, dp2[maxm][maxm], dpv[2][maxm][maxm];
+	while (scanf("%d%d%d", &a, &b, &c), a){
+		n = a; m = b; s = c;
+		for (int i = 0; i < a; i++) scanf("%d", p + i);
+		for (int i = 0; i < a; i++) p[i]--;
+		for (int i = 0; i < b; i++) scanf("%d", q + i);
+		for (int i = 0; i < b; i++) q[i]--;
+		for (int i = 0; i < maxn; i++) r[i].clear();
+		for (int i = 0; i < c; i++){
+			int d; scanf("%d", &d);
+			for (int j = 0; j < d; j++){
+				int e; scanf("%d", &e);
+				e--;
+				r[i].push_back(e);
+			}
+			scanf("%d", to + i);
+			to[i]--;
+		}
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < maxm; j++)
+				for (int k = 0; k < maxm; k++)
+					for (int l = 0; l < maxm; l++) dp[i][j][k][l] = -1;
+
+		for (int i = 0; i < a; i++)
+			for (int j = 0; j < a; j++)
+				for (int k = 0; k < maxm; k++) calc(0, i, j, k);
+
+		for (int i = 0; i < b; i++)
+			for (int j = 0; j < b; j++)
+				for (int k = 0; k < maxm; k++) calc(1, i, j, k);
+
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < maxm; j++)
+				for (int k = 0; k < maxm; k++) dpv[i][j][k] = 0;
+
+		for (int i = 0; i < a; i++)
+			for (int j = 0; j < a; j++)
+				for (int k = 0; k < maxm; k++) if (dp[0][i][j][k]) dpv[0][i][j] += 1 << k;
+
+		for (int i = 0; i < b; i++)
+			for (int j = 0; j < b; j++)
+				for (int k = 0; k < maxm; k++) if (dp[1][i][j][k]) dpv[1][i][j] += 1 << k;
+
+		int ret = -1;
+		for (int i = 0; i < n; i++){
+			for (int v = 0; v < m; v++){
+				for (int j = 0; j < maxm; j++)
+					for (int k = 0; k < maxm; k++) dp2[j][k] = -999999999;
+
+				dp2[0][0] = 0;
+				for (int j = 0; j < n; j++){
+					for (int k = 0; k < m; k++){
+						for (int f = j; f < n; f++)
+							for (int g = k; g < m; g++){
+								if (dpv[0][(i + j) % n][(i + f) % n] & dpv[1][(v + k) % m][(v + g) % m])dp2[f + 1][g + 1] = max(dp2[f + 1][g + 1], dp2[j][k] + 1);
+							}
+					}
+				}
+				ret = max(ret, dp2[n][m]);
+			}
+		}
+		printf("%d\n", ret);
+	}
+}
