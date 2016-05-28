@@ -1,0 +1,58 @@
+#include <iostream>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+typedef pair<int, int> P;
+
+const int M = 1001, G = M / 2;
+
+int main(){
+	int m, n, grid[M][M], dy[] = { 1, 0, -1, 0 }, dx[] = { 0, 1, 0, -1 };
+	bool vis[M][M], pt[M*M];
+	P dp[M][M];
+	for (int i = 0; i < M*M; i++)pt[i] = true;
+	pt[0] = pt[1] = false;
+	for (int i = 2; i <= M; i++){
+		if (pt[i]){
+			for (int j = 2 * i; j < M*M; j += i) pt[j] = false;
+		}
+	}
+	while (cin >> m >> n, m){
+		for (int i = 0; i < M; i++)
+			for (int j = 0; j < M; j++){
+				grid[i][j] = -1;
+				vis[i][j] = false;
+				dp[i][j] = P(0, 0);
+			}
+		int y = G, x = G, d = 0, sy = 0, sx = 0;
+		for (int i = 0; i < m; i++){
+			if (i + 1 == n){ sy = y; sx = x; }
+			grid[y][x] = i + 1;
+			int nxt = grid[y + dy[(d + 1) % 4]][x + dx[(d + 1) % 4]];
+			if (nxt < 0)d = (d + 1) % 4;
+			y += dy[d]; x += dx[d];
+		}
+		vis[sy][sx] = true;
+		dp[sy][sx] = P(pt[n], pt[n] ? n : 0);
+		P ans = dp[sy][sx];
+		for (int i = 0; i < M; i++)
+			for (int j = 0; j < M; j++){
+				if (!vis[i][j]) continue;
+				for (int k = 0; k < 3; k++){
+					if (grid[i + 1][j + k - 1] < 0) continue;
+					vis[i + 1][j + k - 1] = true;
+					P tmp = dp[i][j];
+					int val = grid[i + 1][j + k - 1];
+					if (pt[val]){
+						tmp.first++;
+						tmp.second = val;
+					}
+					dp[i + 1][j + k - 1] = max(dp[i + 1][j + k - 1], tmp);
+					ans = max(ans, tmp);
+				}
+			}
+		cout << ans.first << " " << ans.second << endl;
+	}
+}
