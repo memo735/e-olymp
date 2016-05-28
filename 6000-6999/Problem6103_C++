@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <algorithm>
+#include <string.h>
+#include <tuple>
+
+using namespace std;
+
+typedef tuple<int, int, int> T3;
+
+struct Team {
+	int id, solved, time, wrong[15];
+	bool operator<(const Team& o) const { return T3(solved, -time, id) < T3(o.solved, -o.time, o.id); }
+	bool eq(const Team& o) const { return solved == o.solved && time == o.time; }
+};
+
+Team teams[50];
+
+int main() {
+	while (true) {
+		int M, T, P, R;
+		scanf("%d %d %d %d", &M, &T, &P, &R);
+		if (M == 0) break;
+		memset(teams, 0, sizeof teams);
+		for (int i = 0; i < T; i++) teams[i].id = i;
+		for (int i = 0; i < R; i++) {
+			int m, t, p, j;
+			scanf("%d %d %d %d", &m, &t, &p, &j);
+			if (j) teams[t - 1].wrong[p]++;
+			else {
+				teams[t - 1].solved++;
+				teams[t - 1].time += m + teams[t - 1].wrong[p] * 20;
+			}
+		}
+		sort(teams, teams + T);
+		for (int i = T - 1; i >= 0; i--) {
+			char tail = i == 0 ? '\n' : teams[i].eq(teams[i - 1]) ? '=' : ',';
+			printf("%d%c", teams[i].id + 1, tail);
+		}
+	}
+}
