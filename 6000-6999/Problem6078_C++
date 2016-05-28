@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+const int INF = 0x3f3f3f3f;
+
+int main()
+{
+	int t, m, n, i, j, step[55];
+	double dp[55][55], ans;
+	char str[55];
+	scanf("%d", &n);
+	while (n--)
+	{
+		scanf("%d%d", &m, &t);
+		memset(step, 0, sizeof step);
+		memset(dp, 0, sizeof dp);
+		step[m + 2] = -1;
+		for (i = 1; i <= m; i++)
+		{
+			scanf("%s", str);
+			if (str[0] == 'L') step[i] = INF;
+			else sscanf(str, "%d", &step[i]);
+		}
+		dp[0][0] = 1.0;
+		for (i = 0; i <= t - 1; i++)
+		{
+			for (j = 0; j <= m; j++)
+			{
+				if (step[j + 1] == INF) dp[i + 2][j + 1] += dp[i][j] * 0.5;
+				else dp[i + 1][j + 1 + step[j + 1]] += dp[i][j] * 0.5;
+				if (step[j + 2] == INF) dp[i + 2][j + 2] += dp[i][j] * 0.5;
+				else dp[i + 1][j + 2 + step[j + 2]] += dp[i][j] * 0.5;
+			}
+		}
+		ans = 0;
+		for (i = 0; i <= t; i++) ans += dp[i][m + 1];
+		if (ans == 0.5) printf("Push. 0.5000\n");
+		else if (ans > 0.5) printf("Bet for. %.4f\n", ans);
+		else printf("Bet against. %.4f\n", ans);
+	}
+	return 0;
+}
