@@ -1,0 +1,24 @@
+#include <iostream>
+#include<vector>
+
+using namespace std;
+
+string s[1001];
+vector<int> g[1001];
+
+void dfs(int v, int d){
+	for (int i = 0; i < d; i++) cout << ".";
+	cout << s[v - 1] << endl;
+	for (int i = 0; i < g[v].size(); i++) dfs(g[v][i], d + 1);
+}
+
+int main(){
+	int n, k[1001];
+	cin >> n;
+	for (int i = 0; i < n; i++){
+		cin >> k[i] >> s[i];
+		g[k[i]].push_back(i + 1);
+	}
+	dfs(1, 0);
+	return 0;
+}
