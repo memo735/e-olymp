@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <string.h>
+
+char str[100];
+
+int main(){
+	int i, j, k, count, len;
+	while (scanf("%s", str), strcmp(str, "*")){
+		len = strlen(str);
+		if (len <= 2){
+			printf("%s is surprising.\n", str);
+			continue;
+		}
+		for (i = 0, count = 0; i < len && count != 2; i++){
+			count = 0;
+			for (j = i + 1, k = 0; j < len; j++, k++){
+				if (str[j] == str[k]) count++;
+				if (count == 2) break;
+			}
+		}
+		if (count == 2) printf("%s is NOT surprising.\n", str);
+		else printf("%s is surprising.\n", str);
+	}
+	return 0;
+}
