@@ -1,0 +1,99 @@
+#include <iostream>
+#include <map>
+#include <queue>
+
+using namespace std;
+
+const int N = 30;
+
+struct node{
+	int v, cap;
+	node(){}
+	node(int _v, int _cap) :v(_v), cap(_cap){}
+	bool operator < (const node &a) const{ return a.cap < cap; }
+};
+
+map<string, int> mp;
+int n, m, k, g[N][N], dis[N], clo[N], pre[N], fst[N], max_side[N];
+
+int Prim(int src, int id){
+	priority_queue<node> q;
+	while (!q.empty()) q.pop();
+	dis[src] = 0;
+	q.push(node(src, 0));
+	int ans = 0;
+	while (!q.empty()){
+		node cur = q.top();
+		q.pop();
+		int u = cur.v;
+		if (!clo[u]){
+			clo[u] = id;
+			ans += dis[u];
+			for (int i = 1; i<n; i++)
+				if (!clo[i] && g[u][i] != 0 && dis[i]>g[u][i]){
+					pre[i] = u;
+					dis[i] = g[u][i];
+					q.push(node(i, dis[i]));
+				}
+		}
+	}
+	return ans;
+}
+
+void update(int cur, int last, int maxside){
+	max_side[cur] = maxside > g[cur][last] ? maxside : g[cur][last];
+	for (int i = 1; i < n; i++)
+		if (i != last && g[cur][i] != 0 && (pre[cur] == i || pre[i] == cur)) update(i, cur, max_side[cur]);
+}
+
+int main(){
+	char s1[20], s2[20];
+	int cap;
+	while (~scanf("%d", &m)){
+		mp["Park"] = 0;
+		n = 1;
+		memset(g, 0, sizeof g);
+		while (m--){
+			scanf("%s %s %d", s1, s2, &cap);
+			if (!mp.count(s1)) mp[s1] = n++;
+			if (!mp.count(s2)) mp[s2] = n++;
+			int u = mp[s1], v = mp[s2];
+			if (!g[u][v] || g[u][v]>cap) g[u][v] = g[v][u] = cap;
+		}
+		scanf("%d", &k);
+		//Solve();
+		int i, res, cnt;
+		for (i = 0; i < n; i++){
+			dis[i] = INT_MAX;
+			clo[i] = pre[i] = fst[i] = 0;
+		}
+		res = 0, cnt = 1;
+		for (i = 1; i < n; i++)
+			if (!clo[i]) res += Prim(i, cnt++);
+		for (i = 1; i < n; i++){
+			int id = clo[i];
+			if (g[0][i] != 0 && (!fst[id] || g[0][i] < g[0][fst[id]])) fst[id] = i;
+		}
+		for (i = 1; i < cnt; i++){
+			res += g[0][fst[i]];
+			g[0][fst[i]] = g[fst[i]][0] = 0;
+			update(fst[i], 0, 0);
+		}
+		k = k - cnt + 1;
+		while (k--){
+			int tmp = 0;
+			for (i = 1; i < n; i++)
+				if (g[0][i] != 0 && (tmp == 0 || max_side[tmp] - g[0][tmp] < max_side[i] - g[0][i])) tmp = i;
+			if (max_side[tmp] <= g[0][tmp]) break;
+			res = res - max_side[tmp] + g[0][tmp];
+			g[0][tmp] = g[tmp][0] = 0;
+			int p = 0;
+			for (i = tmp; pre[i] != 0; i = pre[i])
+				if (p == 0 || g[p][pre[p]] < g[i][pre[i]]) p = i;
+			pre[p] = 0;
+			update(tmp, 0, 0);
+		}
+		printf("Total miles driven: %d\n", res);
+	}
+	return 0;
+}
