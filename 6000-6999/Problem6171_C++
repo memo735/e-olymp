@@ -1,0 +1,142 @@
+#include <iostream>
+#include <algorithm>
+#include <string.h>
+#include <queue>
+#include <list>
+
+using namespace std;
+
+const int nn = 500001, inf = 0x3fffffff, mod = 10000003;
+
+int n, m, a, b, num, p[nn], dis[nn];
+bool use[nn * 20];
+pair<int, int> ha[nn * 20];
+queue<int>que;
+list<int> ls;
+list<int>::iterator it;
+
+struct node
+{
+	int en, next;
+} E[nn * 2];
+
+void add(int st, int en)
+{
+	E[num].en = en;
+	E[num].next = p[st];
+	p[st] = num++;
+	E[num].en = st;
+	E[num].next = p[en];
+	p[en] = num++;
+}
+
+void jiaru(int u, int v)
+{
+	if (u > v) swap(u, v);
+	long ix = u * 1313131L % mod + v * 1313131L % mod * 1313131 % mod;
+	ix %= mod;
+	for (int i = ix;; i = i + 1 < mod ? i + 1 : i + 1 - mod)
+	{
+		if (!use[i])
+		{
+			use[i] = true;
+			ha[i] = make_pair(u, v);
+			break;
+		}
+		if (ha[i] == make_pair(u, v)) break;
+	}
+}
+
+bool zhao(int u, int v)
+{
+	if (u > v) swap(u, v);
+	long ix = u * 1313131L % mod + v * 1313131L % mod * 1313131 % mod;
+	ix %= mod;
+	for (int i = ix;; i = i + 1 < mod ? i + 1 : i + 1 - mod)
+	{
+		if (!use[i]) return false;
+		if (ha[i] == make_pair(u, v)) return true;
+	}
+}
+
+long bfs()
+{
+	int i, sta, w;
+	for (i = 1; i <= n; i++) dis[i] = inf;
+	dis[1] = 0;
+	que.push(1);
+	while (que.size())
+	{
+		sta = que.front();
+		que.pop();
+		for (i = p[sta]; i + 1; i = E[i].next)
+		{
+			w = E[i].en;
+			if (dis[w] == inf)
+			{
+				que.push(w);
+				dis[w] = dis[sta] + 1;
+			}
+		}
+	}
+	return (long)dis[n] * a;
+}
+
+long go()
+{
+	int i;
+	ls.clear();
+	for (i = 2; i <= n; i++)
+	{
+		ls.push_back(i);
+		dis[i] = inf;
+	}
+	que.push(1);
+	dis[1] = 0;
+	int sta;
+	while (que.size())
+	{
+		sta = que.front();
+		que.pop();
+		for (it = ls.begin(); it != ls.end();)
+		{
+			if (!zhao(sta, *it))
+			{
+				dis[*it] = dis[sta] + 1;
+				que.push(*it);
+				it = ls.erase(it);
+			}
+			else ++it;
+		}
+	}
+	return (long)dis[n] * b;
+}
+
+int main()
+{
+	int i, u, v;
+	while (scanf("%d%d%d%d", &n, &m, &a, &b) != EOF)
+	{
+		if (n == 1) while (1);
+		memset(use, false, sizeof use);
+		memset(p, -1, sizeof p);
+		num = 0;
+		for (i = 1; i <= m; i++)
+		{
+			scanf("%d%d", &u, &v);
+			add(u, v);
+			jiaru(u, v);
+		}
+		if (zhao(1, n))
+		{
+			if (a <= b) printf("%d\n", a);
+			else printf("%ld\n", min((long)a, go()));
+		}
+		else
+		{
+			if (b <= a) printf("%d\n", b);
+			else printf("%ld\n", min((long)b, bfs()));
+		}
+	}
+	return 0;
+}
