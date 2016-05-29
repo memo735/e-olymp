@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 1001;
+
+int a[maxn], r[maxn], dp[maxn][55], sum[maxn][maxn];
+vector<int> E[maxn];
+
+int lowbit(int x) { return x & -x; }
+
+int get(int x)
+{
+	int ans = 0;
+	for (int i = x; i; i -= lowbit(i)) ans += a[i];
+	return ans;
+}
+
+void update(int x, int v)
+{
+	for (int i = x; i < maxn; i += lowbit(i)) a[i] += v;
+}
+
+int main()
+{
+	int n, m, k;
+	scanf("%d%d%d", &n, &m, &k);
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%d", &r[i]);
+		E[r[i] - 1].push_back(i);
+	}
+	for (int i = 0; i < m; i++)
+	{
+		memset(a, 0, sizeof a);
+		for (int j = i; j < m; j++)
+		{
+			if (i != j) sum[i][j] = sum[i][j - 1];
+			for (int t = 0; t < E[j].size(); t++) sum[i][j] += get(E[j][t]);
+			for (int t = 0; t < E[j].size(); t++) update(E[j][t], 1);
+		}
+	}
+	for (int i = 0; i <= m; i++)
+		for (int j = 0; j <= k; j++) dp[i][j] = 1e9;
+
+	dp[0][0] = 0;
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < k; j++)
+		{
+			if (dp[i][j] == 1e9) continue;
+			for (int t = i; t < m; t++)
+				dp[t + 1][j + 1] = min(dp[t + 1][j + 1], dp[i][j] + sum[i][t]);
+		}
+
+	cout << dp[m][k] << endl;
+}
