@@ -1,0 +1,56 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <bitset>
+#include <sstream>
+
+using namespace std;
+
+const int MAX_N = 5001;
+vector<int> G[MAX_N];
+bitset<MAX_N> bi[MAX_N];
+bool vis[MAX_N], isX[MAX_N];
+
+void dfs(int cur) {
+	vis[cur] = true;
+	int size = G[cur].size();
+	for (int i = 0; i < size; i++) {
+		int now = G[cur][i];
+		if (!vis[now]) dfs(now);
+		bi[cur] |= bi[now];
+	}
+}
+
+int main() {
+	int n, k, num, x;
+	while (~scanf("%d %d", &n, &k)) {
+		for (int i = 0; i < MAX_N; ++i)  {
+			G[i].clear();
+			bi[i].reset();
+			bi[i].set(i);
+			vis[i] = false;
+		}
+		for (int i = 0; i < k; ++i) {
+			scanf("%d", &num);
+			isX[num] = true;
+		}
+		string s;
+		for (int i = 1; i <= n; ++i) {
+			scanf("%d", &num);
+			getline(cin, s);
+			stringstream ss(s);
+			while (ss >> x) G[num].push_back(x);
+		}
+		int ans = 0, id = 0;
+		for (int i = 1; i <= n; ++i) {
+			if (!vis[i]) dfs(i);
+			int tmp = bi[i].count();
+			if (isX[i] && (tmp > ans || tmp == ans && i < id)) {
+				ans = tmp;
+				id = i;
+			}
+		}
+		printf("%d\n", id);
+	}
+	return 0;
+}
