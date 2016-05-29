@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+const int maxn = 50001;
+int head[maxn], ind[maxn], en;
+
+struct Edge{
+	int v, next;
+} edge[maxn * 10];
+
+void addedge(int u, int v)
+{
+	edge[en].v = v;
+	edge[en].next = head[u];
+	head[u] = en++;
+}
+
+int toposort(int n)
+{
+	int u, cnt = 0;
+	bool flag = 0;
+	queue<int> q;
+	for (int i = 1; i <= n; i++) if (ind[i] == 0) q.push(i);
+	while (!q.empty())
+	{
+		cnt++;
+		if (q.size() > 1) flag = 1;
+		u = q.front(), q.pop();
+		for (int i = head[u]; i != -1; i = edge[i].next)
+		{
+			int v = edge[i].v;
+			ind[v]--;
+			if (ind[v] == 0) q.push(v);
+		}
+	}
+	if (cnt != n) return 0;
+	if (flag == 1) return 2;
+	return 1;
+}
+
+int main()
+{
+	int n, m, u, v;
+	while (scanf("%d%d", &n, &m) && n + m)
+	{
+		memset(head, -1, sizeof head);
+		memset(ind, 0, sizeof ind);
+		en = 0;
+		for (int i = 0; i < m; i++)
+		{
+			scanf("%d%d", &u, &v);
+			addedge(u, v);
+			++ind[v];
+		}
+		printf("%d\n", toposort(n));
+	}
+	return 0;
+}
