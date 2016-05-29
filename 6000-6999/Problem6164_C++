@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 101;
+
+vector<int> g[2*maxn];
+int sz = 0, A = 15000, p[2 * maxn], z[2 * maxn], con[25000];
+int v[maxn][2 * maxn][2 * maxn], val[maxn][2 * maxn][2 * maxn], dp[2][maxn][2 * maxn][2 * maxn];
+
+int calc(int at, int l, int r, int dep){
+	if (v[at][l][r])return val[at][l][r];
+	if (g[at].size() == 0){
+		dp[0][at][l][r] = dp[1][at][l][r] = 1;
+		return val[at][l][r] = p[at] * dep;
+	}
+	int perm[10];
+	for (int i = 0; i < g[at].size(); i++) perm[i] = i;
+	int len = g[at].size(), best = z[0];
+	for (int i = 0; i < len; i++) best = max(best, -calc(g[at][i], 0, sz - 1, dep));
+	val[at][l][r] = best;
+	int r1 = 9999999, r2 = 0;
+	do{
+		int t1 = 0, t2 = 0;
+		int va = z[l], vb = z[r];
+		for (int i = 0; i < len; i++){
+			int tmp = -calc(g[at][perm[i]], con[A - vb], con[A - va], dep);
+			t1 += dp[0][g[at][perm[i]]][con[A - vb]][con[A - va]];
+			t2 += dp[1][g[at][perm[i]]][con[A - vb]][con[A - va]];
+			if (tmp > va) va = tmp;
+			if (va >= vb) break;
+		}
+		r1 = min(r1, t1);
+		r2 = max(r2, t2);
+	} while (next_permutation(perm, perm + len));
+	dp[0][at][l][r] = r1;
+	dp[1][at][l][r] = r2;
+	v[at][l][r] = 1;
+	return val[at][l][r];
+}
+
+int main(){
+	int a; scanf("%d", &a);
+	for (int i = 0; i < a; i++) scanf("%d", p + i);
+	for (int i = 0; i < a; i++){
+		int b; scanf("%d", &b);
+		for (int j = 0; j < b; j++){
+			int c; scanf("%d", &c); c--;
+			g[i].push_back(c);
+		}
+	}
+	for (int i = 0; i < a; i++){
+		z[sz++] = p[i];
+		z[sz++] = -p[i];
+	}
+	z[sz++] = 11111;
+	z[sz++] = -11111;
+	sort(z, z + sz);
+	for (int i = 0; i < sz; i++) con[z[i] + A] = i;
+	for (int i = 0; i < a; i++)
+		for (int j = 0; j < sz; j++)
+			for (int k = 0; k < sz; k++) dp[0][i][j][k] = dp[1][i][j][k] = -1;
+	calc(0, 0, sz - 1, 1);
+	printf("%d %d\n", dp[0][0][0][sz - 1], dp[1][0][0][sz - 1]);
+}
