@@ -1,0 +1,21 @@
+#include <stdio.h>  
+
+int main()
+{
+	int n, i, num, tmp, a[100002];
+	while (scanf("%d", &n) == 1)
+	{
+		for (i = 0, num = 0; i < n; i++)
+		{
+			scanf("%d", &tmp);
+			if (i == 0) a[num++] = tmp;
+			else
+			{
+				if ((tmp + a[num - 1]) % 2 == 0 && num > 0) num--;
+				else a[num++] = tmp;
+			}
+		}
+		printf("%d\n", num);
+	}
+	return 0;
+}
