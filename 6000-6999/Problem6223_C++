@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct
+{
+	int v, next;
+} Node;
+Node e[50000];
+
+int indeks, top1, top2, count;
+int first[5001], low[5001], stack1[5001], stack2[5001], belong[5001];
+
+void Garbow(int i)
+{
+	int j, k;
+	stack1[++top1] = stack2[++top2] = i;
+	low[i] = indeks++;
+	for (j = first[i]; j != -1; j = e[j].next)
+	{
+		k = e[j].v;
+		if (!low[k]) Garbow(k);
+		else if (!belong[k])
+		{
+			while (low[stack2[top2]] > low[k]) top2--;
+		}
+	}
+	if (stack2[top2] == i)
+	{
+		top2--;
+		count++;
+		do {
+			k = stack1[top1--];
+			belong[k] = count;
+		} while (k != i);
+	}
+}
+
+int main()
+{
+	int g, i, j, n, m, u, v, degree[5001];
+	while (scanf("%d", &n) && n)
+	{
+		scanf("%d", &m);
+		g = 0; top1 = top2 = -1; indeks = 1; count = 0;
+		memset(first, -1, sizeof first);
+		memset(low, 0, sizeof low);
+		memset(belong, 0, sizeof belong);
+		memset(degree, 0, sizeof degree);
+		for (i = 1; i <= m; i++)
+		{
+			scanf("%d%d", &u, &v);
+			e[g].v = v;
+			e[g].next = first[u];
+			first[u] = g++;
+		}
+		for (i = 1; i <= n; i++) if (!low[i]) Garbow(i);
+		for (i = 1; i <= n; i++)
+			for (j = first[i]; j != -1; j = e[j].next)
+			{
+				v = e[j].v;
+				if (belong[i] != belong[v]) degree[belong[i]]++;
+			}
+		for (i = 1; i <= n; i++) if (!degree[belong[i]]) printf("%d ", i);
+		printf("\n");
+	}
+	return 0;
+}
