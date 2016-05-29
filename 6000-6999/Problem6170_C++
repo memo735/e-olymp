@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+#define inff 0x3fffffff
+
+struct node
+{
+	int out, in, cost;
+} a[1001];
+
+bool cmp(node x, node y)
+{
+	if (x.cost == y.cost) return x.in > y.in;
+	return x.cost > y.cost;
+}
+
+int main()
+{
+	int i, j, n;
+	bool use[1001];
+	while (scanf("%d", &n) != EOF)
+	{
+		for (i = 1; i <= n; i++) scanf("%d%d%d", &a[i].out, &a[i].in, &a[i].cost);
+		sort(a + 1, a + n + 1, cmp);
+		memset(use, false, sizeof use);
+		int ans = 0;
+		for (i = 1; i <= n; i++)
+		{
+			int ix = 0, id = -1;
+			for (j = 1; j <= n; j++)
+			{
+				if (!use[j] && a[j].out < a[i].in && a[j].out > ix)
+				{
+					id = j;
+					ix = a[j].out;
+				}
+			}
+			if (id != -1) use[id] = true;
+			ans += a[i].cost*(a[i].in - ix);
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
