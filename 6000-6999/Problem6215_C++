@@ -1,0 +1,33 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+string s[2005];
+int n;
+
+void sol()
+{
+	sort(s, s + n);
+	string s1 = s[n / 2 - 1], s2 = s[n / 2], t = "", p = "";
+	for (int i = 0;; ++i)
+	{
+		for (char c = 'A'; c <= 'Z'; ++c)
+		{
+			t = p + c;
+			if (s1 <= t &&t < s2){ cout << t << endl; return; }
+		}
+		p += s1[i];
+	}
+}
+
+int main()
+{
+	while (~scanf("%d", &n) && n)
+	{
+		for (int i=0;i<=n - 1;i++) cin >> s[i];
+		sol();
+	}
+}
