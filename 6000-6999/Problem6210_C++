@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <algorithm>
+#include <string.h>
+#include <math.h>
+
+using namespace std;
+
+int main()
+{
+	int n, w[5001], C[5001];
+	double m, eps = 1e-9, c[5001];
+	long long f[10001];
+	while (~scanf("%d%lf", &n, &m)) {
+		if (n + m < eps) break;
+		for (int i = 0; i < n; ++i) scanf("%d%lf", w + i, c + i), C[i] = (floor)(c[i] * 100);
+		memset(f, 0, sizeof f);
+		int S = (floor)(m * 100);
+		for (int i = 0; i < n; ++i)
+			for (int v = C[i]; v <= S; ++v)
+				if (f[v] < f[v - C[i]] + w[i]) f[v] = f[v - C[i]] + w[i];
+		printf("%lld\n", f[S]);
+	}
+	return 0;
+}
