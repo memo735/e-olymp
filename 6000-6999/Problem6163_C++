@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 100000;
+
+int dp[maxn], l1[maxn], r1[maxn], l2[maxn], r2[maxn], z[2 * maxn], segtree[1 << 19];
+pair<int, pair<int, int>> ev[2*maxn];
+
+int query(int a, int b, int c, int d, int e){
+	if (d < a || b < c) return 0;
+	if (c <= a && b <= d) return segtree[e];
+	return max(query(a, (a + b) / 2, c, d, e * 2), query((a + b) / 2 + 1, b, c, d, e * 2 + 1));
+}
+
+void update(int a, int b){
+	a += 262144;
+	while (a){
+		segtree[a] = max(segtree[a], b);
+		a /= 2;
+	}
+}
+
+int main(){
+	int a;
+	scanf("%d", &a);
+	for (int i = 0; i < a; i++){
+		scanf("%d%d%d%d", l1 + i, r1 + i, l2 + i, r2 + i);
+		z[i * 2] = r2[i];
+		z[i * 2 + 1] = l2[i];
+		ev[i * 2] = make_pair(l1[i], make_pair(i, 0));
+		ev[i * 2 + 1] = make_pair(r1[i], make_pair(i, 1));
+	}
+	sort(z, z + a * 2);
+	sort(ev, ev + a * 2);
+	for (int i = 0; i < a * 2; i++){
+		int at = ev[i].second.first;
+		if (ev[i].second.second == 0){
+			int pos = lower_bound(z, z + a * 2, l2[at]) - z;
+			dp[at] = query(0, 262143, 0, pos, 1) + 1;
+		}
+		else
+		{
+			int pos = lower_bound(z, z + a * 2, r2[at]) - z;
+			update(pos, dp[at]);
+		}
+	}
+	int ret = 0;
+	for (int i = 0; i < a; i++)ret = max(ret, dp[i]);
+	printf("%d\n", ret);
+}
