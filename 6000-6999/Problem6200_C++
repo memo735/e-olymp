@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <string.h>
+
+using namespace std;
+
+
+int ans(int x)
+{
+	int tmp = 1;
+	for (int i = 0; i < x; i++) tmp *= 3;
+	return tmp;
+}
+
+int main()
+{
+	int tc, flag = 0, a[40];
+	scanf("%d", &tc);
+	while (tc--)
+	{
+		int n, num = 0;
+		scanf("%d", &n);
+		memset(a, 0, sizeof a);
+		while (n)
+		{
+			a[num++] = n % 3;
+			n /= 3;
+		}
+		int cnt = 0, xxx = num, b[40];
+		for (int i = 0; i < num; i++)
+		{
+			if (a[i] == 2)
+			{
+				b[cnt++] = ans(i);
+				a[i] = 0;
+				a[i + 1]++;
+				if (i == num - 1) xxx++;
+			}
+			if (a[i] == 3)
+			{
+				a[i] = 0;
+				a[i + 1]++;
+				if (i == num - 1) xxx++;
+			}
+		}
+		if (flag == 1) puts("");
+		else flag = 1;
+		printf("left pan:");
+		for (int i = cnt - 1; i >= 0; i--) printf(" %d", b[i]);
+		puts("");
+		printf("right pan:");
+		for (int i = xxx - 1; i >= 0; i--) if (a[i]) printf(" %d", ans(i));
+		puts("");
+	}
+	return 0;
+}
