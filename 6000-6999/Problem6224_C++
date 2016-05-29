@@ -1,0 +1,48 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 200001;
+int p[maxn];
+
+struct node
+{
+	int u, v, cost;
+	bool operator < (const node &a) const { return cost < a.cost; }
+} a[maxn];
+
+int find(int x)
+{
+	if (p[x] == x) return x;
+	return p[x] = find(p[x]);
+}
+
+int main()
+{
+	int n, m;
+	while (scanf("%d%d", &n, &m) && n + m)
+	{
+		long long sum = 0;
+		for (int i = 0; i < m; i++)
+		{
+			scanf("%d%d%d", &a[i].u, &a[i].v, &a[i].cost);
+			sum += a[i].cost;
+		}
+		for (int i = 0; i <= n; i++) p[i] = i;
+		sort(a, a + m);
+		long long ans = 0;
+		for (int i = 0; i < m; i++)
+		{
+			int ita = find(a[i].u);
+			int itb = find(a[i].v);
+			if (ita != itb)
+			{
+				ans += a[i].cost;
+				p[ita] = itb;
+			}
+		}
+		printf("%lld\n", sum - ans);
+	}
+	return 0;
+}
