@@ -1,0 +1,187 @@
+#include <cstdio>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+int xx, yy, mp[140][140], vis[140][140];
+int dir[4][2] = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+
+struct node
+{
+	int x, y, step;
+	bool operator<(const node p) const { return step > p.step; }
+};
+
+struct point
+{
+	int n, s, w, e;
+};
+
+point po[140][140];
+node p, q;
+priority_queue<node> Q;
+
+void bfs()
+{
+	p.x = 70; p.y = 70;
+	p.step = 0;
+	Q.push(p);
+	vis[70][70] = 1;
+	while (!Q.empty())
+	{
+		q = Q.top();
+		Q.pop();
+		if (q.x == xx&&q.y == yy)
+		{
+			printf("%d\n", q.step);
+			return;
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			p.x = q.x + dir[i][0]; p.y = q.y + dir[i][1];
+			if (p.x >= 0 && p.x < 140 && p.y >= 0 && p.y < 140 && !vis[p.x][p.y] && mp[p.x][p.y])
+			{
+				if (i == 0 && po[q.x][q.y].n)
+				{
+					vis[p.x][p.y] = 1;
+					p.step = q.step + 1;
+					Q.push(p);
+				}
+				if (i == 1 && po[q.x][q.y].e)
+				{
+					vis[p.x][p.y] = 1;
+					p.step = q.step + 1;
+					Q.push(p);
+				}
+				if (i == 2 && po[q.x][q.y].s)
+				{
+					vis[p.x][p.y] = 1;
+					p.step = q.step + 1;
+					Q.push(p);
+				}
+				if (i == 3 && po[q.x][q.y].w)
+				{
+					vis[p.x][p.y] = 1;
+					p.step = q.step + 1;
+					Q.push(p);
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	int tc;
+	scanf("%d", &tc);
+	getchar();
+	while (tc--)
+	{
+		int n;
+		scanf("%d", &n);
+		memset(mp, 0, sizeof mp);
+		int x = 70; int y = 70;
+		mp[x][y] = 1;
+		po[70][70].n = 0;
+		po[70][70].s = 0;
+		po[70][70].w = 0;
+		po[70][70].e = 0;
+		for (int i = 0; i < n; i++)
+		{
+			int x1 = x, y1 = y;
+			char ch[100];
+			scanf("%s", ch);
+			getchar();
+			if (ch[0] == 'S')
+			{
+				y++;
+				if (mp[x][y]) po[x][y].n = 1;
+				else
+				{
+					po[x][y].n = 1;
+					po[x][y].s = 0;
+					po[x][y].w = 0;
+					po[x][y].e = 0;
+					mp[x][y] = 1;
+				}
+				if (mp[x1][y1]) po[x1][y1].s = 1;
+				else
+				{
+					po[x1][y1].n = 0;
+					po[x1][y1].s = 1;
+					po[x1][y1].w = 0;
+					po[x1][y1].e = 0;
+				}
+			}
+			if (ch[0] == 'N')
+			{
+				y--;
+				if (mp[x][y]) po[x][y].s = 1;
+				else
+				{
+					po[x][y].n = 0;
+					po[x][y].s = 1;
+					po[x][y].w = 0;
+					po[x][y].e = 0;
+					mp[x][y] = 1;
+				}
+				if (mp[x1][y1]) po[x1][y1].n = 1;
+				else
+				{
+					po[x1][y1].n = 1;
+					po[x1][y1].s = 0;
+					po[x1][y1].w = 0;
+					po[x1][y1].e = 0;
+				}
+			}
+			if (ch[0] == 'W')
+			{
+				x--;
+				if (mp[x][y]) po[x][y].e = 1;
+				else
+				{
+					po[x][y].n = 0;
+					po[x][y].s = 0;
+					po[x][y].w = 0;
+					po[x][y].e = 1;
+					mp[x][y] = 1;
+				}
+				if (mp[x1][y1]) po[x1][y1].w = 1;
+				else
+				{
+					po[x1][y1].n = 0;
+					po[x1][y1].s = 0;
+					po[x1][y1].w = 1;
+					po[x1][y1].e = 0;
+				}
+			}
+			if (ch[0] == 'E')
+			{
+				x++;
+				if (mp[x][y]) po[x][y].w = 1;
+				else
+				{
+					po[x][y].n = 0;
+					po[x][y].s = 0;
+					po[x][y].w = 1;
+					po[x][y].e = 0;
+					mp[x][y] = 1;
+				}
+				if (mp[x1][y1]) po[x1][y1].e = 1;
+				else
+				{
+					po[x1][y1].n = 0;
+					po[x1][y1].s = 0;
+					po[x1][y1].w = 0;
+					po[x1][y1].e = 1;
+				}
+			}
+		}
+		xx = x; yy = y;
+		memset(vis, 0, sizeof vis);
+		bfs();
+		while (!Q.empty()) Q.pop();
+	}
+	return 0;
+}
