@@ -1,0 +1,12 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int W, H, w, h, L, R;
+	cin >> W >> H >> w >> h;
+	L = W / w / 2 + W / w % 2;
+	R = H / h / 2 + H / h % 2;
+	cout << L*R << endl;
+}
