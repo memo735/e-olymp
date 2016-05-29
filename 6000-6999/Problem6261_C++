@@ -1,0 +1,32 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+const int maxn = 1050;
+
+int main()
+{
+	int n, m, t = 0;
+	char s[maxn];
+	pair<int, pair<int, string> > p[maxn];
+	scanf("%d%d", &n, &m);
+	for (int i = 0; i < n; i++) cin >> p[i].second.second, p[i].second.first = n - i;
+	for (int i = 0; i < m; i++)
+	{
+		scanf("%s", s);
+		int flag = 0, cnt = 0;
+		for (int j = 0; j < n; j++)
+		{
+			if (s[j] == 'X') flag = j, cnt++;
+		}
+		if (cnt == 0 || cnt > 1) t++;
+		else p[flag].first++;
+	}
+	sort(p, p + n);
+	for (int i = n - 1; i >= 0; i--)
+	{
+		cout << p[i].second.second << " ";
+		printf("%.2f%%\n", 100.0*p[i].first / m);
+	}
+	printf("Invalid %.2f%%\n", 100.0*t / m);
+}
