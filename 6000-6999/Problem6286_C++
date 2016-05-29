@@ -1,0 +1,43 @@
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
+bool Sade(int x)
+{
+	if (x == 0 || x == 1) return false;
+	if (x == 2 || x == 3) return true;
+	if (x % 2 == 0) return false;
+	int kok = (int)sqrt(x) + 1;
+	for (int i = 3; i < kok; i = i + 2)
+	{
+		if (x%i == 0) return false;
+	}
+	return true;
+}
+
+int bolenSayi(int x)
+{
+	if (Sade(x)) return 2;
+	int say = 1, bolen = 2;
+	while (x > 1)
+	{
+		int tekrar = 0;
+		while (x%bolen == 0)
+		{
+			x = x / bolen;
+			tekrar++;
+		}
+		if (tekrar > 0) say = say*(tekrar + 1);
+		if (bolen == 2) bolen = 3;
+		else bolen = bolen + 2;
+	}
+	return say;
+}
+
+int main()
+{
+	int n; cin >> n;
+	cout << bolenSayi(n + 1) << endl;
+	return 0;
+}
