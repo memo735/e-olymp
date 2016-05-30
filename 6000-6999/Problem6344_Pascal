@@ -1,0 +1,12 @@
+var
+  Ax,Ay,Bx,By,Cx,Cy,Dx,Dy:real;
+begin
+  readln(Ax,Ay);
+  readln(Cx,Cy);
+  Bx:= (Ax + Cx) / 2 + (Cy - Ay) / 2;
+  By:= (Ay + Cy) / 2 - (Cx - Ax) / 2;
+  Dx:= (Ax + Cx) / 2 - (Cy - Ay) / 2;
+  Dy:= (Ay + Cy) / 2 + (Cx - Ax) / 2;
+  writeln(Bx:0:4,' ',By:0:4);
+  writeln(Dx:0:4,' ',Dy:0:4);
+end.
