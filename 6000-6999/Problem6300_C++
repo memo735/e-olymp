@@ -1,0 +1,36 @@
+#include <iostream>
+#include <cctype>
+
+using namespace std;
+
+int main(){
+	string s;
+	cin >> s;
+	if (s.find('_') == string::npos){
+		if (isupper(s[0])) cout << "Error!";
+		else
+		{
+			for (int i = 0; i < s.size(); i++){
+				if (islower(s[i])) cout << s[i];
+				else cout << "_" << (char)(s[i] + 0x20);
+			}
+		}
+	}
+	else
+	{
+		bool err = false;
+		for (int i = 0; i < s.size(); i++){
+			if (isupper(s[i])) err = true;
+			if (s[i] == '_' && (i == 0 || i == s.size() - 1 || s[i - 1] == '_')) err = true;
+		}
+		if (err) cout << "Error!";
+		else
+		{
+			for (int i = 0; i < s.size(); i++){
+				if (s[i] == '_') continue;
+				cout << (char)(i&&s[i - 1] == '_' ? s[i] - 0x20 : s[i]);
+			}
+		}
+	}
+	return 0;
+}
