@@ -1,0 +1,62 @@
+#include <iostream>
+#include <complex>
+#include <vector>
+
+using namespace std;
+
+double pos_at(double x1, double y1, double x2, double y2, double qx){
+	return y1 + (y2 - y1)*(qx - x1) / (x2 - x1);
+}
+
+void calc(vector<double> &field, int sign, double x1, double x2){
+	if (x2 < x1) swap(x1, x2);
+	for (int x = 0; x < field.size(); x++){
+		double d = 0;
+		int t1 = !(x1 + 1E-9 < x) + !(x1 + 1E-9 < x + 1);
+		int t2 = !(x2 + 1E-9 < x) + !(x2 + 1E-9 < x + 1);
+		double yl = pos_at(x1, 1, x2, 0, x);
+		double yh = pos_at(x1, 1, x2, 0, x + 1);
+		if (t1 == 2) d = 1.0;
+		else if (t1 == 1){
+			if (t2 == 1) d = (x1 + x2) / 2 - x;
+			else if (t2 == 2) d = 1 - (x + 1 - x1)*(1 - yh) / 2;
+		}
+		else if (t1 == 0){
+			if (t2 == 2) d = (yl + yh) / 2;
+			else if (t2 == 1) d = (x2 - x)*yl / 2;
+			else if (t2 == 0) d = 0.0;
+		}
+		field[x] += sign * d;
+	}
+}
+
+void calc(vector<vector<double>> &field, int x1, int y1, int x2, int y2){
+	if (y1 == y2) return;
+	int sign = y1 < y2 ? -1 : 1;
+	if (y2 < y1){
+		swap(x1, x2);
+		swap(y1, y2);
+	}
+	for (int i = y1; i < y2; i++) calc(field[i], sign, pos_at(y1, x1, y2, x2, i), pos_at(y1, x1, y2, x2, i + 1));
+}
+
+int main(){
+	int n, w, h;
+	cin >> n >> w >> h;
+	vector<int> xs(n), ys(n);
+	for (int i = 0; i < n; i++) cin >> xs[i] >> ys[i];
+	vector<vector<double>> field(h, vector<double>(w, 0.0));
+	for (int i = 0; i < n; i++) calc(field, xs[i], ys[i], xs[(i + 1) % n], ys[(i + 1) % n]);
+	for (int y = h - 1; y >= 0; y--){
+		for (int x = 0; x < w; x++){
+			double d = field[y][x];
+			if (d + 1E-9 < 0.25) cout << ".";
+			else if (d + 1E-9 < 0.50) cout << "+";
+			else if (d + 1E-9 < 0.75) cout << "o";
+			else if (d + 1E-9 < 1.00) cout << "$";
+			else cout << "#";
+		}
+		cout << endl;
+	}
+	return 0;
+}
