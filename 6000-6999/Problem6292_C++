@@ -1,0 +1,127 @@
+#include <stdio.h>
+#include <string.h>
+
+using namespace std;
+
+int n, ans, num[110];
+char s[110], A[110][20], B[110][20], C[110][100];
+bool valid[110];
+
+struct Trie
+{
+	int L, root, next[26666][10], end[26666];
+	int newnode()
+	{
+		for (int i = 0; i < 10; i++) next[L][i] = -1;
+		end[L++] = -1;
+		return L - 1;
+	}
+	void init()
+	{
+		L = 0;
+		root = newnode();
+	}
+	void insert(char *s1, char *s2, int num)
+	{
+		int len = strlen(s1), l = 0, r = 0;
+		for (int i = 0; i < len; i++)
+		{
+			for (int j = 0; j < 10; j++)
+			{
+				if (next[l][j] == -1) next[l][j] = newnode();
+				if (end[l] > 0) end[next[l][j]] = end[l];
+				if (next[r][j] == -1) next[r][j] = newnode();
+				if (end[r] > 0) end[next[r][j]] = end[r];
+			}
+			end[l] = end[r] = -1;
+			if (l == r)
+			{
+				for (int j = s1[i] - '0' + 1; j < s2[i] - '0'; j++) end[next[l][j]] = num;
+			}
+			else
+			{
+				for (int j = s1[i] - '0' + 1; j < 10; j++) end[next[l][j]] = num;
+				for (int j = 0; j < s2[i] - '0'; j++) end[next[r][j]] = num;
+			}
+			l = next[l][s1[i] - '0'];
+			r = next[r][s2[i] - '0'];
+		}
+		end[l] = num;
+		end[r] = num;
+	}
+	void dfs(int now)
+	{
+		if (end[now] > 0)
+		{
+			ans += valid[end[now]];
+			return;
+		}
+		if (next[now][0] == -1) return;
+		bool flag = 0;
+		for (int i = 0; i < 10; i++)
+		{
+			dfs(next[now][i]);
+			if (end[next[now][i]] != end[next[now][0]]) flag = 1;
+		}
+		if (!flag && valid[end[next[now][0]]] && now != root)
+		{
+			ans -= 9;
+			end[now] = end[next[now][0]];
+		}
+	}
+	void output(int now, int len)
+	{
+		if (end[now] > 0)
+		{
+			if (valid[end[now]])
+			{
+				for (int i = 0; i < len; i++) putchar(s[i]);
+				putchar(' ');
+				printf("%s\n", C[end[now]]);
+			}
+			return;
+		}
+		if (next[now][0] == -1) return;
+		for (int i = 0; i < 10; i++)
+		{
+			s[len] = i + '0';
+			output(next[now][i], len + 1);
+		}
+	}
+};
+
+Trie trie;
+
+int main()
+{
+	int cas = 1;
+	while (scanf("%d", &n) != EOF)
+	{
+		if (cas != 1) printf("\n");
+		cas++;
+		trie.init();
+		memset(valid, 0, sizeof valid);
+		for (int i = 1; i <= n; i++)
+		{
+			scanf("%s - %s %s", A[i], B[i], C[i]);
+			int len1 = strlen(A[i]);
+			int len2 = strlen(B[i]);
+			for (int j = len2 - 1; j >= 0; j--) B[i][j + (len1 - len2)] = B[i][j];
+			for (int j = 0; j < len1 - len2; j++) B[i][j] = A[i][j];
+			if (strcmp(C[i], "invalid")) valid[i] = 1;
+			num[i] = i;
+			for (int j = 0; j < i; j++)
+				if (strcmp(C[i], C[j]) == 0)
+				{
+					num[i] = j;
+					break;
+				}
+		}
+		for (int i = n; i >= 1; i--) trie.insert(A[i], B[i], num[i]);
+		ans = 0;
+		trie.dfs(trie.root);
+		printf("%d\n", ans);
+		trie.output(trie.root, 0);
+	}
+	return 0;
+}
