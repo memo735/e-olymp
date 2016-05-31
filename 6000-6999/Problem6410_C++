@@ -1,38 +1,38 @@
 #include <iostream>
-#include <algorithm>
 #include <string>
+#include <map>
 
 using namespace std;
 
-long test, n, ind, i, j;
-string tmp;
-string write[1000];
-pair <short int, short int> index[1000];
-pair <string, short int> vect[1000];
+string Key1[1000], Key2[1000], Ciphertext[1000];
+map<string, string> M;
+
+// Reads a sentence, splits it into words
+void ReadSentence(int n, string S[])
+{
+	char word[11];
+	for (int i = 0; i < n; i++)
+	{
+		scanf("%s", word);
+		S[i] = word;
+	}
+}
 
 int main()
 {
-	cin >> test;
-	for (int _test = 0; _test < test; _test++)
+	int cases, casenr, n, i;
+	scanf("%d\n", &cases);
+	for (casenr = 1; casenr <= cases; casenr++)
 	{
-		cin >> n;
-		for (i = 0; i < n; i++)
-		{
-			cin >> tmp;
-			vect[i].first = tmp;
-			vect[i].second = -1;
-		}
-		for (i = 0; i < n; i++)
-		{
-			cin >> tmp;
-			ind = 0;
-			while (vect[ind].first != tmp) ind++;
-			index[i] = make_pair(ind, i);
-		}
-		sort(index, index + n);
-		for (i = 0; i < n; i++) cin >> write[i];
-		cout << write[index[0].second];
-		for (i = 1; i < n; i++) cout << " " << write[index[i].second];
-		cout << endl;
+		scanf("%d\n", &n);
+		ReadSentence(n, Key1);
+		ReadSentence(n, Key2);
+		ReadSentence(n, Ciphertext);
+		// Build map
+		M.clear();
+		for (i = 0; i < n; i++) M[Key2[i]] = Ciphertext[i];
+		// Translate and print
+		for (i = 0; i < n; i++) printf("%s%c", M[Key1[i]].c_str(), i < n - 1 ? ' ' : '\n');
 	}
+	return 0;
 }
