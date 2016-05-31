@@ -1,0 +1,30 @@
+#include <iostream>
+
+using namespace std;
+
+const int inf = ~0u >> 1;
+
+template <class T> bool chmin(T& a, const T &b) { return b < a ? a = b, 1 : 0; }
+
+int main()
+{
+	int T, cnt[111], use[33][33], price[111], num[111];
+	scanf("%d", &T);
+	while (T--){
+		int n, m; scanf("%d%d", &n, &m);
+		for (int i = 0; i <= n - 1; i++){
+			scanf("%d", cnt + i);
+			for (int j = 0; j <= cnt[i] - 1; j++) scanf("%d", &use[i][j]);
+			scanf("%d", price + i);
+		}
+		for (int i = 0; i <= m - 1; i++) scanf("%d", num + i);
+		int ans = 0;
+		for (int i = 0; i <= n - 1; i++){
+			int up = inf;
+			for (int j = 0; j <= cnt[i] - 1; j++) chmin(up, num[use[i][j] - 1]);
+			ans += price[i] * up;
+		}
+		printf("%d\n", ans);
+	}
+	return 0;
+}
