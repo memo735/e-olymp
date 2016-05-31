@@ -1,0 +1,67 @@
+#include <stdio.h>  
+
+/*
+[ 0 1 1 0 ][F(  n  )]     [F(n + 1)]
+[ K 0 0 1 ][G(  n  )]  =  [G(n + 1)]
+[ 1 K 0 0 ][H(  n  )]     [H(n + 1)]
+[ 0 0 1 0 ][H(n - 1)]     [H(  n  )]
+*/
+
+const int OMm[4][4] = { { 0, 1, 1, 0 }, { 'k', 0, 0, 1 }, { 1, 'k', 0, 0 }, { 0, 0, 1, 0 } };
+const int UMm[4][4] = { { 1, 0, 0, 0 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
+
+struct Matrix
+{
+	int m[4][4];
+	Matrix() {}
+	Matrix(const int m[4][4]) {
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++) this->m[i][j] = m[i][j];
+	}
+};
+
+int P, Ax, Bx, Cx, Kx, Nx, Ay, By, Cy, Ky, Ny, X;
+Matrix Mx, My, OM(OMm), UM(UMm);
+
+Matrix MatrixPlus(Matrix M1, Matrix M2) {
+	Matrix A;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			A.m[i][j] = 0;
+			for (int k = 0; k < 4; k++) A.m[i][j] = (A.m[i][j] + M1.m[i][k] * M2.m[k][j]) % P;
+		}
+	}
+	return A;
+}
+
+Matrix MatrixKPlus(int k) {
+	if (k == 0) return UM;
+	if (k & 1) return MatrixPlus(OM, MatrixKPlus(k - 1));
+	Matrix TempM = MatrixKPlus(k / 2);
+	return MatrixPlus(TempM, TempM);
+}
+
+int main() {
+
+	int CaseNum;
+	scanf("%d", &CaseNum);
+	while (CaseNum--) {
+		scanf("%d%d%d%d%d%d%d%d%d%d%d%d", &P, &Ax, &Bx, &Cx, &Kx, &Nx, &Ay, &By, &Cy, &Ky, &Ny, &X);
+		OM.m[1][0] = OM.m[2][1] = Kx;
+		Mx = MatrixKPlus(Nx - 1);
+		OM.m[1][0] = OM.m[2][1] = Ky;
+		My = MatrixKPlus(Ny - 1);
+		int ABCx = (Mx.m[0][0] * Ax + Mx.m[0][1] * Bx + Mx.m[0][2] * Cx) % P;
+		int ABCy = (My.m[0][0] * Ay + My.m[0][1] * By + My.m[0][2] * Cy) % P;
+		int Ans = -1, MaybeH0;
+		for (MaybeH0 = 0; MaybeH0 < P; MaybeH0++) {
+			if ((MaybeH0 * Mx.m[0][3] + ABCx) % P == X) {
+				if (Ans == -1) Ans = (MaybeH0 * My.m[0][3] + ABCy) % P;
+				else if (Ans != (MaybeH0 * My.m[0][3] + ABCy) % P) break;
+			}
+		}
+		if (MaybeH0 == P && Ans != -1) printf("%d\n", Ans);
+		else printf("UNKNOWN\n");
+	}
+	return 0;
+}
