@@ -1,29 +1,35 @@
 #include <iostream>
-#include <string>
+#include <string.h>
 
 using namespace std;
 
-string str;
-long long test, d[30];
-
-string sANS()
-{
-	for (int j = 0; j < 30; j++) d[j] = 0;
-	for (int j = 0; j < (int)str.length() - 1; j++)
-	{
-		d[str[j] - 65]++;
-		if (d[str[j] - 65] % 4 == 3 && str[j] != str[j + 1]) return "FAKE";
-	}
-	if ((d[str[str.length() - 1] - 65] + 1) % 4 == 3) return "FAKE";
-	return "OK";
-}
+char Message[100001];
+int Freq[26];
 
 int main()
 {
-	cin >> test;
-	for (int i = 0; i < test; i++)
+	int cases, casenr, n, i, c;
+	bool ok;
+	scanf("%d\n", &cases);
+	for (casenr = 1; casenr <= cases; casenr++)
 	{
-		cin >> str;
-		cout << sANS() << endl;
+		scanf("%s\n", Message);
+		memset(Freq, 0, sizeof Freq);
+		ok = true;
+		// Process the message
+		n = strlen(Message);
+		for (i = 0; ok && i < n; i++)
+		{
+			c = Message[i] - 'A'; // Convert to integer 0-25
+			Freq[c]++;
+			if (Freq[c] == 3) // If seen for the third time
+			{
+				if (Message[i + 1] != Message[i]) ok = false;
+				i++; // Ignore this next character
+				Freq[c] = 0;
+			}
+		}
+		printf("%s\n", ok ? "OK" : "FAKE");
 	}
+	return 0;
 }
