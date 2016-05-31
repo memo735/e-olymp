@@ -1,0 +1,18 @@
+import java.util.*;
+
+public class QuestionF {
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		int n = scn.nextInt();
+		for (int x = 1; x <= n; x++) {
+			int hour = scn.nextInt(), min = scn.nextInt();
+			min = min - 45;
+			if (min < 0) {
+				min = min + 60;
+				hour--;
+				if (hour < 0) hour += 24;
+			}
+			System.out.println("Case #" + x + ": " + hour + " " + min);
+		}
+	}
+}
