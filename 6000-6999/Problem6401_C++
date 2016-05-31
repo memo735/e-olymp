@@ -1,0 +1,67 @@
+#include <iostream>
+#include <math.h>
+#include <algorithm>
+
+#define eps 0.000001
+
+using namespace std;
+
+bool equ(double x, double y)
+{
+	if (fabs(x - y) < eps) return true;
+	return false;
+}
+
+int main()
+{
+	int i, n, T;
+	bool flag;
+	double x, y, z, a[100];
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d", &n);
+		for (i = 1; i <= n; i++) scanf("%lf", &a[i]);
+		if (a[1] != 0)
+		{
+			x = a[2] / a[1];
+			flag = false;
+			for (i = 3; i <= n; i++)
+			{
+				if (!equ(a[i], x*a[i - 1]))
+				{
+					flag = true;
+					break;
+				}
+			}
+			if (!flag)
+			{
+				printf("%.0lf\n", a[n] * x);
+				continue;
+			}
+		}
+		if (a[1] * a[3] - a[2] * a[2] != 0)
+		{
+			flag = false;
+			x = (a[3] * a[3] - a[2] * a[4]) / (a[1] * a[3] - a[2] * a[2]);
+			y = (a[1] * a[4] - a[2] * a[3]) / (a[1] * a[3] - a[2] * a[2]);
+			for (i = 5; i <= n; i++)
+			{
+				if (!equ(a[i], x*a[i - 2] + y*a[i - 1]))
+				{
+					flag = true;
+					break;
+				}
+			}
+			if (!flag)
+			{
+				printf("%.0lf\n", a[n - 1] * x + a[n] * y);
+				continue;
+			}
+		}
+		x = (a[4] * (a[3] * a[5] - a[4] * a[4]) - a[2] * (a[5] * a[5] - a[6] * a[4]) + a[3] * (a[5] * a[4] - a[6] * a[3])) / (a[1] * (a[3] * a[5] - a[4] * a[4]) - a[2] * (a[2] * a[5] - a[3] * a[4]) + a[3] * (a[2] * a[4] - a[3] * a[3]));
+		y = (a[1] * (a[5] * a[5] - a[4] * a[6]) - a[4] * (a[2] * a[5] - a[3] * a[4]) + a[3] * (a[2] * a[6] - a[3] * a[5])) / (a[1] * (a[3] * a[5] - a[4] * a[4]) - a[2] * (a[2] * a[5] - a[3] * a[4]) + a[3] * (a[2] * a[4] - a[3] * a[3]));
+		z = (a[1] * (a[3] * a[6] - a[4] * a[5]) - a[2] * (a[2] * a[6] - a[3] * a[5]) + a[4] * (a[2] * a[4] - a[3] * a[3])) / (a[1] * (a[3] * a[5] - a[4] * a[4]) - a[2] * (a[2] * a[5] - a[3] * a[4]) + a[3] * (a[2] * a[4] - a[3] * a[3]));
+		printf("%.0lf\n", a[n - 2] * x + a[n - 1] * y + a[n] * z);
+	}
+}
