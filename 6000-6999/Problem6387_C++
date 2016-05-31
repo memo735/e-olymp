@@ -1,0 +1,29 @@
+#include <iostream>
+
+using namespace std;
+
+int a[20];
+
+bool check(int p1, int p2){
+	int mm = 100;
+	for (int i = p1; i <= p2; i++) if (a[i] < mm) mm = a[i];
+	if (mm > a[p1 - 1] && mm > a[p2 + 1]) return true;
+	return false;
+}
+
+int main()
+{
+	int p;
+	scanf("%d", &p);
+	while (p--){
+		int cas;
+		scanf("%d", &cas);
+		for (int i = 0; i < 15; i++) scanf("%d", &a[i]);
+		int cnt = 0;
+		for (int i = 1; i < 15; i++){
+			for (int j = i; j < 15 - 1; j++) if (check(i, j)) cnt++;
+		}
+		printf("%d %d\n", cas, cnt);
+	}
+	return 0;
+}
