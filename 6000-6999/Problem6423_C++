@@ -1,0 +1,58 @@
+#include <iostream>
+#include <math.h>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1000;
+
+int X[N], Y[N], R[N];
+double Dis[N + 2], Len[N + 2][N + 2]; // Maximum radius that can fit between sensors i and j
+bool Seen[N + 2];
+
+double eucldis(int i, int j)
+{
+	return sqrt((long)(X[i] - X[j])*(X[i] - X[j]) + (long)(Y[i] - Y[j])*(Y[i] - Y[j]));
+}
+
+int main()
+{
+	int cases, casenr, w, n, i, j, wall1, wall2;
+	double m, maxdis;
+	scanf("%d\n", &cases);
+	for (casenr = 1; casenr <= cases; casenr++)
+	{
+		scanf("%d\n%d\n", &w, &n);
+		for (i = 0; i < n; i++) scanf("%d %d %d\n", &X[i], &Y[i], &R[i]);
+		// Add walls as vertices
+		wall1 = n;
+		wall2 = n + 1;
+		// Compute all edge lengths
+		Len[wall1][wall2] = Len[wall2][wall1] = w / 2.0;
+		for (i = 0; i < n; i++)
+		{
+			Len[i][wall1] = Len[wall1][i] = max(0.0, (X[i] - R[i]) / 2.0);
+			Len[i][wall2] = Len[wall2][i] = max(0.0, (w - X[i] - R[i]) / 2.0);
+			for (j = i + 1; j < n; j++) Len[i][j] = Len[j][i] = max(0.0, (eucldis(i, j) - R[i] - R[j]) / 2.0);
+		}
+		// Initialize subgraph
+		memset(Seen, false, sizeof Seen);
+		Seen[wall1] = true;
+		for (i = 0; i < n + 2; i++) Dis[i] = Len[wall1][i];
+		maxdis = 0;
+		while (1)
+		{
+			// Look for nearest unadded vertex
+			m = 1e9;
+			for (j = 0; j < n + 2; j++) if (!Seen[j] && Dis[j] < m) m = Dis[i = j];
+			maxdis = max(maxdis, m);
+			if (i == wall2) break;
+			Seen[i] = true;
+			// Update distances
+			for (j = 0; j < n + 2; j++) if (!Seen[j]) Dis[j] = min(Dis[j], Len[i][j]);
+		}
+		printf("%lf\n", maxdis);
+	}
+	return 0;
+}
