@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define MAXN 110 
+
+int a[MAXN], flag[MAXN];
+
+bool judge(int a[], int flag[], int n){
+	int temp = 0;
+	for (int i = 1; i <= n; ++i){
+		if (flag[i] == 0){
+			temp = a[i];
+			break;
+		}
+	}
+	for (int i = 1; i <= n; ++i){
+		if (flag[i] == 0 && temp != a[i]) return false;
+	}
+	return true;
+}
+
+int main(){
+	int n, t;
+	while (cin >> n, n){
+		cin >> t;
+		memset(a, 0, sizeof a);
+		memset(flag, 0, sizeof flag);
+		int front = 1;
+		do{
+			int count = 0, i = front;
+			while (1){
+				if (flag[i] == 0){
+					count++;
+					a[i]++;
+					if (front > n) front = 1;
+					if (count == t){
+						flag[i] = 1;
+						front = i + 1;
+						break;
+					}
+				}
+				++i;
+				if (i > n) i = 1;
+			}
+		} while (!judge(a, flag, n));
+		int p = 0, c = 0;
+		for (int i = 1; i <= n; ++i){
+			if (flag[i] == 0){
+				++p;
+				c = a[i];
+			}
+		}
+		cout << p << " " << c << endl;
+	}
+	return 0;
+}
