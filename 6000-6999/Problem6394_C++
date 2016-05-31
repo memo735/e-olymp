@@ -1,0 +1,26 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int maxn = 100000;
+
+int main()
+{
+	long kk, k, p, r, c, C[maxn + 2][52];
+	for (int i = 0; i <= maxn; i++) C[i][0] = 1;
+	for (int i = 1; i <= maxn; i++)
+		for (int j = 1; j <= min(i, 50); j++) C[i][j] = C[i - 1][j] + C[i - 1][j - 1];
+
+	scanf("%ld", &k);
+	while (k--)
+	{
+		scanf("%ld%ld%ld%ld", &kk, &p, &r, &c);
+		long ans = 1;
+		for (int i = 1; i <= r - c; i++) ans *= p;
+		if (c > r / 2) c = r - c;
+		ans *= C[r][c];
+		printf("%ld %ld\n", kk, ans);
+	}
+	return 0;
+}
