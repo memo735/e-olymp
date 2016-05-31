@@ -1,0 +1,50 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int N = 201;
+int f[N], link[N], g[N][N];
+
+bool find(int x)
+{
+	for (int i = 0; i < 26; i++) {
+		if (!f[i] && g[x][i]) {
+			f[i] = 1;
+			if (link[i] == -1 || find(link[i])) {
+				link[i] = x;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+int hungary()
+{
+	int ans = 0;
+	for (int i = 0; i < 26; i++) {
+		memset(f, 0, sizeof f);
+		if (find(i)) ans++;
+	}
+	return ans;
+}
+
+int main()
+{
+	int n;
+	char a[100], b[100];
+	while (~scanf("%d", &n)) {
+		if (!n) break;
+		memset(f, 0, sizeof f);
+		memset(g, 0, sizeof g);
+		memset(link, -1, sizeof link);
+		getchar();
+		while (n--) {
+			scanf("%s%s", a, b);
+			g[a[0] - 'A'][b[0] - 'A'] = 1;
+		}
+		printf("%d\n", hungary());
+	}
+	return 0;
+}
