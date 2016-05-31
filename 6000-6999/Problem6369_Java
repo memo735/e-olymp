@@ -1,0 +1,23 @@
+import java.util.*;
+
+public class acmA {
+	public static void main(String[] args) {
+		Scanner s = new Scanner(System.in);
+		int x = 0, num = s.nextInt();
+		while (num != 0) {
+			int t = num % 5;
+			int d = (num - t) / 5;
+			t = d;
+			int tot = d;
+			while (t >= 5) {
+				t = t % 5;
+				d = (d - t) / 5;
+				t = d;
+				tot = tot + d;
+			}
+			x++;
+			System.out.println("Case #" + x + ": " + tot);
+			num = s.nextInt();
+		}
+	}
+}
