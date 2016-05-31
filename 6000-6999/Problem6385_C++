@@ -1,0 +1,91 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define MAXN 25
+
+char grid[MAXN][MAXN];
+bool ok, num[MAXN], vis[MAXN][MAXN];
+int cnt, M[4][2] = { { 1, 0 }, { 0, 1 }, { 0, -1 }, { -1, 0 } };
+
+void dfs(int x, int y, char c)
+{
+	if (x < 1 || y < 1 || x>12 || y>10) return;
+	if (c != grid[x][y]) return;
+	if (vis[x][y]) return;
+	cnt++;
+	vis[x][y] = true;
+	for (int i = 0; i < 4; ++i) dfs(x + M[i][0], y + M[i][1], c);
+}
+
+void move(int a, int b)
+{
+	for (int i = 1; i <= 12; ++i)
+		grid[i][a] = grid[i][b];
+}
+
+void fillx(int x)
+{
+	for (int i = 1; i <= 12; ++i) grid[i][x] = 'x';
+}
+
+int count()
+{
+	int ans = 0;
+	for (int i = 1; i <= 12; ++i)
+		for (int j = 1; j <= 10; ++j)
+			if (grid[i][j] != 'x') ans++;
+	return ans;
+}
+
+bool check(int x)
+{
+	for (int i = 1; i <= 12; ++i) if (grid[i][x] != 'x') return false;
+	return true;
+}
+
+int main()
+{
+	int t;
+	while (scanf("%d", &t) && t)
+	{
+		for (int i = 12; i >= 1; --i) scanf("%s", grid[i] + 1);
+		memset(num, 1, sizeof num);
+		while (t--)
+		{
+			memset(vis, 0, sizeof vis);
+			char tt[4];
+			int sx, sy;
+			scanf("%s%d", tt, &sy);
+			sx = tt[0] - 'a' + 1;
+			cnt = 0;
+			dfs(sy, sx, grid[sy][sx]);
+			if (cnt < 3) continue;
+			for (int i = 1; i <= 10; ++i)
+			{
+				int len = 1;
+				for (int j = 1; j <= 12; ++j) if (!vis[j][i]) grid[len++][i] = grid[j][i];
+				for (int j = len; j <= 12; ++j) grid[j][i] = 'x';
+			}
+			for (int i = 1; i <= 10; ++i) if (check(i)) num[i] = false;
+			for (int i = 1; i <= 10; ++i)
+				if (!num[i])
+				{
+					int now = i;
+					for (int j = i + 1; j <= 10; ++j)
+						if (!num[now] && num[j])
+						{
+							move(now, j);
+							num[now] = num[j];
+							now++;
+							num[j] = 0;
+						}
+					for (int j = now; j <= 10; ++j) fillx(j);
+				}
+		}
+		int ans = count();
+		printf("%d\n", ans);
+	}
+	return 0;
+}
