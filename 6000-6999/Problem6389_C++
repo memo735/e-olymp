@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// Read a river system and return its order
+int go()
+{
+	// Read number of nodes, M, and number of edges, P
+	int i, j, k, m, p; cin >> k >> m >> p;
+	// Represent the river as an array of arrays. r[i] is an array
+	// of the nodes that flow into node i. We won't use r[0].
+	vector< vector<int> > r(m + 1);
+	// Read edges
+	for (j = 1; j <= p; ++j)
+	{
+		int a, b; cin >> a >> b;
+		// Water flows from a to b
+		r[b].push_back(a);
+	}
+	// Order of each node. Initialize all to 0 indicating we don't know yet.
+	vector<int> order(m + 1, 0);
+	// If r[i] is empty, then it's a source node and its order is 1.
+	for (i = 1; i <= m; ++i) if (r[i].size() == 0) order[i] = 1;
+	// If r[i] is not empty, and we know the order of all the immediately
+	// upstream nodes, we can compute the order of i. Stop when we know
+	// the order of node m.
+	while (order[m] == 0)
+	{
+		for (i = 1; i <= m; ++i)
+		{
+			if (order[i] == 0 && r[i].size() > 0)
+			{
+				bool seen_zero = false;
+				int max_order = 0; // maximum order of upstream nodes
+				int num_max = 0; // number of nodes with that order
+				for (j = 0; j < r[i].size(); ++j)
+				{
+					int node = r[i][j];
+					if (order[node] == 0) seen_zero = true;
+					if (order[node] == max_order) ++num_max;
+					if (order[node] > max_order)
+					{
+						max_order = order[node];
+						num_max = 1;
+					}
+				}
+				if (!seen_zero)
+				{
+					if (num_max >= 2) order[i] = max_order + 1;
+					else order[i] = max_order;
+				}
+			}
+		}
+	}
+	return order[m];
+}
+
+int main()
+{
+	int num; cin >> num;
+	// Process each data set identically
+	for (int i = 1; i <= num; ++i)
+	{
+		int order = go();
+		cout << i << " " << order << endl;
+	}
+	return 0;
+}
