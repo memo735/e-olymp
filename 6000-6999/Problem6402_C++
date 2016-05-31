@@ -1,0 +1,29 @@
+#include <iostream>  
+#include <algorithm>  
+
+using namespace std;
+
+int main()
+{
+	int t;
+	scanf("%d", &t);
+	while (t--)
+	{
+		int n, i, j, q, p, Min = 100000000, a[22] = { 0 };
+		scanf("%d", &n);
+		for (i = 1; i <= n; i++)
+		{
+			a[i] |= 1 << i - 1;
+			scanf("%d", &q);
+			for (j = 0; j < q; j++) scanf("%d", &p), a[i] |= 1 << p - 1;
+		}
+		for (i = 1; i < 1 << n; i++)
+		{
+			int sum = 0, ans = 0;
+			for (j = 0; j < n; j++) if (i & 1 << j) sum++, ans |= a[j + 1];
+			if (ans == (1 << n) - 1) Min = min(sum, Min);
+		}
+		printf("%d\n", Min);
+	}
+	return 0;
+}
