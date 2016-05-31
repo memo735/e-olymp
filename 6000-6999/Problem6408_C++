@@ -1,0 +1,43 @@
+#include <iostream>  
+#include <math.h>  
+
+using namespace std;
+
+#define eps 1e-8  
+
+int sig(double x){ return (x > eps) - (x < -eps); }
+
+bool dfs(double *a, int len){
+	if (len == 1 && sig(a[0] - 24) == 0) return true;
+	for (int i = 0; i < len; i++){
+		for (int j = 0; j < len; j++){
+			if (i == j) continue;
+			double b[4];
+			int l = 0;
+			for (int k = 0; k < len; k++) if (k != i&&k != j) b[l++] = a[k];
+			b[l++] = a[i] + a[j];
+			if (dfs(b, l) == true) return true;
+			b[l - 1] = a[i] - a[j];
+			if (dfs(b, l) == true) return true;
+			b[l - 1] = a[i] * a[j];
+			if (dfs(b, l) == true) return true;
+			if (sig(a[j] - 0) != 0){
+				b[l - 1] = a[i] / a[j];
+				if (dfs(b, l) == true)return true;
+			}
+		}
+	}
+	return false;
+}
+
+int main(){
+	double a[4];
+	int n; scanf("%d", &n);
+	while (n--){
+		scanf("%lf%lf%lf%lf", &a[0], &a[1], &a[2], &a[3]);
+		int len = 4;
+		if (dfs(a, len) == true) printf("YES\n");
+		else printf("NO\n");
+	}
+	return  0;
+}
