@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+#include <map>
+
+using namespace std;
+
+int main()
+{
+	int test; cin >> test;
+	while (test--) {
+		map<string, int>  attrs;
+		int n; cin >> n;
+		while (n--) {
+			string attr, cat;
+			cin >> attr >> cat;
+			attrs[cat]++;
+		}
+		int opts = 1;
+		for (auto it = attrs.begin(); it != attrs.end(); ++it) opts *= it->second + 1;
+		cout << opts - 1 << endl;
+	}
+	return 0;
+}
