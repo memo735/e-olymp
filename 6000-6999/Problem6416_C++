@@ -1,69 +1,77 @@
 #include <iostream>
-#include <string>
+#include <queue>
+#include <utility>
+#include <string.h>
 
 using namespace std;
 
-int test, n, m, i, j, ans, eventCount;
-char d[100][100];
-unsigned int mas[100][100];
-bool bevent, key[26];
-string str;
-
-void rec(char x, char y)
-{
-	if (x >= 0 && x < n && y >= 0 && y < m)
-		if (mas[x][y] != eventCount && d[x][y] != '*')
-		{
-			if (d[x][y] == '.')
-			{
-				mas[x][y] = eventCount;
-				rec(x + 1, y); rec(x - 1, y); rec(x, y + 1); rec(x, y - 1);
-			}
-			else if (d[x][y] >= 'A' && d[x][y] <= 'Z')
-			{
-				if (key[d[x][y] - 65])
-				{
-					mas[x][y] = eventCount; bevent = true; d[x][y] = '.';
-					rec(x + 1, y); rec(x - 1, y); rec(x, y + 1); rec(x, y - 1);
-				}
-			}
-			else if (d[x][y] >= 'a' && d[x][y] <= 'z')
-			{
-				key[d[x][y] - 97] = true; d[x][y] = '.';
-				mas[x][y] = eventCount; bevent = true;
-				rec(x + 1, y); rec(x - 1, y); rec(x, y + 1); rec(x, y - 1);
-			}
-			else if (d[x][y] == '$')
-			{
-				ans++; d[x][y] = '.';
-				mas[x][y] = eventCount;
-				rec(x + 1, y); rec(x - 1, y); rec(x, y + 1); rec(x, y - 1);
-			}
-		}
-}
+char Map[102][102];
+bool GotKey[26], Visited[102][102];
+queue<pair<int, int> > BFSqueue;
+int dx[4] = { 0, 0, -1, 1 }, dy[4] = { -1, 1, 0, 0 };
 
 int main()
 {
-	cin >> test;
-	for (int _test = 0; _test < test; _test++)
+	int cases, casenr, h, w, x, y, x2, y2, i, docs;
+	pair<int, int> P;
+	char keys[27], c;
+	scanf("%d\n", &cases);
+	for (casenr = 1; casenr <= cases; casenr++)
 	{
-		for (i = 0; i < 26; i++) key[i] = false;
-		for (i = 0; i < 100; i++) for (j = 0; j < 100; j++) mas[i][j] = 0;
-		bevent = true; ans = 0;
-		cin >> n >> m;
-		for (i = 0; i < n; i++)
-			for (j = 0; j < m; j++) cin >> d[i][j];
-
-		cin >> str;
-		if (str != "0") for (i = 0; i < str.length(); i++) key[str[i] - 97] = true;
-		for (eventCount = 1; bevent; eventCount++)
+		scanf("%d %d\n", &h, &w);
+		for (y = 1; y <= h; y++) scanf("%s\n", Map[y] + 1);
+		scanf("%s\n", keys);
+		// Add a layer of free space around the border of the map
+		h += 2;
+		w += 2;
+		for (x = 0; x < w; x++) Map[0][x] = Map[h - 1][x] = '.';
+		for (y = 0; y < h; y++) Map[y][0] = Map[y][w - 1] = '.';
+		// Determine keys in possession
+		memset(GotKey, false, sizeof GotKey);
+		if (keys[0] != '0') for (i = 0; keys[i] != '\0'; i++) GotKey[keys[i] - 'a'] = true;
+		BFSqueue = queue<pair<int, int> >();
+		memset(Visited, false, sizeof Visited);
+		BFSqueue.push(make_pair(0, 0));
+		Visited[0][0] = true;
+		docs = 0;
+		while (!BFSqueue.empty())
 		{
-			bevent = false;
-			for (i = 0; i < n; i++) rec(i, 0);
-			for (i = 0; i < n; i++) rec(i, m - 1);
-			for (i = 0; i < m; i++) rec(0, i);
-			for (i = 0; i < m; i++) rec(n - 1, i);
+			P = BFSqueue.front();
+			BFSqueue.pop();
+			x = P.first;
+			y = P.second;
+			// Try all directions
+			for (i = 0; i < 4; i++)
+			{
+				x2 = x + dx[i];
+				y2 = y + dy[i];
+				// Check if the new location is on the map and unseen
+				if (x2 >= 0 && x2 < w && y2 >= 0 && y2 < h && !Visited[y2][x2])
+				{
+					Visited[y2][x2] = true;
+					c = Map[y2][x2];
+					// If it's a new key: clear BFS queue
+					if ('a' <= c && c <= 'z' && !GotKey[c - 'a'])
+					{
+						GotKey[c - 'a'] = true;
+						// Reinitialize
+						BFSqueue = queue<pair<int, int> >();
+						memset(Visited, false, sizeof Visited);
+						BFSqueue.push(make_pair(x2, y2));
+						Visited[y2][x2] = true;
+						break;
+					}
+					if (c == '$')
+					{
+						docs++;
+						Map[y2][x2] = '.'; // Prevent counting multiple times
+					}
+					// If not a wall or an unopenable door, add to BFS queue
+					if (c != '*' && !('A' <= c && c <= 'Z' && !GotKey[c - 'A'])) BFSqueue.push(make_pair(x2, y2));
+				}
+			}
 		}
-		cout << ans << endl;
+		printf("%d\n", docs);
 	}
+	return 0;
 }
