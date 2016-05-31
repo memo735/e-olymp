@@ -1,0 +1,17 @@
+import java.util.*;
+
+public class ricesack {
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		int n = scn.nextInt();
+		for (int y = 1; y <= n; y++) {
+			int[] a = new int[5];
+			int max = 0;
+			for (int x = 0; x < 5; x++) {
+				a[x] = scn.nextInt();
+				if (a[x] > max) max = a[x];
+			}
+			System.out.println("Case #" + y + ": " + max);
+		}
+	}
+}
