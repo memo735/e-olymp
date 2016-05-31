@@ -1,0 +1,92 @@
+import java.util.*;
+
+public class acmD {
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		String ls = System.getProperty("line.separator");
+		scn.useDelimiter(ls);
+		int n = scn.nextInt();
+		for (int x = 1; x <= n; x++) {
+			String s = scn.next();
+			StringTokenizer st = new StringTokenizer(s, " ");
+			int count = 1;
+			ArrayList <Integer> num = new ArrayList<Integer>();
+			ArrayList <String> operator = new ArrayList<String>();
+			ArrayList <String> operatorStack = new ArrayList<String>();
+			while (st.hasMoreTokens()) {
+				if ((count % 2) != 0) {
+					String ss = st.nextToken();
+					int no = Integer.parseInt(ss);
+					num.add(no);
+				}
+				else {
+					String ss = st.nextToken();
+					operator.add(ss);
+				}
+				count++;
+			}
+			for (int y = 0; y < operator.size(); y++) {
+				String compare = operator.get(y);
+				char comp = compare.charAt(0);
+				if (comp == '/' || comp == '*') operatorStack.add(compare);
+			}
+			for (int y = 0; y < operator.size(); y++) {
+				String compare = operator.get(y);
+				char comp = compare.charAt(0);
+				if (comp == '+' || comp == '-') operatorStack.add(compare);
+			}
+			System.out.print("Case #" + x + ": ");
+			for (int y = 0; y < operatorStack.size(); y++) System.out.print(operatorStack.get(y) + " ");
+			for (int y = 0; y < operator.size(); y++) {
+				String compare = operator.get(y);
+				char comp = compare.charAt(0);
+				int total = 0;
+				if (comp == '/') {
+					int no1 = num.get(y), no2 = num.get(y + 1);
+					total = no1 / no2;
+					num.remove(y);
+					num.remove(y);
+					num.add(y, total);
+					operator.remove(y);
+					y--;
+				}
+				else
+					if (comp == '*') {
+						int no1 = num.get(y), no2 = num.get(y + 1);
+						total = no1 * no2;
+						num.remove(y);
+						num.remove(y);
+						num.add(y, total);
+						operator.remove(y);
+						y--;
+					}
+			}
+			for (int y = 0; y < operator.size(); y++) {
+				String compare = operator.get(y);
+				char comp = compare.charAt(0);
+				int total = 0;
+				if (comp == '+') {
+					int no1 = num.get(y), no2 = num.get(y + 1);
+					total = no1 + no2;
+					num.remove(y);
+					num.remove(y);
+					num.add(y, total);
+					operator.remove(y);
+					y--;
+				}
+				else
+					if (comp == '-') {
+						int no1 = num.get(y), no2 = num.get(y + 1);
+						total = no1 - no2;
+						num.remove(y);
+						num.remove(y);
+						num.add(y, total);
+						operator.remove(y);
+						y--;
+					}
+			}
+			System.out.print(num.get(0));
+			System.out.println();
+		}
+	}
+}
