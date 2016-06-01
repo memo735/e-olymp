@@ -1,0 +1,47 @@
+#include <string.h>
+#include <iostream>
+
+using namespace std;
+
+const int maxn = 100001;
+
+int main()
+{
+	int t, num[maxn], num2[maxn];
+	char str1[maxn], str2[maxn];
+	cin >> t;
+	while (t--)
+	{
+		memset(num2, 0, sizeof num2);
+		memset(num, 0, sizeof num);
+		cin >> str1;
+		int len = strlen(str1);
+		for (int i = 0; i < len; ++i) num[i] = str1[i] - 'a';
+		cin >> str2;
+		int len2 = strlen(str2);
+		for (int i = 0; i < len2; ++i)
+		{
+			int temp = str2[i] - 'a';
+			num2[temp]++;
+		}
+		int st = 0;
+		bool flag = false;
+		for (int i = 0; i < len; ++i)
+		{
+			num2[num[i]]--;
+			while (num2[num[i]] < 0)
+			{
+				num2[num[st]]++;
+				st++;
+			}
+			if (i - st + 1 == len2)
+			{
+				flag = true;
+				break;
+			}
+		}
+		if (flag) cout << "YES\n";
+		else cout << "NO\n";
+	}
+	return 0;
+}
