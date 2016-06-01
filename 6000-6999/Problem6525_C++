@@ -1,0 +1,22 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int tc, n, k, x;
+	string s;
+	cin >> tc;
+	while (tc--)
+	{
+		cin >> n >> k;
+		int tot = 0;
+		for (int i = 0; i < n; i++)
+		{
+			cin >> x;
+			tot += x / k;
+		}
+		cout << tot << "\n";
+	}
+	return 0;
+}
