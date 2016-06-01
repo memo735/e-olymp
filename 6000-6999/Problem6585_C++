@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+const int M = 11, N = 101, mod = 1e9 + 7;
+
+int main(){
+	long cnt[M], dp[M][N][M], C[N][N];
+	string s;
+	C[0][0] = 1;
+	for (int i = 1; i < N; ++i){
+		for (int j = 0; j <= i; ++j) C[i][j] = j == 0 ? 1 : (C[i - 1][j] + C[i - 1][j - 1]) % mod;
+	}
+	while (cin >> s)
+	{
+		memset(cnt, 0, sizeof cnt);
+		memset(dp, 0, sizeof dp);
+		int n = s.size(), n2 = n / 2, n1 = n - n2;
+		for (int i = 0; i < n; ++i) cnt[9 - (s[i] - '0')]++;
+		dp[0][0][0] = 1;
+		long sum = 0;
+		for (int i = 0; i < 10; ++i) {                // digit
+			for (int j = 0; j <= n1; ++j) {           // odd used
+				for (int k = 0; k < 11; ++k) {        // remainder
+					if (!dp[i][j][k] || j > sum) continue;
+					int j1 = j, j2 = sum - j;
+					for (int z = 0; z <= cnt[i]; ++z){
+						int z1 = z, z2 = cnt[i] - z;
+						if (j1 + z1 > n1 || j2 + z2 > n2) continue;
+						long tmp = dp[i][j][k];
+						if (n & 1 && i == 9) tmp = tmp * C[j1 + z1 - 1][z1] % mod;
+						else tmp = tmp * C[j1 + z1][z1] % mod;
+						if (!(n & 1) && i == 9) tmp = tmp * C[j2 + z2 - 1][z2] % mod;
+						else tmp = tmp * C[j2 + z2][z2] % mod;
+						int _i = i + 1, _j = j1 + z1, _k = (k + z1*(9 - i) - z2*(9 - i) + 11 * 10000) % 11;
+						dp[_i][_j][_k] = (dp[_i][_j][_k] + tmp) % mod;
+					}
+				}
+			}
+			sum += cnt[i];
+		}
+		cout << dp[10][n1][0] << endl;
+	}
+}
