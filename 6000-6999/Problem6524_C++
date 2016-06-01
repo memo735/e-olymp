@@ -1,47 +1,72 @@
-#include <string.h>
 #include <iostream>
+#include <string.h>
+#include <algorithm>
 
 using namespace std;
 
-const int maxn = 100001;
+const int maxn = 1000;
 
 int main()
 {
-	int t, num[maxn], num2[maxn];
-	char str1[maxn], str2[maxn];
-	cin >> t;
-	while (t--)
+	int T, hash1[maxn], cur[maxn], h[100005];
+	char s[100005], t[100005];
+	scanf("%d", &T);
+	getchar();
+	while (T--)
 	{
-		memset(num2, 0, sizeof num2);
-		memset(num, 0, sizeof num);
-		cin >> str1;
-		int len = strlen(str1);
-		for (int i = 0; i < len; ++i) num[i] = str1[i] - 'a';
-		cin >> str2;
-		int len2 = strlen(str2);
-		for (int i = 0; i < len2; ++i)
+		memset(h, 0, sizeof h);
+		memset(hash1, 0, sizeof hash1);
+		memset(cur, 0, sizeof cur);
+		memset(t, 0, sizeof t);
+		memset(s, 0, sizeof s);
+		scanf("%s", t);
+		getchar();
+		scanf("%s", s);
+		getchar();
+		int len1 = strlen(s), len2 = strlen(t);
+		for (int i = 0; i < len1; i++)
 		{
-			int temp = str2[i] - 'a';
-			num2[temp]++;
+			int temp = s[i];
+			hash1[temp]++;
 		}
-		int st = 0;
+		int cnt = 0;
 		bool flag = false;
-		for (int i = 0; i < len; ++i)
+		if (len1 == len2)
 		{
-			num2[num[i]]--;
-			while (num2[num[i]] < 0)
+			for (int i = 0; i < len2; i++)
 			{
-				num2[num[st]]++;
-				st++;
-			}
-			if (i - st + 1 == len2)
-			{
-				flag = true;
-				break;
+				int d = t[i];
+				h[i] = d;
+				if (cur[d] < hash1[d]) cnt++;
+				cur[d]++;
+				if (cnt == len1){
+					flag = true;
+					break;
+				}
 			}
 		}
-		if (flag) cout << "YES\n";
-		else cout << "NO\n";
+		else
+		{
+			for (int i = 0; i < len2; i++)
+			{
+				int d = t[i];
+				h[i] = d;
+				if (cur[d] < hash1[d]) cnt++;
+				cur[d]++;
+				if (i >= len1)
+				{
+					d = h[i - len1];
+					if (cur[d] <= hash1[d]) cnt--;
+					cur[d]--;
+				}
+				if (cnt == len1){
+					flag = true;
+					break;
+				}
+			}
+		}
+		if (flag) printf("YES\n");
+		else printf("NO\n");
 	}
 	return 0;
 }
