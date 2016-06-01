@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+#define N 101
+
+int n, len, ans[N], vis[N], viss[N], link[N], g[N][N];
+
+int dfs(int x)
+{
+	for (int y = 1; y <= n; ++y)
+	{
+		if (g[x][y] && !vis[y] && !viss[y])
+		{
+			vis[y] = 1;
+			if (link[y] == 0 || dfs(link[y]))
+			{
+				link[y] = x;
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
+int match()
+{
+	int anss = 0;
+	memset(link, 0, sizeof link);
+	for (int x = 1; x <= n; ++x)
+	{
+		if (ans[x]) continue;
+		memset(vis, 0, sizeof vis);
+		if (dfs(x)) anss++;
+	}
+	return anss == len;
+}
+
+int main()
+{
+	int t; cin >> t;
+	char str[N], s[N];
+	while (t--)
+	{
+		memset(vis, 0, sizeof vis);
+		memset(viss, 0, sizeof viss);
+		memset(link, 0, sizeof link);
+		memset(g, 0, sizeof g);
+		memset(ans, 0, sizeof ans);
+		int m = 0;
+		cin >> str + 1;
+		n = strlen(str + 1);
+		sort(str + 1, str + 1 + n);
+		for (int i = 1; i <= n; ++i)
+		{
+			cin >> s;
+			int len2 = strlen(s);
+			for (int j = 1; j <= n; ++j)
+			{
+				for (int k = 0; k<len2; ++k) if (str[j] == s[k]) g[i][j] = 1;
+			}
+		}
+		for (int x = 1; x <= n; ++x)
+		{
+			memset(vis, 0, sizeof vis);
+			if (dfs(x)) m++;
+		}
+		if (m  < n)
+		{
+			cout << "NO SOLUTION\n";
+			continue;
+		}
+		len = n;
+		for (int i = 1; i <= n; ++i)
+		{
+			for (int j = 1; j <= n; ++j)
+			{
+				if (!viss[j] && g[i][j])
+				{
+					ans[i] = j;
+					len--;
+					viss[j] = 1;
+					if (match()) break;
+					viss[j] = 0;
+					len++;
+				}
+			}
+		}
+		for (int x = 1; x <= n; ++x) cout << str[ans[x]];
+		cout << endl;
+	}
+	return 0;
+}
