@@ -1,0 +1,55 @@
+#include <iostream>
+#include <queue>
+#include <string.h>
+
+using namespace std;
+
+int main()
+{
+	char st[1010];
+	int t;
+	scanf("%d", &t);
+	getchar();
+	while (t--)
+	{
+		gets(st);
+		int num[30], len = strlen(st);
+		int u = 0;
+		for (int i = 0; i < len; i++)
+		{
+			if (st[i] != ' ') break;
+			u++;
+		}
+		if (u == len) { printf("NOT POSSIBLE\n"); continue; }
+		int _max = -1, flag = 0;
+		char ch = 0;
+		memset(num, 0, sizeof num);
+		for (int i = 0; i<len; i++)
+		{
+			if (st[i] == ' ') continue;
+			num[(st[i] - 'A')]++;
+			if (num[(st[i] - 'A')]>_max)
+			{
+				_max = num[(st[i] - 'A')];
+				ch = st[i];
+				flag = st[i] - 'E';
+			}
+		}
+		int no = 0;
+		for (int i = 0; i < 26; i++)
+			if (num[i] == _max && i + 'A' != ch)
+			{
+				printf("NOT POSSIBLE\n");
+				no = 1;
+				break;
+			}
+		if (no) continue;
+		printf("%d ", flag >= 0 ? flag : flag + 26);
+		for (int i = 0; i < len; i++)
+		{
+			if (st[i] == ' ') printf(" ");
+			else printf("%c", (st[i] - 'A' - flag + 26) % 26 + 'A');
+		}
+		printf("\n");
+	}
+}
