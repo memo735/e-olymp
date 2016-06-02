@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+const int spec_cnt = 4, morse_cnt = 30;
+const char spec[5] = "_.,?";
+const char *morse_cstr[] = { ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-",
+				".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-",
+				".--", "-..-", "-.--", "--..", "..--", "---.", ".-.-", "----" };
+
+const vector<string> morse(morse_cstr, morse_cstr + morse_cnt);
+
+int char_to_ID(char c) {
+	if ('A' <= c && c <= 'Z') return c - 'A';
+	for (int i = 0; i < spec_cnt; i++) if (c == spec[i]) return 'Z' - 'A' + i + 1;
+	return -1;
+}
+
+char ID_to_char(int id) {
+	if (id <= 'Z' - 'A') return 'A' + id;
+	return spec[id - ('Z' - 'A' + 1)];
+}
+
+char code_to_char(const string &code) {
+	for (int i = 0; i < morse_cnt; ++i) if (morse[i] == code) return ID_to_char(i);
+	return -1;
+}
+
+int main() {
+	string inp_str;
+	while (cin >> inp_str) {
+		string mors;
+		vector<int> lengths;
+		for (string::iterator it = inp_str.begin(); it != inp_str.end(); ++it) {
+			int id = char_to_ID(*it);
+			mors.append(morse[id]);
+			lengths.push_back(morse[id].length());
+		}
+		reverse(lengths.begin(), lengths.end());
+		int str_pos = 0;
+		for (vector<int>::iterator it = lengths.begin(); it != lengths.end(); ++it) {
+			cout << code_to_char(mors.substr(str_pos, *it));
+			str_pos += *it;
+		}
+		cout << "\n";
+	}
+	return 0;
+}
