@@ -1,0 +1,18 @@
+#include <algorithm>
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	string a, b;
+	int t = 1;
+	while (cin >> a >> b){
+		if (a == "END" && b == "END") break;
+		sort(a.begin(), a.end());
+		sort(b.begin(), b.end());
+		printf("Case %d: %s\n", t++, (a == b) ? "same" : "different");
+	}
+	return 0;
+}
