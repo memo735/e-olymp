@@ -1,0 +1,83 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAXV = 200, REMOVED = 2;
+char adj[MAXV][MAXV];
+string names[MAXV];
+int nv, nRem;
+
+int getVnum(string s)
+{
+	for (int i = 0; i < nv; i++) if (names[i] == s) return i;
+	names[nv++] = s;
+	return nv - 1;
+}
+
+void removeEdges(int v, int *path, int len)
+{
+	bool isSink = true;
+	for (int i = 0; i < nv; i++) {
+		if (adj[v][i] == 1) {
+			isSink = false;
+			path[len] = i;
+			removeEdges(i, path, len + 1);
+		}
+	}
+	if (isSink) {
+		for (int i = 0; i < len - 2; i++) {
+			for (int j = i + 2; j < len; j++) {
+				if (adj[path[i]][path[j]] == 1) {
+					nRem++;
+					adj[path[i]][path[j]] = REMOVED;
+				}
+			}
+		}
+	}
+}
+
+void sort(int *index)
+{
+	index[0] = 0;
+	for (int i = 1; i < nv; i++) {
+		int j = i;
+		while (j > 0 && names[index[j - 1]] > names[i]) {
+			index[j] = index[j - 1];
+			j--;
+		}
+		index[j] = i;
+	}
+}
+
+int main()
+{
+	int n, icase = 0, path[MAXV], index[MAXV];
+	cin >> n;
+	while (n > 0) {
+		icase++;
+		for (int i = 0; i < MAXV; i++)
+			for (int j = 0; j < MAXV; j++) adj[i][j] = 0;
+
+		nv = 0;
+		for (int i = 0; i < n; i++) {
+			string s1, s2;
+			cin >> s1 >> s2;
+			int v1 = getVnum(s1), v2 = getVnum(s2);
+			adj[v1][v2] = 1;
+		}
+		nRem = 0;
+		for (int i = 0; i < nv; i++) {
+			path[0] = i;
+			removeEdges(i, path, 1);
+		}
+		sort(index);
+		cout << "Case " << icase << ": " << nRem;
+		for (int i = 0; i < nv; i++)
+			for (int j = 0; j < nv; j++)
+				if (adj[index[i]][index[j]] == REMOVED)
+					cout << ' ' << names[index[i]] << ',' << names[index[j]];
+
+		cout << endl;
+		cin >> n;
+	}
+}
