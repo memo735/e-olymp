@@ -1,0 +1,47 @@
+#include <iostream>
+
+using namespace std;
+
+#define N 1001
+#define inf 0x7ffffffffffffll
+
+long a[N], b[N], sum1[N], sum2[N], dp[N][N];
+int n, m, qe[N];
+
+long getU(int j, int k, int z){
+	return dp[k][j - 1] + sum2[k] - (dp[z][j - 1] + sum2[z]);
+}
+
+long getD(int k, int z){ return sum1[k] - sum1[z]; }
+
+long getDP(int i, int j, int k){
+	return dp[k][j - 1] + (sum1[i] - sum1[k]) * a[i] - (sum2[i] - sum2[k]);
+}
+
+int main() {
+	while (cin >> n >> m){
+		for (int i = 1; i <= n; i++) cin >> a[i] >> b[i];
+		sum1[0] = sum2[0] = 0;
+		for (int i = 1; i <= n; i++){
+			sum1[i] = sum1[i - 1] + b[i];
+			sum2[i] = sum2[i - 1] + a[i] * b[i];
+		}
+		for (int i = 0; i <= n; i++)
+			for (int j = 0; j <= m; j++) dp[i][j] = inf;
+		dp[0][0] = 0;
+		for (int j = 1; j <= m; j++){
+			int head = 0, tail = 0;
+			qe[tail++] = 0;
+			for (int i = 1; i <= n; i++){
+				while (head + 1 < tail && getU(j, qe[head + 1], qe[head]) <= a[i] * getD(qe[head + 1], qe[head])) head++;
+				dp[i][j] = getDP(i, j, qe[head]);
+				while (head + 1 < tail && getU(j, i, qe[tail - 1]) * getD(qe[tail - 1], qe[tail - 2]) <=
+					getU(j, qe[tail - 1], qe[tail - 2]) * getD(i, qe[tail - 1]))
+					tail--;
+				qe[tail++] = i;
+			}
+		}
+		cout << dp[n][m] << endl;
+	}
+	return 0;
+}
