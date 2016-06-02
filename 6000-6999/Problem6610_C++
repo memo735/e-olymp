@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int n, m, opp[] = { 1, 0, 3, 2 };
+int dx[] = { 0, 0, 1, -1 }, dy[] = { 1, -1, 0, 0 };
+char g[101][101];
+bool done[101][101];
+
+bool is_ill(int x, int y)
+{
+	if (x < 0 || y < 0 || x >= n || y >= m) return 1;
+	return 0;
+}
+
+void solve(int x, int y, int dir)
+{
+	if (g[x][y] == 'X')return;
+	if (g[x][y] != 'D')
+	{
+		g[x][y]++;
+		return;
+	}
+	if (!done[x][y])
+	{
+		done[x][y] = 1;
+		for (int i = 0; i < 4; i++)
+			if (opp[i] != dir)
+			{
+				int curx = x + dx[i], cury = y + dy[i];
+				if (is_ill(curx, cury)) continue;
+				solve(curx, cury, i);
+			}
+	}
+}
+
+int main()
+{
+	int T, k;
+	scanf("%d", &T);
+	while (T--)
+	{
+		scanf("%d%d", &m, &n);
+		for (int i = 0; i < n; i++) scanf("%s", g[i]);
+		scanf("%d", &k);
+		int x, y;
+		while (k--)
+		{
+			memset(done, 0, sizeof done);
+			scanf("%d%d", &y, &x);
+			solve(x, y, -1);
+		}
+		for (int i = 0; i < n; i++) puts(g[i]);
+	}
+	return 0;
+}
