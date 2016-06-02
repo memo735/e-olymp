@@ -1,19 +1,28 @@
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
-const int MOD = 1e9 + 7;
-const int MAX = 101;
+#define MOD 1000000007
+int memo[100][201][201];
 
-int main()
-{
-	long dp[MAX][2 * MAX][4 * MAX];
-	dp[0][0][0] = 1;
-	for (int i = 1; i <= 100; i++)
-		for (int j = 0; j <= 200; j++)
-			for (int k = 0; k <= 200; k++)
-				dp[i][j][k] = (dp[i][j - 1][k - 1] + dp[i - 1][j][k * 2] + dp[i - 1][j][k * 2 + 1]) % MOD;
+int solve(int pos, int s, int have){
+	if (pos == 0){
+		if (s) return 0;
+		return have == 0 ? 1 : 0;
+	}
+	int &ret = memo[pos][s][have];
+	if (ret == -1){
+		ret = solve(pos - 1, s, have / 2);
+		if (s) ret += solve(pos, s - 1, have + 1);
+		if (ret >= MOD) ret -= MOD;
+	}
+	return ret;
+}
 
-	int s, b;
-	while (scanf("%d %d", &s, &b) != EOF) printf("%ld\n", dp[b][s][0]);
+int main(){
+	int S, B;
+	memset(memo, -1, sizeof memo);
+	while (scanf("%d %d", &S, &B) == 2) printf("%d\n", solve(B - 1, S, 0));
+	return 0;
 }
