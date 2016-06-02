@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+	int n, arr[5005];
+	string s;
+	while (cin >> n && n)
+	{
+		for (int i = 0; i < n; i++) cin >> arr[i];
+		int idx = -1;
+		for (int i = 0; i < n; i++)
+			if (arr[i])
+			{
+				idx = i;
+				break;
+			}
+		if (idx == -1)
+		{
+			cout << (n + 1) / 2 << "\n";
+			continue;
+		}
+		vector<int>v; //to make both end with 1
+		for (int i = idx; i < n; i++)  v.push_back(arr[i]);
+		for (int i = 0; i < idx; i++)  v.push_back(arr[i]);
+		v.push_back(arr[idx]);
+		int cnt = 0, tot = 0;
+		for (int i = 1; i < n; i++)
+		{
+			while (!v[i])
+			{
+				cnt++;
+				i++;
+			}
+			tot += cnt / 2;
+			cnt = 0;
+		}
+		cout << tot << "\n";
+	}
+	return 0;
+}
