@@ -1,0 +1,82 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+#define MAXN 10000
+vector<int> gph[MAXN];
+bool seen[MAXN];
+int n;
+
+bool
+is_nbr(int a, int b)
+{
+	vector<int>::iterator v;
+	for (v = gph[a].begin(); v != gph[a].end(); ++v) if (*v == b) return true;
+	return false;
+}
+
+bool testvs(int a, int b)
+{
+	bool adj = is_nbr(a, b);
+	int ncom = 0;
+	vector<int>::iterator v;
+	for (v = gph[a].begin(); v != gph[a].end(); ++v) if (is_nbr(b, *v)) ncom++;
+	if (adj) return ncom == 0;
+	return ncom <= 1;
+}
+
+bool test_component(int from)
+{
+	vector<int> wl, deg3;
+	int a, b;
+	vector<int>::iterator v;
+	wl.push_back(from);
+	seen[from] = true;
+	while (!wl.empty())
+	{
+		a = wl.back();
+		wl.pop_back();
+		if (gph[a].size() == 3) deg3.push_back(a);
+		for (v = gph[a].begin(); v != gph[a].end(); ++v)
+			if (!seen[*v])
+			{
+				seen[*v] = true;
+				wl.push_back(*v);
+			}
+	}
+	if (deg3.size() >= 5) return true;
+	for (a = 0; a < deg3.size(); a++)
+		for (b = a + 1; b < deg3.size(); b++)
+			if (testvs(deg3[a], deg3[b])) return true;
+
+	return false;
+}
+
+bool good_tree()
+{
+	int i;
+	for (i = 0; i < n; i++) if (gph[i].size() >= 4) return true;
+	for (i = 0; i < n; i++) seen[i] = false;
+	for (i = 0; i < n; i++)
+		if (!seen[i] && gph[i].size() == 3 && test_component(i)) return true;
+
+	return false;
+}
+
+int main()
+{
+	int m, i, f, t;
+	while (scanf("%d%d", &n, &m) == 2)
+	{
+		for (i = 0; i < m; i++)
+		{
+			scanf("%d%d", &f, &t);
+			gph[--f].push_back(--t);
+			gph[t].push_back(f);
+		}
+		printf("%s\n", good_tree() ? "YES" : "NO");
+		for (i = 0; i < n; i++) gph[i].clear();
+	}
+	return 0;
+}
