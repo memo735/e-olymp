@@ -1,0 +1,83 @@
+#include <iostream>
+#include <set>
+#include <string>
+
+using namespace std;
+
+char grid[5][5];
+pair<int,int> hsh[300];
+string insrt = "ABCDEFGHIKLMNOPQRSTUVWXYZ";
+
+int main()
+{
+	string key, txt;
+	int tst;
+	cin >> tst;
+	getline(cin, txt);
+	for (int t = 1; t <= tst; t += 1){
+		getline(cin, key);
+		getline(cin, txt);
+		string tmpkey, tmptxt;
+		for (int i = 0; i < key.size(); i++) if (isalpha(key[i])) tmpkey += toupper(key[i]);
+		for (int i = 0; i < txt.size(); i++) if (isalpha(txt[i])) tmptxt += toupper(txt[i]);
+		key = tmpkey, txt = tmptxt;
+		set<char> vis;
+		vis.insert('J');
+		int r = 0, c = 0;
+		for (int i = 0; i < key.size(); i++){
+			if (vis.count(key[i])) continue;
+			vis.insert(key[i]);
+			grid[r][c] = key[i];
+			hsh[key[i]] = make_pair(r, c);
+			if (++c == 5) ++r, c = 0;
+		}
+		for (int i = 'A'; i <= 'Z'; i += 1){
+			if (!vis.count(i)){
+				grid[r][c] = i;
+				hsh[i] = make_pair(r, c);
+				if (++c == 5) ++r, c = 0;
+			}
+		}
+		int ins = 0;
+		for (int i = 0; i <= txt.size() - 1; i += 2){
+			if (i == txt.size() - 1){
+				if (insrt[ins] == txt[i]){
+					ins = (ins + 1) % insrt.size();
+					i -= 2;
+					continue;
+				}
+				txt += insrt[ins];
+				ins = (ins + 1) % insrt.size();
+				continue;
+			}
+			if (txt[i] == txt[i + 1]){
+				if (insrt[ins] == txt[i]){
+					ins = (ins + 1) % insrt.size();
+					i -= 2;
+					continue;
+				}
+				txt.insert(i + 1, 1, insrt[ins]);
+				ins = (ins + 1) % insrt.size();
+			}
+		}
+		string res;
+		for (int i = 0; i <= txt.size() - 1; i += 2){
+			pair<int, int> p1 = hsh[txt[i]], p2 = hsh[txt[i + 1]];
+			if (p1.first == p2.first){
+				res += grid[p1.first][(p1.second + 1) % 5];
+				res += grid[p2.first][(p2.second + 1) % 5];
+			}
+			else if (p1.second == p2.second){
+				res += grid[(p1.first + 1) % 5][p1.second];
+				res += grid[(p2.first + 1) % 5][p2.second];
+			}
+			else
+			{
+				res += grid[p1.first][p2.second];
+				res += grid[p2.first][p1.second];
+			}
+		}
+		printf("Case %d: %s\n", t, res.c_str());
+	}
+	return 0;
+}
