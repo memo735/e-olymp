@@ -1,0 +1,52 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int MAX = 100;
+long primepow[MAX], prime[MAX], nprimes = 0;
+
+void factorization(long n)   // O(sqrt(n))
+{
+	nprimes = 0;
+	long pow;
+	int d = 1;
+	for (long i = 2; i *i <= n; i += d, d = 2) {
+		pow = 0;
+		while (!(n % i)) pow++, n /= i;
+		if (pow != 0) primepow[nprimes] = pow, prime[nprimes++] = i;
+	}
+	if (n > 1) primepow[nprimes] = 1, prime[nprimes++] = n;
+}
+
+//call factorization before calling this
+long divs[MAX];//holds divisors
+int sz = 0;
+void generate_divisors(int ind = 0, long mul = 1)
+{
+	if (ind == nprimes) {
+		divs[sz++] = mul;
+		return;
+	}
+	long x = 1;
+	for (int i = 0; i <= primepow[ind]; i++) {
+		generate_divisors(ind + 1, mul * x);
+		x *= prime[ind];
+	}
+}
+
+int main()
+{
+	long n, t, b;
+	int tst = 1;
+	while (cin >> n >> t >> b){
+		sz = 0;
+		t %= n;
+		factorization(b);
+		generate_divisors();
+		sort(divs, divs + sz);
+		int num = upper_bound(divs, divs + sz, t) - divs;
+		cout << "Case " << tst++ << ": " << ((num & 1) ? "On\n" : "Off\n");
+	}
+	return 0;
+}
