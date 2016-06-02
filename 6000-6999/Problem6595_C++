@@ -2,46 +2,59 @@
 
 using namespace std;
 
-#define N 1001
-#define inf 0x7ffffffffffffll
+#define MAXN 1000
 
-long a[N], b[N], sum1[N], sum2[N], dp[N][N];
-int n, m, qe[N];
+int N, K, nh, pos, X[MAXN], W[MAXN];
+long f[MAXN], g[MAXN], dp[2][MAXN];
 
-long getU(int j, int k, int z){
-	return dp[k][j - 1] + sum2[k] - (dp[z][j - 1] + sum2[z]);
+struct line{
+	long y0;
+	int m;
+	line(){}
+	line(long _y0, int _m) : y0(_y0), m(_m){}
+};
+
+bool check(line a, line b, line c){
+	return (a.y0 - b.y0) * (c.m - a.m) < (a.y0 - c.y0) * (b.m - a.m);
 }
 
-long getD(int k, int z){ return sum1[k] - sum1[z]; }
+line H[MAXN];
 
-long getDP(int i, int j, int k){
-	return dp[k][j - 1] + (sum1[i] - sum1[k]) * a[i] - (sum2[i] - sum2[k]);
+void update(line l){
+	while (nh >= 2 && !check(H[nh - 2], H[nh - 1], l)){
+		if (pos == nh - 1) --pos;
+		--nh;
+	}
+	H[nh++] = l;
 }
 
-int main() {
-	while (cin >> n >> m){
-		for (int i = 1; i <= n; i++) cin >> a[i] >> b[i];
-		sum1[0] = sum2[0] = 0;
-		for (int i = 1; i <= n; i++){
-			sum1[i] = sum1[i - 1] + b[i];
-			sum2[i] = sum2[i - 1] + a[i] * b[i];
+long eval(int id, int x){
+	return H[id].y0 + (long)H[id].m * x;
+}
+
+long query(int x){
+	while (pos + 1 < nh && eval(pos, x) > eval(pos + 1, x)) ++pos;
+	return eval(pos, x);
+}
+
+int main(){
+	while (scanf("%d %d", &N, &K) == 2){
+		for (int i = 0; i < N; ++i) scanf("%d %d", &X[i], &W[i]);
+		f[0] = W[0];
+		g[0] = (long)X[0] * W[0];
+		for (int i = 1; i < N; ++i){
+			f[i] = f[i - 1] + W[i];
+			g[i] = g[i - 1] + (long)X[i] * W[i];
 		}
-		for (int i = 0; i <= n; i++)
-			for (int j = 0; j <= m; j++) dp[i][j] = inf;
-		dp[0][0] = 0;
-		for (int j = 1; j <= m; j++){
-			int head = 0, tail = 0;
-			qe[tail++] = 0;
-			for (int i = 1; i <= n; i++){
-				while (head + 1 < tail && getU(j, qe[head + 1], qe[head]) <= a[i] * getD(qe[head + 1], qe[head])) head++;
-				dp[i][j] = getDP(i, j, qe[head]);
-				while (head + 1 < tail && getU(j, i, qe[tail - 1]) * getD(qe[tail - 1], qe[tail - 2]) <=
-					getU(j, qe[tail - 1], qe[tail - 2]) * getD(i, qe[tail - 1]))
-					tail--;
-				qe[tail++] = i;
+		for (int i = 0; i < N; ++i) dp[1][i] = X[i] * f[i] - g[i];
+		for (int k = 2, r = 0; k <= K; ++k, r ^= 1){
+			nh = 0; pos = 0;
+			for (int i = k - 1; i < N; ++i){
+				update(line(dp[r ^ 1][i - 1] + g[i - 1], -f[i - 1]));
+				dp[r][i] = X[i] * f[i] - g[i] + query(X[i]);
 			}
 		}
-		cout << dp[n][m] << endl;
+		printf("%ld\n", dp[K & 1][N - 1]);
 	}
 	return 0;
 }
