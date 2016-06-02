@@ -1,0 +1,91 @@
+#include <iostream>
+#include <string.h>
+
+int dir[4][2] = { { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 0 } };
+int n, m, k, map[30][30];
+
+int dfs(int r, int c, int d, int step)
+{
+	int x, y, i;
+	if (d == 0)
+	{
+		for (i = c; i <= n; i++) if (map[r][i] == 1) break;
+		if (i >= n + 1)
+		{
+			printf("%d %d ", n, m + 1 - r);
+			return step + (n - c);
+		}
+	}
+	else if (d == 1)
+	{
+		for (i = r; i >= 1; i--) if (map[i][c] == 1) break;
+		if (i <= 0)
+		{
+			printf("%d %d ", c, m);
+			return step + r - 1;
+		}
+	}
+	else if (d == 2)
+	{
+		for (i = c; i >= 1; i--) if (map[r][i] == 1) break;
+		if (i <= 0)
+		{
+			printf("%d %d ", 1, m + 1 - r);
+			return step + c - 1;
+		}
+	}
+	else
+	{
+		for (i = r; i <= m; i++) if (map[i][c] == 1) break;
+		if (i >= m + 1)
+		{
+			printf("%d %d ", c, 1);
+			return step + (m - r);
+		}
+	}
+
+	x = r + dir[d][0];
+	y = c + dir[d][1];
+	if (map[x][y] != 1) dfs(x, y, d, ++step);
+	else
+	{
+		d = (d + 3) % 4;
+		if (map[r + dir[d][0]][c + dir[d][1]] != 1) dfs(r + dir[d][0], c + dir[d][1], d, ++step);
+		else
+		{
+			d = (d + 1) % 4;
+			d = (d + 1) % 4;
+			if (map[r + dir[d][0]][c + dir[d][1]] != 1) dfs(r + dir[d][0], c + dir[d][1], d, ++step);
+			else
+			{
+				d = (d + 1) % 4;
+				dfs(r + dir[d][0], c + dir[d][1], d, ++step);
+			}
+		}
+	}
+}
+
+int main()
+{
+	int item = 1;
+	while (~scanf("%d %d %d", &n, &m, &k))
+	{
+		if (n == 0 && m == 0 && k == 0) break;
+		memset(map, 0, sizeof map);
+		int a, b, r, c, d, ans;
+		for (int i = 0; i < k; i++)
+		{
+			scanf("%d %d", &a, &b);
+			map[m + 1 - b][a] = 1;
+		}
+		scanf("%d %d", &c, &r);
+		if (r == m) d = 3;
+		else if (r == 1) d = 1;
+		else if (c == n) d = 2;
+		else d = 0;
+		printf("Case %d: ", item++);
+		ans = dfs(m + 1 - r, c, d, 1);
+		printf("%d\n", ans);
+	}
+	return 0;
+}
