@@ -1,0 +1,41 @@
+#include <iostream>
+#include <set>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+	int n[2], m, x, tst = 1;
+	while (cin >> n[0] >> n[1] >> m && (n[0] || n[1] || m)) {
+		set<int> idx[2];
+		vector<vector<int>> t(2, vector<int>(2000, -1));
+		while (m--) {
+			cin >> x;
+			int turn = 0;
+			while (1) {
+				int md = x%n[turn];
+				idx[turn].insert(md);
+				if (t[turn][md] == -1) {
+					t[turn][md] = x;
+					break;
+				}
+				swap(t[turn][md], x);
+				turn = !turn;
+			}
+		}
+		printf("Case %d:\n", tst++);
+		vector<pair<int, int>> res1, res2;
+		for (auto it = idx[0].begin(); it != idx[0].end(); ++it) res1.push_back(make_pair(*it, t[0][*it]));
+		for (auto it = idx[1].begin(); it != idx[1].end(); ++it) res2.push_back(make_pair(*it, t[1][*it]));
+		if (res1.size()){
+			printf("Table 1\n");
+			for (int i = 0; i < res1.size(); i++) printf("%d:%d\n", res1[i].first, res1[i].second);
+		}
+		if (res2.size()){
+			printf("Table 2\n");
+			for (int i = 0; i < res2.size(); i++) printf("%d:%d\n", res2[i].first, res2[i].second);
+		}
+	}
+	return 0;
+}
