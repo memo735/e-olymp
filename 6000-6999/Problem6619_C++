@@ -1,33 +1,37 @@
 #include <iostream>
+#include <algorithm>
+#include <vector>
 
-#define MAX 1000
+using namespace std;
 
-int nu[MAX][MAX], ew[MAX][MAX], nc[MAX];
+const int MAXN = 1001;
+const int MAXINT = 2000000000;
 
-/* for 1000 vertices, simple recursion is enough */
-int dfs(int u, int parent, int w) {
-	int i, chld = 0, leaf = 1;
-	for (i = 0; i < nc[u]; ++i) {
-		if (nu[u][i] != parent) {
-			leaf = 0;
-			chld += dfs(nu[u][i], u, ew[u][nu[u][i]]);
-		}
+int n, c, cost[MAXN][MAXN];
+vector <int> G[MAXN];
+
+int dfs(int now, int fa){
+	if (G[now].size() == 1 && G[now][0] == fa) return MAXINT;
+	int tmp = 0;
+	for (int i = 0; i < (int)G[now].size(); i++){
+		if (G[now][i] == fa) continue;
+		tmp = tmp + min(dfs(G[now][i], now), cost[now][G[now][i]]);
 	}
-	return (w < chld || leaf) ? w : chld;
+	return tmp;
 }
 
-int main() {
-	int i, n, c;
-	while (scanf("%d%d", &n, &c) == 2) {
-		for (i = 0; i < n; ++i) nc[i] = 0;
-		for (i = 1; i < n; ++i) {
-			int u, v, w;
-			scanf("%d%d%d", &u, &v, &w); --u; --v;
-			nu[u][nc[u]++] = v;
-			nu[v][nc[v]++] = u;
-			ew[u][v] = ew[v][u] = w;
+int main(){
+	while (scanf("%d%d", &n, &c) == 2){
+		for (int i = 1; i <= n; i++) G[i].clear();
+		for (int i = 0; i < n - 1; i++){
+			int x, y, z;
+			scanf("%d%d%d", &x, &y, &z);
+			cost[x][y] = z;
+			cost[y][x] = z;
+			G[x].push_back(y);
+			G[y].push_back(x);
 		}
-		printf("%d\n", dfs(c - 1, -1, 10000000));
+		printf("%d\n", dfs(c, -1));
 	}
 	return 0;
 }
