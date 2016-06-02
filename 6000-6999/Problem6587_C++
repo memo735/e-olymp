@@ -1,0 +1,45 @@
+#include <iostream>
+#include <algorithm>
+#include <stack>
+
+using namespace std;
+
+const int maxn = 100001;
+
+int main() {
+	int n, a[maxn], h[maxn];
+	while (scanf("%d", &n) == 1) {
+		for (int i = 0; i < n; i++) scanf("%d", &h[i]), a[i] = h[i];
+		stack< pair<int, int> > stk;
+		for (int i = 0; i < n; i++) {
+			if (!stk.empty()) stk.top().second = min(stk.top().second, h[i]);
+			while (!stk.empty() && stk.top().first <= h[i]) {
+				pair<int, int> p = stk.top();
+				stk.pop();
+				if (!stk.empty()) stk.top().second = min(stk.top().second, p.second);
+			}
+			if (!stk.empty()) a[i] = min(a[i], h[i] - stk.top().second);
+			stk.push(make_pair(h[i], h[i]));
+		}
+		while (!stk.empty()) stk.pop();
+		for (int i = n - 1; i >= 0; i--) {
+			if (!stk.empty()) stk.top().second = min(stk.top().second, h[i]);
+			while (!stk.empty() && stk.top().first <= h[i]) {
+				pair<int, int> p = stk.top();
+				stk.pop();
+				if (!stk.empty()) stk.top().second = min(stk.top().second, p.second);
+			}
+			if (!stk.empty()) a[i] = min(a[i], h[i] - stk.top().second);
+			stk.push(make_pair(h[i], h[i]));
+		}
+		int f = 0;
+		for (int i = 0; i < n; i++) {
+			if (a[i] >= 150000) {
+				if (f++) printf(" ");
+				printf("%d", i + 1);
+			}
+		}
+		puts("");
+	}
+	return 0;
+}
