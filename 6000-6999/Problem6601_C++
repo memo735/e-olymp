@@ -1,0 +1,61 @@
+#include <iostream>
+
+using namespace std;
+
+#define MAXN 50001
+
+int N, M, sl, passo = 0, owner[MAXN], vis[MAXN], LEFT[MAXN], size[MAXN], adj[MAXN][5];
+int di[] = { 1, -1, 0, 0 }, dj[] = { 0, 0, 1, -1 };
+char grid[100][100];
+
+bool pode(int i, int j) { return 0 <= i && i < N && 0 <= j && j < M; }
+
+int id(int i, int j) { return i*M + j; }
+
+int AlternatingPath(int u) {
+	if (vis[u] == passo) return 0;
+	vis[u] = passo;
+	for (int j = 0; j < size[u]; j++) {
+		int v = adj[u][j];
+		if (owner[v] == -1 || AlternatingPath(owner[v])) {
+			owner[v] = u;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int main() {
+	int C, D;
+	while (scanf("%d%d", &N, &M) == 2) {
+		C = 0;
+		for (int i = 0; i < N; i++) {
+			scanf("%s", grid[i]);
+			for (int j = 0; j < M; j++) {
+				owner[id(i, j)] = -1;
+				if (grid[i][j] == '.') C++;
+			}
+		}
+		sl = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = i & 1; j < M; j += 2) {
+				if (grid[i][j] == 'X') continue;
+				LEFT[sl++] = id(i, j);
+				size[id(i, j)] = 0;
+				for (int k = 0; k < 4; k++) {
+					if (pode(i + di[k], j + dj[k]) && grid[i + di[k]][j + dj[k]] == '.') {
+						adj[id(i, j)][size[id(i, j)]++] = id(i + di[k], j + dj[k]);
+					}
+				}
+			}
+		}
+		D = 0;
+		for (int i = 0; i < sl; i++) {
+			passo++;
+			D += AlternatingPath(LEFT[i]);
+		}
+		if (2 * D != C) printf("1\n");
+		else printf("2\n");
+	}
+	return 0;
+}
