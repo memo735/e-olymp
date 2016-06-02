@@ -1,0 +1,54 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int MAXSIZE = 62;
+
+long long upper[MAXSIZE + 1], p2[MAXSIZE];
+
+string convert(long long a, int len)
+{
+	string s = "";
+	for (int i = 0; i < len; i++) {
+		if (a % 2 == 0) s = "a" + s;
+		else s = "b" + s;
+		a /= 2;
+	}
+	return s;
+}
+
+string getString(long long n)
+{
+	int len = 1;
+	while (upper[len] < n) len++;
+	long long base = upper[len - 1] + 1;
+	int j = len - 1;
+	string s = "";
+	while (j >= 0) {
+		if (n < base + p2[j]) {
+			s += "a" + convert(n - base, j);
+			break;
+		}
+		s += "bb";
+		base += p2[j];
+		j -= 2;
+	}
+	return s;
+}
+
+int main()
+{
+	long long n, m;
+	int icase = 0;
+	upper[0] = 0, upper[1] = 1;
+	for (int i = 2; i <= MAXSIZE; i++) upper[i] = upper[i - 1] + 2 * upper[i - 2] + 3;
+	p2[0] = 1;
+	for (int i = 1; i < MAXSIZE; i++) p2[i] = 2 * p2[i - 1];
+	cin >> n >> m;
+	while (n != 0) {
+		string s1 = getString(1 + n*(m - 1)), s2 = getString(n*m);
+		cout << "Case " << ++icase << ": " << s1 << ' ' << s2 << endl;
+		cin >> n >> m;
+	}
+}
