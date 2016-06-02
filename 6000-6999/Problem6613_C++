@@ -1,0 +1,17 @@
+#include <iostream>
+
+#define MAXN 10000
+
+int main() {
+	while (1) {
+		int n = 0;
+		scanf(" 1/%d ", &n);
+		if (n == 0) break;
+		int result = 0;
+		for (int x = n + 1; x <= 2 * n; x++) {
+			if (n*x % (x - n) == 0) result++;
+		}
+		printf("%d\n", result);
+	}
+	return 0;
+}
