@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+const int MOD = 1e9 + 7;
+const int MAX = 101;
+
+int main()
+{
+	long dp[MAX][2 * MAX][4 * MAX];
+	dp[0][0][0] = 1;
+	for (int i = 1; i <= 100; i++)
+		for (int j = 0; j <= 200; j++)
+			for (int k = 0; k <= 200; k++)
+				dp[i][j][k] = (dp[i][j - 1][k - 1] + dp[i - 1][j][k * 2] + dp[i - 1][j][k * 2 + 1]) % MOD;
+
+	int s, b;
+	while (scanf("%d %d", &s, &b) != EOF) printf("%ld\n", dp[b][s][0]);
+}
