@@ -1,0 +1,177 @@
+#include <iostream>
+
+using namespace std;
+
+const int MAX = 25;
+
+char grid[MAX*MAX];
+
+struct baseadj{
+	int nadj, adj[5];
+} base[MAX*MAX];
+
+class edge {
+public:
+	int w;
+	edge *next;
+	edge(int vert = -1, edge *nxt = NULL)
+	{
+		w = vert;
+		next = nxt;
+	}
+};
+
+edge gr[MAX*MAX*(MAX*((MAX + 1) / 2) + MAX) + 2] = { 0 };
+int path[MAX*MAX*(MAX*((MAX + 1) / 2) + MAX)] = { 0 };
+int npath, sink;
+
+int shortest(int n)
+{
+	int path[n][n];
+	for (int i = 0; i < n; i++)
+		for (int j = 1; j < n; j++) path[i][j] = n*n;
+
+	for (int i = 0; i < n; i++) path[i][0] = 0;
+	while (1) {
+		for (int i = 0; i < n; i++) {
+			for (int j = 1; j < n - 1; j++)
+				if (grid[i*n + j] != 'X') {
+					int ans = path[i][j];
+					if (path[i][j - 1] + 1 < ans) ans = path[i][j - 1] + 1;
+					if (path[i][j + 1] + 1 < ans) ans = path[i][j + 1] + 1;
+					if (i > 0 && path[i - 1][j] + 1 < ans) ans = path[i - 1][j] + 1;
+					if (i < n - 1 && path[i + 1][j] + 1 < ans) ans = path[i + 1][j] + 1;
+					path[i][j] = ans;
+				}
+		}
+		for (int i = 0; i < n; i++) {
+			int ans = path[i][n - 1];
+			if (path[i][n - 2] + 1 < ans) return path[i][n - 2] + 1;
+			if (i > 0 && path[i - 1][n - 1] + 1 < ans) return path[i - 1][n - 1] + 1;
+			if (i < n - 1 && path[i + 1][n - 1] + 1 < ans) return path[i + 1][n - 1] + 1;
+		}
+	}
+}
+
+bool findPath(int len, bool visited[], int maxlen)
+{
+	if (path[len] == sink) {
+		npath = len;
+		return true;
+	}
+	int v = path[len];
+	for (edge* p = gr[v].next; p != NULL; p = p->next) {
+		if (!visited[p->w]) {
+			visited[p->w] = true;
+			path[len + 1] = p->w;
+			if (findPath(len + 1, visited, maxlen)) return true;
+		}
+	}
+	return false;
+}
+
+bool findPath(int level)
+{
+	bool visited[sink + 1];
+	for (int i = 0; i <= sink; i++) visited[i] = false;
+	return findPath(0, visited, 3 * level);
+}
+
+bool deleteEdge(int v, int w)
+{
+	edge *p = gr + v;
+	while (p->next != NULL && p->next->w != w) p = p->next;
+	if (p->next == NULL) return false;
+	edge* tmp = p->next;
+	p->next = tmp->next;
+	delete tmp;
+	return true;
+}
+
+int flow = 0;
+
+int maxflow(int level)
+{
+	while (findPath(level)) {
+		flow++;
+		for (int i = 0; i < npath; i++) {
+			int v = path[i], w = path[i + 1];
+			if (!deleteEdge(v, w)) cout << "ERROR: vertex " << w << " not on edge list for " << v << endl;
+			gr[w].next = new edge(v, gr[w].next);
+		}
+	}
+	return flow;
+}
+
+int main()
+{
+	int n, icase = 0; cin >> n;
+	while (n != 0) {
+		icase++;
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++) cin >> grid[n*j + i];
+
+		for (int i = 0; i < n*n; i++) {
+			base[i].nadj = 0;
+			int c = i / n, r = i%n;
+			if (grid[i] == '.') {
+				if (c > 0 && grid[i - n] == '.') base[i].adj[base[i].nadj++] = n*n - n;
+				base[i].adj[base[i].nadj++] = n*n;
+				if (r > 0 && grid[i - 1] == '.') base[i].adj[base[i].nadj++] = n*n - 1;
+				if (r < n - 1 && grid[i + 1] == '.') base[i].adj[base[i].nadj++] = n*n + 1;
+				if (c < n - 1 && grid[i + n] == '.') base[i].adj[base[i].nadj++] = n*n + n;
+			}
+		}
+		int minlen = shortest(n);
+		gr[0].next = NULL;
+		for (int i = n; i >= 1; i--) gr[0].next = new edge(i, gr[0].next);
+		int index = 0;
+		sink = n*n*(minlen + 1) + 1;
+		for (int i = 0; i < minlen; i++) {
+			for (int j = 0; j < n*n; j++) {
+				index++;
+				gr[index].next = NULL;
+				for (int k = 0; k < base[j].nadj; k++) {
+					if (index + base[j].adj[k] < sink) gr[index].next = new edge(index + base[j].adj[k], gr[index].next);
+				}
+			}
+		}
+		for (int j = 0; j < n*n; j++) gr[++index].next = NULL;
+		for (int i = 1; i <= n; i++) gr[sink - i].next = new edge(sink, gr[sink - i].next);
+		gr[sink].next = NULL;
+		flow = 0;
+		while (maxflow(minlen) < n) {
+			minlen++;
+			// add next layer
+			gr[sink + n*n] = gr[sink];		// save sink backwards edges
+			for (int i = 1; i <= n; i++) {
+				if (gr[sink - i].next != NULL && gr[sink - i].next->w == sink) {
+					delete gr[sink - i].next;
+					gr[sink - i].next = NULL;
+				}
+			}
+			gr[sink].next = NULL;
+			index = sink - n*n - 1;
+			sink += n*n;
+			for (int j = 0; j < n*n; j++) {
+				index++;
+				if (gr[index].next != NULL && gr[index].next->w == sink - n*n) gr[index].next = NULL;
+				for (int k = 0; k < base[j].nadj; k++)
+					if (index + base[j].adj[k] < sink) gr[index].next = new edge(index + base[j].adj[k], gr[index].next);
+			}
+			for (int j = 0; j < n*n; j++) gr[++index].next = NULL;
+			for (int i = 1; i <= n; i++) gr[sink - i].next = new edge(sink, gr[sink - i].next);
+			// put in back edges to extend previous flow
+			for (edge *p = gr[sink].next; p != NULL; p = p->next) {
+				int w = p->w;
+				p->w += n*n;
+				int v = p->w;
+				deleteEdge(v, sink);
+				deleteEdge(w, v);
+				gr[v].next = new edge(w, gr[v].next);
+			}
+		}
+		cout << "Case " << icase << ": " << minlen << endl;
+		cin >> n;
+	}
+}
