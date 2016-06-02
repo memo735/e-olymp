@@ -1,0 +1,47 @@
+#include <iostream>
+#include <queue>
+#include <string.h>
+
+using namespace std;
+
+queue<char> q;
+int cnt, num;
+
+void print()
+{
+	printf("%d: ", num);
+	int x = 0;
+	while (!q.empty())
+	{
+		x++;
+		char c = q.front(); q.pop();
+		if (x == 3 && c == 'Z') printf(" Z");
+		else if (c == ':') printf(": ");
+		else putchar(c);
+	}
+	printf(";\n");
+}
+
+int main()
+{
+	int T; char ss[10000];
+	scanf("%d", &T); gets(ss);
+	while (T--)
+	{
+		while (!q.empty()) q.pop();
+		cnt = 0; num = 0;
+		while (gets(ss))
+		{
+			++num;
+			if (!strcmp(ss, "END OF CASE")) break;
+			int t = strlen(ss);
+			for (int i = 0; i < t; i++)
+			{
+				if (ss[i] == ' ') continue;
+				if (ss[i] != ';') q.push(ss[i]);
+				else print();
+			}
+		}
+	}
+	return 0;
+}
