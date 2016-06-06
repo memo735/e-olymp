@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string.h>
+
+char s[10000];
+int i;
+
+double sol() {
+	if (s[i] != '(') {
+		double e;
+		sscanf(s + i, "%lf", &e);
+		while ('0' <= s[i] && s[i] <= '9' || s[i] == '-') i++;
+		while (s[i] == ' ')  i++;
+		return e;
+	}
+	double p, e1, e2;
+	sscanf(s + i, "(%lf", &p);
+	while (s[i] != ' ')  i++;
+	i++;
+	e1 = sol(), e2 = sol();
+	while (s[i] != ')')  i++;
+	i++;
+	while (s[i] == ' ')  i++;
+	return p*(e1 + e2) + (1 - p)*(e1 - e2);
+}
+
+int main() {
+	while (gets(s)) {
+		if (!strcmp(s, "()")) break;
+		i = 0;
+		printf("%.2lf\n", sol());
+	}
+	return 0;
+}
