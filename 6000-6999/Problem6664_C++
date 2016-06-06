@@ -1,0 +1,59 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+#define maxN 31
+#define INF 1 << 30
+
+int N;
+double d[maxN], mat[maxN][maxN];
+char s[maxN][100];
+
+bool bellman(int s){
+	int i, k;
+	for (i = 1; i <= N; i++)  d[i] = 0;
+	d[s] = 1;
+	for (k = 1; k <= N; k++){
+		int flag = 0;
+		for (i = 1; i <= N; i++){
+			for (int j = 1; j <= N; j++){
+				if (mat[i][j] < INF && d[i]>0 && d[j] < d[i] * mat[i][j]){
+					d[j] = d[i] * mat[i][j];
+					flag = 1;
+				}
+			}
+		}
+		if (flag == 0) break;
+	}
+	if (k <= N) return false;
+	return true;
+}
+
+int main(){
+	int cnt = 0, i, j, k;
+	while (1){
+		cnt++;
+		scanf("%d", &N);
+		if (N == 0)   break;
+		for (i = 1; i <= N; i++)
+			for (j = 1; j <= N; j++) mat[i][j] = INF;
+
+		for (i = 1; i <= N; i++) scanf("%s", s[i]);
+		char ch1[100], ch2[100];
+		int m;
+		scanf("%d", &m);
+		double r;
+		for (i = 1; i <= m; i++){
+			scanf("%s%lf%s", ch1, &r, ch2);
+			for (j = 1; j <= N; j++) if (strcmp(ch1, s[j]) == 0) break;
+			for (k = 1; k <= N; k++) if (strcmp(ch2, s[k]) == 0) break;
+			if (mat[j][k] == INF || mat[j][k]<INF && mat[j][k]>r) mat[j][k] = r;
+		}
+		int flag = 0;
+		if (bellman(1)) flag = 1;
+		if (flag) printf("Case %d: Yes\n", cnt);
+		else printf("Case %d: No\n", cnt);
+	}
+	return 0;
+}
