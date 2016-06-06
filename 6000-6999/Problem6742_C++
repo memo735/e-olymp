@@ -1,0 +1,158 @@
+#include <iostream>
+#include <string.h>
+#include <algorithm>
+
+using namespace std;
+
+const int INF = 1000111222;
+const int NN = 52;
+
+int T, T1, x[NN], y[NN], c[NN], p1[NN], p[10050];
+int temp_p[10050], dd[10050], qw[7501];
+
+struct G
+{
+	int v, cap, next;
+} E[85000], E1[2701];
+
+void add1(int u, int v)
+{
+	E1[T1].v = v;
+	E1[T1].next = p1[u];
+	p1[u] = T1++;
+}
+
+void add(int u, int v, int cap)
+{
+	E[T].v = v;
+	E[T].cap = cap;
+	E[T].next = p[u];
+	p[u] = T++;
+	E[T].v = u;
+	E[T].cap = 0;
+	E[T].next = p[v];
+	p[v] = T++;
+}
+
+bool find_path(int st, int en, int n)
+{
+	int i, u, v, head, tail;
+	for (i = 0; i <= n; i++) dd[i] = -1;
+	dd[st] = 0;
+	qw[head = tail = 0] = st;
+	while (head <= tail)
+	{
+		u = qw[head++];
+		for (i = p[u]; i + 1; i = E[i].next)
+		{
+			v = E[i].v;
+			if (dd[v] == -1 && E[i].cap > 0)
+			{
+				dd[v] = dd[u] + 1;
+				qw[++tail] = v;
+			}
+		}
+	}
+	return dd[en] != -1;
+}
+
+int dfs_flow(int u, int& en, int f)
+{
+	if (u == en || f == 0) return f;
+	int temp, flow = 0;
+	for (; temp_p[u] + 1; temp_p[u] = E[temp_p[u]].next)
+	{
+		G& e = E[temp_p[u]];
+		if (dd[e.v] == dd[u] + 1)
+		{
+			temp = dfs_flow(e.v, en, min(f, e.cap));
+			if (temp > 0)
+			{
+				f -= temp;
+				flow += temp;
+				e.cap -= temp;
+				E[temp_p[u] ^ 1].cap += temp;
+				if (f == 0) break;
+			}
+		}
+	}
+	return flow;
+}
+
+int dinic(int st, int en, int n)
+{
+	int i, ans = 0;
+	while (find_path(st, en, n))
+	{
+		for (i = 0; i <= n; i++) temp_p[i] = p[i];
+		ans += dfs_flow(st, en, INF);
+	}
+	return ans;
+}
+
+void solve(int n, int sum)
+{
+	memset(p, -1, sizeof p);
+	T = 0;
+	int i, j, k, v, ans = 0;
+	for (i = 1; i <= n + sum; i++)
+	{
+		for (j = p1[0]; j + 1; j = E1[j].next)
+		{
+			v = E1[j].v;
+			add(0, v + i*n * 2, INF);
+		}
+		for (k = 2; k <= n + 1; k++)
+		{
+			for (j = p1[k]; j + 1; j = E1[j].next)
+			{
+				v = E1[j].v;
+				if (v == 1) add(k + i*n * 2 - n, 1, INF);
+				else add(k + i*n * 2 - n, v + i*n * 2, INF);
+			}
+			add(k + i*n * 2 - n - n, k + i*n * 2 - n, c[k - 1]);
+		}
+		k = dinic(0, 1, i*n * 2 + n + 1);
+		ans += k;
+		if (ans >= sum) break;
+	}
+	if (i > n + sum) puts("IMPOSSIBLE");
+	else printf("%d\n", i);
+}
+
+int main()
+{
+	int i, j, N, M, D, W;
+	while (scanf("%d%d%d%d", &N, &M, &D, &W) != EOF)
+	{
+		memset(p1, -1, sizeof p1);
+		T1 = 0;
+		for (i = 1; i <= N; i++) scanf("%d%d%d", &x[i], &y[i], &c[i]);
+		if (D >= W)
+		{
+			puts("1");
+			continue;
+		}
+		for (i = 1; i <= N; i++)
+		{
+			if (y[i] <= D) add1(0, i + 1);
+			if (W - y[i] <= D)
+			{
+				add1(i + 1, 1);
+				add1(1, i + 1);
+			}
+			add1(i + 1, i + 1);
+			for (j = i + 1; j <= N; j++)
+			{
+				if ((x[i] - x[j])*(x[i] - x[j]) + (y[i] - y[j])*(y[i] - y[j]) <= D*D)
+				{
+					add1(i + 1, j + 1);
+					add1(j + 1, i + 1);
+				}
+			}
+		}
+		c[0] = INF;
+		solve(N, M);
+	}
+	return 0;
+}
