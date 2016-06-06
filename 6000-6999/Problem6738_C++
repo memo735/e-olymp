@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string.h>
+
+const int maxn = 2097152;
+
+void max(int *a, const int b) { if (*a < b) *a = b; }
+
+int main() {
+	int n, a[21], b[maxn], f[maxn], g[maxn];
+	long i, j, k = 0, l;
+	scanf("%d", &n);
+	for (i = 0; i < n; ++i) scanf("%d", a + i);
+	for (i = 0; i < n; ++i) scanf("%ld", &j), k += (a[i] -= j);
+	if (k) return puts("-1"), 0;
+	for (i = 0, k = 1; i < n; ++i, k <<= 1) b[k] = i;
+	for (g[0] = 0, i = 1; i < k; ++i) j = i & -i, g[i] = g[i ^ j] + a[b[j]];
+	memset(f, 0, sizeof f);
+	for (i = 1; i < k; ++i)
+		for (j = i; j; j ^= l) l = j & -j, max(f + i, f[i ^ l] + (g[i] == a[b[l]]));
+
+	printf("%d", n - f[k - 1]);
+	return 0;
+}
