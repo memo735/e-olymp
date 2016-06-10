@@ -1,0 +1,310 @@
+#include <assert.h>// c
+#include <iostream>// io
+#include <iomanip>
+#include <vector>// container
+#include <map>
+#include <set>
+#include <queue>
+#include <bitset>
+#include <algorithm>// other
+#include <complex>
+#include <numeric>
+#include <functional>
+#include <regex>
+
+using namespace std;
+#define ALL(c) c.begin(),c.end()
+#define IN(l,v,r) (l<=v && v < r)
+template<class T> void UNIQUE(T& v){
+	sort(ALL(v));
+	v.erase(unique(ALL(v)), v.end());
+}
+
+#define range(i,l,r) for(int i=(int)l;i<(int)(r);i++)
+
+template<typename T> istream& operator >> (istream& is, vector<T>& as){ range(i, 0, as.size())is >> as[i]; return is; }
+//output
+
+struct Edge{
+	char c; int f, t;
+};
+
+class NFA{
+public:
+	static NFA ONE;
+	int N;
+	vector<Edge> es;
+	vector<vector<int>> f_cache, t_cache, reachable;
+	vector<vector<vector<int>>> trans;
+	int s, t;
+	NFA(int N = 0) :N(N), s(0), t(1){
+		f_cache = t_cache = vector<vector<int>>(N);
+	}
+	void add_edge(char c, int f, int t){
+		int eid = es.size();
+		es.push_back({ c, f, t });
+		f_cache[f].push_back(eid); t_cache[t].push_back(eid);
+	}
+	static NFA *disjoint(NFA* a, NFA* b){
+		// merge technique
+		NFA *res = (a->es.size() < b->es.size() ? b : a), *add = (a->es.size() < b->es.size() ? a : b);
+		res->f_cache.resize(res->N + add->N); res->t_cache.resize(res->N + add->N);
+		int eid = res->es.size();
+		for (Edge& e : add->es){
+			e.f += res->N; e.t += res->N;
+			res->es.push_back(e);
+			res->f_cache[e.f].push_back(eid); res->t_cache[e.t].push_back(eid); eid++;
+		}
+		res->N += add->N;
+		return res;
+	}
+	static NFA* Union(NFA* a, NFA* b){
+		bool bl = a->es.size() < b->es.size();
+		int as = (bl ? b->N : 0) + a->s, at = (bl ? b->N : 0) + a->t, bs = (!bl ? a->N : 0) + b->s, bt = (!bl ? a->N : 0) + b->t;
+		int S = a->N + b->N, T = a->N + b->N + 1;
+		NFA* ab = disjoint(a, b), *ab1 = disjoint(ab, &ONE), *res = disjoint(ab1, &ONE);
+		res->add_edge('-', S, as); res->add_edge('-', S, bs); res->add_edge('-', at, T); res->add_edge('-', bt, T);
+		res->s = S; res->t = T;
+		return res;
+	}
+	static NFA* Concat(NFA* a, NFA* b){
+		bool bl = a->es.size() < b->es.size();
+		int as = (bl ? b->N : 0) + a->s, at = (bl ? b->N : 0) + a->t, bs = (!bl ? a->N : 0) + b->s, bt = (!bl ? a->N : 0) + b->t;
+		NFA* res = disjoint(a, b);
+		res->add_edge('-', at, bs);
+		res->s = as; res->t = bt;
+		return res;
+	}
+	static NFA* Star(NFA* a){
+		NFA* res = disjoint(a, &ONE);
+		res->add_edge('-', res->N - 1, a->s); res->add_edge('-', a->t, res->N - 1);
+		res->s = res->t = res->N - 1;
+		return res;
+	}
+	// step
+	void create_reachable(){
+		queue<pair<int, int>> que; que.push({ t, 0 });
+		reachable = vector<vector<int>>(N, vector<int>(4));
+		reachable[t][0] = true;
+		while (!que.empty()){
+			int t, d; tie(t, d) = que.front(); que.pop();
+			//back
+			for (int eid : t_cache[t]){
+				Edge& e = es[eid];
+				if (e.c == '-'){
+					if (!reachable[e.f][d]){
+						reachable[e.f][d] = true;
+						que.push({ e.f, d });
+					}
+				}
+				else{
+					if (d + 1 <reachable[e.f].size() && !reachable[e.f][d + 1]){
+						reachable[e.f][d + 1] = true;
+						que.push({ e.f, d + 1 });
+					}
+				}
+			}
+		}
+	}
+	void create_trans(){
+		trans = vector<vector<vector<int>>>(N, vector<vector<int>>(27));
+		// eps trans
+		range(st, 0, N){
+			vector<bool> passed(N);
+			passed[st] = true;
+			queue<int> que;
+			range(i, 0, passed.size())if (passed[i])que.push(i);
+			while (!que.empty()){
+				int s = que.front(); que.pop();
+				for (int eid : f_cache[s])if (es[eid].c == '-' && !passed[es[eid].t]){
+					passed[es[eid].t] = true;
+					que.push(es[eid].t);
+				}
+			}
+			range(i, 0, N)if (passed[i]) trans[st][26].push_back(i);
+		}
+		range(st, 0, N)range(c, 'A', 'Z' + 1){
+			// eps trans
+			vector<bool> passed(N);
+			for (int s : trans[st][26])passed[s] = true;
+			vector<bool> npassed(N);
+			queue<int> que;
+			range(i, 0, passed.size())if (passed[i])que.push(i);
+			while (!que.empty()){
+				int s = que.front(); que.pop();
+				for (int eid : f_cache[s])if ((es[eid].c == c || es[eid].c == '.') && !npassed[es[eid].t]){
+					npassed[es[eid].t] = true;
+					que.push(es[eid].t);
+				}
+			}
+			// eps trans
+			range(i, 0, N)if (npassed[i])for (int s : trans[i][26]) npassed[s] = true;
+			range(s, 0, npassed.size())if (npassed[s]){
+				bool alleps = true;
+				for (int eid : f_cache[s])alleps &= es[eid].c == '-';
+				if (alleps && t != s)continue;
+				trans[st][c - 'A'].push_back(s);
+			}
+		}
+	}
+} NFA::ONE = NFA(1);
+
+class REGtoNFA{
+public:
+	static NFA* pattern(string& s, int& i, int e);
+	static NFA* simple(string& s, int& i, int e){
+		NFA* p = basic(s, i, e);
+		while (i < e && s[i] != '|'){
+			NFA* q = basic(s, i, e);
+			p = NFA::Concat(p, q);
+		}
+		return p;
+	}
+	static NFA* basic(string& s, int& i, int e){
+		NFA* p = elementary(s, i, e);
+		if (i < s.size() && s[i] == '*'){
+			i++;// *
+			p = NFA::Star(p);
+		}
+		return p;
+	}
+	static NFA* elementary(string& s, int& i, int e){
+		NFA* p;
+		if (s[i] == '('){
+			i++; // (
+			int d = 1;
+			for (int j = i; j < e; j++){
+				if (s[j] == '(') d++;
+				if (s[j] == ')') d--;
+				if (d == 0){
+					e = j; break;
+				}
+			}
+			p = pattern(s, i, e);
+			i++;
+		}
+		else{
+			p = new NFA(2);
+			p->add_edge(s[i], p->s, p->t);
+			i++;
+		}
+		return p;
+	}
+};
+
+NFA* REGtoNFA::pattern(string& s, int& i, int e)
+{
+	NFA* p = simple(s, i, e);
+	while (i < e && s[i] == '|')
+	{
+		i++;// '|'
+		NFA* q = simple(s, i, e);
+		p = NFA::Union(p, q);
+	}
+	return p;
+}
+
+int rc = 0;
+class Main{
+public:
+	int h, w;
+	vector<string> tmp, res;
+	vector<NFA> NFAs;
+	vector<vector<int>> stats;
+	void dfs(int y, int x, int c){
+		if (rc > 1)return;
+		if (y == h){
+			rc += c;
+			res = tmp;
+			return;
+		}
+		vector<vector<vector<int>>> nstats(2, vector<vector<int>>(26));
+		vector<int> nfai = { y, h + x };
+		range(ni, 0, 2)for (char nc = 'A'; nc <= 'Z'; nc++){
+			for (int s : stats[nfai[ni]])for (int t : NFAs[nfai[ni]].trans[s][nc - 'A']) nstats[ni][nc - 'A'].push_back(t);
+			UNIQUE(nstats[ni][nc - 'A']);
+		}
+		vector<int> gid(26); iota(ALL(gid), 0);
+		for (char c1 = 'A'; c1 <= 'Z'; c1++)for (char c2 = 'A'; c2 < c1; c2++)if (gid[c2 - 'A'] == c2 - 'A'){
+			if (nstats[0][c1 - 'A'].size() == nstats[0][c2 - 'A'].size() && nstats[1][c1 - 'A'].size() == nstats[1][c2 - 'A'].size()){
+				bool eq = true;
+				range(ni, 0, 2){
+					range(i, 0, nstats[ni][c1 - 'A'].size()){
+						eq &= nstats[ni][c1 - 'A'][i] == nstats[ni][c2 - 'A'][i];
+						if (!eq)break;
+					}
+					if (!eq)break;
+				}
+				if (eq){
+					gid[c1 - 'A'] = gid[c2 - 'A'];
+					break;
+				}
+			}
+		}
+		vector<int> gc(26);
+		range(i, 0, 26)gc[gid[i]]++;
+		for (char c = 'A'; c <= 'Z'; c++)if (gid[c - 'A'] == c - 'A'){
+			tmp[y][x] = c;
+			bool tmpOK = true;
+			{
+				bool ok = false;
+				for (int s : nstats[0][c - 'A'])ok |= NFAs[y].reachable[s][w - 1 - x];
+				tmpOK &= ok;
+			}
+			{
+				bool ok = false;
+				for (int s : nstats[1][c - 'A'])ok |= NFAs[h + x].reachable[s][h - 1 - y];
+				tmpOK &= ok;
+			}
+			if (x == w - 1){
+				bool ok = false;
+				for (int s : nstats[0][c - 'A'])ok |= s == NFAs[y].t;
+				tmpOK &= ok;
+			}
+			if (y == h - 1){
+				bool ok = false;
+				for (int s : nstats[1][c - 'A'])ok |= s == NFAs[h + x].t;
+				tmpOK &= ok;
+			}
+			if (tmpOK){
+				vector<int> tmpp = stats[y], tmpq = stats[h + x];
+				stats[y] = nstats[0][c - 'A']; stats[h + x] = nstats[1][c - 'A'];
+				if (x + 1 < w) dfs(y, x + 1, gc[c - 'A']);
+				else dfs(y + 1, 0, gc[c - 'A']);
+				stats[y] = tmpp; stats[h + x] = tmpq;
+			}
+		}
+	}
+	void run(){
+		while (true){
+			cin >> h >> w;
+			if (h == 0 && w == 0)break;
+			rc = 0;
+			tmp = res = vector<string>(h, string(w, '-'));
+			vector<string> ss(h + w); cin >> ss;
+			// h <= 4, w <= 4
+			NFAs = vector<NFA>(h + w);
+			range(i, 0, h + w){
+				string s = "";
+				range(j, 1, ss[i].size() - 1) s += ss[i][j];
+				int cur = 0, e = s.size();
+				NFAs[i] = *REGtoNFA::pattern(s, cur, e);
+			}
+			range(i, 0, h + w){
+				NFAs[i].create_reachable();
+				NFAs[i].create_trans();
+			}
+			stats = vector<vector<int>>(h + w);
+			range(i, 0, h + w) stats[i].push_back(NFAs[i].s);
+			dfs(0, 0, 1);
+			if (rc > 1) cout << "ambiguous" << endl;
+			else if (rc == 0) cout << "none" << endl;
+			else range(i, 0, h) cout << res[i] << endl;
+		}
+	}
+};
+
+int main(){
+	Main().run();
+	return 0;
+}
