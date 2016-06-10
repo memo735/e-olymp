@@ -1,0 +1,56 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+const int MAXN = 1001;
+int n, a[MAXN], b[MAXN], dp[200000];
+
+int DP(int num, int a[]) {
+	int sumv = 0, mi = 0;
+	for (int i = 1; i <= num; i++) sumv += a[i];
+	while (1 << mi + 1 <= sumv) mi++;
+	int maxs = 1 << mi;
+	dp[0] = 1;
+	for (int i = 1; i <= num; i++) {
+		int tmp = a[i];
+		for (int j = maxs; j >= tmp; j -= tmp) {
+			if (dp[j]) dp[j + tmp] = max(dp[j + tmp], dp[j] + 1);
+		}
+		dp[tmp] = max(dp[tmp], 1);
+	}
+	int ans = 0;
+	for (int i = 0; i <= mi; i++) ans = max(ans, dp[1 << i]);
+	for (int i = 1; i <= num; i++) {
+		int tmp = a[i];
+		for (int j = maxs; j >= tmp; j -= tmp) dp[j + tmp] = 0;
+		dp[tmp] = 0;
+	}
+	return ans;
+}
+
+int main() {
+	while (scanf("%d", &n) == 1 && n) {
+		int maxb = -1;
+		for (int i = 1; i <= n; i++) scanf("%d", &b[i]), maxb = max(maxb, b[i]);
+		int ret = 0;
+		for (int i = 1; i <= maxb; i += 2) {
+			int sz = 0;
+			for (int j = 1; j <= n; j++) {
+				if (b[j] % i == 0) {
+					int t = b[j] / i;
+					for (int k = 0; k < 11; k++) {
+						if (1 << k == t) {
+							a[++sz] = t;
+							break;
+						}
+					}
+				}
+			}
+			if (sz) ret = max(ret, DP(sz, a));
+		}
+		cout << ret << endl;
+	}
+	return 0;
+}
