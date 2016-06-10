@@ -1,0 +1,93 @@
+#include <algorithm>
+#include <assert.h>
+#include <iostream>
+#include <limits>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+typedef long long weight;
+const weight INF = numeric_limits<weight>::max() / 2;
+
+typedef pair<weight, weight> value;
+
+struct heap
+{
+	value v;
+	heap * l;
+	heap * r;
+};
+
+vector<heap> H;
+heap * nexth;
+
+void merge(heap * & x, heap * y)
+{
+	if (!x) swap(x, y);
+	if (!y) return;
+	if (y->v > x->v) swap(x, y);
+	swap(x->l, x->r);
+	merge(x->r, y);
+}
+
+struct vertex
+{
+	weight w;
+	vector<vertex *> N;
+};
+
+vector<vertex> G;
+
+heap * dfs(vertex * u, vertex * p = nullptr)
+{
+	heap * h = nullptr;
+	for (vertex * v : u->N) if (v != p) merge(h, dfs(v, u));
+	value a(min(u->w, (weight)0), max(u->w, (weight)0));
+	while (h)
+	{
+		if (a.second + h->v.first >= 0) a.second += h->v.first + h->v.second;
+		else if (a.first + a.second <= 0)
+		{
+			a.first += a.second + h->v.first;
+			a.second = h->v.second;
+		}
+		else break;
+		merge(h->l, h->r);
+		h = h->l;
+	}
+	if (a.first + a.second > 0)
+	{
+		nexth->v = a;
+		nexth->r = nexth->l = nullptr;
+		merge(h, nexth++);
+	}
+	return h;
+}
+
+int main()
+{
+	int T;
+	assert(1 == scanf("%d", &T));
+	while (T--){
+		int n, t;
+		assert(2 == scanf("%d%d", &n, &t));
+		vector<vertex>(n + 1).swap(G);
+		G[0].w = INF;
+		for (int i = 1; i <= n; ++i) assert(1 == scanf("%Ld", &G[i].w));
+		G[0].N.push_back(&G[t]);
+		G[t].N.push_back(&G[0]);
+		for (int i = 1; i < n; ++i)
+		{
+			int x, y;
+			assert(2 == scanf("%d%d", &x, &y));
+			G[x].N.push_back(&G[y]);
+			G[y].N.push_back(&G[x]);
+		}
+		vector<heap>(n + 1).swap(H);
+		nexth = &H[0];
+		heap * h = dfs(&G[1]);
+		printf(h && h->v.first >= 0 && h->v.second >= INF / 2 ? "escaped\n" : "trapped\n");
+	}
+	return 0;
+}
