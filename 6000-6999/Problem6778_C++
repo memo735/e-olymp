@@ -1,0 +1,30 @@
+#include <iostream>
+#include <string.h>
+
+using namespace std;
+
+int n, m, s, dp[256][16];
+
+int solve()
+{
+	memset(dp, 0, sizeof dp);
+	dp[0][0] = 1;
+	for (int i = 1; i <= n; i++) {
+		for (int j = s - i; j >= 0; j--)
+			for (int k = m - 1; k >= 0; k--)
+				dp[j + i][k + 1] += dp[j][k];
+	}
+	return dp[s][m];
+}
+
+bool input()
+{
+	scanf("%d%d%d", &n, &m, &s);
+	return n || m || s;
+}
+
+int main()
+{
+	while (input()) printf("%d\n", solve());
+	return 0;
+}
