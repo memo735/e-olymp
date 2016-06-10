@@ -1,0 +1,47 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+
+const int dx[4] = { 2, 2, -2, -2 };
+const int dy[4] = { 2, -2, 2, -2 };
+const int bsize = 10;
+
+string board[bsize + 1];
+
+int go(int x, int y)
+{
+	int m = 0;
+	for (int q = 0; q < 4; q++)
+	{
+		if (x + dx[q] < 0 || x + dx[q] >= bsize || y + dy[q] < 0 || y + dy[q] >= bsize) continue;
+		if (board[x + dx[q] / 2][y + dy[q] / 2] == 'B' && board[x + dx[q]][y + dy[q]] == '#')
+		{
+			board[x][y] = '#';
+			board[x + dx[q] / 2][y + dy[q] / 2] = '#';
+			board[x + dx[q]][y + dy[q]] = 'W';
+			m = max(m, 1 + go(x + dx[q], y + dy[q]));
+			board[x][y] = 'W';
+			board[x + dx[q] / 2][y + dy[q] / 2] = 'B';
+			board[x + dx[q]][y + dy[q]] = '#';
+		}
+	}
+	return m;
+}
+
+int main()
+{
+	int TT; cin >> TT;
+	cin.ignore();
+	while (TT--)
+	{
+		cin.ignore();
+		for (int i = 0; i < bsize; i++) cin >> board[i];
+		int m = 0;
+		for (int i = 0; i < bsize; i++)
+			for (int j = 0; j < bsize; j++)
+				if (board[i][j] == 'W') m = max(m, go(i, j));
+		cout << m << endl;
+	}
+}
