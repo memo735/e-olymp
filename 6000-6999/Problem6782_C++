@@ -1,0 +1,74 @@
+#include <iostream>
+#include <unordered_map>
+#include <queue>
+#include <assert.h>
+#include <array>
+
+using namespace std;
+
+array<int, 9> field, goal;
+
+int encode() {
+	int res = 0;
+	for (int i = 0; i < 9; ++i) res = res * 9 + field[i];
+	return res;
+}
+
+void decode(int v) {
+	for (int i = 0; i < 9; ++i) {
+		field[8 - i] = v % 9;
+		v /= 9;
+	}
+}
+
+const int TO[4][9] = {
+	{ 1, 2, 3, 4, 5, 6, 7, 8, 0 },
+	{ 8, 0, 1, 2, 3, 4, 5, 6, 7 },
+	{ 6, 7, 8, 0, 1, 2, 3, 4, 5 },
+	{ 3, 4, 5, 6, 7, 8, 0, 1, 2 },
+};
+
+bool solve() {
+	int CH, CV;
+	if (!(cin >> CH >> CV)) return false;
+	if (!CH && !CV) return false;
+	for (int i = 0; i < 9; ++i) cin >> field[i];
+	for (int i = 0; i < 9; ++i) cin >> goal[i];
+	int G;
+	array<int, 9> tmp = field;
+	field = goal;
+	G = encode();
+	field = tmp;
+	unordered_map<int, int> memo;
+	memo[0] = encode();
+	priority_queue<pair<int, int>> q;
+	q.push(make_pair(0, encode()));
+	while (!q.empty()) {
+		const int cost = -q.top().first, state = q.top().second;
+		q.pop();
+		if (memo.count(state) && memo[state] < cost) continue;
+		if (state == G) {
+			cout << cost << endl;
+			return true;
+		}
+		decode(state);
+		int zero = 0;
+		while (field[zero] != 0) ++zero;
+		for (int d = 0; d < 4; ++d) {
+			swap(field[zero], field[TO[d][zero]]);
+			const int nc = cost + (d < 2 ? CH : CV);
+			const int ns = encode();
+			swap(field[zero], field[TO[d][zero]]);
+			if (memo.count(ns) && memo[ns] <= nc) continue;
+			memo[ns] = nc;
+			q.push(make_pair(-nc, ns));
+		}
+	}
+	assert(false);
+	return true;
+}
+
+int main() {
+	while (solve());
+	return 0;
+}
