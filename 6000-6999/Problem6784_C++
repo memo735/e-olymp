@@ -1,0 +1,73 @@
+#include <map>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int m, n, a, b;
+
+struct P {
+	int x, y, z;
+	P() {}
+	P(int x, int y, int z) : x(x), y(y), z(z) {}
+	bool operator< (const P& l) const {
+		if (x != l.x) return x < l.x;
+		if (y != l.y) return y > l.y;
+		return z > l.z;
+	}
+};
+
+int r() {
+	const int C = ~(1 << 31), M = (1 << 16) - 1;
+	a = 36969 * (a & M) + (a >> 16);
+	b = 18000 * (b & M) + (b >> 16);
+	return (C & (a << 16) + b) % 1000000;
+}
+
+bool C(map<int, P>& polyline, const P& p) {
+	map<int, P>::iterator it = polyline.lower_bound(p.y);
+	if (it == polyline.begin()) return true;
+	--it;
+	return it->second.z >= p.z;
+}
+
+void insert_polyline(vector<map<int, P> >& polyline, const P& p) {
+	int l = -1, r = polyline.size();
+	while (r - l != 1) {
+		int md = (l + r) / 2;
+		bool ok = C(polyline[md], p);
+		if (ok) r = md;
+		else l = md;
+	}
+	if (polyline.size() == r) polyline.emplace_back();
+	if (polyline[r].find(p.y) != polyline[r].end() && polyline[r][p.y].z <= p.z) return;
+	polyline[r][p.y] = p;
+	map<int, P>::iterator it = polyline[r].find(p.y);
+	++it;
+	while (it != polyline[r].end()) {
+		if (it->second.z < p.z) break;
+		polyline[r].erase(it++);
+	}
+}
+
+int main() {
+	int cnt = 0;
+	while (cin >> m >> n >> a >> b, m || n || a || b) {
+		cnt++;
+		vector<P> v;
+		for (int i = 0; i < m; i++) {
+			int x, y, z; cin >> x >> y >> z;
+			v.emplace_back(x, y, z);
+		}
+		for (int i = 0; i < n; i++) {
+			int x = r(), y = r(), z = r();
+			v.emplace_back(x, y, z);
+		}
+		sort(v.begin(), v.end());
+		vector<map<int, P> > polyline;
+		for (int i = 0; i < v.size(); i++) insert_polyline(polyline, v[i]);
+		cout << polyline.size() << "\n";
+	}
+	return 0;
+}
