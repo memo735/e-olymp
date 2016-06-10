@@ -1,0 +1,32 @@
+#include <iostream>
+
+using namespace std;
+
+long H, h, m, s, d;
+bool check(){
+	long x = 60 * H*s, y = (60 * m*d + s)*H, z = 3600 * h*d + 60 * m*d + s;
+	if (y == z) return false;
+	long dify = y - x, difz = x - z;
+	if (dify < 0) dify += 3600 * H*d;
+	if (difz < 0) difz += 3600 * H*d;
+	return dify == difz;
+}
+
+long gcd(long a, long b){ return b ? gcd(b, a%b) : a; }
+
+int main(){
+	while (cin >> H >> h >> m >> s, H){
+		d = 119 * H - 1; s *= d;
+		while (1){
+			if (check()){
+				long g = gcd(s, d);
+				cout << h << " " << m << " " << s / g << " " << d / g << endl;
+				break;
+			}
+			s++;
+			if (s / d == 60) s = 0, m++;
+			if (m == 60) m = 0, h++;
+			if (h == H) h = 0;
+		}
+	}
+}
