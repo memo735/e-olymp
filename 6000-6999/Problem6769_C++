@@ -1,0 +1,121 @@
+#include <algorithm>
+#include <assert.h>
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
+using namespace std;
+
+const int MAXNAME = 20, MAXLINES = 100000, MAXSTOPS = 300000, INFTY = 1000000000;
+
+void cinword(string expected)
+{
+	string word; cin >> word;
+	assert(word == expected);
+}
+
+int main()
+{
+	int nkases = 0;
+	cin >> nkases;
+	assert(1 <= nkases);
+	for (int kase = 1; kase <= nkases; ++kase)
+	{
+		cinword("Stops:");
+		unordered_map<string, int> stopsbyname;
+		for (int stop = 0, comma = 1; comma; ++stop)
+		{
+			string name; cin >> name;
+			assert(1 <= name.size() && name.size() <= MAXNAME);
+			comma = name[name.size() - 1] == ',';
+			if (comma) name.resize(name.size() - 1);
+			stopsbyname[name] = stop;
+		}
+		int nstops = stopsbyname.size();
+		assert(2 <= nstops && nstops <= MAXSTOPS);
+		cinword("Lines:");
+		unordered_map<string, int> linesbyname;
+		for (int line = 0, comma = 1; comma; ++line)
+		{
+			string name; cin >> name;
+			assert(1 <= name.size() && name.size() <= MAXNAME);
+			comma = name[name.size() - 1] == ',';
+			if (comma) name.resize(name.size() - 1);
+			linesbyname[name] = line;
+		}
+		int nlines = linesbyname.size();
+		assert(1 <= nlines && nlines <= MAXLINES);
+		vector<vector<int>> lines(nlines), stops(nstops);
+		for (int i = 0; i < nlines; ++i)
+		{
+			string linename; cin >> linename;
+			assert(linesbyname.find(linename) != linesbyname.end());
+			int line = linesbyname[linename];
+			cinword("route:");
+			for (int comma = 1; comma;)
+			{
+				string stopname; cin >> stopname;
+				comma = stopname[stopname.size() - 1] == ',';
+				if (comma) stopname.resize(stopname.size() - 1);
+				assert(stopsbyname.find(stopname) != stopsbyname.end());
+				int stop = stopsbyname[stopname];
+				lines[line].push_back(stop);
+				stops[stop].push_back(line);
+			}
+		}
+		cinword("Johny"); cinword("lives"); cinword("at");
+		string sourcename; cin >> sourcename;
+		assert(stopsbyname.find(sourcename) != stopsbyname.end());
+		int source = stopsbyname[sourcename];
+		cinword("Michelle"); cinword("lives"); cinword("at");
+		string targetname; cin >> targetname;
+		assert(stopsbyname.find(targetname) != stopsbyname.end());
+		int target = stopsbyname[targetname];
+		vector<bool> linevisited(nlines, false);
+		vector<int> queue(1, source);
+		vector<int> best(nstops, -1);
+		best[source] = 0;
+		for (int cost = 0; queue.size(); ++cost)
+		{
+			vector<int> rides;
+			for (int stop : queue)
+			{
+				if (stop == target)
+					if (cost == 1)
+						if (best[stop] == 1) printf("optimal travel from %s to %s: %d line%s, %d minute%s\n", sourcename.c_str(), targetname.c_str(), cost, "", best[stop], "");
+						else printf("optimal travel from %s to %s: %d line%s, %d minute%s\n", sourcename.c_str(), targetname.c_str(), cost, "", best[stop], "s");
+					else
+						if (best[stop] == 1) printf("optimal travel from %s to %s: %d line%s, %d minute%s\n", sourcename.c_str(), targetname.c_str(), cost, "s", best[stop], "");
+						else printf("optimal travel from %s to %s: %d line%s, %d minute%s\n", sourcename.c_str(), targetname.c_str(), cost, "s", best[stop], "s");
+						for (int line : stops[stop]) rides.push_back(line);
+			}
+			queue.clear();
+			unordered_map<int, int> updates;
+			for (int line : rides)
+				if (!linevisited[line])
+				{
+					linevisited[line] = true;
+					vector<int> aux[2];
+					for (int dir = 0; dir < 2; ++dir)
+					{
+						int curr = -INFTY;
+						for (int stop : lines[line])
+						{
+							++curr;
+							if (best[stop] < 0) updates[stop] = max(updates[stop], curr);
+							else curr = max(curr, best[stop]);
+						}
+						reverse(lines[line].begin(), lines[line].end());
+					}
+				}
+			for (auto update : updates)
+			{
+				if (best[update.first] < 0) queue.push_back(update.first);
+				if (best[update.first] < update.second) best[update.first] = update.second;
+			}
+		}
+	}
+	return 0;
+}
