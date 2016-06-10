@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <string.h>
+
+using namespace std;
+
+typedef vector<int> vi;
+
+int n, l[101], t[101], r[101], b[101];
+vi x, y;
+long rec[101][101];
+const int dy[] = { -1, 0, 1, 0 }, dx[] = { 0, 1, 0, -1 };
+
+void dfs(int py, int px, long col){
+	if (rec[py][px] != col) return;
+	rec[py][px] = -1;
+	for (int i = 0; i < 4; i++){
+		int ny = py + dy[i], nx = px + dx[i];
+		if (ny < 0 || nx < 0 || ny >= y.size() || nx >= x.size()) continue;
+		dfs(ny, nx, col);
+	}
+}
+
+int main(){
+	while (cin >> n, n){
+		x.clear(); y.clear();
+		x.push_back(-1); y.push_back(-1);
+		for (int i = 0; i < n; i++){
+			cin >> l[i] >> t[i] >> r[i] >> b[i];
+			x.push_back(l[i]); x.push_back(r[i]);
+			y.push_back(t[i]); y.push_back(b[i]);
+		}
+		sort(x.begin(), x.end());
+		x.erase(unique(x.begin(), x.end()), x.end());
+		sort(y.begin(), y.end());
+		y.erase(unique(y.begin(), y.end()), y.end());
+		memset(rec, 0, sizeof rec);
+		for (int i = 0; i < n; i++){
+			l[i] = lower_bound(x.begin(), x.end(), l[i]) - x.begin();
+			r[i] = lower_bound(x.begin(), x.end(), r[i]) - x.begin();
+			t[i] = lower_bound(y.begin(), y.end(), t[i]) - y.begin();
+			b[i] = lower_bound(y.begin(), y.end(), b[i]) - y.begin();
+			for (int j = b[i]; j < t[i]; j++){
+				for (int k = l[i]; k < r[i]; k++) rec[j][k] |= 1LL << i;
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i < y.size(); i++)
+			for (int j = 0; j < x.size(); j++){
+				if (rec[i][j] >= 0) dfs(i, j, rec[i][j]), ans++;
+			}
+		cout << ans << endl;
+	}
+}
