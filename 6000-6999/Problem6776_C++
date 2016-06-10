@@ -1,0 +1,75 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 26;
+
+bool graph[N][N];
+int color[N], dp[N], parent[N];
+
+void dfs(int u, int f) {
+	if (color[u] == 2) return;
+	parent[u] = f;
+	if (color[u] == 1) throw u;
+	color[u] = 1;
+	parent[u] = f;
+	for (int v = 0; v < N; ++v)
+		if (graph[u][v]) {
+			dfs(v, u);
+			dp[u] = max(dp[u], 1 + dp[v]);
+		}
+	color[u] = 2;
+}
+
+int main() {
+	int Z; cin >> Z;
+	while (Z--) {
+		for (int i = 0; i < N; ++i)
+			for (int j = 0; j < N; ++j) graph[i][j] = true;
+		int n; cin >> n;
+		while (n--) {
+			string w; cin >> w;
+			graph[w[0] - 'a'][w[1] - 'a'] = false;
+		}
+		for (int i = 0; i < N; ++i) {
+			color[i] = 0;
+			dp[i] = 0;
+		}
+		int on_cycle = -1;
+		try {
+			for (int i = 0; i < N; ++i) dfs(i, -1);
+		}
+		catch (int ex_on_cycle) {
+			on_cycle = ex_on_cycle;
+		}
+		int path[100], path_len = 0;
+		if (on_cycle != -1) {
+			path_len = 39;  // this makes 20x20 square
+			for (int i = path_len - 1; i >= 0; --i) {
+				path[i] = on_cycle;
+				on_cycle = parent[on_cycle];
+			}
+		}
+		else {
+			int u = 0;
+			for (int i = 0; i < N; ++i) if (dp[i] > dp[u]) u = i;
+			while (dp[u] > 0) {
+				path[path_len++] = u;
+				for (int v = 0; v < N; ++v)
+					if (graph[u][v] && dp[v] == dp[u] - 1) {
+						u = v;
+						break;
+					}
+			}
+			path[path_len++] = u;
+		}
+		path_len = (path_len + 1) / 2;
+		for (int i = 0; i < path_len; ++i) {
+			for (int j = 0; j < path_len; ++j) cout << static_cast<char>('a' + path[i + j]);
+			cout << endl;
+		}
+	}
+	return 0;
+}
