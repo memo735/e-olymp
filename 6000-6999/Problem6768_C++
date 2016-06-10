@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+#define FOREACH(i, v) for (__typeof((v).begin()) i = (v).begin(); i != (v).end(); i++)
+#define st first
+#define nd second
+int stmp;
+#define scanf stmp=scanf
+
+typedef long long LL;
+typedef pair<LL, LL> PLL;
+
+LL euclid(LL a, LL b) {
+	while (a) {
+		b %= a;
+		swap(a, b);
+	}
+	return b;
+}
+
+LL t[10000100];
+
+int main() {
+	int n, z;
+	scanf("%d", &z);
+	while (z--) {
+		scanf("%d", &n);
+		for (int i = 0; i < n; i++) scanf("%lld", t + i);
+		vector<PLL> lefts;
+		LL best = 0;
+		for (int i = 0; i < n; i++) {
+			lefts.push_back(make_pair(0, i));
+			FOREACH(leftEnd, lefts) {
+				leftEnd->st = euclid(leftEnd->st, t[i]);
+			}
+			sort(lefts.begin(), lefts.end());
+			vector<PLL> tmp;
+			for (int j = 0; j < lefts.size(); j++) {
+				if (!j || lefts[j - 1].first != lefts[j].first) {
+					tmp.push_back(lefts[j]);
+				}
+			}
+			swap(tmp, lefts);
+			FOREACH(leftEnd, lefts) {
+				best = max(best, (i - leftEnd->nd + 1) * LL(leftEnd->st));
+			}
+		}
+		printf("%lld\n", best);
+	}
+	return 0;
+}
