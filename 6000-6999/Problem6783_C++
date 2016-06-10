@@ -1,0 +1,137 @@
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <random>
+#include <unordered_map>
+#include <math.h>
+
+using namespace std;
+
+typedef pair<int, int> P;
+
+int gcd(int a, int b) {
+	if (a == 0) return b;
+	return gcd(b%a, a);
+}
+
+struct K {
+	int x, y, z;
+	K() {}
+	K(int x, int y, int z) : x(x), y(y), z(z) {}
+	bool operator== (const K &r) const { return x == r.x && y == r.y && z == r.z; }
+};
+
+struct T {
+	double x, y, z;
+	int i;
+	T() {}
+	T(int x, int y, int z, int i) : x(x), y(y), z(z), i(i) {}
+	K key(double r) const { return K(x / r, y / r, z / r); }
+	double abs() const { return sqrt(x*x + y*y + z*z); }
+};
+
+double dist(const T &l, const T &r) {
+	double x = l.x - r.x, y = l.y - r.y, z = l.z - r.z;
+	return sqrt(x*x + y*y + z*z);
+}
+
+const int MN = 100100, MD = 1007;
+
+int n, x[MN], y[MN], z[MN];
+T p[MN];
+
+struct Hash {
+	int operator()(const K &x) const { return x.x ^ x.y << 10 ^ x.z << 20; }
+};
+
+unordered_map<K, vector<int>, Hash> mp;
+
+P solve() {
+	for (int i = 0; i < n; i++) {
+		int g = gcd(gcd(x[i], y[i]), z[i]);
+		p[i] = T(x[i] / g, y[i] / g, z[i] / g, i);
+	}
+	sort(p, p + n, [](const T &l, const T &r) {
+		if (l.x != r.x) return l.x < r.x;
+		if (l.y != r.y) return l.y < r.y;
+		return l.z < r.z;
+	});
+	n = unique(p, p + n, [](const T &l, const T &r){ return l.x == r.x && l.y == r.y && l.z == r.z; }) - p;
+	shuffle(p, p + n, mt19937(random_device()()));
+	for (int i = 0; i < n; i++) {
+		double u = p[i].abs();
+		p[i].x /= u;
+		p[i].y /= u;
+		p[i].z /= u;
+	}
+	double res = dist(p[1], p[0]);
+	P resp = P(p[0].i, p[1].i);
+	if (resp.first > resp.second) swap(resp.first, resp.second);
+	mp[p[0].key(res)].push_back(0);
+	mp[p[1].key(res)].push_back(1);
+	for (int i = 2; i < n; i++) {
+		double r = res;
+		P rp = resp;
+		K k = p[i].key(res);
+		bool f = false;
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				for (int z = -1; z <= 1; z++) {
+					auto it = mp.find(K(k.x + x, k.y + y, k.z + z));
+					if (it == mp.end()) continue;
+					for (int t : it->second) {
+						double u = dist(p[i], p[t]);
+						P up = P(p[t].i, p[i].i);
+						if (up.first > up.second) swap(up.first, up.second);
+						if (u < r || u == r && up < rp) {
+							f = true;
+							r = u;
+							rp = up;
+						}
+					}
+				}
+			}
+		}
+		if (f) {
+			res = r;
+			resp = rp;
+			mp.clear();
+			for (int j = 0; j <= i; j++) mp[p[j].key(res)].push_back(j);
+		}
+		else mp[p[i].key(res)].push_back(i);
+	}
+	return resp;
+}
+
+typedef tuple<int, int, int> TD;
+TD d[MN];
+
+int main() {
+	while (1) {
+		int m, s, w;
+		scanf("%d %d %d %d", &n, &m, &s, &w);
+		if (!n && !m) break;
+		for (int i = 0; i < n; i++) {
+			int x, y, z;
+			scanf("%d %d %d", &x, &y, &z);
+			d[i] = TD(x, y, z);
+		}
+		int g = s;
+		for (int i = n; i < n + m; i++) {
+			int x, y, z;
+			x = (g / 7) % 100 + 1;
+			y = (g / 700) % 100 + 1;
+			z = (g / 70000) % 100 + 1;
+			d[i] = TD(x, y, z);
+			if (g % 2 == 0) g = (g / 2);
+			else g = (g / 2) ^ w;
+		}
+		n += m;
+		sort(d, d + n);
+		for (int i = 0; i < n; i++) tie(x[i], y[i], z[i]) = d[i];
+		auto r = solve();
+		int a = r.first, b = r.second;
+		printf("%d %d %d %d %d %d\n", x[a], y[a], z[a], x[b], y[b], z[b]);
+	}
+	return 0;
+}
