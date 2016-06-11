@@ -1,0 +1,28 @@
+#include <iostream>
+#include <set>
+
+using namespace std;
+typedef set<double> si;
+
+int main(void) {
+	set<double> X;
+	set<double>::iterator it = X.begin();
+	char str[100];
+	while (scanf("%s", str) == 1) {
+		if (*str == '#') {
+			printf("%.0lf\n", *it);
+			X.erase(it++);
+			if (X.size() % 2) --it;
+		}
+		else {
+			double x = atoi(str) + 0.4*drand48();
+			X.insert(x);
+			if (X.size() == 1) it = X.begin();
+			else {
+				if (x < *it) --it;
+				if (X.size() % 2 == 0) ++it;
+			}
+		}
+	}
+	return 0;
+}
