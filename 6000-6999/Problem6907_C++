@@ -1,0 +1,35 @@
+#include <iostream>
+#include <vector>
+#include <string.h>
+
+using namespace std;
+
+string temp[] = { "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ" };
+
+char calc(int num, char c){
+	bool u = 0;
+	if ('a' <= c && c <= 'z') c = c - 'a' + 'A', u = 1;
+	for (int i = 0; i <= 7; i++){
+		for (int j = 0; j <= temp[i].size() - 1; j++)
+			if (temp[i][j] == c){
+				int len = temp[i].size(), cnt = j + 1;
+				while (cnt <= num) cnt += len;
+				cnt -= num;
+				c = temp[i][cnt - 1]; break;
+			}
+	}
+	if (u) c = c - 'A' + 'a';
+	return c;
+}
+
+int main()
+{
+	char s[1005], ans[1005];
+	while (scanf("%s", s) != EOF && s[0] != '#'){
+		int n = strlen(s);
+		for (int i = 0; i <= n - 1; i++) ans[i] = calc(i + 1, s[i]);
+		ans[n] = '\0';
+		printf("%s\n", ans);
+	}
+	return 0;
+}
