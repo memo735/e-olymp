@@ -1,0 +1,36 @@
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+int main()
+{
+	int n, d, a[210];
+	while (cin >> d >> n && n) {
+		for (int i = 1; i <= n; ++i) scanf("%d", &a[i]);
+		int ans = 1e18;
+		priority_queue<int> now;
+		for (int i = 1; i <= n; ++i) now.push(-a[i]);
+		while (now.size() < d) {
+			for (int i = 1; i <= n; ++i) now.push(now.top() - a[i]);
+			now.pop();
+		}
+		while (1) {
+			int sum = 0;
+			priority_queue<int> nex;
+			for (int i = 1; i <= d; ++i) {
+				int x = now.top();
+				now.pop();
+				sum -= x;
+				nex.push(x);
+			}
+			if (sum >= ans) break;
+			ans = sum;
+			for (int i = 1; i <= n; ++i) nex.push(nex.top() - a[i]);
+			nex.pop();
+			swap(now, nex);
+		}
+		cout << ans << endl;
+	}
+	return 0;
+}
