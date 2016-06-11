@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main() {
+	int n, i, j, k, m = 0, c[1001], d[1001], g[1001];
+	scanf("%d", &n);
+	for (i = 1; i <= n; i++) scanf("%d%d%d", g + i, d + i, c + i);
+	d[0] = 101;
+	for (i = 0; i < n; i++) {
+		k = 0;
+		for (j = 1; j <= n; k += (j - k) * (d[j++] < d[k]));
+		for (j = k; j && c[j] >= d[k]; j = g[j]);
+		if (!j) {
+			for (j = k; j; c[j] -= d[k], j = g[j]);
+			m++;
+		}
+		d[k] = d[0];
+	}
+	printf("%d\n", m);
+	return 0;
+}
