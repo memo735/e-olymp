@@ -1,0 +1,59 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+int n, group[200], cur[200];
+vector<int> adj[200], rest[200];
+
+bool search(int v, int T, int g) {
+	group[v] = g;
+	for (int i = 0; i < rest[v].size(); ++i) {
+		int w = rest[v][i];
+		if (group[w] == g) return false;
+		if (group[w] != -1) continue;
+		if (g != cur[w] && !search(w, T, 3 - g - cur[w])) return false;
+	}
+	return true;
+}
+
+bool poss(int T) {
+	int ogroup[500];
+	memset(group, -1, sizeof group);
+	for (int i = 1; i <= n; ++i) rest[i].clear();
+	for (int i = 1; i <= n; ++i)
+		for (int j = T; j < n - 1; ++j) {
+			rest[i].push_back(adj[i][j]);
+			rest[adj[i][j]].push_back(i);
+		}
+	for (int i = 1; i <= n; ++i)
+		if (group[i] == -1) {
+			memcpy(ogroup, group, sizeof group);
+			if (!search(i, T, (cur[i] + 1) % 3)) {
+				memcpy(group, ogroup, sizeof group);
+				if (!search(i, T, (cur[i] + 2) % 3)) return false;
+			}
+		}
+	return true;
+}
+
+int main() {
+	scanf("%d", &n);
+	for (int i = 1; i <= n; ++i) {
+		scanf("%d", cur + i);
+		for (int j = 0; j < n - 1; ++j) {
+			int v; scanf("%d", &v);
+			adj[i].push_back(v);
+		}
+	}
+	int lo = -1, hi = n - 1;
+	while (hi - lo > 1)
+	{
+		int m = (hi + lo) / 2;
+		if (poss(m)) hi = m;
+		else lo = m;
+	}
+	printf("%d\n", hi);
+	return 0;
+}
