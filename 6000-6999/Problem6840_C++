@@ -1,0 +1,18 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main(){
+	int T, n, s[1005];
+	scanf("%d", &T);
+	while (T--){
+		int i, res = 0;
+		scanf("%d", &n);
+		for (i = 0; i < n; i++) scanf("%d", &s[i]);
+		sort(s, s + n);
+		for (i = 0; i < n; i++) res = max(res, s[i] * (n - i));
+		printf("%d\n", res);
+	}
+	return 0;
+}
