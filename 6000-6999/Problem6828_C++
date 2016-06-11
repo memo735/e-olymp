@@ -1,0 +1,23 @@
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	int n; scanf("%d", &n);
+	vector<int> a(n), b(n);
+	for (int i = 0; i < n; ++i) scanf("%d", &a[i]);
+	for (int i = 0; i < n; ++i) scanf("%d", &b[a[i] - 1]);
+	//For 2 permutations a, b:
+	//sgn(a) == sgn(b^-1) is equivalent to sgn(a * b) == 1
+	vector<bool> seen(n, false);
+	int swaps = n;
+	for (int i = 0; i < n; ++i)
+		if (!seen[i])
+		{
+			swaps--;
+			for (int j = i; !seen[j]; j = b[j] - 1) seen[j] = true;
+		}
+	printf(swaps & 1 ? "Impossible\n" : "Possible\n");
+}
