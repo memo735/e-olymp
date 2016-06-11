@@ -1,0 +1,63 @@
+#include <iostream> 
+#include <string.h> 
+
+#define MAXSIZE 43 
+
+struct POINT {
+	int x, y;
+};
+
+int n, h, w;
+bool cover[MAXSIZE][MAXSIZE];
+char map[MAXSIZE][MAXSIZE];
+char dir[4][2] = { 1, 0, -1, 0, 0, 1, 0, -1 };
+POINT link[MAXSIZE][MAXSIZE];
+
+bool find(int py, int px)
+{
+	int i, x, y;
+	for (i = 0; i < 4; ++i)
+	{
+		y = py + dir[i][0];
+		x = px + dir[i][1];
+		if (0 < x && x <= w && 0 < y && y <= h && !cover[y][x] && map[y][x] == '*')
+		{
+			cover[y][x] = true;
+			if (!link[y][x].x || find(link[y][x].y, link[y][x].x))
+			{
+				link[y][x].y = py;
+				link[y][x].x = px;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+int main()
+{
+	int i, j;
+	int sum, cnt;
+	while (~scanf("%d", &n))
+	{
+		while (n--)
+		{
+			scanf("%d%d", &h, &w);
+			for (j = 1; j <= h; j++) scanf("%s", &map[j][1]);
+			sum = cnt = 0;
+			memset(link, 0, sizeof link);
+			for (j = 1; j <= h; ++j)
+				for (i = 1; i <= w; ++i)
+				{
+					if (map[j][i] == '*')
+					{
+						++cnt;
+						memset(cover, 0, sizeof cover);
+						sum += find(j, i);
+					}
+				}
+			printf("%d\n", cnt - sum / 2);
+		}
+	}
+	return 0;
+}
