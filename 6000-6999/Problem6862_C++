@@ -1,0 +1,48 @@
+#include <iostream>
+#include <string.h>
+
+int main()
+{
+	int T, n, m;
+	char map[15][15];
+	scanf("%d", &T);;
+	while (T--)
+	{
+		int i, j, ans = 0;
+		memset(map, '.', sizeof map);
+		scanf("%d%d", &n, &m);
+		getchar();
+		for (i = 1; i <= n; i++)
+		{
+			for (j = 1; j <= m; j++)
+			{
+				map[i][j] = getchar();
+				if (map[i][j] == '.') continue;
+				if (map[i][j] == '/')
+				{
+					if (map[i + 1][j - 1] == '/' || map[i - 1][j + 1] == '/') continue;
+					ans++;
+				}
+				else if (map[i][j] == '\\')
+				{
+					if (map[i - 1][j - 1] == '\\' || map[i + 1][j + 1] == '\\') continue;
+					ans++;
+				}
+				else if (map[i][j] == '|')
+				{
+					if (map[i - 1][j] == '|' || map[i + 1][j] == '|') continue;
+					ans++;
+				}
+				else if (map[i][j] == '-')
+				{
+					if (map[i][j - 1] == '-' || map[i][j + 1] == '-') continue;
+					ans++;
+				}
+			}
+			getchar();
+		}
+		if (ans == 1) printf("CORRECT\n");
+		else printf("INCORRECT\n");
+	}
+	return 0;
+}
