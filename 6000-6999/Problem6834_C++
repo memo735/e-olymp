@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+#define INF 123456789
+
+int main(){
+	int N, H, L; cin >> N >> H >> L;
+	vector<int> horrorindex(N, INF);
+	queue<int> queuedmovies;
+	int h;
+	for (int i = 0; i < H; i++){
+		cin >> h;
+		horrorindex[h] = 0;
+		queuedmovies.push(h);
+	}
+	vector<vector<int> > graph(N);
+	int a, b;
+	for (int i = 0; i < L; i++){
+		cin >> a >> b;
+		graph[a].push_back(b);
+		graph[b].push_back(a);
+	}
+	while (!queuedmovies.empty()){
+		h = queuedmovies.front();
+		queuedmovies.pop();
+		int q = horrorindex[h];
+		for (int i = 0; i < graph[h].size(); i++){
+			if (horrorindex[graph[h][i]] == INF){
+				horrorindex[graph[h][i]] = q + 1;
+				queuedmovies.push(graph[h][i]);
+			}
+		}
+	}
+	int bestmovie = 0, bestquality = horrorindex[0];
+	for (int i = 0; i < N; i++){
+		if (horrorindex[i] > bestquality){
+			bestquality = horrorindex[i];
+			bestmovie = i;
+		}
+	}
+	cout << bestmovie << endl;
+	return 0;
+}
