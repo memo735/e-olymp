@@ -1,0 +1,115 @@
+#include <vector>
+#include <cstdio>
+#include <bitset>
+#include <iostream>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+#define trav(it,c) for(__typeof((c).begin()) it=(c).begin(); it!=(c).end(); ++it)
+
+vector<int> w;
+
+void improvMin(int &a, int b) { a = min(a, b); }
+
+int sef(int a) {
+	if (w[a] < 0) return a;
+	return w[a] = sef(w[a]);
+}
+
+bool spoj(int a, int b) {
+	int x = sef(a), y = sef(b);
+	if (x == y) return false;
+	if (w[x] > w[y]) swap(x, y);
+	w[x] += w[y]; w[y] = x;
+	return true;
+}
+
+int size(int a) { return -w[sef(a)]; }
+
+int main()
+{
+	int n, r; scanf("%d %d", &n, &r);
+	w.assign(n, -1);
+	int a[n][n];
+	for (int i = 0; i < n; ++i)
+		for (int j = 0; j < n; ++j) a[i][j] = 123456789;
+
+	int included = 0;
+	bitset<20> deg;
+	for (int i = 0; i < r; ++i)
+	{
+		int x, y, c;
+		scanf("%d %d %d", &x, &y, &c);
+		x--; y--;
+		a[x][y] = a[y][x] = c;
+		included += c;
+		deg[x] = !deg[x];
+		deg[y] = !deg[y];
+		spoj(x, y);
+	}
+	vector<int> icomp(n, -1);
+	int compon = 0;
+	for (int i = 0; i < n; ++i)
+		if (w[i] < 0 && i == 0 || w[i] <= -2) icomp[i] = compon++;
+
+	vector<bitset<20> > comp(compon);
+	bitset<20> need;
+	for (int i = 0; i < n; ++i)
+		if (i == 0 || size(i) >= 2)
+		{
+			need[i] = true;
+			comp[icomp[sef(i)]][i] = true;
+		}
+	int f; scanf("%d", &f);
+	for (int k = 0; k < f; ++k)
+	{
+		int x, y, c;
+		scanf("%d %d %d", &x, &y, &c);
+		x--; y--;
+		improvMin(a[x][y], c);
+		a[y][x] = a[x][y];
+	}
+	for (int k = 0; k < n; ++k)
+		for (int i = 0; i < n; ++i)
+			for (int j = 0; j < n; ++j) improvMin(a[i][j], a[i][k] + a[k][j]);
+
+	int s = 1 << n;
+	vector<int> match(s, 123456789);
+	match[0] = 0;
+	for (int k = 0; k < s; ++k)
+	{
+		bitset<20> b(k);
+		for (int i = 0; i < n; ++i)
+			if (!b[i])
+				for (int j = i + 1; j < n; ++j)
+					if (!b[j]) improvMin(match[k | 1 << i | 1 << j], match[k] + a[i][j]);
+	}
+
+	vector<map<int, int> > best(s);
+	vector<int> beg(n);
+	int stockh = icomp[sef(0)];
+	best[comp[stockh].to_ulong()][(comp[stockh] & deg).to_ulong()] = 0;
+
+	int res = 123456789;
+	for (int k = 0; k < s; ++k)
+		trav(jt, best[k])
+	{
+		bitset<20> pari(jt->first), state(k);
+		for (int i = 0; i < n; ++i)
+			if (state[i])
+				for (int j = 0; j < n; ++j)
+					if (need[j] && !state[j] && a[i][j] < 123456789)
+					{
+						bitset<20> npari = pari | comp[icomp[sef(j)]] & deg;
+						bitset<20> conn = state | comp[icomp[sef(j)]];
+						npari[i] = !npari[i];
+						npari[j] = !npari[j];
+						if (!best[conn.to_ulong()].count(npari.to_ulong())) best[conn.to_ulong()][npari.to_ulong()] = jt->second + a[i][j];
+						else improvMin(best[conn.to_ulong()][npari.to_ulong()], jt->second + a[i][j]);
+					}
+		if (need == state) res = min(res, match[pari.to_ulong()] + jt->second);
+	}
+	printf("%d\n", res + included);
+}
