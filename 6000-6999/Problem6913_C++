@@ -1,0 +1,86 @@
+#include <iostream>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <algorithm>
+
+using namespace std;
+
+struct node
+{
+	char clor[30];
+	int x, y;
+} dot[105];
+
+const double pi = acos(-1.);
+int i, j, k, n, ans;
+double ang1, ang2, _cross, _dot, ang;
+bool flag;
+
+int cmp(const void *a, const void *b)
+{
+	struct node *x = (node *) a;
+	struct node *y = (node *) b;
+	return strcmp(x->clor, y->clor);
+}
+double cal_cross(double x1, double y1, double x2, double y2, double x3, double y3)
+{
+	return (x1 - x3)*(y2 - y3) - (x2 - x3)*(y1 - y3);
+}
+
+double cal_dot(double x1, double y1, double x2, double y2, double x3, double y3)
+{
+	return (x1 - x3)*(x2 - x3) + (y1 - y3)*(y2 - y3);
+}
+
+bool on_segment(double x1, double y1, double x2, double y2, double x3, double y3)
+{
+	double X1 = min(x1, x2), X2 = max(x1, x2);
+	double Y1 = min(y1, y2), Y2 = max(y1, y2);
+	if (X1 <= x3 && x3 <= X2 && Y1 <= y3 && y3 <= Y2) return false;
+	return true;
+}
+
+int main()
+{
+	while (1)
+	{
+		ans = 0;
+		scanf("%d", &n);
+		if (n == 0) break;
+		getchar();
+		for (i = 0; i < n; i++) scanf("%s%d%d", &dot[i].clor, &dot[i].x, &dot[i].y);
+		qsort(dot, n, sizeof dot[0], cmp);
+		flag = false;
+		for (i = 0; i < n; i++)
+		{
+			if (i != 0 && strcmp(dot[i].clor, dot[i - 1].clor) == 0 && flag) continue;
+			flag = true;
+			for (j = i + 1; j < n; j++)
+			{
+				ang1 = 0;
+				ang2 = 0;
+				if (strcmp(dot[i].clor, dot[j].clor) != 0) break;
+				for (k = 0; k < n; k++)
+					if (strcmp(dot[i].clor, dot[k].clor) != 0)
+					{
+						_cross = cal_cross(dot[i].x, dot[i].y, dot[j].x, dot[j].y, dot[k].x, dot[k].y);
+						_dot = cal_dot(dot[i].x, dot[i].y, dot[j].x, dot[j].y, dot[k].x, dot[k].y);
+						ang = fabs(atan2(_cross, _dot));
+						if (_cross > 0) ang1 = max(ang1, ang);
+						else
+							if (_cross < 0) ang2 = max(ang2, ang);
+							else if (!on_segment(dot[i].x, dot[i].y, dot[j].x, dot[j].y, dot[k].x, dot[k].y)) flag = false;
+							if (ang1 + ang2 >= pi) flag = false;
+							if (!flag) break;
+					}
+				if (flag)
+				{
+					ans++;
+					break;
+				}
+			}
+		}
+		printf("%d\n", ans);
+	}
+}
