@@ -1,0 +1,134 @@
+#include <iostream>
+
+using namespace std;
+
+struct P {
+	double x, y;
+};
+
+struct L {
+	double x1, y1, x2, y2;
+};
+
+int main() {
+	while (1) {
+		int n; cin >> n;
+		if (n < 0) break;
+		L vl[n];
+		for (int i = 0; i < n; ++i) cin >> vl[i].x1 >> vl[i].y1 >> vl[i].x2 >> vl[i].y2;
+		for (int i = 0; i<n; ++i)
+			if (vl[i].x1 > vl[i].x2) {
+				swap(vl[i].x1, vl[i].x2);
+				swap(vl[i].y1, vl[i].y2);
+			}
+		int edge[n];
+		for (int i = 0; i < n; ++i) edge[i] = -1;
+		for (int i = 0; i < n; ++i) {
+			P p;
+			if (vl[i].y1 < vl[i].y2) p = (P){ vl[i].x1, vl[i].y1 };
+			else p = (P){ vl[i].x2, vl[i].y2 };
+			double y = -1;
+			int next = -1;
+			for (int j = 0; j < n; ++j)
+				if (i != j) {
+					if (vl[j].x1 <= p.x && p.x <= vl[j].x2) {
+						double yy = vl[j].y1 + (vl[j].y2 - vl[j].y1) / (vl[j].x2 - vl[j].x1) * (p.x - vl[j].x1);
+						if (y < yy && yy < p.y) {
+							next = j;
+							y = yy;
+						}
+					}
+				}
+			if (next != -1) edge[i] = next;
+		}
+		bool ok = false;
+		bool start[n];
+		for (int i = 0; i < n; ++i) start[i] = false;
+		for (int i = 0; i < n; ++i) {
+			double x = vl[i].x1 - 1e-8, y = -1;
+			int next = -1;
+			for (int j = 0; j < n; ++j)
+				if (vl[j].x1 <= x && x <= vl[j].x2) {
+					double yy = vl[j].y1 + (vl[j].y2 - vl[j].y1) / (vl[j].x2 - vl[j].x1) * (x - vl[j].x1);
+					if (y < yy) {
+						next = j;
+						y = yy;
+					}
+				}
+			if (next == -1 && -10 <= x && x <= 10) ok = true;
+			if (next != -1) start[next] = true;
+			x = vl[i].x1 + 1e-8;
+			y = -1;
+			next = -1;
+			for (int j = 0; j < n; ++j)
+				if (vl[j].x1 <= x && x <= vl[j].x2) {
+					double yy = vl[j].y1 + (vl[j].y2 - vl[j].y1) / (vl[j].x2 - vl[j].x1) * (x - vl[j].x1);
+					if (y < yy) {
+						next = j;
+						y = yy;
+					}
+				}
+			if (next == -1 && -10 <= x && x <= 10) ok = true;
+			if (next != -1) start[next] = true;
+			x = vl[i].x2 - 1e-8;
+			y = -1;
+			next = -1;
+			for (int j = 0; j < n; ++j)
+				if (vl[j].x1 <= x && x <= vl[j].x2) {
+					double yy = vl[j].y1 + (vl[j].y2 - vl[j].y1) / (vl[j].x2 - vl[j].x1) * (x - vl[j].x1);
+					if (y < yy) {
+						next = j;
+						y = yy;
+					}
+				}
+			if (next == -1 && -10 <= x && x <= 10) ok = true;
+			if (next != -1) start[next] = true;
+			x = vl[i].x2 + 1e-8;
+			y = -1;
+			next = -1;
+			for (int j = 0; j < n; ++j)
+				if (vl[j].x1 <= x && x <= vl[j].x2) {
+					double yy = vl[j].y1 + (vl[j].y2 - vl[j].y1) / (vl[j].x2 - vl[j].x1) * (x - vl[j].x1);
+					if (y < yy) {
+						next = j;
+						y = yy;
+					}
+				}
+			if (next == -1 && -10 <= x && x <= 10) ok = true;
+			if (next != -1) start[next] = true;
+		}
+		double x = -10 + 1e-8, y = -1;
+		int next = -1;
+		for (int j = 0; j < n; ++j) if (vl[j].x1 <= x && x <= vl[j].x2) {
+			double yy = vl[j].y1 + (vl[j].y2 - vl[j].y1) / (vl[j].x2 - vl[j].x1) * (x - vl[j].x1);
+			if (y < yy) {
+				next = j;
+				y = yy;
+			}
+		}
+		if (next == -1 && -10 <= x && x <= 10) ok = true;
+		x = 10 - 1e-8;
+		y = -1;
+		next = -1;
+		for (int j = 0; j < n; ++j)
+			if (vl[j].x1 <= x && x <= vl[j].x2) {
+				double yy = vl[j].y1 + (vl[j].y2 - vl[j].y1) / (vl[j].x2 - vl[j].x1) * (x - vl[j].x1);
+				if (y < yy) {
+					next = j;
+					y = yy;
+				}
+			}
+		if (next == -1 && -10 <= x && x <= 10) ok = true;
+		for (int i = 0; i < n; ++i)
+			if (start[i]) {
+				int pos = i;
+				while (edge[pos] != -1) pos = edge[pos];
+				double xx;
+				if (vl[pos].y1 < vl[pos].y2) xx = vl[pos].x1;
+				else xx = vl[pos].x2;
+				if (-10 <= xx && xx <= 10) ok = true;
+			}
+		if (ok) cout << "yes" << endl;
+		else cout << "no" << endl;
+	}
+}
