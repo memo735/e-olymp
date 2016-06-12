@@ -1,0 +1,66 @@
+#include <algorithm>
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+#define LIMIT 401
+#define SIZE 80001
+
+const int BLACK = 2, GRAY = 1, WHITE = 0;
+
+struct Edge {
+	int u, v, w;
+	bool operator < (const Edge &temp) const { return w < temp.w; }
+};
+
+Edge edges[SIZE];
+int parent[LIMIT];
+map<string, int> mapping;
+
+void initialize(int &n) {
+	for (int i = 0; i<n; i++) parent[i] = i;
+}
+
+int findParent(int child) {
+	if (parent[child] == child) return child;
+	return parent[child] = findParent(parent[child]);
+}
+
+int getMinimumCost(int &n, int &m) {
+	int i, cost = 0, u, v, counter = 0;
+	sort(edges, edges + m);
+	for (i = 0; i < m; i++) {
+		u = findParent(edges[i].u);
+		v = findParent(edges[i].v);
+		if (u != v) {
+			parent[v] = u;
+			cost += edges[i].w;
+			counter++;
+		}
+	}
+	if (counter == n - 1) return cost;
+	return -1;
+}
+
+int main() {
+	int i, n, m, cost;
+	char city1[11], city2[11];
+	while (scanf("%d %d", &n, &m) == 2 && n + m) {
+		initialize(n);
+		for (i = 0; i < n; i++) {
+			scanf("%s", city1);
+			mapping[city1] = i;
+		}
+		for (i = 0; i < m; i++) {
+			scanf("%s %s %d", city1, city2, &cost);
+			edges[i].u = mapping[city1], edges[i].v = mapping[city2], edges[i].w = cost;
+		}
+		scanf("%s", city1);
+		cost = getMinimumCost(n, m);
+		if (cost == -1) printf("Impossible\n");
+		else printf("%d\n", cost);
+		mapping.clear();
+	}
+	return 0;
+}
