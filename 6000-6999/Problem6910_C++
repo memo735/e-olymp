@@ -1,0 +1,76 @@
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+#define sz(v) v.size()
+#define rep(i, a, b) for(int i = a; i <= (int)(b); i ++)
+#define red(i, a, b) for(int i = a; i >= (int)(b); i --)
+
+vector<int> ans, src[201];
+int n, g[201][201], cnt[201][201];
+
+struct pat{
+	int u, v, d;
+	pat(){ }
+	pat(int _u, int _v) : u(_u), v(_v){ }
+};
+
+vector<pat> an;
+
+bool calc(int u, int v, int sub){
+	rep(i, 0, sz(src[u]) - 1){
+		int t = src[u][i];
+		if (cnt[u][t] == 1 && g[t][v]) return 0;
+	}
+	if (!sub) return 1;
+	rep(i, 0, sz(src[u]) - 1){
+		int t = src[u][i];
+		if (g[t][v]) cnt[u][t] = --cnt[t][u];
+	}
+	return 1;
+}
+
+bool ok(int u, int v){
+	if (g[u][v] > 1){
+		g[v][u] = --g[u][v]; return 1;
+	}
+	int flag = 0;
+	rep(i, 0, n - 1) if (i != u && i != v && g[u][i] && g[i][v]) ++flag;
+	if (!flag) return 0;
+	if (!calc(u, v, 0) || !calc(v, u, 0)) return 0;
+	calc(u, v, 1); calc(v, u, 1);
+	cnt[v][u] = cnt[u][v] = flag;
+	src[u].push_back(v); src[v].push_back(u);
+	g[u][v] = --g[v][u];
+	return 1;
+}
+
+int main()
+{
+	int m;
+	while (scanf("%d%d", &n, &m) != EOF){
+		if (!n && !m) break;
+		memset(g, 0, sizeof g);
+		an.clear(); ans.clear();
+		rep(i, 0, m - 1){
+			int u, v;
+			scanf("%d%d", &u, &v); --u; --v;
+			if (u == v){
+				ans.push_back(i); continue;
+			}
+			an.push_back(pat(u, v));
+			g[u][v] = ++g[v][u];
+		}
+		memset(cnt, 0, sizeof cnt);
+		rep(i, 0, n - 1) src[i].clear();
+		red(i, m - 1, 0) if (ok(an[i].u, an[i].v)) ans.push_back(i);
+		sort(ans.begin(), ans.end());
+		printf("%d", ans.size());
+		rep(i, 0, sz(ans) - 1) printf(" %d", ans[i] + 1);
+		puts("");
+	}
+	return 0;
+}
