@@ -1,0 +1,58 @@
+#include <vector>
+#include <queue>
+#include <algorithm>
+#include <map>
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+int main() {
+	int n, i, j;
+	vector<int> g[105];
+	string word, def, line;
+	while (scanf("%d", &n) == 1 && n) {
+		map<string, int> R;
+		for (i = 0; i < 105; i++) g[i].clear();
+		cin.ignore(100, '\n');
+		int size = 0, indeg[105] = {};
+		while (n--) {
+			getline(cin, line);
+			stringstream sin(line);
+			sin >> word;
+			int &x = R[word];
+			if (x == 0) x = ++size;
+			while (sin >> def) {
+				int &y = R[def];
+				if (y == 0) y = ++size;
+				g[x].push_back(y);
+				indeg[y]++;
+			}
+		}
+		int ret = size, used[105] = {};
+		queue<int> Q;
+		for (i = 1; i <= size; i++) if (indeg[i] == 0) Q.push(i);
+		while (!Q.empty()) {
+			int tn = Q.front();
+			Q.pop();
+			ret--;
+			used[tn] = 1;
+			for (i = 0; i < g[tn].size(); i++) if (--indeg[g[tn][i]] == 0) Q.push(g[tn][i]);
+		}
+		printf("%d\n", ret);
+		string dictionary[105];
+		for (map<string, int>::iterator it = R.begin();
+			it != R.end(); ++it) {
+			dictionary[it->second] = it->first;
+		}
+		string res[105];
+		for (i = 1, j = 0; i <= size; i++) if (used[i] == 0) res[j++] = dictionary[i];
+		sort(res, res + ret);
+		for (i = 0; i < ret; i++) {
+			if (i) putchar(' ');
+			cout << res[i];
+		}
+		cout << endl;
+	}
+	return 0;
+}
