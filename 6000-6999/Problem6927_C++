@@ -1,0 +1,56 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 41, BASE = 25000, F = BASE * 2;
+
+void dp(int num[], int size, int f, int lim)
+{
+	bool t[N][F];
+	long bit[N][F];
+	fill(&t[0][0], &t[size][lim + BASE], false);
+	fill(&bit[0][0], &bit[size][lim + BASE], 0L);
+	t[0][BASE] = true;
+	for (int i = 0; i < size; ++i){
+		for (int j = 0; j < F; ++j){
+			if (!t[i][j]) continue;
+			int n = j + num[i];
+			if (0 <= n && n < F){
+				t[i + 1][n] = true;
+				bit[i + 1][n] |= bit[i][j] | (1L << i);
+			}
+			n = j - num[i];
+			if (0 <= n && n < F){
+				t[i + 1][n] = true;
+				bit[i + 1][n] |= bit[i][j];
+			}
+		}
+	}
+	if (t[size][BASE + f] && t[size][BASE - f]){
+		for (int i = 0; i < size; ++i){
+			long a = bit[size][BASE + f] & (1L << i);
+			long b = bit[size][BASE - f] & (1L << i);
+			if (a == b) printf("?");
+			else printf("%c", a ? '+' : '-');
+		}
+		puts("");
+	}
+	else puts("*");
+}
+
+int main()
+{
+	int num[1001];
+	while (1){
+		int n, f, lim = 0;
+		scanf("%d%d", &n, &f);
+		if (n == 0 && f == 0) break;
+		for (int i = 0; i < n; ++i){
+			scanf("%d", num + i);
+			lim += num[i];
+		}
+		dp(num, n, f, lim);
+	}
+	return 0;
+}
