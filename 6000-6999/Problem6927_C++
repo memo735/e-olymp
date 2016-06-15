@@ -1,56 +1,55 @@
-#include <iostream>
-#include <algorithm>
+#include <stdio.h>
+#include <string.h>
 
-using namespace std;
+const int maxn = 22000;
 
-const int N = 41, BASE = 25000, F = BASE * 2;
+long plus[2][2 * maxn], minus[2][2 * maxn]; // shift MAXN
 
-void dp(int num[], int size, int f, int lim)
-{
-	bool t[N][F];
-	long bit[N][F];
-	fill(&t[0][0], &t[size][lim + BASE], false);
-	fill(&bit[0][0], &bit[size][lim + BASE], 0L);
-	t[0][BASE] = true;
-	for (int i = 0; i < size; ++i){
-		for (int j = 0; j < F; ++j){
-			if (!t[i][j]) continue;
-			int n = j + num[i];
-			if (0 <= n && n < F){
-				t[i + 1][n] = true;
-				bit[i + 1][n] |= bit[i][j] | (1L << i);
-			}
-			n = j - num[i];
-			if (0 <= n && n < F){
-				t[i + 1][n] = true;
-				bit[i + 1][n] |= bit[i][j];
+void solve(int n, int f, int A[]) {
+	int i, j, k, roll = 0, L, R;
+	memset(plus, 0, sizeof plus);
+	memset(minus, 0, sizeof minus);
+	plus[roll][maxn + A[0]] = 1;
+	minus[roll][maxn - A[0]] = 1;
+	L = maxn - A[0];
+	R = maxn + A[0];
+	for (i = 1; i < n; i++) {
+		memset(plus[1 - roll], 0, sizeof plus[0]);
+		memset(minus[1 - roll], 0, sizeof minus[0]);
+		for (j = L; j <= R; j++) {
+			if (plus[roll][j] || minus[roll][j]) {
+				k = j + A[i];
+				plus[1 - roll][k] |= plus[roll][j] | (1L << i);
+				minus[1 - roll][k] |= minus[roll][j];
+				k = j - A[i];
+				plus[1 - roll][k] |= plus[roll][j];
+				minus[1 - roll][k] |= minus[roll][j] | (1L << i);
 			}
 		}
+		L -= A[i];
+		R += A[i];
+		roll = 1 - roll;
 	}
-	if (t[size][BASE + f] && t[size][BASE - f]){
-		for (int i = 0; i < size; ++i){
-			long a = bit[size][BASE + f] & (1L << i);
-			long b = bit[size][BASE - f] & (1L << i);
-			if (a == b) printf("?");
-			else printf("%c", a ? '+' : '-');
+	long a = plus[roll][f + maxn], b = minus[roll][f + maxn];
+	if (a == 0 && b == 0) {
+		puts("*");
+		return;
+	}
+	for (i = 0; i < n; i++) {
+		if ((a >> i) & 1) {
+			if ((b >> i) & 1) putchar('?');
+			else putchar('+');
 		}
-		puts("");
+		else putchar('-');
 	}
-	else puts("*");
+	puts("");
 }
 
-int main()
-{
-	int num[1001];
-	while (1){
-		int n, f, lim = 0;
-		scanf("%d%d", &n, &f);
-		if (n == 0 && f == 0) break;
-		for (int i = 0; i < n; ++i){
-			scanf("%d", num + i);
-			lim += num[i];
-		}
-		dp(num, n, f, lim);
+int main() {
+	int n, f, A[50], i;
+	while (scanf("%d %d", &n, &f) == 2 && n) {
+		for (i = 0; i < n; i++) scanf("%d", &A[i]);
+		solve(n, f, A);
 	}
 	return 0;
 }
