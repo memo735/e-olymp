@@ -1,0 +1,34 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	int G, Q, S, K;
+	while (scanf("%d %d", &G, &Q) == 2) {
+		if (G == 0)  break;
+		int g[105][105], i, j, k, x;
+		for (i = 0; i < G; i++)
+			for (j = 0; j < Q; j++) scanf("%d", &x), g[i][x - 1] = j + 1;
+
+		scanf("%d", &S);
+		while (S--) {
+			int score[105] = {};
+			scanf("%d", &K);
+			for (i = 0; i < K; i++) {
+				scanf("%d", &k);
+				for (j = 0; j < G; j++) score[g[j][i]] += k;
+			}
+			int mx = 0, first = 0;
+			for (i = 1; i <= Q; i++) mx = max(mx, score[i]);
+			for (i = 1; i <= Q; i++)
+				if (score[i] == mx) {
+					if (first) putchar(' ');
+					first = 1;
+					printf("%d", i);
+				}
+			puts("");
+		}
+	}
+	return 0;
+}
