@@ -1,0 +1,83 @@
+#include <iostream>
+#include <algorithm>
+#include <math.h>
+
+using namespace std;
+
+int comp(double x, double y) {
+	if (fabs(x - y) < 1e-7) return 0;
+	return x < y ? -1 : 1;
+}
+
+struct P{
+	double x, y, z;
+	P() {}
+	P(double x, double y, double z) : x(x), y(y), z(z) {}
+	P operator+(P b) const { return P(x + b.x, y + b.y, z + b.z); }
+	P operator-() const { return P(-x, -y, -z); }
+	P operator-(P b) const { return *this + -b; }
+	double operator*(P b) const { return x*b.x + y*b.y + z*b.z; }
+	P operator*(double k) const { return P(x*k, y*k, z*k); }
+	P operator%(P b) const { return P(y*b.z - z*b.y, z*b.x - x*b.z, x*b.y - y*b.x); } // cross product
+	P operator/(P b) const { return b*(*this*b / (b*b)); } // projection of this onto b
+	double operator!() const { return sqrt(*this**this); } // length
+} p[4], q[4];
+
+// Distance from point c to segment [a, b]
+double distSP(P a, P b, P c) {
+	P pp = a + (c - a) / (b - a);
+	if (!comp(!(a - pp) + !(pp - b), !(a - b))) return !(c - pp);
+	return min(!(a - c), !(b - c));
+}
+
+// Distance from segment [a, b] to segment [c, d]
+double distSS(P a, P b, P c, P d) {
+	P ba = b - a, cd = c - d, ca = c - a;
+	P w = ba%cd;
+	double dd = w*w;
+	if (!comp(dd, 0)) return min(min(distSP(a, b, c), distSP(a, b, d)), min(distSP(c, d, a), distSP(c, d, b)));
+	double x = ca%cd*w / dd;
+	double y = ba%ca*w / dd;
+	double z = ba%cd*ca / dd;
+	if (0 <= x && x <= 1 && 0 <= y && y <= 1) return !(w*z);
+	return min(min(distSP(a, b, c), distSP(a, b, d)), min(distSP(c, d, a), distSP(c, d, b)));
+}
+
+// Distance from point d to triangle [a, b, c]
+double distPP(P a, P b, P c, P d) {
+	P ba = b - a, ca = c - a, da = d - a;
+	P w = ba%ca, q = d - da / w;
+	double x = (b - a) % (q - a) * w, y = (c - b) % (q - b) * w, z = (a - c) % (q - c) * w;
+	if (x <= 0 && y <= 0 && z <= 0 || x >= 0 && y >= 0 && z >= 0) return !(da / w);
+	return min(min(distSP(a, b, d), distSP(b, c, d)), distSP(c, a, d));
+}
+
+int main() {
+	int t = 1;
+	scanf("%d", &t);
+	while (t--)
+	{
+		for (int i = 0; i < 4; ++i) scanf("%lf%lf%lf", &p[i].x, &p[i].y, &p[i].z);
+		for (int i = 0; i < 4; ++i) scanf("%lf%lf%lf", &q[i].x, &q[i].y, &q[i].z);
+		double dist = 1.0 / 0.0;
+		for (int i = 0; i < 4; ++i)
+			for (int j = i + 1; j < 4; ++j)
+				for (int k = j + 1; k < 4; ++k)
+					for (int l = 0; l < 4; ++l) {
+						double d = distPP(p[i], p[j], p[k], q[l]);
+						if (d < dist) dist = d;
+						d = distPP(q[i], q[j], q[k], p[l]);
+						if (d < dist) dist = d;
+					}
+		for (int i = 0; i < 4; ++i){
+			for (int j = i + 1; j < 4; ++j)
+				for (int k = 0; k < 4; ++k)
+					for (int l = k + 1; l < 4; ++l) {
+						double d = distSS(p[i], p[j], q[k], q[l]);
+						if (d < dist) dist = d;
+					}
+		}
+		printf("%.2lf\n", dist);
+	}
+	return 0;
+}
