@@ -1,0 +1,20 @@
+#include <string.h>
+#include <stdio.h>
+
+char buf[101];
+
+int main()
+{
+	int d;
+	while (~scanf("%d%s", &d, buf) && (d || strcmp(buf, "0"))) {
+		int count = 0;
+		for (int i = 0; buf[i]; ++i)
+			if (buf[i] != d + '0' && (count || buf[i] != '0')) {
+				printf("%c", buf[i]);
+				count++;
+			}
+		if (!count) printf("0");
+		puts("");
+	}
+	return 0;
+}
