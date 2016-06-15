@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+
+using namespace std;
+
+const int maxn = 300;
+
+int N, cp, cnt, rnum, scnt, q[maxn], low[maxn];
+vector<int> egs[maxn];
+bool trav[maxn];
+
+void tarjan(int a){
+	int b, c, m;
+	trav[a] = 1, m = low[a] = cnt++;
+	q[cp++] = a;
+	for (int i = 0; i < egs[a].size(); i++){
+		b = egs[a][i];
+		if (!trav[b]) tarjan(b);
+		if (low[b] < m) m = low[b];
+	}
+	if (m < low[a]){ low[a] = m; return; }
+	rnum = cp;
+	do{
+		low[c = q[--cp]] = N;
+	} while (c != a);
+	scnt++;
+}
+
+void ans(){
+	scnt = cp = cnt = 0;
+	memset(trav, 0, sizeof trav);
+	tarjan(0);
+	if (scnt == 1 && rnum == N) printf("1\n");
+	else printf("0\n");
+}
+
+int main(){
+	int a, b, c, m;
+	while (scanf("%d%d", &N, &m) == 2){
+		if (N + m == 0) break;
+		for (int i = 0; i < maxn; i++) egs[i].clear();
+		for (int i = 0; i < m; i++){
+			scanf("%d%d%d", &a, &b, &c);
+			a--, b--;
+			if (c == 2)egs[a].push_back(b), egs[b].push_back(a);
+			else egs[a].push_back(b);
+		}
+		ans();
+	}
+}
