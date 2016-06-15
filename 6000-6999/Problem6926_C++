@@ -1,0 +1,42 @@
+#include <iostream>
+
+int main()
+{
+	char L[256], R[256], move[50005], maps[101][101];
+	L['N'] = 'O'; L['O'] = 'S'; L['S'] = 'L'; L['L'] = 'N';
+	R['N'] = 'L'; R['L'] = 'S'; R['S'] = 'O'; R['O'] = 'N';
+	int n, m, s, x = 0, y = 0, f = 0, xx, yy;
+	while (~scanf("%d%d%d", &n, &m, &s) && s) {
+		for (int i = 0; i < n; ++i) scanf("%s", maps[i]);
+		scanf("%s", move);
+		for (int i = 0; i < n; ++i)
+			for (int j = 0; j < m; ++j)
+				if (maps[i][j] != '.' && maps[i][j] != '*' && maps[i][j] != '#') {
+					x = i;
+					y = j;
+					f = maps[i][j];
+				}
+
+		int count = 0;
+		for (int i = 0; i < s; ++i) {
+			xx = x;
+			yy = y;
+			if (move[i] == 'D') f = R[f];
+			else if (move[i] == 'E') f = L[f];
+			else if (move[i] == 'F') {
+				if (f == 'O' && y > 0 && maps[x][y - 1] != '#') yy = y - 1;
+				if (f == 'L' && y < m - 1 && maps[x][y + 1] != '#') yy = y + 1;
+				if (f == 'N' && x > 0 && maps[x - 1][y] != '#') xx = x - 1;
+				if (f == 'S' && x < n - 1 && maps[x + 1][y] != '#') xx = x + 1;
+				x = xx;
+				y = yy;
+				if (maps[x][y] == '*') {
+					maps[x][y] = '.';
+					count++;
+				}
+			}
+		}
+		printf("%d\n", count);
+	}
+	return 0;
+}
