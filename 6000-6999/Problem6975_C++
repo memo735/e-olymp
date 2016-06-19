@@ -1,0 +1,21 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	long n;
+	while (1) {
+		cin >> n;
+		if (cin.eof()) break;
+		int digs = 0, k = 0;
+		while (digs != 0x3ff) {
+			k++;
+			long w = n * k;
+			while (w > 0) {
+				digs |= 1 << (w % 10);
+				w /= 10;
+			}
+		}
+		cout << k << endl;
+	}
+}
