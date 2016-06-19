@@ -1,0 +1,44 @@
+#include <iostream>
+#include <map>
+#include <string.h>
+
+using namespace std;
+
+const int N = 101;
+map<string, int> mp;
+char lang[N][N], s[N], delim[N];
+string t;
+
+int main(){
+	int n; scanf("%d", &n);
+	for (int i = 0; i < n; i++){
+		scanf("%s", lang[i]);
+		for (bool flag = false; !flag;){
+			scanf("%s%[ \n]", s, delim);
+			for (int j = 0; s[j]; j++) s[j] = tolower(s[j]);
+			t = s;
+			mp[t] = i;
+			for (int j = 0; delim[j]; j++)
+				if (delim[j] == '\n'){
+					flag = true;
+					break;
+				}
+		}
+	}
+	scanf("%*[,.!;() \n]");
+	for (bool flag = false; ~scanf("%[^,.!;() \n]%[,.!;() \n]", s, delim);){
+		if (!flag){
+			for (int i = 0; s[i]; i++) s[i] = tolower(s[i]);
+			t = s;
+			if (mp.find(t) != mp.end()){
+				flag = true;
+				puts(lang[mp[t]]);
+			}
+		}
+		for (int i = 0; delim[i]; i++)
+			if (delim[i] == '\n'){
+				flag = false;
+				break;
+			}
+	}
+}
