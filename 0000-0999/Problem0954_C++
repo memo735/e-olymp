@@ -1,15 +1,10 @@
 #include <iostream>
-#include <fstream>
 #include <math.h>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-double a, b, H;
-
 int main()
 {
-	cin >> a >> b >> H;
+	double a, b, H; cin >> a >> b >> H;
 	cout << fixed << 2 * (a + b) * hypot(a / 2 - b / 2, H) << endl;
 }
