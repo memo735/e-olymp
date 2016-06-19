@@ -1,15 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-int n, MAX = 0, ind = -2, a, b;
-
 int main()
 {
-	cin >> n;
+	int n, MAX = 0, ind = -2, a, b; cin >> n;
 	for (int i = 0; i < n; i++)
 	{
 		cin >> a >> b;
