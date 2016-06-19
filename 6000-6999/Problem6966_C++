@@ -1,0 +1,20 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+	while (1){  //do another problem...
+		int num; cin >> num; if (num < 0) break;
+		int sum = 1, nFacs = 1, fac[1000]; fac[0] = 1;
+		for (int i = 2; i <= num / 2; i++)
+			if (num % i == 0){ //if i divides into num
+				sum += i;  fac[nFacs++] = i;
+			}
+		if (sum == num){  //if perfect...
+			cout << num << " = " << fac[0];
+			for (int i = 1; i < nFacs; i++) cout << " + " << fac[i];
+			cout << endl;
+		}
+		else cout << num << " is NOT perfect." << endl;
+	}
+}
