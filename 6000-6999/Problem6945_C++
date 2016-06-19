@@ -1,0 +1,144 @@
+#include <iostream>  
+#include <string.h>
+#include <algorithm>
+#include <vector>  
+
+using namespace std;
+
+int v[10] = { 6, 3, 6, 6, 5, 6, 6, 4, 6, 6 };
+int e[10] = { 6, 2, 5, 5, 4, 5, 6, 3, 7, 6 };
+
+int n, m, d[55], degree[55], c[2222], fa[2222];
+vector<int> g[1111];
+bool vis[3333];
+
+int gao(int i)
+{
+	if ((n - v[i]) % e[i] == 0 && m%e[i] == 0) {
+		int a = (n - v[i]) / e[i], b = m / e[i] - 1;
+		degree[i] = a == b ? a : -1;
+	}
+	else degree[i] = -1;
+	return 0;
+}
+
+bool j1()
+{
+	int t = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		if (fa[i] == i) t++;
+		if (t > 1) return 0;
+	}
+	return 1;
+}
+
+int f(int x) { return x == fa[x] ? x : fa[x] = f(fa[x]); }
+
+int dfs(int u)
+{
+	int ret = 1;
+	vis[u] = 1;
+	for (int i = 0; i < g[u].size(); i++)
+	{
+		int v = g[u][i];
+		if (!vis[v]) ret += dfs(v);
+	}
+	return ret;
+}
+
+vector<int> solve()
+{
+	memset(vis, 0, sizeof vis);
+	vector<int> ret;
+	int st = -1;
+	for (int i = 1; i <= n; i++)
+	{
+		if (c[i] == 3) vis[i] = 1;
+		if (c[i] == 1) st = i;
+	}
+	if (st > -1) ret.push_back(dfs(st));
+	for (int i = 1; i <= n; i++) if (!vis[i]) ret.push_back(dfs(i));
+	sort(ret.begin(), ret.end());
+	return ret;
+}
+
+int main()
+{
+	int re, ca = 1; cin >> re;
+	while (re--)
+	{
+		cin >> n >> m;
+		memset(degree, -1, sizeof degree);
+		for (int i = 1; i <= n; i++)g[i].clear();
+		memset(d, 0, sizeof d);
+		memset(c, 0, sizeof c);
+		for (int i = 1; i <= n; i++) fa[i] = i;
+		for (int i = 0; i < m; i++) {
+			int u, v;
+			scanf("%d%d", &u, &v);
+			fa[f(u)] = f(v);
+			g[u].push_back(v);
+			g[v].push_back(u);
+			c[u]++, c[v]++;
+		}
+		printf("Case %d: ", ca++);
+		bool ok = 1;
+		for (int i = 1; i <= n; i++) {
+			d[c[i]]++;
+			if (c[i] == 0 || c[i]>3)
+			{
+				ok = 0;
+				break;
+			}
+		}
+		if (!j1()) ok = 0;
+		if (ok == 0)
+		{
+			printf("0\n");
+			if (re) putchar(10);
+			continue;
+		}
+		if (d[1] == 2 && d[3] == 0)
+		{
+			gao(1);
+			gao(2);
+			gao(5);
+			gao(7);
+		}
+		if (d[1] == 0 && d[3] == 0) gao(0);
+		if (d[1] == 3 && d[3] == 1)
+		{
+			vector<int> ret = solve();
+			if (ret.size() == 3)
+			{
+				sort(ret.begin(), ret.end());
+				if (ret[1] == 2 * ret[0] && ret[2] == 2 * ret[0]) gao(3);
+				if (ret[2] == 2 * ret[1] && ret[2] == 2 * ret[0]) gao(4);
+			}
+		}
+		if (d[1] == 1 && d[3] == 1)
+		{
+			vector<int> ret = solve();
+			if (ret.size() == 2 && ret[0] * 2 == ret[1] + 1 && ret[0] % 2 == 0) gao(6), gao(9);
+		}
+		if (d[1] == 0 && d[3] == 2)
+		{
+			vector<int> ret = solve();
+			if (ret.size() == 2) ret.push_back(0);
+			sort(ret.begin(), ret.end());
+			if (ret.size() == 3)
+			{
+				if (ret[1] == ret[2] && ret[1] - 2 == 3 * ret[0]) gao(8);
+			}
+		}
+		int ans = 0;
+		for (int i = 0; i <= 9; i++) if (degree[i] != -1) ans++;
+		printf("%d\n", ans);
+		for (int i = 0; i <= 9; i++)
+		{
+			if (degree[i] > -1) printf("%d %d\n", i, degree[i]);
+		}
+		if (re) printf("\n");
+	}
+}
