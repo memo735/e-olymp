@@ -1,0 +1,51 @@
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+int N, a[100010], T[100010];
+char tt[100000];
+long long cnt;
+
+void merge_sort(int *A, int x, int y, int *T)
+{
+	if (y - x > 1)
+	{
+		int m = x + (y - x) / 2;
+		int p = x, q = m, i = x;
+		merge_sort(A, x, m, T);
+		merge_sort(A, m, y, T);
+		while (p < m || q < y)
+		{
+			if (q >= y || p < m && A[p] <= A[q]) T[i++] = A[p++];
+			else
+			{
+				T[i++] = A[q++];
+				cnt += m - p;
+			}
+		}
+		for (i = x; i < y; i++) A[i] = T[i];
+	}
+}
+
+int main()
+{
+	map<string, int> h;
+	while (scanf("%d", &N), N)
+	{
+		for (int i = 0; i < N; i++)
+		{
+			scanf("%s", tt);
+			h[tt] = i;
+		}
+		for (int i = 0; i < N; i++)
+		{
+			scanf("%s", tt);
+			a[i] = h[tt];
+		}
+		cnt = 0;
+		merge_sort(a, 0, N, T);
+		printf("%lld\n", cnt);
+	}
+	return 0;
+}
