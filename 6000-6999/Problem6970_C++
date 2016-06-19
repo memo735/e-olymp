@@ -1,0 +1,83 @@
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+double calcang(double x, double y)
+{
+	// clockwise; don't use atan2; always positive
+	if (x >= 0) {
+		if (y >= 0) return 2 + y - x; // quadrant 1:  y - x ;
+		return 11 + x + y; // quadrant 4:  x + y
+	}
+	if (y >= 0) return 5 - y - x; // quadrant 2:  - y - x
+	return 8 + x - y; // quadrant 3:  x - y
+}
+
+int main() {
+	int kases; cin >> kases;
+	while (kases--)
+	{
+		int n; cin >> n;
+		double x[n], y[n], r[n];
+		for (int i = 0; i < n; i++) {
+			double xx; cin >> xx;
+			double yy; cin >> yy;
+			x[i] = xx;
+			y[i] = yy;
+			x[i] = 0.6 * xx + 0.8 * yy;
+			y[i] = 0.6 * yy - 0.8 * xx;
+			cin >> r[i];
+		}
+		int res = 2;
+		if (res > n) res = n;
+		double plus[2 * n - 2], minus[2 * n - 2];
+		for (int i = 0; i < n; i++) {
+			int at = 0, zeroval = 1;
+			for (int j = 0; j < n; j++) {
+				if (i == j) continue;
+				double dx = x[j] - x[i], dy = y[j] - y[i];
+				double dist = sqrt(dx*dx + dy*dy);
+				dx /= dist;
+				dy /= dist;
+				double ev[4];
+				for (int sides = 0; sides < 4; sides++) {
+					double oneside = (sides & 2) == 0 ? r[i] : -r[i];
+					oneside += (sides & 1) != 0 ? r[j] : -r[j];
+					double sin = oneside / dist;
+					double cos = sqrt(1 - sin*sin);
+					double a = dy * cos + dx * sin;
+					double b = dy * sin - dx * cos;
+					double ab = sqrt(a*a + b*b);
+					if ((sides & 2) != 0) ab = -ab;
+					a /= ab;
+					b /= ab;
+					ev[sides] = calcang(a, b);
+				}
+				plus[at] = ev[0];
+				plus[at + 1] = ev[2];
+				minus[at] = ev[1];
+				minus[at + 1] = ev[3];
+				at += 2;
+				if (ev[1] < ev[0]) zeroval++;
+				if (ev[3] < ev[2]) zeroval++;
+			}
+			sort(plus, plus + 2 * n - 2);
+			sort(minus, minus + 2 * n - 2);
+			int ri = zeroval, atp = 0, atm = 0, curr = zeroval;
+			while (atp < 2 * n - 2) {
+				if (atm == 2 * n - 2 || plus[atp] <= minus[atm]) {
+					curr++;
+					atp++;
+				}
+				else {
+					curr--;
+					atm++;
+				}
+				if (curr > ri) ri = curr;
+			}
+			if (ri > res) res = ri;
+		}
+		cout << res << endl;
+	}
+}
