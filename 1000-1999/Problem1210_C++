@@ -1,15 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-unsigned long long ans = 0, a, n, power = 0;
-
 int main()
 {
-	cin >> n >> a;
+	long long ans = 0, a, n, power; cin >> n >> a;
 	power = a;
 	if (a == 1) cout << n * (n + 1) / 2 << endl;
 	else
