@@ -1,23 +1,13 @@
 #include <iostream>
-#include <fstream>
-
-#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-
-ll n, m, i, j;
-
 int main()
 {
-	cin >> n;
-	cin >> m;
-	FOR(i, n)
+	int n, m, i, j; cin >> n >> m;
+	for (i = 0; i < n; i++)
 	{
-		FOR(j, m)
+		for (j = 0; j < m; j++)
 			if ((i + j) % 2 == n % 2) cout << 'X';
 			else cout << '.';
 			cout << endl;
