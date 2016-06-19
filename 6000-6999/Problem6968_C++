@@ -1,0 +1,35 @@
+#include <iostream>
+
+using namespace std;
+
+long cnt3(long v, long d, int isfirst) {
+	if (d == 0 && v == 0) return 1;
+	if (v < 0 || v >= d * 20) return 0;
+	if (d == 1)
+	{
+		if ((v & 1) == 0) return 1;
+		return 0;
+	}
+	long r = 0;
+	for (int p = v % 10; p < 20; p += 10) {
+		r += (10 - abs(p - 9) - isfirst) * cnt3((v - p*d - p) / 10, d / 100, 0);
+		isfirst = 0;
+	}
+	return r;
+}
+
+long cnt(long v) {
+	long r = 0;
+	for (long d = 1; d <= v + 1; d *= 10) r += cnt3(v, d, 1);
+	return r;
+}
+
+int main() {
+	int kases; cin >> kases;
+	while (kases--)
+	{
+		long v; cin >> v;
+		if (v < 0) break;
+		cout << cnt(v) << endl;
+	}
+}
