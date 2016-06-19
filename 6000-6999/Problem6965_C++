@@ -1,0 +1,79 @@
+#include <cstdio>
+#include <string.h>
+#include <queue>
+
+using namespace std;
+
+int k, w, h, sx, sy, num[26];
+bool vis[1000][1000];
+char map[1000][1000];
+int dir[4][2] = { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+
+struct node
+{
+	int x, y, sum;
+	bool operator <(const node p) const { return sum > p.sum; }
+};
+
+node p, q;
+
+void bfs()
+{
+	priority_queue<node> Q;
+	q.x = sx; q.y = sy;
+	q.sum = 0;
+	vis[q.x][q.y] = 1;
+	Q.push(q);
+	while (!Q.empty())
+	{
+		q = Q.top(); Q.pop();
+		if (q.x < 0 || q.x >= h || q.y < 0 || q.y >= w)
+		{
+			printf("%d\n", q.sum);
+			return;
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			p.x = q.x + dir[i][0]; p.y = q.y + dir[i][1];
+			if (p.x < 0 || p.x >= h || p.y < 0 || p.y >= w)
+			{
+				printf("%d\n", q.sum);
+				return;
+			}
+			if (!vis[p.x][p.y])
+			{
+				int tt = map[p.x][p.y] - 'A';
+				vis[p.x][p.y] = 1;
+				p.sum = q.sum + num[tt];
+				Q.push(p);
+			}
+		}
+	}
+}
+
+int main()
+{
+	int tc; scanf("%d", &tc);
+	while (tc--)
+	{
+		scanf("%d%d%d\n", &k, &w, &h);
+		memset(vis, 0, sizeof vis);
+		for (int i = 0; i < k; i++)
+		{
+			char c; int n;
+			scanf("%c %d\n", &c, &n);
+			num[c - 'A'] = n;
+		}
+		for (int i = 0; i < h; i++)
+		{
+			scanf("%s", map[i]);
+			for (int j = 0; j < w; j++)
+				if (map[i][j] == 'E')
+				{
+					sx = i; sy = j;
+				}
+		}
+		bfs();
+	}
+	return 0;
+}
