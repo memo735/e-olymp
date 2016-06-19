@@ -1,14 +1,9 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-int a;
-
 int main()
 {
-	cin >> a;
+	int a; cin >> a;
 	cout << a / 100 << a % 10 << endl;
 }
