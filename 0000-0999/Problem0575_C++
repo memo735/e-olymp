@@ -1,17 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-
-ll n;
-
 int main()
 {
-	cin >> n;
+	int n; cin >> n;
 	switch (n)
 	{
 	case 1: cout << 1 << endl; break;
