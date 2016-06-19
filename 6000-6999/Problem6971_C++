@@ -1,0 +1,65 @@
+#include <iostream>
+#include <string.h>
+#include <vector>
+#include <algorithm>
+#include <valarray>
+#include <map>
+
+using namespace std;
+
+const int base = 300, SIZE = 10001, mod[2] = { 999999937, 1000000007 };
+
+int mx = 0, siz[2][SIZE], n[2];
+char tp[2][SIZE];
+vector<vector<int>> adj[2];
+
+struct cmp{
+	bool operator()(const valarray<int>& a, const valarray<int>& b)const{
+		if (a[0] == b[0]) return a[1] < b[1];
+		return a[0] < b[0];
+	}
+};
+
+map<valarray<int>, int, cmp> htosz;
+
+//valarray = pair<ll,ll> for double hash
+valarray<int> hashf(int idx, bool treeidx, bool docmp){
+	siz[treeidx][idx]++;
+	valarray<int> res = { tp[treeidx][idx], tp[treeidx][idx] }; //type
+	res *= base; res[0] %= mod[0]; res[1] %= mod[1];
+	res += adj[treeidx][idx].size(); //sz of child
+	res[0] %= mod[0]; res[1] %= mod[1];
+	int i = 0;
+	for (auto it = adj[treeidx][idx].begin(); it != adj[treeidx][idx].end(); ++it){
+		res *= hashf(*it, treeidx, docmp); //hash every child
+		res += base;
+		res[0] %= mod[0]; res[1] %= mod[1];
+		siz[treeidx][idx] += siz[treeidx][*it];
+		++i;
+	}
+	if (!docmp) htosz[res] = siz[treeidx][idx];
+	else if (htosz.count(res)) mx = max(mx, siz[treeidx][idx]);
+	return res;
+}
+
+int main(){
+	int tst, p; cin >> tst;
+	while (tst--){
+		htosz.clear();
+		mx = 0;
+		cin >> n[0] >> n[1];
+		memset(siz, 0, sizeof siz);
+		adj[0] = vector<vector<int>>(n[0]);
+		adj[1] = vector<vector<int>>(n[1]);
+		for (int k = 0; k < 2; k++){
+			for (int i = 0; i < n[k]; i++){
+				cin >> tp[k][i] >> p;
+				if (i) adj[k][p].push_back(i);
+			}
+		}
+		hashf(0, 0, 0);
+		hashf(0, 1, 1);
+		cout << mx << "\n";
+	}
+	return 0;
+}
