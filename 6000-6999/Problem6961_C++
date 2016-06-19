@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+int main() {
+	int kases; cin >> kases;
+	while (kases--)
+	{
+		int N, D;
+		cin >> N >> D;
+		int r = 0;
+		for (int i = 0; i < N; i++) {
+			int vi, fi, ci;
+			cin >> vi >> fi >> ci;
+			if (vi * fi >= D * ci) r++;
+		}
+		cout << r << endl;
+	}
+}
