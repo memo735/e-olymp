@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+	vector<int> v;
+	int N, E, P;
+	while (cin >> N >> E >> P) {
+		if (N == 0) break;
+		vector<int> e(N), p(N), parent(N);
+		for (int i = 0; i < N; ++i) cin >> e[i] >> p[i] >> parent[i];
+		double best_slope = 0;
+		for (int i = 0; i < N; i++) {
+			double temp_e = 0, temp_p = 0;
+			int pos = i;
+			double sub;
+			while (pos != -1) {
+				sub = e[pos] / 2.0;
+				temp_e += e[pos];
+				temp_p += p[pos];
+				pos = parent[pos] - 1;
+				best_slope = max(best_slope, double(temp_p) / temp_e);
+				temp_e -= sub;
+			}
+		}
+		if (P < E*best_slope) cout << 0 << endl;
+		else cout << int(1.0 + log(P / (E*best_slope)) / best_slope) << endl;
+	}
+	return 0;
+}
