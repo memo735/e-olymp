@@ -1,21 +1,13 @@
 #include <iostream>
-#include <fstream>
 #include <math.h>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long int s64;
-typedef double f64;
-
-f64 R;
-s64 ans;
-
 int main()
 {
-	cin >> R;
-	for (f64 x = 1; x < R; x = x + 1) ans += sqrt(R*R - x*x);
+	double R; cin >> R;
+	int ans = 0;
+	for (double x = 1; x < R; x = x + 1) ans += sqrt(R*R - x*x);
 	ans *= 4;
 	cout << ans << endl;
 }
