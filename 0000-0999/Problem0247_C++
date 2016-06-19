@@ -1,13 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-long long n, ans = 0, tmp;
 
 int main()
 {
+	long long n, ans = 0, tmp;
 	cin >> n;
 	for (int i = 0; i < n; i++)
 	{
