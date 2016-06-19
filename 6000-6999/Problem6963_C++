@@ -1,0 +1,111 @@
+#include <algorithm>
+#include <iostream>
+#include <string.h>
+#include <map>
+
+using namespace std;
+
+map<int, int> id;
+int n, idp, isSortedA, a[10];
+double e[41000];
+
+int getid(int a) {
+	if (id[a] == 0) id[a] = idp++;
+	return id[a];
+}
+
+int hash1(int a[], int n) {
+	int ret = 0;
+	for (int i = 0; i < n; i++) ret = ret * 10 + a[i];
+	return ret;
+}
+
+//monty(anow) = p1*monty(anext1) + p2*monty(anext2) + .. + (1-p1-p2)*monty(anow) + 1;
+//p = 2/n*n
+double monty(int a) {
+	if (a == isSortedA) return 0;
+	if (e[getid(a)] != 0) return e[getid(a)];
+	int tmp[10], tmpa = a;
+	for (int i = n - 1; i >= 0; i--) {
+		tmp[i] = tmpa % 10;
+		tmpa /= 10;
+	}
+	int num = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = i + 1; j < n; j++) if (tmp[i] > tmp[j]) num++;
+	}
+	if (num == 0) {
+		isSortedA = a;
+		return 0;
+	}
+	double ans = n*n / (num*2.0);
+	for (int i = 0; i < n; i++) {
+		for (int j = i + 1; j < n; j++) {
+			if (tmp[i] > tmp[j]) {
+				swap(tmp[i], tmp[j]);
+				ans += 1.0 / num * monty(hash1(tmp, n));;
+				swap(tmp[i], tmp[j]);
+			}
+		}
+	}
+	return e[getid(a)] = ans;
+}
+
+double carlos(int a) {
+	if (a == isSortedA) return 0;
+	if (e[getid(a)] != 0) return e[getid(a)];
+	int tmp[10], tmpa = a;
+	for (int i = n - 1; i >= 0; i--) {
+		tmp[i] = tmpa % 10;
+		tmpa /= 10;
+	}
+	int num = 0;
+	for (int i = 0; i < n - 1; i++) if (tmp[i] > tmp[i + 1]) num++;
+	if (num == 0) {
+		isSortedA = a;
+		return 0;
+	}
+	double ans = (n - 1.0) / num;
+	for (int i = 0; i < n - 1; i++) {
+		int j = i + 1;
+		if (tmp[i] > tmp[j]) {
+			swap(tmp[i], tmp[j]);
+			ans += 1.0 / num * carlos(hash1(tmp, n));;
+			swap(tmp[i], tmp[j]);
+		}
+	}
+	return e[getid(a)] = ans;
+}
+
+int main() {
+	int t;
+	scanf("%d", &t);
+	while (t--) {
+		isSortedA = -1;
+		scanf("%d", &n);
+		int tmp[10];
+		for (int i = 0; i < n; i++) {
+			scanf("%d", &a[i]);
+			tmp[i] = a[i];
+		}
+		sort(tmp, tmp + n);
+		unique(tmp, tmp + n);
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (a[i] == tmp[j]) {
+					a[i] = j;
+					break;
+				}
+			}
+		}
+		idp = 0;
+		id.clear();
+		memset(e, 0, sizeof e);
+		printf("Monty %.6lf ", monty(hash1(a, n)));
+		idp = 0;
+		id.clear();
+		memset(e, 0, sizeof e);
+		printf("Carlos %.6lf\n", carlos(hash1(a, n)));;
+	}
+	return 0;
+}
