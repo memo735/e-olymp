@@ -1,17 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef unsigned long long ull;
-
-ull n, ans, i;
-
 int main()
 {
-	cin >> n;
+	unsigned int n, ans = 0, i; cin >> n;
 	for (i = 0; n >= 1 << i; i++) ans += (bool)(n & 1 << i);
 	cout << ans << endl;
 }
