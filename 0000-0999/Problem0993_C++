@@ -1,15 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-int mas[100], n, m, x, y;
-
 int main()
 {
-	cin >> n >> m;
+	int n, m, x, y, mas[100]; cin >> n >> m;
 	for (int i = 0; i < n; i++) mas[i] = 0;
 	for (int i = 0; i < m; i++)
 	{
