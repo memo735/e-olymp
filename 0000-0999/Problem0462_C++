@@ -1,19 +1,12 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long int s64;
-
-s64 mas[100], n, k, tmp;
-
 int main()
 {
-	cin >> n;
+	int mas[100], n, tmp; cin >> n;
 	for (int i = 0; i < n; i++) cin >> mas[i];
-	cin >> k;
+	int k; cin >> k;
 	for (int i = 0; i < k; i++)
 	{
 		cin >> tmp;
