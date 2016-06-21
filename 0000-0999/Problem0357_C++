@@ -1,16 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long double ld;
-
-ld tmp, MAX = -1;
-
 int main()
 {
+	double tmp, MAX = -1;
 	while (cin)
 	{
 		cin >> tmp;
