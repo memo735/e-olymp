@@ -1,23 +1,13 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <algorithm>
 
-#define REP(i,n) for((i) = 0; (i) < (int)(n); (i)++)
-#define sz(x) ((int)(x).size())
-
 using namespace std;
-
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-typedef vector<ll> vll;
-
-ll n, m, k, i;
-vll v;
 
 int main()
 {
+	long n, m, k, i;
+	vector<long> v;
 	cin >> k >> n >> m;
 	for (i = 1; i*i < n; i++)
 	{
@@ -29,5 +19,5 @@ int main()
 	}
 	if (i*i == n && m % (i + k) == 0) v.push_back(i);
 	sort(v.begin(), v.end());
-	REP(i, sz(v)) cout << v[i] << endl;
+	for(i = 0; i < v.size(); i++) cout << v[i] << endl;
 }
