@@ -1,15 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
+int n, m;
 
-typedef long long ll;
-
-ll n, m;
-
-ll gcd(ll a, ll b)
+int gcd(int a, int b)
 {
 	while (b)
 	{
@@ -23,7 +18,7 @@ int main()
 {
 	while (cin)
 	{
-		cin >> n; cin >> m;
+		cin >> n >> m;
 		if (cin)
 		{
 			if (gcd(n, m) == 1) cout << "YES" << endl;
