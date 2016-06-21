@@ -1,11 +1,8 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-int d[10001], n;
+int d[10001];
 
 int dp(int param)
 {
@@ -18,7 +15,7 @@ int dp(int param)
 
 int main()
 {
-	cin >> n;
+	int n; cin >> n;
 	for (int i = 0; i <= n; i++) d[i] = -1;
 	int TMP = 1;
 	while (TMP * 2 < n)
