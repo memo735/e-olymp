@@ -1,23 +1,18 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-long long ans, n, m, tmp;
-
-long long gcd(long long a, long long b)
+long gcd(long a, long b)
 {
 	return b ? gcd(b, a % b) : a;
 }
 
 int main()
 {
-	cin >> n;
+	long ans, n, m, tmp; cin >> n;
 	for (int i = 0; i < n; i++)
 	{
-		cin >> m; cin >> ans;
+		cin >> m >> ans;
 		for (int j = 1; j < m; j++)
 		{
 			cin >> tmp;
