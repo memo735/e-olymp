@@ -1,30 +1,20 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <algorithm>
 
-
-#define REP(i,n) for((i) = 0; (i) < (int)(n); (i)++)
-
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-typedef vector<ll> vll;
-
-ll n, t, i;
-vll v;
-
-bool f(ll a, ll b)
+bool f(int a, int b)
 {
 	return a > b;
 }
 
 int main()
 {
+	int n, t, i;
+	vector<int> v;
 	cin >> n;
-	REP(i, n)
+	for (i = 0; i < n; i++)
 	{
 		cin >> t;
 		v.push_back(t);
@@ -33,7 +23,7 @@ int main()
 	if (v.size() > 0)
 	{
 		cout << v[0];
-		for (int i = 1; i < v.size(); i++) cout << " " << v[i];
+		for (i = 1; i < v.size(); i++) cout << " " << v[i];
 	}
 	cout << endl;
 }
