@@ -1,19 +1,12 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-
-long n, a, b;
-string s;
-
 int main()
 {
-	cin >> n >> a >> b;
+	int n, a, b; cin >> n >> a >> b;
+	string s;
 	if (a + b == 0) cout << 0 << endl;
 	else
 	{
