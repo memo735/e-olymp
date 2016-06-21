@@ -1,15 +1,10 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
+int ans = 0, vect[4][2];
 
-#define ll long long
-
-ll ans = 0, vect[4][2];
-
-ll S(ll a, ll b)
+int S(int a, int b)
 {
 	return (vect[a][0] - vect[b][0]) * (vect[a][1] + vect[b][1]);
 }
