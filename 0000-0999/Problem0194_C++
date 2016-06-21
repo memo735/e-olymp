@@ -1,18 +1,13 @@
 #include <iostream>
-#include <fstream>
 #include <algorithm>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-int n, tmp, A, B;
-string a, b;
-
 int main()
 {
-	cin >> n;
+	int n, tmp, A = 0, B = 0; cin >> n;
 	tmp = n;
+	string a, b;
 	for (int i = 2; i < 10; i++)
 		while (tmp % i == 0)
 		{
