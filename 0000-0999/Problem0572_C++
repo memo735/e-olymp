@@ -1,20 +1,11 @@
 #include <iostream>
-#include <fstream>
-#include <stdio.h>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-
-ll n, d, cnt;
-bool star = false;
-
 int main()
 {
-	cin >> n;
-	d = 2;
+	long n, d = 2, cnt; cin >> n;
+	bool star = false;
 	while (n)
 	{
 		if (n % d == 0)
