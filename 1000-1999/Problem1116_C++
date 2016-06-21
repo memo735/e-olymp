@@ -1,20 +1,12 @@
 #include <iostream>
-#include <fstream>
 #include <string>
-
-#define len length()
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-
-ll tmp, n, i;
-string s;
-
 int main()
 {
+	long tmp, n;
+	string s;
 	while (cin)
 	{
 		cin >> n;
@@ -33,7 +25,7 @@ int main()
 						tmp /= i;
 					}
 				if (tmp != 1) s = "-1";
-				else for (int j = 0; j < s.len / 2; j++) swap(s[j], s[s.len - j - 1]);
+				else for (int j = 0; j < s.length() / 2; j++) swap(s[j], s[s.length() - j - 1]);
 			}
 			cout << s << endl;
 		}
