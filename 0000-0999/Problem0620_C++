@@ -1,15 +1,12 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-int n;
 string ans = "0", dn[10][100];
 bool dnb[10][100];
+int n;
 
-inline string sum(string a, string b)
+string sum(string a, string b)
 {
 	if (a.length() < b.length()) swap(a, b);
 	int tmp = 0;
@@ -33,7 +30,7 @@ inline string sum(string a, string b)
 	return a;
 }
 
-inline string rec(char ch, int index)
+string rec(char ch, int index)
 {
 	if (ch == 'A') return "0";
 	if (index == n - 1) return "1";
