@@ -1,25 +1,18 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 
 using namespace std;
 
-vector <int> vect;
-pair <int, int> ct;
-int n, tmp, middle = -1;
-bool push, med = true;
-
-ifstream in("input.txt", ios::in);
-ofstream out("output.txt", ios::out);
-
 int main()
 {
-
+	vector<int> vect;
+	pair<int, int> ct;
+	int tmp, middle = -1;
 	do
 	{
-		in >> tmp;
-		if (in) vect.push_back(tmp);
-	} while (in);
+		cin >> tmp;
+		if (cin) vect.push_back(tmp);
+	} while (cin);
 	for (int i = 0; i < vect.size(); i++)
 	{
 		ct.first = 0;
@@ -35,5 +28,5 @@ int main()
 			break;
 		}
 	}
-	out << middle << endl;
+	cout << middle << endl;
 }
