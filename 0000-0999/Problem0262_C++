@@ -1,10 +1,8 @@
 #include <iostream>
-#include <fstream>
 #include <algorithm>
 #include <vector>
 
 using namespace std;
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
 
 vector <int> vect;
 int n, k, dn[2000], tmp;
