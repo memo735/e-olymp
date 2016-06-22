@@ -1,18 +1,12 @@
 #include <iostream>
-#include <fstream>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long int s64;
-
-pair <s64, s64> a, b, c, d;
-s64 AB, AC, AD, BC, BD, CD;
-bool x, y, z;
-
 int main()
 {
+	pair<int, int> a, b, c, d;
+	int AB, AC, AD, BC, BD, CD;
+	bool x, y, z;
 	cin >> a.first >> a.second >> b.first >> b.second >> c.first >> c.second >> d.first >> d.second;
 	AB = (a.first - b.first)*(a.first - b.first) + (a.second - b.second)*(a.second - b.second);
 	AC = (a.first - c.first)*(a.first - c.first) + (a.second - c.second)*(a.second - c.second);
@@ -20,9 +14,9 @@ int main()
 	BC = (b.first - c.first)*(b.first - c.first) + (b.second - c.second)*(b.second - c.second);
 	BD = (b.first - d.first)*(b.first - d.first) + (b.second - d.second)*(b.second - d.second);
 	CD = (c.first - d.first)*(c.first - d.first) + (c.second - d.second)*(c.second - d.second);
-	x = (AB == CD) && (AC == BC) && (BC == BD) && (BD == AD) && (AC + BC == AB);
-	y = (AC == BD) && (AB == BC) && (BC == CD) && (CD == AD) && (AB + BC == AC);
-	z = (AD == BC) && (AB == BD) && (BD == CD) && (CD == AC) && (AB + BD == AD);
-	if (x | y | z) cout << "YES" << endl;
+	x = AB == CD && AC == BC && BC == BD && BD == AD && AC + BC == AB;
+	y = AC == BD && AB == BC && BC == CD && CD == AD && AB + BC == AC;
+	z = AD == BC && AB == BD && BD == CD && CD == AC && AB + BD == AD;
+	if (x || y || z) cout << "YES" << endl;
 	else cout << "NO" << endl;
 }
