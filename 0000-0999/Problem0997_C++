@@ -1,22 +1,15 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-typedef pair<ll, ll> pll;
-
-ll i, n;
-pll x, y;
+int n;
 bool d[100][100];
-vector < pair<ll, pll> > v;
+vector<pair<int, pair<int, int>>> v;
 
-void add(ll a, ll b, ll c)
+void add(int a, int b, int c)
 {
-	if (a >= 1 && a <= n && b >= 1 && b <= n && !d[a][b])
+	if (1 <= a && a <= n && 1 <= b && b <= n && !d[a][b])
 	{
 		d[a][b] = true;
 		v.push_back(make_pair(c, make_pair(a, b)));
@@ -25,9 +18,10 @@ void add(ll a, ll b, ll c)
 
 int main()
 {
+	pair<int, int> x, y;
 	cin >> n >> x.first >> x.second >> y.first >> y.second;
 	v.push_back(make_pair(0, x));
-	for (ll i = 0; i < v.size(); i++)
+	for (int i = 0; i < v.size(); i++)
 	{
 		if (v[i].second == y)
 		{
