@@ -1,100 +1,86 @@
-#include <fstream>
 #include <iostream>
 
 using namespace std;
 
-#define SIZE 100000
-#define INF 1000000000
-#define ll long long
+#define lson l, m, rt << 1
+#define rson m + 1, r, rt << 1 | 1
 
-int n, k, a, b;
-char mas[SIZE];
-char ch;
+const int maxn = 65536;
 
-struct segment_tree
+int flag, s, ans[maxn << 2] = { 0 };
+
+int sign(int x)
 {
-	int pos_left, pos_right;
-	char product;
-	segment_tree *left, *right;
-};
-
-segment_tree* build(int L, int R)
-{
-	segment_tree *Tree = new segment_tree;
-	if (L == R)
-	{
-		Tree->product = mas[L];
-		Tree->pos_left = Tree->pos_right = L;
-		Tree->left = Tree->right = NULL;
-		return Tree;
-	}
-	int M = (L + R) / 2;
-	Tree->left = build(L, M);
-	Tree->right = build(M + 1, R);
-	Tree->pos_left = L;
-	Tree->pos_right = R;
-	Tree->product = Tree->left->product * Tree->right->product;
-	return Tree;
+	if (x > 0) return 1;
+	if (x < 0) return -1;
+	return 0;
 }
 
-char product(segment_tree *Tree, int L, int R)
-{
-	if (L < Tree->pos_left) L = Tree->pos_left;
-	if (R > Tree->pos_right) R = Tree->pos_right;
-	if (L > R) return 1;
-	if (Tree->pos_left == L && Tree->pos_right == R) return Tree->product;
-	return product(Tree->left, L, R) * product(Tree->right, L, R);
-}
+void PushUP(int rt) { ans[rt] = ans[rt << 1] * ans[rt << 1 | 1]; }
 
-void update(segment_tree *Tree, int position, char value)
-{
-	if (Tree->pos_left == Tree->pos_right)
-	{
-		Tree->product = value;
+void build(int l, int r, int rt) {
+	if (l == r) {
+		int x;
+		scanf("%d", &x);
+		ans[rt] = sign(x);
 		return;
 	}
-	if (position < Tree->right->pos_left) update(Tree->left, position, value);
-	else update(Tree->right, position, value);
-	Tree->product = Tree->left->product * Tree->right->product;
+	int m = (l + r) >> 1;
+	build(lson);
+	build(rson);
+	PushUP(rt);
 }
 
-int main()
-{
-	while (cin)
-	{
-		cin >> n >> k;
-		if (cin)
+void update(int p, int x, int l, int r, int rt) {
+	if (l == r) {
+		if (sign(ans[rt]) != sign(x))
 		{
-			int tmp_int;
-			for (int i = 0; i < n; i++)
-			{
-				cin >> tmp_int;
-				if (tmp_int == 0) mas[i] = 0;
-				else if (tmp_int > 0) mas[i] = 1;
-				else mas[i] = -1;
-			}
-			segment_tree *Tree_main = new segment_tree;
-			Tree_main = build(0, n - 1);
-			for (int i = 0; i < k; i++)
-			{
-				cin >> ch >> a >> b;
-				if (ch == 'P')
-				{
-					char tmp = product(Tree_main, a - 1, b - 1);
-					if (tmp == 1) cout << "+";
-					else if (tmp == -1) cout << "-";
-					else cout << "0";
-				}
-				else
-				{
-					char tmp;
-					if (b == 0) tmp = 0;
-					else if (b > 0) tmp = 1;
-					else tmp = -1;
-					update(Tree_main, a - 1, tmp);
-				}
-			}
-			cout << endl;
+			flag = 1;
+			ans[rt] = sign(x);
 		}
+		return;
 	}
+	int m = (l + r) >> 1;
+	if (p <= m) update(p, x, lson);
+	else update(p, x, rson);
+	if (flag)PushUP(rt);
+}
+
+void query(int L, int R, int l, int r, int rt) {
+	if (L <= l && r <= R) {
+		s *= ans[rt];
+		return;
+	}
+	int m = (l + r) >> 1;
+	if (L <= m && s != 0) query(L, R, lson);
+	if (R > m && s != 0) query(L, R, rson);
+}
+
+int main() {
+	int n, m;
+	while (~scanf("%d%d", &n, &m))
+	{
+		build(1, n, 1);
+		while (m--)
+		{
+			char op[2];
+			int a, b;
+			scanf("%s%d%d", op, &a, &b);
+			if (op[0] == 'P')
+			{
+				s = 1;
+				query(a, b, 1, n, 1);
+				if (s == 0) printf("0");
+				else if (s == 1) printf("+");
+				else printf("-");
+			}
+			else
+			{
+				flag = 0;
+				update(a, b, 1, n, 1);
+			}
+		}
+		printf("\n");
+	}
+	return 0;
 }
