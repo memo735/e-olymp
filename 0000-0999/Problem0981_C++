@@ -1,42 +1,30 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <algorithm>
 
-#define REP(i,n) for((i) = 0; (i) < (int)(n); (i)++)
-
 using namespace std;
-
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-typedef unsigned long long ull;
-typedef vector<bool> vb;
-typedef pair<ll, ll> pll;
-
-ll n, m, i, j, a, b, c, _count;
-ull ans;
-vector < pair<ll, pll> > v;
-vb bv(20000);
 
 int main()
 {
-	cin >> n; cin >> m;
-	REP(i, m)
+	int n, m, a, b, c, cnt = 0, ans = 0;
+	vector <pair<int, pair<int, int>> > v;
+	vector<bool> bv(20000);
+	cin >> n >> m;
+	for (int i = 0; i < m; i++)
 	{
 		cin >> a >> b >> c;
 		v.push_back(make_pair(c, make_pair(a, b)));
 	}
 	sort(v.begin(), v.end());
 	bv[v[0].second.first] = true;
-	REP(i, m)
+	for (int i = 0; i < m; i++)
 	{
-		if (_count == n - 1) break;
+		if (cnt == n - 1) break;
 		if (bv[v[i].second.first] ^ bv[v[i].second.second])
 		{
 			bv[v[i].second.first] = bv[v[i].second.second] = true;
 			ans += v[i].first;
-			_count++;
+			cnt++;
 			i = -1;
 		}
 	}
