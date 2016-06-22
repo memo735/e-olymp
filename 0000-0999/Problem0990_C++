@@ -1,25 +1,20 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
 string str;
-int dn[100][100], ans;
+int dn[100][100];
 
 int rec(int open, int pos)
 {
-	if (pos > str.length()) return 0;
-	if (open < 0) return 0;
+	if (pos > str.length() || open < 0) return 0;
 	if (pos == str.length() && open == 0) return 1;
 	if (dn[open][pos] != -1) return dn[open][pos];
 	if (str[pos] == '(') return dn[open][pos] = rec(open + 1, pos + 1);
 	if (str[pos] == ')') return dn[open][pos] = rec(open - 1, pos + 1);
 	return dn[open][pos] = rec(open + 1, pos + 1) + rec(open - 1, pos + 1);
 }
-
 
 int main()
 {
