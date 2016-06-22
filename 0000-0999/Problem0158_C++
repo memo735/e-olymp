@@ -1,31 +1,20 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <string>
 
-#define ln length()
-#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
-
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<bool> vb;
-typedef pair<int, int> pii;
-
-ll n, tmp, i;
-string d[100000];
-bool db[100000];
+int n, tmp, i;
+string d[7200];
+bool db[7200];
 
 string SUM(string a, string b)
 {
-	for (int j = 0; j < a.ln / 2; j++) swap(a[j], a[a.ln - j - 1]);
-	for (int j = 0; j < b.ln / 2; j++) swap(b[j], b[b.ln - j - 1]);
-	if (a.ln < b.ln) swap(a, b);
-	ll j, ost = 0;
-	for (j = 0; j < b.ln; j++)
+	for (int j = 0; j < a.length() / 2; j++) swap(a[j], a[a.length() - j - 1]);
+	for (int j = 0; j < b.length() / 2; j++) swap(b[j], b[b.length() - j - 1]);
+	if (a.length() < b.length()) swap(a, b);
+	int j, ost = 0;
+	for (j = 0; j < b.length(); j++)
 	{
 		ost += a[j] + b[j] - 96;
 		a[j] = ost % 10 + 48;
@@ -33,7 +22,7 @@ string SUM(string a, string b)
 	}
 	while (ost)
 	{
-		if (j == a.ln) a += ost + 48, ost = 0;
+		if (j == a.length()) a += ost + 48, ost = 0;
 		else
 		{
 			ost += a[j] - 48;
@@ -42,11 +31,11 @@ string SUM(string a, string b)
 			j++;
 		}
 	}
-	for (j = 0; j < a.ln / 2; j++) swap(a[j], a[a.ln - j - 1]);
+	for (j = 0; j < a.length() / 2; j++) swap(a[j], a[a.length() - j - 1]);
 	return a;
 }
 
-string dp(ll fibo)
+string dp(int fibo)
 {
 	if (db[fibo]) return d[fibo];
 	db[fibo] = true;
@@ -58,7 +47,7 @@ int main()
 	d[0] = d[1] = d[2] = d[3] = d[4] = "1";
 	db[0] = db[1] = db[2] = db[3] = db[4] = true;
 	cin >> n;
-	FOR(i, n)
+	for (i = 0; i < n; i++)
 	{
 		cin >> tmp;
 		cout << dp(tmp) << endl;
