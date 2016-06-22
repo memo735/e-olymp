@@ -1,33 +1,23 @@
 #include <iostream>
-#include <fstream>
 #include <string>
-#include <cstdlib>
-
-#define ln length()
-#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-
-string a, b;
-ll C[26], n, tmp, i, j;
-
 int main()
 {
+	int C[26], n, tmp;
 	cin >> n;
+	string a, b;
 	getline(cin, a);
-	FOR(i, n)
+	for (int i = 0; i < n; i++)
 	{
 		getline(cin, a);
 		getline(cin, b);
 		tmp = 0;
-		FOR(j, 26) C[j] = 0;
-		FOR(j, a.ln) C[a[j] - 97]++;
-		FOR(j, b.ln) C[b[j] - 97]--;
-		FOR(j, 26) tmp += abs(C[j]);
+		for (int j = 0; j < 26; j++) C[j] = 0;
+		for (int j = 0; j < a.length(); j++) C[a[j] - 97]++;
+		for (int j = 0; j < b.length(); j++) C[b[j] - 97]--;
+		for (int j = 0; j < 26; j++) tmp += abs(C[j]);
 		cout << "Case #" << i + 1 << ":  " << tmp << endl;
 	}
 }
