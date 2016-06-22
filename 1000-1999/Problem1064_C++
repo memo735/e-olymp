@@ -1,20 +1,17 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
 int n, index = 0;
-char ch, X, Y, d[50][50], dTMP[50][50];
+char d[50][50], dTMP[50][50];
 pair <char, char> _beg, _end;
 bool input = false;
-vector < pair < pair < char, char >, int> > vect;
+vector<pair<pair<char, char>, int>> vect;
 
 void PushtoVect(char x, char y, int k)
 {
-	if (x >= 0 && x < n && y >= 0 && y < n)
+	if (0 <= x && x < n && 0 <= y && y < n)
 		if (dTMP[x][y] != '#')
 		{
 			dTMP[x][y] = '#';
@@ -24,6 +21,7 @@ void PushtoVect(char x, char y, int k)
 
 int main()
 {
+	char ch, X, Y;
 	cin >> n;
 	for (char i = 0; i < n; i++)
 		for (char j = 0; j < n; j++)
