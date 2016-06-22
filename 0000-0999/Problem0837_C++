@@ -1,23 +1,18 @@
 #include <iostream>
-#include <fstream>
 #include <algorithm>
 #include <string>
 #include <vector>
 
 using namespace std;
 
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-vector <char> vect;
-string str;
-int x, y;
-
 int main()
 {
-	cin >> str;
+	string str; cin >> str;
+	vector <char> vect;
+	int x, y;
 	for (int i = 0; i < str.length(); i++) vect.push_back(str[i]);
 	sort(vect.begin(), vect.end());
-	for (;;)
+	while (1)
 	{
 		for (int i = 0; i < vect.size(); i++) cout << vect[i]; cout << endl;
 		x = vect.size() - 2;
