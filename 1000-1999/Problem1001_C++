@@ -1,38 +1,27 @@
 #include <iostream>
-#include <fstream>
 #include <algorithm>
 #include <string>
 
-#define ln length()
-#define FOR(i,n) for((i) = 0; (i) < (int)(n); (i)++)
-
 using namespace std;
-
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
-
-typedef long long ll;
-
-string n, m;
-ll i;
 
 string SUM(string a, string b)
 {
-	FOR(i, a.ln / 2) swap(a[i], a[a.ln - i - 1]);
-	FOR(i, b.ln / 2) swap(b[i], b[b.ln - i - 1]);
-	ll carry = 0;
-	for (i = 0; i < max(a.ln, b.ln) || carry; i++)
+	for (int i = 0; i < a.length() / 2; i++) swap(a[i], a[a.length() - i - 1]);
+	for (int i = 0; i < b.length() / 2; i++) swap(b[i], b[b.length() - i - 1]);
+	int carry = 0;
+	for (int i = 0; i < max(a.length(), b.length()) || carry; i++)
 	{
-		if (i == a.ln) a += '0';
-		a[i] += carry + (i < b.ln ? b[i] - 48 : 0);
+		if (i == a.length()) a += '0';
+		a[i] += carry + (i < b.length() ? b[i] - 48 : 0);
 		carry = a[i] > '1';
 		if (carry) a[i] -= 2;
 	}
-	FOR(i, a.ln / 2) swap(a[i], a[a.ln - i - 1]);
+	for (int i = 0; i < a.length() / 2; i++) swap(a[i], a[a.length() - i - 1]);
 	return a;
 }
 
 int main()
 {
-	cin >> n; cin >> m;
+	string n, m; cin >> n >> m;
 	cout << SUM(n, m) << endl;
 }
