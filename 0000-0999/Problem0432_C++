@@ -1,10 +1,7 @@
 #include <iostream>
-#include <fstream>
 #include <vector>
 
 using namespace std;
-
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
 
 struct xyz{
 	int x, y, z;
@@ -19,10 +16,10 @@ bool operator ==(xyz &a, xyz &b){
 int n = 1, m = 1, k = 1, ans = 0, xx, yy, zz;
 char g[30][30][30], ch;
 int used[30][30][30];
-vector < pair<xyz, int> > vect;
+vector<pair<xyz, int> > vect;
 
 void check(int x, int y, int z, int len){
-	if (x >= 0 && x < n && y >= 0 && y < m && z >= 0 && z < k && !used[x][y][z] && g[x][y][z] != '#'){
+	if (0 <= x && x < n && 0 <= y && y < m && 0 <= z && z < k && !used[x][y][z] && g[x][y][z] != '#'){
 		vect.push_back(make_pair(xyz(x, y, z), len + 1));
 		used[x][y][z] = true;
 	}
@@ -37,7 +34,7 @@ int main(){
 				for (int j = 0; j < 30; j++)
 					for (int h = 0; h < 30; h++) used[i][j][h] = false;
 
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < n; i++){
 				for (int j = 0; j < m; j++)
 					for (int h = 0; h < k; h++){
 						cin >> ch;
@@ -45,7 +42,7 @@ int main(){
 						if (ch == 'S') ss = xyz(i, j, h);
 						if (ch == 'E') ff = xyz(i, j, h);
 					}
-
+			}
 			vect.clear();
 			vect.push_back(make_pair(ss, 0));
 			used[ss.x][ss.y][ss.z] = true;
