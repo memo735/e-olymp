@@ -1,10 +1,7 @@
 #include <iostream>
-#include <fstream>
 #include <math.h>
 
 using namespace std;
-
-fstream in("input.txt", ios::in), out("output.txt", ios::out);
 
 pair <double, double> a, b, c;
 
