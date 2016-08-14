@@ -1,21 +1,16 @@
 #include <iostream>
+#include <math.h>
 
 using namespace std;
-int main()
-{
-	bool mas[10];
-	long n,temp;
-	cin >> n;
-	for (int i = 0; i < n; i++)
+
+int main() {
+	int n, t;
+	scanf("%d", &t);
+	while (t--)
 	{
-		cin >> temp;
-		mas[i] = false;
-		for (int j = 1; j<=temp; j++)
-			if (temp % j == 0)
-				if (mas[i]) mas[i] = false;
-				else mas[i] = true;
+		scanf("%d", &n);
+		int r = (int)sqrt(1.0*n);
+		printf("%d\n", r*r == n);
 	}
-	for (int i = 0; i<n; i++)
-		if (mas[i]) cout << "1\n";
-		else cout << "0\n";
+	return 0;
 }
