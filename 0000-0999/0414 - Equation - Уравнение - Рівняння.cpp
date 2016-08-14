@@ -3,9 +3,8 @@
 using namespace std;
 
 int main() {
-	int c, i, n, res;
+	int c, i, n, res = 1;
 	scanf("%d", &n);
-	res = 1;
 
 	//Для каждого простого делителя i числа n подсчитываем степень c, с которой он входит в n.Умножаем результат res на 2c + 1.
 	for (i = 2; i <= sqrt(1.0*n); i++)
