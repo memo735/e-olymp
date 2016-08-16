@@ -8,7 +8,7 @@ int main()
 	while (cin)
 	{
 		cin >> tmp;
-		if (cin) if (tmp > MAX) MAX = tmp;
+		if (tmp > MAX) MAX = tmp;
 	}
 	cout << fixed << MAX << endl;
 }
