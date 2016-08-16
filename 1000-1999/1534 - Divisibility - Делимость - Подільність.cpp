@@ -2,7 +2,6 @@
 
 using namespace std;
 
-
 int a[20], n, l, r;
 
 int gcd(int A, int B)
