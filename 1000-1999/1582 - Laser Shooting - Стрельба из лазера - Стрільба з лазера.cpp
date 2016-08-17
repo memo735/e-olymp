@@ -12,7 +12,6 @@ int i, n, x[51], yy1[51], yy2[51];
 double numberOfHits()
 {
 	double a1, a2, res = 0.0;
-	int i;
 	for (i = 0; i < n; i++)
 	{
 		a1 = atan(1.0 * yy1[i] / x[i]);
