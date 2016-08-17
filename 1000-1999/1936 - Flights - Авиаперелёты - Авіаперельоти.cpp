@@ -1,23 +1,31 @@
-#include <stdio.h>
+#include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-struct vertex{
-	int used, color;
-	int g[1000], gr[1000];
-};
-
-void dfs(int i);
-void dfsr(int i, int color);
-bool strongly_connected_count();
-
 vector <int> lst;
-vector <vertex> v;
 int n, m, color = 0, weight, a, l, r = -1;
 
-bool strongly_connected_count(){
+struct vertex {
+	int used, color, g[1000], gr[1000];
+};
+
+vector <vertex> v;
+
+void dfs(int i) {
+	v[i].used = 1;
+	for (int ii = 0; ii < n; ii++) if (ii != i && !v[ii].used && v[i].g[ii] <= weight) dfs(ii);
+	lst.push_back(i);
+}
+
+void dfsr(int i, int color) {
+	v[i].used = 2;
+	v[i].color = color;
+	for (int ii = 0; ii < n; ii++) if (ii != i && v[ii].used != 2 && v[i].gr[ii] <= weight) dfsr(ii, color);
+}
+
+bool strongly_connected_count() {
 	int color = 0;
 	for (int i = 0; i < n; i++) v[i].used = 0;
 	for (int i = 0; i < n; i++) if (!v[i].used) dfs(i);
@@ -25,21 +33,7 @@ bool strongly_connected_count(){
 	return color == 1;
 }
 
-void dfs(int i){
-	v[i].used = 1;
-	for (int ii = 0; ii < n; ii++) if (ii != i && !v[ii].used && v[i].g[ii] <= weight) dfs(ii);
-	lst.push_back(i);
-}
-
-void dfsr(int i, int color){
-	v[i].used = 2;
-	v[i].color = color;
-	for (int ii = 0; ii < n; ii++) if (ii != i && v[ii].used != 2 && v[i].gr[ii] <= weight) dfsr(ii, color);
-}
-
-int main(){
-	freopen("input.txt", "r", stdin);
-	freopen("output.txt", "w", stdout);
+int main() {
 	scanf("%d", &n);
 	v.resize(n);
 	for (int i = 0; i < n; i++)
@@ -50,7 +44,7 @@ int main(){
 			v[j].gr[i] = a;
 			r = max(r, a);
 		}
-	while (l < r){
+	while (l < r) {
 		static bool res;
 		weight = (l + r) / 2;
 		res = strongly_connected_count();
