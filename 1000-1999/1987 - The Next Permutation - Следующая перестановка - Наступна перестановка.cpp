@@ -1,25 +1,20 @@
 #include <iostream>
-#include <stdio.h>
 #include <string>
 
 using namespace std;
 
-typedef long long ll;
-
-ll n, tmp, a, b;
+int n, tmp, a, b;
 string s;
 
 int main()
 {
 	cin >> n;
-	for (int j = 0; j < n; j++)
+	while (n--)
 	{
-
-		cin >> tmp;
-		cin >> s;
+		cin >> tmp >> s;
 		cout << tmp << " ";
 		a = -1;
-		for (ll i = s.length() - 1; i >= 0; i--)
+		for (int i = s.length() - 1; i >= 0; i--)
 			if (s[i] < s[i + 1])
 			{
 				a = i;
@@ -29,16 +24,17 @@ int main()
 		else
 		{
 			b = a + 1;
-			for (ll i = a + 2; i < s.length(); i++)
+			for (int i = a + 2; i < s.length(); i++)
 			{
-				if (s[i] < s[b] && s[i] > s[a])
-					b = i;
+				if (s[i] < s[b] && s[i] > s[a]) b = i;
 			}
 			swap(s[a], s[b]);
 			for (int x = a + 1; x < s.length() - 1; x++)
-				for (int y = x + 1; y < s.length(); y++) if (s[x] > s[y]) swap(s[x], s[y]);
+				for (int y = x + 1; y < s.length(); y++)
+					if (s[x] > s[y]) swap(s[x], s[y]);
 
 			cout << s << endl;
 		}
 	}
+	return 0;
 }
