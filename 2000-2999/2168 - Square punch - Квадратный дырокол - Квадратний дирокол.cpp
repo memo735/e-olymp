@@ -19,12 +19,13 @@ int main()
 	for (int i = 0; i < n; i++)
 		for (int j = 0; j < m; j++) cin >> mas[i][j];
 
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++)
 			if (mas[i][j] == 0)
 			{
 				rec(i, j);
 				Sum++;
 			}
+	}
 	cout << Sum << endl;
 }
