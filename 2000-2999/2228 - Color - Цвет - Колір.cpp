@@ -68,9 +68,7 @@ void write(int d)
 
 int main()
 {
-	int t;
-	int vis[maxn];
-
+	int t, vis[maxn];
 	for (int i = 2; i < maxn; i++)
 		if (!vis[i])
 		{
