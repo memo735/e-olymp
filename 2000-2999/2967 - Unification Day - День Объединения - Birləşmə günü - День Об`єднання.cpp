@@ -2,7 +2,6 @@
 #include <math.h>
 #include <string.h>
 
-
 using namespace std;
 
 #define MAX 5001
