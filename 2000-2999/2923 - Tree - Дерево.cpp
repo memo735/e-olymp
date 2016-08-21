@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <iostream>
 #include <vector>
 #include <set>
 
@@ -36,4 +36,5 @@ int main(){
 	printf("%d", ans[0]);
 	for (int i = 1; i < n; i++) printf(" %d", ans[i]);
 	printf("\n");
+	return 0;
 }
