@@ -3,9 +3,6 @@
 
 using namespace std;
 
-typedef vector <pair<int, int> > vii;
-typedef long long ll;
-
 int test, n, m, a, b, i, j;
 vector <vector<int> > g;
 vector <int> used;
@@ -27,7 +24,6 @@ void dfs(int v, int color)
 
 int main()
 {
-	ios::sync_with_stdio(false);
 	n = 1;
 	while (n)
 	{
@@ -45,7 +41,7 @@ int main()
 				g[b - 1].push_back(a - 1);
 			}
 			dfs(0, 1);
-			cout << ((result) ? "BICOLOURABLE.\n" : "NOT BICOLOURABLE.\n");
+			cout << (result ? "BICOLOURABLE.\n" : "NOT BICOLOURABLE.\n");
 		}
 	}
 	return 0;
