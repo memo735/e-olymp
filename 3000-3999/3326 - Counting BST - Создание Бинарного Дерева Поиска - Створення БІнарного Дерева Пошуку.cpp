@@ -6,19 +6,19 @@ int m, MOD = 1000003;
 
 struct Math // with MOD 1000003
 {
-	long long pow_mod(long long a, long long p)
+	long pow_mod(long a, long p)
 	{
 		if (a >= m) a %= MOD;
 		if (a == 0) return 0;
 		if (p == 0) return 1;
-		long long t = pow_mod(a, p / 2);
+		long t = pow_mod(a, p / 2);
 		if (p & 1) return a * t % MOD * t % MOD;
 		return t*t % MOD;
 	}
-	long long inverse(long long a) { return pow_mod(a, MOD - 2); }
-	long long C_MOD(long long n, long long k)
+	long inverse(long a) { return pow_mod(a, MOD - 2); }
+	long C_MOD(long n, long k)
 	{
-		long long ans = 1;
+		long ans = 1;
 		if (k > n / 2) k = n - k;
 		for (int i = 1; i <= k; i++)
 		{
@@ -68,7 +68,7 @@ struct BST
 	{
 		if (!T) return 1;
 		if (T->F) return T->F;
-		return T->F = (long long)f(T->ch[0]) * f(T->ch[1]) % MOD \
+		return T->F = (long)f(T->ch[0]) * f(T->ch[1]) % MOD \
 			* math.C_MOD(getsz(T->ch[0]) + getsz(T->ch[1]), getsz(T->ch[0])) % MOD;
 	}
 } bst;
