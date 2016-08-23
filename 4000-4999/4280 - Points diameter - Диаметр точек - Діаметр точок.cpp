@@ -72,6 +72,6 @@ int main()
 		//Вычисляем квадрат расстояния между точками i и j и пересчитываем квадрат диаметра точек diam.
 		diam = max(diam, dist(i, j));
 	}
-	printf("%.12lf\n", sqrt(1.0*diam));
+	printf("%.12lf\n", sqrt(diam));
 	return 0;
 }
