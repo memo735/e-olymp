@@ -3,10 +3,8 @@
 
 using namespace std;
 
-#define MAX 10001
-
 int a, b, c, d, i, len, start;
-char s[MAX];
+char s[10001];
 
 int main() {
 	//Читаем строку, начиная с 4-ой позиции строки s.
