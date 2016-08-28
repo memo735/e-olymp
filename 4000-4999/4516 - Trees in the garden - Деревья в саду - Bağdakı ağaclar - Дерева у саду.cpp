@@ -3,8 +3,7 @@
 
 using namespace std;
 
-#define MAX 1001
-int i, j, n, mind, maxd, Error, used[MAX], g[MAX][MAX];
+int i, j, n, mind, maxd, Error, used[1001], g[1001][1001];
 
 //Поиск в глубину из вершины v. Красим вершину v цветом Color. Проверяем,
 //является ли граф двудольным, если разрешено проходить лишь по ребрам,
