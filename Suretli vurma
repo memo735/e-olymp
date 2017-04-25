@@ -1,0 +1,41 @@
+using System;
+using System.Numerics;
+
+namespace Karabutsa
+{
+    internal class Program
+    {
+        public static void Main(string[] args)
+        {
+            string a = Console.ReadLine();
+            string b = Console.ReadLine();
+            BigInteger x = BigInteger.Parse(a);
+            BigInteger y = BigInteger.Parse(b);
+            int n = a.Length, m = b.Length;
+            //schonhageStrassenMultiplication(a, b, n, m);
+            BigInteger[] linearConvolution = new BigInteger[n + m - 1];
+            for (int i = 0; i < n + m - 1; i++) linearConvolution[i] = 0;
+            BigInteger p = x;
+            for (int i = 0; i < m; i++)
+            {
+                x = p;
+                for (int j = 0; j < n; j++)
+                {
+                    linearConvolution[i + j] += y % 10 * (x % 10);
+                    x /= 10;
+                }
+                y /= 10;
+            }
+            BigInteger product = 0;
+            BigInteger nextCarry = 0, baza = 1;
+            for (int i = 0; i < n + m - 1; i++)
+            {
+                linearConvolution[i] += nextCarry;
+                product = product + baza * (linearConvolution[i] % 10);
+                nextCarry = linearConvolution[i] / 10;
+                baza *= 10;
+            }
+            Console.WriteLine(product);
+        }
+    }
+}
