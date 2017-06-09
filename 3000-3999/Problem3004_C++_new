@@ -1,0 +1,32 @@
+
+
+
+
+#include <stdio.h>
+#include <algorithm>
+#include <set>
+std::multiset <long long> v;
+std::multiset<long long>::iterator end;
+long long temp,n,k,i,a;
+
+
+int main(){
+scanf("%lld %lld",&n,&k);
+for( i=0;i<n;i++){
+scanf("%lld",&a);
+if(v.size()!=k) v.insert(a);
+else {
+temp= *v.begin();
+v.erase(v.begin());
+v.insert(temp+a);
+
+}
+
+
+}
+
+end= v.end();
+end--;
+printf("%lld",*end);
+
+}
