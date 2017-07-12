@@ -11,7 +11,6 @@ int main()
 		int n; cin >> n;
 		char x[30];
 		set<string> a;
-		a.clear();
 		while (n-- > 0)
 		{
 			cin >> x;
